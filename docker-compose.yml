@@ -1,43 +1,32 @@
 services:
   backend:
-    build: backend/.
-    ports:
-      - "8000:8000"
-    networks:
-      - backend-db
-    depends_on:
-      - db
-    command: >
-      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+      build: backend/.
+      ports:
+          - "8000:8000"
+      networks:
+          - backend-db
+      depends_on:
+          - db
+      command: >
+          sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
   db:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: mypassword
-    expose:
-      - 5432
-    ports:
-      - "8001:5432"
-    networks:
-      - backend-db
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-
-  frontend:
-    build: frontend/.
-    ports:
-      - "3000:80"
-    networks:
-      - frontend-backend
-    depends_on:
-      - backend
-    volumes:
-      - ./frontend:/usr/share/nginx/html
+      image: postgres
+      environment:
+          POSTGRES_PASSWORD: mypassword
+      expose:
+          - 5432
+      ports:
+          - "8001:5432"
+      networks:
+          - backend-db
+      volumes:
+          - ./data/db:/var/lib/postgresql/data
 
 networks:
-  backend-db:
-    name: backend-db
-    driver: bridge
-  frontend-backend:
-      name: frontend-backend
-      driver: bridge
+    backend-db:
+        name: backend-db
+        driver: bridge
+    frontend-backend:
+        name: frontend-backend
+        driver: bridge
