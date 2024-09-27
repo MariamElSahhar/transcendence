@@ -23,7 +23,21 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data
 
+  frontend:
+    build: frontend/.
+    ports:
+      - "3000:80"
+    networks:
+      - frontend-backend
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+
 networks:
   backend-db:
     name: backend-db
     driver: bridge
+  frontend-backend:
+      name: frontend-backend
+      driver: bridge
