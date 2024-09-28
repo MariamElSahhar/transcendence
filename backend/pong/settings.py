@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -60,6 +60,9 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8080", #local frontend
+    "http://localhost:8080", #local frontend
+    "http://127.0.0.1:80", #docker frontend
+    "http://localhost:80", #docker frontend
 ]
 
 ROOT_URLCONF = 'pong.urls'

@@ -1,7 +1,4 @@
-const BASE_URL =
-	process.env.ENV == "prod"
-		? "http://backend/api"
-		: "http://127.0.0.1:8000/api";
+const BASE_URL = "http://127.0.0.1:8000/api";
 
 // Fetch all users
 export const fetchUsers = async () => {

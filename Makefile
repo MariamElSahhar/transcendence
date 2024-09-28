@@ -4,7 +4,7 @@ PYTHON_ENV := python
 docker-up:
 	docker-compose up --build
 
-docker-clean:
+docker-down:
 	docker-compose down
 
 # LOCAL
