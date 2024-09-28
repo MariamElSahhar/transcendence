@@ -9,7 +9,7 @@ WORKDIR /code
 COPY . .
 RUN pip install -r requirements.txt
 
-ENV DJANGO_ENV=production
+ENV ENV=production
 EXPOSE 8000
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
