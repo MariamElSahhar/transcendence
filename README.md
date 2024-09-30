@@ -6,12 +6,12 @@
 
 ## Running locally
 ### Frontend
-1. `make run-frontend`
+1. Run `make run-frontend`
 
 2. Access through `http://127.0.0.1:8080/`
 ### Backend and Database
 1. Make you activate a Python environment and install the packages in `requirements.txt`
-2. `make run-db`
+2. Run `make run-db`
 
 This runs the PostgreSQL container and maps the database to ``data/`` in the repository. `data/` is in `.gitignore` and won't be uploaded to Git.
 
