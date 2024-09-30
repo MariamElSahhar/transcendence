@@ -60,8 +60,11 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8080",
+    "https://127.0.0.1:8080",
     "http://127.0.0.1",
+    "https://127.0.0.1",
     "http://localhost",
+    "https://localhost",
 ]
 
 ROOT_URLCONF = 'pong.urls'
