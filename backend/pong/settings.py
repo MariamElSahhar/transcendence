@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+	'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,6 +56,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1",
+    "http://localhost",
 ]
 
 ROOT_URLCONF = 'pong.urls'
@@ -86,8 +94,8 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'mypassword',
-        'HOST': 'db' if env("DJANGO_ENV") == "production" else 'localhost',
-        'PORT': '5432' if env("DJANGO_ENV") == "production" else '8001',
+        'HOST': 'db' if env("ENV") == "production" else 'localhost',
+        'PORT': '5432' if env("ENV") == "production" else '8001',
     }
 }
 

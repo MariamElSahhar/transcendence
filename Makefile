@@ -4,15 +4,15 @@ PYTHON_ENV := python
 docker-up:
 	docker-compose up --build
 
-docker-clean:
+docker-down:
 	docker-compose down
 
 # LOCAL
 run-frontend:
-	cd frontend && http-server -P http://localhost:8080? -c-1
+	cd frontend && ENV=dev http-server -P http://localhost:8080? -c-1
 
 run-backend:
-	DJANGO_ENV=dev $(PYTHON_ENV) backend/manage.py runserver
+	ENV=dev $(PYTHON_ENV) backend/manage.py runserver
 
 run-db:
 	docker-compose up db
