@@ -1,0 +1,25 @@
+<svg width="150" height="50" viewBox="0 0 574 205" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="redToBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:red;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:blue;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect y="71" width="32" height="134" fill="url(#redToBlue)"/> <!-- Changed to gradient -->
+  <rect x="432" width="32" height="134" fill="url(#redToBlue)"/> <!-- Changed to gradient -->
+  <rect x="290" y="35" width="32" height="134" fill="url(#redToBlue)"/>
+  <rect x="393" y="35" width="32" height="134" fill="url(#redToBlue)"/>
+  <rect x="297.888" y="55.4001" width="31.5842" height="148.803" transform="rotate(-40.2332 297.888 55.4001)" fill="url(#redToBlue)"/>
+  <rect x="149" y="35" width="32" height="134" fill="url(#redToBlue)"/>
+  <rect x="251" y="35" width="32" height="134" fill="url(#redToBlue)"/>
+  <rect x="149" y="169" width="32" height="134" transform="rotate(-90 149 169)" fill="url(#redToBlue)"/>
+  <rect x="149" y="67" width="32" height="134" transform="rotate(-90 149 67)" fill="url(#redToBlue)"/>
+  <rect x="205" y="113" width="22" height="22" transform="rotate(-90 205 113)" fill="url(#redToBlue)"/> <!-- Changed to gradient -->
+  <rect x="39" y="67" width="32" height="103" transform="rotate(-90 39 67)" fill="url(#redToBlue)"/>
+  <rect x="39" y="137" width="32" height="103" transform="rotate(-90 39 137)" fill="url(#redToBlue)"/>
+  <rect x="142" y="137" width="32" height="102" transform="rotate(180 142 137)" fill="url(#redToBlue)"/>
+  <rect x="471" y="67" width="32" height="103" transform="rotate(-90 471 67)" fill="url(#redToBlue)"/>
+  <rect x="507" y="118" width="32" height="67" transform="rotate(-90 507 118)" fill="url(#redToBlue)"/>
+  <rect x="471" y="168" width="32" height="103" transform="rotate(-90 471 168)" fill="url(#redToBlue)"/>
+  <rect x="542" y="86" width="32" height="82" fill="url(#redToBlue)"/>
+</svg>
