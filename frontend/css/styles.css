@@ -124,6 +124,14 @@ footer {
 	margin-top: auto;
 }
 
+#registerForm {
+	width: 100%;
+}
+
+#error-message {
+    display: none;
+}
+
 /* Apply only to the registration page */
 .registration-page .page-content {
 	display: flex;
@@ -136,18 +144,17 @@ footer {
 }
 
 /* Style the box that contains the registration form */
-.registration-page .registration-box {
+.registration-box {
 	display: flex;
 	flex-direction: column;
 	align-items: center; /* Ensure the form fields are centered */
 	background-color: white;
 	border: 1px solid #ddd;
-	padding: 40px;
-	border-radius: 15px;
-	max-width: 600px;
 	width: 100%;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 	margin: 0 auto; /* Ensure it's centered horizontally */
+	max-width: 600px;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Center the title */
