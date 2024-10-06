@@ -57,24 +57,3 @@
 		</p>
 	</div>
 </div>
-
-<!-- JavaScript to handle login and redirect to home game page -->
-<script>
-	document
-		.getElementById("loginForm")
-		.addEventListener("submit", function (event) {
-			event.preventDefault(); // Prevent the default form submission
-
-			const username = document.getElementById("loginUser").value;
-			localStorage.setItem("loginUsername", username); // Store the username in localStorage
-			const password = document.getElementById("loginPass").value;
-
-			// Simulate a login check (replace this with real validation logic later)
-			if (username && password) {
-				window.history.pushState({}, "", "/home_game"); // Use SPA routing for redirection
-				handleLocation(); // Dynamically load the home_game page without reloading
-			} else {
-				alert("Please enter both username and password.");
-			}
-		});
-</script>

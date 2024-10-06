@@ -1,4 +1,4 @@
-import { fetchUsers } from "./api/users.js";
+import { fetchUsers } from "../api/users-api.js";
 
 export const populateUserList = async () => {
 	const userListElement = document.getElementById("user-list");
@@ -19,9 +19,10 @@ export const populateUserList = async () => {
 			listItem.textContent = "no users created yet";
 			userListElement.appendChild(listItem);
 		}
-
 	} catch (error) {
 		console.error("Error fetching users:", error);
 		userListElement.innerHTML = "<li>Failed to load user list</li>";
 	}
 };
+
+populateUserList();
