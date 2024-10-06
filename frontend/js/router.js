@@ -1,16 +1,24 @@
+const routes = {
+	404: { html: "/pages/404.html", script: null },
+	"/": { html: "/pages/login.html", script: "/js/pages/login.js" },
+	"/users": { html: "/pages/users.html", script: "/js/pages/users.js" },
+	"/lorem": { html: "/pages/lorem.html", script: null },
+	"/register": {
+		html: "/pages/register.html",
+		script: "/js/pages/register.js",
+	},
+};
+
+const redirect = (path) => {
+	window.history.pushState({}, "", path);
+	handleLocation();
+};
+
 const route = (event) => {
 	event = event || window.event;
 	event.preventDefault();
 	window.history.pushState({}, "", event.target.href);
 	handleLocation();
-};
-
-const routes = {
-	404: { html: "/pages/404.html", script: null },
-	"/": { html: "/pages/index.html", script: null },
-	"/users": { html: "/pages/users.html", script: "/js/users.js" },
-	"/lorem": { html: "/pages/lorem.html", script: null },
-	"/register": { html: "/pages/register.html", script: null },
 };
 
 const handleLocation = async () => {
@@ -36,5 +44,6 @@ const handleLocation = async () => {
 
 window.onpopstate = handleLocation;
 window.route = route;
-
 handleLocation();
+
+export default redirect;

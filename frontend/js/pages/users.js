@@ -1,4 +1,4 @@
-import { fetchUsers } from "./api/users-api.js";
+import { fetchUsers } from "../api/users-api.js";
 
 export const populateUserList = async () => {
 	const userListElement = document.getElementById("user-list");
