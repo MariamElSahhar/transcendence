@@ -4,22 +4,16 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Testing Routing</title>
 
+		<!-- STYLES -->
+		<link rel="stylesheet" href="../css/styles.css" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+
 		<!-- SCRIPTS -->
 		<script type="module" src="./js/router.js" defer></script>
 		<script type="module" src="./js/app.js" defer></script>
 	</head>
-	<body id="root">
-		<div id="root">
-			<nav id="main-nav" class="sidebar">
-				<a href="/" onclick="route()">Home</a>
-				<a href="/users" onclick="route()">Users</a>
-				<a href="/lorem" onclick="route()">Lorem</a>
-				<!-- <a href="/" onclick="route()">Index</a> -->
-			</nav>
-			<div id="main-page"></div>
-		</div>
-		<footer>
-            <p>&copy; 2024 Pong Game</p>
-        </footer>
-	</body>
+	<body id="root"></body>
 </html>

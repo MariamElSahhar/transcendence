@@ -1,205 +1,211 @@
 /* General resets */
-html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 /* Body with min-height for full page layout */
 body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+	min-height: 100vh;
 }
 
 /* Main content area - positioned towards the bottom of the page */
 .main-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background: url('../images/pong_image.gif') no-repeat center center fixed;
-    background-size: cover;
-    width: 100vw; /* Ensure it spans the entire viewport width */
-    height: 100vh; /* Ensure it spans the entire viewport height */
-    padding: 20px;
-    flex-grow: 1;
-    padding-bottom: 60px; /* Extra padding at the bottom to push content up slightly */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	background: url("../images/pong_image.gif") no-repeat center center fixed;
+	background-size: cover;
+	width: 100vw; /* Ensure it spans the entire viewport width */
+	height: 100vh; /* Ensure it spans the entire viewport height */
+	padding: 20px;
+	flex-grow: 1;
+	padding-bottom: 60px; /* Extra padding at the bottom to push content up slightly */
 }
 
 /* Login form box */
 .login-box {
-    max-width: 400px;
-    width: 100%;
-    background-color: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	max-width: 400px;
+	width: 100%;
+	background-color: white;
+	padding: 30px;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Button default width */
 button {
-    max-width: 400px;
+	max-width: 400px;
 }
 
 /* Smaller input boxes */
 input.form-control {
-    max-width: 300px;
-    margin: 0 auto;
-    padding: 10px;
-    font-size: 0.9rem;
+	max-width: 300px;
+	margin: 0 auto;
+	padding: 10px;
+	font-size: 0.9rem;
 }
 
 /* Limit the size of the container and ensure proper centering */
 .main-content .container {
-    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 800px; /* Slightly smaller container */
-    width: 100%;
-    color: white;
-    margin: 0 auto; /* Ensure it's centered */
+	background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+	padding: 20px;
+	border-radius: 10px;
+	max-width: 800px; /* Slightly smaller container */
+	width: 100%;
+	color: white;
+	margin: 0 auto; /* Ensure it's centered */
 }
 
 /* Footer should be pushed to the bottom */
 footer {
-    background-color: #343a40;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-    width: 100%;
-    margin-top: auto;
+	background-color: #343a40;
+	color: white;
+	padding: 10px 0;
+	text-align: center;
+	width: 100%;
+	margin-top: auto;
 }
 
 /* Card styling - make the cards smaller and rectangular */
 .card {
-    background-color: #f8f9fa; /* Light background for the cards */
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow */
-    height: 120px; /* Smaller height for the rectangular look */
-    margin-bottom: 30px; /* Space between cards */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transition */
-    width: 100%; /* Full width of column */
-    max-width: 350px; /* Smaller card width */
+	background-color: #f8f9fa; /* Light background for the cards */
+	border-radius: 10px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+	height: 120px; /* Smaller height for the rectangular look */
+	margin-bottom: 30px; /* Space between cards */
+	transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transition */
+	width: 100%; /* Full width of column */
+	max-width: 350px; /* Smaller card width */
 }
 
 /* Make the cards smaller */
 .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 15px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 15px;
 }
 
 /* Apply a gradient mix of red and blue for the cards */
 .card:nth-child(1) .card-body {
-    background: linear-gradient(135deg, #ff416c, #3f5efb); /* Red to blue gradient */
-    color: white;
+	background: linear-gradient(
+		135deg,
+		#ff416c,
+		#3f5efb
+	); /* Red to blue gradient */
+	color: white;
 }
 
 .card:nth-child(2) .card-body {
-    background: linear-gradient(135deg, #3f5efb, #ff416c); /* Blue to red gradient (opposite) */
-    color: white;
+	background: linear-gradient(
+		135deg,
+		#3f5efb,
+		#ff416c
+	); /* Blue to red gradient (opposite) */
+	color: white;
 }
 
 /* Hover effect to make the cards pop and grow */
 .card:hover {
-    transform: translateY(-8px) scale(1.03); /* Lift and slightly enlarge the card */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Darker shadow on hover */
+	transform: translateY(-8px) scale(1.03); /* Lift and slightly enlarge the card */
+	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Darker shadow on hover */
 }
 
 /* Button styling inside the cards */
 .card .btn {
-    background-color: white;
-    color: #333;
-    border: none;
-    font-weight: bold;
-    margin-top: auto;
+	background-color: white;
+	color: #333;
+	border: none;
+	font-weight: bold;
+	margin-top: auto;
 }
 
 /* Apply only to the registration page */
 .registration-page .page-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    background-color: #f8f9fa; /* Light background */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	width: 100%;
+	background-color: #f8f9fa; /* Light background */
 }
 
 /* Style the box that contains the registration form */
 .registration-page .registration-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Ensure the form fields are centered */
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 40px;
-    border-radius: 15px;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin: 0 auto; /* Ensure it's centered horizontally */
+	display: flex;
+	flex-direction: column;
+	align-items: center; /* Ensure the form fields are centered */
+	background-color: white;
+	border: 1px solid #ddd;
+	padding: 40px;
+	border-radius: 15px;
+	max-width: 600px;
+	width: 100%;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	margin: 0 auto; /* Ensure it's centered horizontally */
 }
 
 /* Center the title */
 .registration-page .page-title {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2rem;
-    color: #333;
-    width: 100%;
+	text-align: center;
+	margin-bottom: 30px;
+	font-size: 2rem;
+	color: #333;
+	width: 100%;
 }
 
 /* Ensure labels and inputs are properly aligned */
 form label {
-    display: block; /* Ensure labels are above the fields */
-    text-align: left; /* Left-align the labels */
-    width: 100%; /* Take full width */
+	display: block; /* Ensure labels are above the fields */
+	text-align: left; /* Left-align the labels */
+	width: 100%; /* Take full width */
 }
 
 form .form-control {
-    margin: 0 auto;
-    text-align: left;
-    width: 100%; /* Make sure input fields span the full width of the container */
-    max-width: 500px; /* You can adjust this size as needed */
+	margin: 0 auto;
+	text-align: left;
+	width: 100%; /* Make sure input fields span the full width of the container */
+	max-width: 500px; /* You can adjust this size as needed */
 }
 
 /* Responsive Design Adjustments */
 @media (max-width: 768px) {
-    .registration-page .registration-box {
-        padding: 20px; /* Reduce padding on smaller screens */
-        max-width: 90%; /* Make the form box take up more width on small screens */
-    }
+	.registration-page .registration-box {
+		padding: 20px; /* Reduce padding on smaller screens */
+		max-width: 90%; /* Make the form box take up more width on small screens */
+	}
 
-    .registration-page .page-title {
-        font-size: 1.75rem; /* Slightly reduce title size on smaller screens */
-    }
+	.registration-page .page-title {
+		font-size: 1.75rem; /* Slightly reduce title size on smaller screens */
+	}
 }
 
 /* Optional: Styling for the form and profile picture */
 .container {
-    max-width: 600px;
-    margin: 0 auto;
+	max-width: 600px;
+	margin: 0 auto;
 }
 
 #profile-picture {
-    border: 3px solid #ddd;
-    transition: border-color 0.3s;
+	border: 3px solid #ddd;
+	transition: border-color 0.3s;
 }
 
 #profile-picture:hover {
-    border-color: #007bff;
+	border-color: #007bff;
 }
 
 .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
+	background-color: #28a745;
+	border-color: #28a745;
 }
 
 .btn-success:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
+	background-color: #218838;
+	border-color: #1e7e34;
 }
