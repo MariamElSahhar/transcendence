@@ -13,10 +13,6 @@ export const login = async (credentials) => {
 			throw new Error("Login failed: " + response.statusText);
 		}
 		const data = await response.json();
-
-		const accessToken = data.access;
-		localStorage.setItem("access_token", accessToken);
-
 		return data;
 	} catch (error) {
 		console.error("Error :", error);
@@ -37,10 +33,6 @@ export const register = async (credentials) => {
 			throw new Error("Registration failed: " + response.statusText);
 		}
 		const data = await response.json();
-
-		const accessToken = data.access;
-		localStorage.setItem("access_token", accessToken);
-
 		return data;
 	} catch (error) {
 		console.error("Error :", error);
