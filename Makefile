@@ -18,8 +18,11 @@ run-backend:
 run-db:
 	docker compose up db
 
-pip-install:
+install:
 	pip install -r backend/requirements.txt
 
-pip-freeze:
+freeze:
 	pip freeze > backend/requirements.txt
+
+migrate:
+	ENV=dev $(PYTHON_ENV) backend/manage.py makemigrations

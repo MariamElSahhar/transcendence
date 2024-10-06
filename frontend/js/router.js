@@ -1,6 +1,6 @@
 const routes = {
 	404: { html: "/pages/404.html", script: null },
-	"/": { html: "/pages/login.html", script: "/js/pages/login.js" },
+	"/login": { html: "/pages/login.html", script: "/js/pages/login.js" },
 	"/users": { html: "/pages/users.html", script: "/js/pages/users.js" },
 	"/lorem": { html: "/pages/lorem.html", script: null },
 	"/register": {
