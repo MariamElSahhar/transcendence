@@ -6,13 +6,8 @@ body {
 	padding: 0;
 }
 
-/* Body with min-height for full page layout */
-body {
-	min-height: 100vh;
-}
-
 /* Main content area - positioned towards the bottom of the page */
-.main-content {
+#login-page {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -24,16 +19,6 @@ body {
 	padding: 20px;
 	flex-grow: 1;
 	padding-bottom: 60px; /* Extra padding at the bottom to push content up slightly */
-}
-
-/* Login form box */
-.login-box {
-	max-width: 400px;
-	width: 100%;
-	background-color: white;
-	padding: 30px;
-	border-radius: 8px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Button default width */
@@ -50,7 +35,7 @@ input.form-control {
 }
 
 /* Limit the size of the container and ensure proper centering */
-.main-content .container {
+#login-page .container {
 	background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
 	padding: 20px;
 	border-radius: 10px;
@@ -129,7 +114,7 @@ footer {
 }
 
 #error-message {
-    display: none;
+	display: none;
 }
 
 /* Apply only to the registration page */
