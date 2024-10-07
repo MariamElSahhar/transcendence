@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 
 # Get users and create new user
@@ -76,6 +76,22 @@ def login_view(request):
         return response
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def token_refresh_view(request):
+    refresh_token = request.COOKIES.get("refresh_token")
+
+    if refresh_token is None:
+        return Response({"detail": "Refresh token not provided"}, status=400)
+
+    request.data["refresh"] = refresh_token
+
+    serializer = TokenRefreshSerializer(data=request.data)
+    try:
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=200)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=400)
 
 # Register
 @api_view(["POST"])
