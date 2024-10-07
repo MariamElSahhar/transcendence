@@ -3,7 +3,9 @@ const BASE_URL = "http://127.0.0.1:8000/api/users";
 // Fetch all users
 export const fetchUsers = async () => {
 	try {
-		const response = await fetch(`${BASE_URL}/`);
+		const response = await fetch(`${BASE_URL}/`, {
+			credentials: "include",
+		});
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -18,7 +20,9 @@ export const fetchUsers = async () => {
 // Function user by ID
 export const fetchUserById = async (id) => {
 	try {
-		const response = await fetch(`${BASE_URL}/${id}/`);
+		const response = await fetch(`${BASE_URL}/${id}/`, {
+			credentials: "include",
+		});
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -34,6 +38,7 @@ export const fetchUserById = async (id) => {
 export const createUser = async (userData) => {
 	try {
 		const response = await fetch(`${BASE_URL}/`, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -55,6 +60,7 @@ export const createUser = async (userData) => {
 export const updateUser = async (id, userData) => {
 	try {
 		const response = await fetch(`${BASE_URL}/${id}/`, {
+			credentials: "include",
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -76,6 +82,7 @@ export const updateUser = async (id, userData) => {
 export const deleteUser = async (id) => {
 	try {
 		const response = await fetch(`${BASE_URL}/${id}/`, {
+			credentials: "include",
 			method: "DELETE",
 		});
 		if (!response.ok) {
