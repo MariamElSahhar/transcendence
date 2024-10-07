@@ -7,9 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
 from django.conf import settings
-from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
@@ -28,7 +26,7 @@ def user_list_create_view(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# Get, update, and delete a user by ID
+# Get, update, or delete a user by ID
 @api_view(["GET", "PUT", "DELETE"])
 def user_retrieve_update_destroy_view(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
@@ -52,22 +50,30 @@ def user_retrieve_update_destroy_view(request, user_id):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login_view(request):
-    # Create an instance of the TokenObtainPairSerializer
     serializer = TokenObtainPairSerializer(data=request.data)
-
     if serializer.is_valid(raise_exception=True):
         tokens = serializer.validated_data
         response = Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+        # Access token
         response.set_cookie(
-            key = settings.SIMPLE_JWT['AUTH_COOKIE'],
-            value = tokens["access"],
-            expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
-            secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-            httponly = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-            samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+            key=settings.SIMPLE_JWT["AUTH_COOKIE"],
+            value=tokens["access"],
+            expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
         )
+        # Refresh token
+        response.set_cookie(
+            key='refresh_token',
+            value=tokens["refresh"],
+            expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
+            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+        )
+        print(response.cookies)
         return response
-
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

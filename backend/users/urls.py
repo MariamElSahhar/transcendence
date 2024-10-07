@@ -3,7 +3,7 @@ from .views import (
     user_list_create_view,
     user_retrieve_update_destroy_view,
     register_view,
-	login_view,
+    login_view,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
