@@ -6,9 +6,11 @@
 
 ## Running locally
 ### Frontend
-1. Run `make run-frontend`
+1. Install `http-server` through npm or brew (or some other way)
+   
+3. Run `make run-frontend`
 
-2. Access through `http://127.0.0.1:8080/`
+4. Access through `http://127.0.0.1:8080/`
 ### Backend and Database
 1. Make you activate a Python environment and install the packages in `requirements.txt`
 2. Run `make run-db`
