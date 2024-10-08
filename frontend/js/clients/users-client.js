@@ -1,9 +1,11 @@
-const BASE_URL = "http://127.0.0.1:8000/api";
+const BASE_URL = "http://127.0.0.1:8000/api/users";
 
 // Fetch all users
 export const fetchUsers = async () => {
 	try {
-		const response = await fetch(`${BASE_URL}/users/`);
+		const response = await fetch(`${BASE_URL}/`, {
+			credentials: "include",
+		});
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -18,7 +20,9 @@ export const fetchUsers = async () => {
 // Function user by ID
 export const fetchUserById = async (id) => {
 	try {
-		const response = await fetch(`${BASE_URL}/users/${id}/`);
+		const response = await fetch(`${BASE_URL}/${id}/`, {
+			credentials: "include",
+		});
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -33,7 +37,8 @@ export const fetchUserById = async (id) => {
 // Create user
 export const createUser = async (userData) => {
 	try {
-		const response = await fetch(`${BASE_URL}/users/`, {
+		const response = await fetch(`${BASE_URL}/`, {
+			credentials: "include",
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -52,14 +57,15 @@ export const createUser = async (userData) => {
 };
 
 // Update existing user by id
-export const updateItem = async (id, itemData) => {
+export const updateUser = async (id, userData) => {
 	try {
-		const response = await fetch(`${BASE_URL}/users/${id}/`, {
+		const response = await fetch(`${BASE_URL}/${id}/`, {
+			credentials: "include",
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(itemData),
+			body: JSON.stringify(userData),
 		});
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
@@ -73,9 +79,10 @@ export const updateItem = async (id, itemData) => {
 };
 
 // Delete user
-export const deleteItem = async (id) => {
+export const deleteUser = async (id) => {
 	try {
-		const response = await fetch(`${BASE_URL}/users/${id}/`, {
+		const response = await fetch(`${BASE_URL}/${id}/`, {
+			credentials: "include",
 			method: "DELETE",
 		});
 		if (!response.ok) {
