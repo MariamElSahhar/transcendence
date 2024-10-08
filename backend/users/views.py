@@ -76,6 +76,7 @@ def login_view(request):
         return response
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Refresh Token
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def token_refresh_view(request):
