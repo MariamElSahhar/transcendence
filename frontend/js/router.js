@@ -9,6 +9,11 @@ const routes = {
 	},
 };
 
+const redirect = (path) => {
+	window.history.pushState({}, "", path);
+	handleLocation();
+};
+
 const route = (event) => {
 	event = event || window.event;
 	event.preventDefault();
@@ -42,4 +47,5 @@ const handleLocation = async () => {
 
 window.onpopstate = handleLocation;
 window.route = route;
+window.redirect = redirect;
 handleLocation();

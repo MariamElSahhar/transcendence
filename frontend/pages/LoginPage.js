@@ -1,6 +1,15 @@
 class LoginPage extends HTMLElement {
+	constructor() {
+		super();
+	}
+
 	async connectedCallback() {
-		await import("../js/components/Navbar.js");
+		await import("./components/Navbar.js");
+		this.render();
+		this.addEventListeners();
+	}
+
+	render() {
 		this.innerHTML = `
 		<navbar-component></navbar-component>
 		<main id="login-page">
@@ -50,6 +59,26 @@ class LoginPage extends HTMLElement {
 			</div>
 		</main>
 	  `;
+	}
+
+	addEventListeners() {
+		const form = this.querySelector("#loginForm");
+		if (form) {
+			form.addEventListener("submit", this.handleSubmit.bind());
+		}
+	}
+
+	async handleSubmit(event) {
+		event.preventDefault();
+
+		const username = document.getElementById("loginUser").value;
+		const password = document.getElementById("loginPass").value;
+
+		if (username && password) {
+			redirect("/register");
+		} else {
+			alert("Please enter both username and password.");
+		}
 	}
 }
 
