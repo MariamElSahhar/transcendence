@@ -24,7 +24,6 @@ const handleLocation = async () => {
 	root.innerHTML = "";
 
 	if (component && componentPath) {
-		console.log("location");
 		try {
 			await import(componentPath);
 			const element = document.createElement(component);

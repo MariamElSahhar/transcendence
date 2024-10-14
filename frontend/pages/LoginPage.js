@@ -1,20 +1,8 @@
 class LoginPage extends HTMLElement {
-	connectedCallback() {
+	async connectedCallback() {
+		await import("../js/components/Navbar.js");
 		this.innerHTML = `
-		<!-- Header (navbar) with left-aligned icon -->
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<div class="container-fluid">
-				<div class="d-flex justify-content-start">
-					<img
-						src="../images/logo.svg"
-						class="icon-option me-2"
-						alt="Pong Game Logo"
-					/>
-				</div>
-			</div>
-		</nav>
-
-		<!-- Main content area -->
+		<navbar-component></navbar-component>
 		<main id="login-page">
 			<div class="container">
 				<h1 class="text-center">Welcome to Pong!</h1>
