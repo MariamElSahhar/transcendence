@@ -2,17 +2,13 @@ const BASE_URL = "http://127.0.0.1:8000/api";
 
 export const login = async (credentials) => {
 	try {
-		const response = await fetch(`${BASE_URL}/login/`, {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(credentials),
-		});
+		const url = `${BASE_URL}/login/`;
+		reponse = HttpRequests.get(url, credentials);
+
 		if (!response.ok) {
 			throw new Error("Login failed: " + response.statusText);
 		}
+
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -23,10 +19,8 @@ export const login = async (credentials) => {
 
 export const refreshAccessToken = async () => {
 	try {
-		const response = await fetch(`${BASE_URL}/token/refresh/`, {
-			method: "POST",
-			credentials: "include",
-		});
+		const url = `${BASE_URL}/token/refresh/`;
+		reponse = HttpRequests.get(url, credentials);
 
 		if (!response.ok) {
 			throw new Error("Refresh failed: " + response.statusText);
@@ -44,16 +38,13 @@ export const refreshAccessToken = async () => {
 
 export const register = async (credentials) => {
 	try {
-		const response = await fetch(`${BASE_URL}/register/`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(credentials),
-		});
+		const url = `${BASE_URL}/register/`;
+		reponse = HttpRequests.get(url, credentials);
+
 		if (!response.ok) {
 			throw new Error("Registration failed: " + response.statusText);
 		}
+
 		const data = await response.json();
 		return data;
 	} catch (error) {
