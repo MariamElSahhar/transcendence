@@ -1,4 +1,5 @@
 const BASE_URL = "http://127.0.0.1:8000/api";
+import * as HttpRequests from "../utils/http-requests.js";
 
 export const login = async (credentials) => {
 	try {

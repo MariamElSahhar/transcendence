@@ -1,17 +1,9 @@
 const routes = {
-	404: { html: "/pages/404.html", script: null },
-	"/login": { html: "/pages/login.html", script: "/js/pages/login.js" },
-	"/users": { html: "/pages/users.html", script: "/js/pages/users.js" },
-	"/lorem": { html: "/pages/lorem.html", script: null },
-	"/register": {
-		html: "/pages/register.html",
-		script: "/js/pages/register.js",
-	},
-};
-
-const redirect = (path) => {
-	window.history.pushState({}, "", path);
-	handleLocation();
+	404: "not-found-component",
+	"/login": "login-component",
+	"/users": "users-component",
+	"/lorem": "lorem-component",
+	"/register": "register-component",
 };
 
 const route = (event) => {
@@ -24,26 +16,12 @@ const route = (event) => {
 const handleLocation = async () => {
 	const path = window.location.pathname;
 	const route = routes[path] || routes[404];
-	const html = await fetch(route.html).then((data) => data.text());
-	document.getElementById("root").innerHTML = html;
-	if (route.script) {
-		try {
-			await new Promise((resolve, reject) => {
-				const script = document.createElement("script");
-				script.src = route.script;
-				script.type = "module";
-				script.onload = resolve;
-				script.onerror = reject;
-				document.body.appendChild(script);
-			});
-		} catch (error) {
-			console.error(`Script ${route.script} failed to load`, error);
-		}
-	}
+	const root = document.getElementById("root");
+	root.innerHTML = "";
+	const element = document.createElement(route.component);
+	root.appendChild(element);
 };
 
 window.onpopstate = handleLocation;
 window.route = route;
 handleLocation();
-
-export default redirect;
