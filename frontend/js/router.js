@@ -1,16 +1,7 @@
 const routes = {
-	404: {
-		component: "not-found-component",
-		path: "../pages/NotFoundPage.js",
-	},
-	"/login": { component: "login-page", path: "../pages/LoginPage.js" },
-	"/users": {
-		component: "users-component",
-		path: "../pages/UsersPage.js",
-	},
-	"/lorem": {
-		component: "lorem-component",
-		path: "../pages/LoremPage.js",
+	"/login": {
+		component: "login-page",
+		path: "../pages/LoginPage.js",
 	},
 	"/register": {
 		component: "register-page",
@@ -27,18 +18,20 @@ const route = (event) => {
 
 const handleLocation = async () => {
 	const path = window.location.pathname;
-	const route = routes[path] || routes[404];
+	const component = routes[path].component || routes[404].component;
+	const componentPath = routes[path].path || routes[404].path;
 	const root = document.getElementById("root");
 	root.innerHTML = "";
 
-	if (route && route.importPath) {
+	if (component && componentPath) {
+		console.log("location");
 		try {
-			await import(route.importPath);
-			const element = document.createElement(route.component);
+			await import(componentPath);
+			const element = document.createElement(component);
 			root.appendChild(element);
 		} catch (error) {
 			console.error(
-				`Failed to load component at ${route.importPath}`,
+				`Failed to load component at ${componentPath}`,
 				error
 			);
 		}

@@ -9,7 +9,7 @@ document
 		const password = document.getElementById("loginPass").value;
 
 		if (username && password) {
-			redirect("/users");
+			route("/users");
 		} else {
 			alert("Please enter both username and password.");
 		}
