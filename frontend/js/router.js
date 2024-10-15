@@ -1,11 +1,11 @@
 const routes = {
-	404: { html: "/pages/404.html", script: null },
-	"/login": { html: "/pages/login.html", script: "/js/pages/login.js" },
-	"/users": { html: "/pages/users.html", script: "/js/pages/users.js" },
-	"/lorem": { html: "/pages/lorem.html", script: null },
+	"/login": {
+		component: "login-page",
+		path: "../pages/LoginPage.js",
+	},
 	"/register": {
-		html: "/pages/register.html",
-		script: "/js/pages/register.js",
+		component: "register-page",
+		path: "../pages/RegisterPage.js",
 	},
 };
 
@@ -23,27 +23,29 @@ const route = (event) => {
 
 const handleLocation = async () => {
 	const path = window.location.pathname;
-	const route = routes[path] || routes[404];
-	const html = await fetch(route.html).then((data) => data.text());
-	document.getElementById("root").innerHTML = html;
-	if (route.script) {
+	const component = routes[path].component || routes[404].component;
+	const componentPath = routes[path].path || routes[404].path;
+	const root = document.getElementById("root");
+	root.innerHTML = "";
+
+	if (component && componentPath) {
 		try {
-			await new Promise((resolve, reject) => {
-				const script = document.createElement("script");
-				script.src = route.script;
-				script.type = "module";
-				script.onload = resolve;
-				script.onerror = reject;
-				document.body.appendChild(script);
-			});
+			await import(componentPath);
+			const element = document.createElement(component);
+			root.appendChild(element);
 		} catch (error) {
-			console.error(`Script ${route.script} failed to load`, error);
+			console.error(
+				`Failed to load component at ${componentPath}`,
+				error
+			);
 		}
+	} else {
+		const element = document.createElement(route.component);
+		root.appendChild(element);
 	}
 };
 
 window.onpopstate = handleLocation;
 window.route = route;
+window.redirect = redirect;
 handleLocation();
-
-export default redirect;
