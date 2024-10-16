@@ -158,11 +158,11 @@ form label {
 	width: 100%; /* Take full width */
 }
 
-form .form-control {
+form .form-input {
 	margin: 0 auto;
 	text-align: left;
-	width: 100%; /* Make sure input fields span the full width of the container */
-	max-width: 500px; /* You can adjust this size as needed */
+	width: 100%;
+	max-width: 500px;
 }
 
 /* Responsive Design Adjustments */

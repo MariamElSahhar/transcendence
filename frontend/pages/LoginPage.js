@@ -11,21 +11,62 @@ class LoginPage extends HTMLElement {
 
 	render() {
 		this.innerHTML = `
+			<main id="login-page" class="d-flex flex-column">
+				<h1 class="text-white mb-3"> Welcome to Pong </h1>
+				<div class="d-flex flex-column w-75 mw-500 p-3 bg-dark align-items-center rounded">
+					<form id="login-form" class="w-100 d-flex flex-column align-items-center">
+						<div class="mb-3 w-75">
+							<label
+								for="login-username-input"
+								class="text-white w-100"
+							>
+								Username
+							</label>
+							<input
+								id="login-username-input"
+								class="w-100"
+							/>
+						</div>
+
+						<div class="mb-3 w-75">
+							<label
+								for="login-password-input"
+								class="text-white w-100"
+							>
+								Password
+							</label>
+							<input
+								id="login-password-input"
+								class="w-100"
+							/>
+						</div>
+
+						<button
+							type="submit"
+							class="btn btn-primary w-75 mt-3"
+						>
+							Submit
+						</button>
+
+					</form>
+				</div>
+			</main>
+		`;
+		/* this.innerHTML = `
 		<navbar-component></navbar-component>
 		<main id="login-page">
 			<div class="container">
 				<h1 class="text-center">Welcome to Pong!</h1>
 
 				<!-- Login Form -->
-				<form id="loginForm" class="mt-4" autocomplete="off">
+				<form id="login" class="mt-4" autocomplete="off">
 					<!-- Username Input -->
 					<div class="mb-3">
 						<label for="loginUser" class="form-label">Username</label>
 						<input
 							type="text"
-							class="form-control"
-							id="loginUser"
-							name="user1"
+							class="form-input"
+							name="username"
 							autocomplete="off"
 							autocorrect="off"
 							spellcheck="false"
@@ -37,8 +78,7 @@ class LoginPage extends HTMLElement {
 						<label for="loginPass" class="form-label">Password</label>
 						<input
 							type="password"
-							class="form-control"
-							id="loginPass"
+							class="form-input"
 							name="password"
 							autocomplete="off"
 						/>
@@ -58,7 +98,7 @@ class LoginPage extends HTMLElement {
 				</p>
 			</div>
 		</main>
-	  `;
+	  `; */
 	}
 
 	addEventListeners() {
