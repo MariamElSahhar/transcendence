@@ -8,17 +8,8 @@ body {
 
 /* Main content area - positioned towards the bottom of the page */
 #login-page {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
 	background: url("../images/pong_image.gif") no-repeat center center fixed;
 	background-size: cover;
-	width: 100vw; /* Ensure it spans the entire viewport width */
-	height: 100vh; /* Ensure it spans the entire viewport height */
-	padding: 20px;
-	flex-grow: 1;
-	padding-bottom: 60px; /* Extra padding at the bottom to push content up slightly */
 }
 
 /* Button default width */
@@ -32,17 +23,6 @@ input.form-control {
 	margin: 0 auto;
 	padding: 10px;
 	font-size: 0.9rem;
-}
-
-/* Limit the size of the container and ensure proper centering */
-#login-page .container {
-	background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
-	padding: 20px;
-	border-radius: 10px;
-	max-width: 800px; /* Slightly smaller container */
-	width: 100%;
-	color: white;
-	margin: 0 auto; /* Ensure it's centered */
 }
 
 /* Footer should be pushed to the bottom */

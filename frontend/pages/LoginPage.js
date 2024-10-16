@@ -11,7 +11,7 @@ class LoginPage extends HTMLElement {
 
 	render() {
 		this.innerHTML = `
-			<main id="login-page" class="d-flex flex-column">
+			<main id="login-page" class="d-flex flex-column vh-100 vw-100 align-items-center justify-content-center text-align-center">
 				<h1 class="text-white mb-3"> Welcome to Pong </h1>
 				<div class="d-flex flex-column w-75 mw-500 p-3 bg-dark align-items-center rounded">
 					<form id="login-form" class="w-100 d-flex flex-column align-items-center">
