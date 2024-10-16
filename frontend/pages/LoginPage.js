@@ -1,3 +1,5 @@
+import { login } from "../js/clients/token-client.js";
+
 class LoginPage extends HTMLElement {
 	constructor() {
 		super();
@@ -60,7 +62,7 @@ class LoginPage extends HTMLElement {
 	addEventListeners() {
 		const form = this.querySelector("#login-form");
 		if (form) {
-			form.addEventListener("submit", this.handleSubmit.bind());
+			form.addEventListener("submit", this.handleSubmit.bind(this));
 		}
 	}
 
@@ -75,6 +77,8 @@ class LoginPage extends HTMLElement {
 		} else {
 			alert("Please enter both username and password.");
 		}
+
+		// login({ username, password });
 	}
 }
 
