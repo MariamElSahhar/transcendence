@@ -47,8 +47,8 @@ class LoginPage extends HTMLElement {
 						>
 							Submit
 						</button>
-
 					</form>
+
 					<p class="text-white">
 						New user? <a href="/register" onclick="route(event)">Register here </a>
 					</p>

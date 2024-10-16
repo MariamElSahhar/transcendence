@@ -131,20 +131,6 @@ footer {
 	width: 100%;
 }
 
-/* Ensure labels and inputs are properly aligned */
-form label {
-	display: block; /* Ensure labels are above the fields */
-	text-align: left; /* Left-align the labels */
-	width: 100%; /* Take full width */
-}
-
-form .form-input {
-	margin: 0 auto;
-	text-align: left;
-	width: 100%;
-	max-width: 500px;
-}
-
 /* Responsive Design Adjustments */
 @media (max-width: 768px) {
 	.registration-page .registration-box {
@@ -170,14 +156,4 @@ form .form-input {
 
 #profile-picture:hover {
 	border-color: #007bff;
-}
-
-.btn-success {
-	background-color: #28a745;
-	border-color: #28a745;
-}
-
-.btn-success:hover {
-	background-color: #218838;
-	border-color: #1e7e34;
 }
