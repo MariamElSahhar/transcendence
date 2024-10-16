@@ -13,7 +13,7 @@ class LoginPage extends HTMLElement {
 		this.innerHTML = `
 			<main id="login-page" class="d-flex flex-column vh-100 vw-100 align-items-center justify-content-center text-align-center">
 				<h1 class="text-white mb-3"> Welcome to Pong </h1>
-				<div class="d-flex flex-column w-75 mw-500 p-3 bg-dark align-items-center rounded">
+				<div class="d-flex flex-column w-75 mw-500 p-3 bg-dark bg-opacity-75 align-items-center rounded">
 					<form id="login-form" class="w-100 d-flex flex-column align-items-center">
 						<div class="mb-3 w-75">
 							<label
@@ -49,60 +49,16 @@ class LoginPage extends HTMLElement {
 						</button>
 
 					</form>
+					<p class="text-white">
+						New user? <a href="/register" onclick="route(event)">Register here </a>
+					</p>
 				</div>
 			</main>
 		`;
-		/* this.innerHTML = `
-		<navbar-component></navbar-component>
-		<main id="login-page">
-			<div class="container">
-				<h1 class="text-center">Welcome to Pong!</h1>
-
-				<!-- Login Form -->
-				<form id="login" class="mt-4" autocomplete="off">
-					<!-- Username Input -->
-					<div class="mb-3">
-						<label for="loginUser" class="form-label">Username</label>
-						<input
-							type="text"
-							class="form-input"
-							name="username"
-							autocomplete="off"
-							autocorrect="off"
-							spellcheck="false"
-						/>
-					</div>
-
-					<!-- Password Input -->
-					<div class="mb-3">
-						<label for="loginPass" class="form-label">Password</label>
-						<input
-							type="password"
-							class="form-input"
-							name="password"
-							autocomplete="off"
-						/>
-					</div>
-
-					<!-- Submit Button -->
-					<div class="text-center">
-						<button type="submit" class="btn btn-primary w-100">
-							Login
-						</button>
-					</div>
-				</form>
-
-				<!-- Link to Registration Page -->
-				<p class="mt-3 text-center">
-					New user? <a href="/register" onclick="route(event)">Register here</a>
-				</p>
-			</div>
-		</main>
-	  `; */
 	}
 
 	addEventListeners() {
-		const form = this.querySelector("#loginForm");
+		const form = this.querySelector("#login-form");
 		if (form) {
 			form.addEventListener("submit", this.handleSubmit.bind());
 		}
@@ -111,8 +67,8 @@ class LoginPage extends HTMLElement {
 	async handleSubmit(event) {
 		event.preventDefault();
 
-		const username = document.getElementById("loginUser").value;
-		const password = document.getElementById("loginPass").value;
+		const username = document.getElementById("login-username-input").value;
+		const password = document.getElementById("login-password-input").value;
 
 		if (username && password) {
 			redirect("/register");
