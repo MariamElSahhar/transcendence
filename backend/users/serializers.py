@@ -11,7 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if CustomUser.objects.filter(username=attrs["username"]).exists():
-            raise ValidationError({"username": "This username is already taken."})
+            raise ValidationError(
+                {"username": "This username is already taken."})
 
         if CustomUser.objects.filter(email=attrs["email"]).exists():
             raise ValidationError({"email": "This email is already in use."})
