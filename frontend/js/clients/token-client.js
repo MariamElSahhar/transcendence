@@ -1,27 +1,33 @@
-const BASE_URL = "http://127.0.0.1:8000/api";
-import * as HttpRequests from "../utils/http-requests.js";
+const BASE_URL = "http://127.0.0.1:8000/apii";
+import { post, get } from "../utils/http-requests.js";
 
-export const login = async (credentials) => {
+export const login = async ({ username, password }) => {
+	const url = `${BASE_URL}/login/`;
+	const requestBody = { username, password };
 	try {
-		const url = `${BASE_URL}/login/`;
-		reponse = HttpRequests.get(url, credentials);
-
+		const {
+			response,
+			body: responseBody,
+			error,
+		} = await post(url, requestBody);
+		if (error) throw Error(error);
 		if (!response.ok) {
-			throw new Error("Login failed: " + response.statusText);
+			return {
+				success: false,
+				error:
+					error.status == 401 ? "Incorrect logins" : "Login failed",
+			};
 		}
-
-		const data = await response.json();
-		return data;
+		return { success: true, data: responseBody };
 	} catch (error) {
-		console.error("Error :", error);
-		throw error;
+		return { success: false, error: "Network error occurred." };
 	}
 };
 
 export const refreshAccessToken = async () => {
 	try {
 		const url = `${BASE_URL}/token/refresh/`;
-		reponse = HttpRequests.get(url, credentials);
+		reponse = get(url, credentials);
 
 		if (!response.ok) {
 			throw new Error("Refresh failed: " + response.statusText);
@@ -40,7 +46,7 @@ export const refreshAccessToken = async () => {
 export const register = async (credentials) => {
 	try {
 		const url = `${BASE_URL}/register/`;
-		reponse = HttpRequests.get(url, credentials);
+		reponse = get(url, credentials);
 
 		if (!response.ok) {
 			throw new Error("Registration failed: " + response.statusText);

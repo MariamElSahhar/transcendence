@@ -72,13 +72,15 @@ class LoginPage extends HTMLElement {
 		const username = document.getElementById("login-username-input").value;
 		const password = document.getElementById("login-password-input").value;
 
-		if (username && password) {
-			redirect("/register");
-		} else {
-			alert("Please enter both username and password.");
-		}
+		if (!username || !password)
+			return alert("Please enter both username and password.");
 
-		// login({ username, password });
+		const { success, error } = login({ username, password });
+		if (success) {
+			alert(`Login success`);
+		} else {
+			alert(error);
+		}
 	}
 }
 
