@@ -2,13 +2,14 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import UserSerializer, LoginSerializer
+from .serializers import UserSerializer
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer, TokenRefreshSerializer)
 
 
 # GET OR CREATE NEW USERS
@@ -22,7 +23,8 @@ def user_list_create_view(request):
     elif request.method == "POST":
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(password=make_password(serializer.validated_data["password"]))
+        serializer.save(password=make_password(
+            serializer.validated_data["password"]))
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -38,7 +40,8 @@ def user_retrieve_update_destroy_view(request, user_id):
     elif request.method == "PUT":
         serializer = UserSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(password=make_password(serializer.validated_data["password"]))
+        serializer.save(password=make_password(
+            serializer.validated_data["password"]))
         return Response(serializer.data)
 
     elif request.method == "DELETE":
@@ -53,7 +56,8 @@ def login_view(request):
     serializer = TokenObtainPairSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         tokens = serializer.validated_data
-        response = Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+        response = Response({"message": "Login successful"},
+                            status=status.HTTP_200_OK)
         # Access token
         response.set_cookie(
             key=settings.SIMPLE_JWT["AUTH_COOKIE"],
@@ -77,6 +81,8 @@ def login_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # REFRESH TOKEN
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def token_refresh_view(request):
@@ -88,7 +94,8 @@ def token_refresh_view(request):
     token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
     if token_serializer.is_valid():
         tokens = token_serializer.validated_data
-        response = Response({"message": "Refresh successful"}, status=status.HTTP_200_OK)
+        response = Response({"message": "Refresh successful"},
+                            status=status.HTTP_200_OK)
         # Access token
         response.set_cookie(
             key=settings.SIMPLE_JWT["AUTH_COOKIE"],
@@ -100,19 +107,25 @@ def token_refresh_view(request):
         )
         return (response)
     else:
-        return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(token_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
 
 # REGISTRATION
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register_view(request):
     user_serializer = UserSerializer(data=request.data)
     if user_serializer.is_valid():
-        user_serializer.save(password=make_password(user_serializer.validated_data["password"]))
+        user_serializer.save(password=make_password(
+            user_serializer.validated_data["password"]))
         token_serializer = TokenObtainPairSerializer(data=request.data)
         if token_serializer.is_valid():
             tokens = token_serializer.validated_data
-            response = Response({"message": "Registration successful"}, status=status.HTTP_200_OK)
+            response = Response(
+                {"message": "Registration successful"},
+                status=status.HTTP_200_OK)
             # Access token
             response.set_cookie(
                 key=settings.SIMPLE_JWT["AUTH_COOKIE"],
@@ -133,6 +146,8 @@ def register_view(request):
             )
             return (response)
         else:
-            return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(token_serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(user_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
