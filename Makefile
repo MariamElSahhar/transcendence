@@ -3,6 +3,7 @@ PYTHON_ENV := python
 # DOCKER
 docker-up:
 	docker compose up --build
+	docker-compose watch
 
 docker-down:
 	docker compose down
