@@ -1,4 +1,12 @@
 const routes = {
+	"/": {
+	  component: "home-page",  // Home component will load HomeContent
+	  path: "../pages/components/home/Home.js",  // Dynamically load the Home component
+	},
+	"/home": {
+	  component: "home-page",  // Home component will load HomeContent
+	  path: "../pages/components/home/Home.js",  // Dynamically load the Home component
+	},
 	"/login": {
 		component: "login-page",
 		path: "../pages/LoginPage.js",
@@ -7,6 +15,10 @@ const routes = {
 		component: "register-page",
 		path: "../pages/RegisterPage.js",
 	},
+	404: {
+		component: "not-found-page",  // Use a 404 fallback component
+		path: "../pages/NotFound.js",  // 404 not found component path
+	  }
 };
 
 const redirect = (path) => {
