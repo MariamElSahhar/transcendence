@@ -12,7 +12,7 @@ export class SignInPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("./components/Navbar.js");
+		await import("./components/navbar/Navbar.js");
 		super.connectedCallback();
 	}
 
