@@ -1,83 +1,95 @@
 export class Component extends HTMLElement {
-    #componentEventListeners;
-    #rendered;
+	#componentEventListeners;
+	#rendered;
 
-    constructor() {
-      super();
-      this.#rendered = false;
-      this.#componentEventListeners = [];
-    }
+	constructor() {
+		super();
+		this.#rendered = false;
+		this.#componentEventListeners = [];
+	}
 
-    connectedCallback() {
-      if (!this.#rendered) {
-        const render = this.render();
-        if (render === false) {
-          return;
-        }
-        this.innerHTML = render + this.style();
-        this.#rendered = true;
-        this.postRender();
-      }
-    }
+	connectedCallback() {
+		if (!this.#rendered) {
+			const render = this.render();
+			if (render === false) {
+				return;
+			}
+			this.innerHTML = render + this.style();
+			this.#rendered = true;
+			this.postRender();
+		}
+	}
 
-    disconnectedCallback() {
-      this.removeAllComponentEventListeners();
-    }
+	disconnectedCallback() {
+		this.removeAllComponentEventListeners();
+	}
 
-    attributeChangedCallback(name, oldValue, newValue) {
-      this.update();
-    }
+	attributeChangedCallback(name, oldValue, newValue) {
+		this.update();
+	}
 
-    addComponentEventListener(element, event, callback, callbackInstance=this) {
-      if (!element) {
-        return;
-      }
-      if (!this.#componentEventListeners[event]) {
-        this.#componentEventListeners[event] = [];
-      }
-      const eventCallback = callback.bind(callbackInstance);
-      this.#componentEventListeners[event].push({element, eventCallback});
-      element.addEventListener(event, eventCallback);
-    }
+	addComponentEventListener(
+		element,
+		event,
+		callback,
+		callbackInstance = this
+	) {
+		if (!element) {
+			return;
+		}
+		if (!this.#componentEventListeners[event]) {
+			this.#componentEventListeners[event] = [];
+		}
+		const eventCallback = callback.bind(callbackInstance);
+		this.#componentEventListeners[event].push({ element, eventCallback });
+		element.addEventListener(event, eventCallback);
+	}
 
-    removeComponentEventListener(element, event) {
-      const eventListeners = this.#componentEventListeners[event];
+	removeComponentEventListener(element, event) {
+		const eventListeners = this.#componentEventListeners[event];
 
-      if (eventListeners) {
-        for (const eventListener of eventListeners) {
-          if (eventListener.element === element) {
-            element.removeEventListener(event, eventListener.eventCallback);
-            eventListeners.splice(eventListeners.indexOf(eventListener), 1);
-          }
-        }
-      }
-    }
+		if (eventListeners) {
+			for (const eventListener of eventListeners) {
+				if (eventListener.element === element) {
+					element.removeEventListener(
+						event,
+						eventListener.eventCallback
+					);
+					eventListeners.splice(
+						eventListeners.indexOf(eventListener),
+						1
+					);
+				}
+			}
+		}
+	}
 
-    removeAllComponentEventListeners() {
-      for (const event in this.#componentEventListeners) {
-        if (this.#componentEventListeners.hasOwnProperty(event)) {
-          const eventListeners = this.#componentEventListeners[event];
-          for (const eventListener of eventListeners) {
-            eventListener.element.removeEventListener(event,
-                eventListener.eventCallback);
-          }
-        }
-      }
-      this.#componentEventListeners = [];
-    }
+	removeAllComponentEventListeners() {
+		for (const event in this.#componentEventListeners) {
+			if (this.#componentEventListeners.hasOwnProperty(event)) {
+				const eventListeners = this.#componentEventListeners[event];
+				for (const eventListener of eventListeners) {
+					eventListener.element.removeEventListener(
+						event,
+						eventListener.eventCallback
+					);
+				}
+			}
+		}
+		this.#componentEventListeners = [];
+	}
 
-    render() {
-      return '';
-    }
+	render() {
+		return "";
+	}
 
-    update() {
-      this.innerHTML = this.render() + this.style();
-    }
+	update() {
+		this.innerHTML = this.render() + this.style();
+	}
 
-    style() {
-      return '<style></style>';
-    }
+	style() {
+		return "<style></style>";
+	}
 
-    postRender() {
-    }
-  }
+	postRender() {}
+}

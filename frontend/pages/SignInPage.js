@@ -1,6 +1,6 @@
 import { Component } from "../js/Component.js";
 
-export class SignIn extends Component {
+export class SignInPage extends Component {
 	constructor() {
 		super();
 		this.isValidEmailInput = false;
@@ -13,7 +13,7 @@ export class SignIn extends Component {
 
 	async connectedCallback() {
 		await import("./components/Navbar.js");
-		this.render();
+		super.connectedCallback();
 	}
 
 	render() {
@@ -21,10 +21,10 @@ export class SignIn extends Component {
 		// 	getRouter().redirect("/");
 		// 	return false;
 		// }
-		this.innerHTML = `
+		return `
 			<navbar-component></navbar-component>
 			<div id="container">
-			<div id="login-card"
+			<div id="login-card w-550"
 				class="d-flex justify-content-center align-items-center rounded-3">
 				<div class="login-card card m-3">
 					<div class="card-body m-2">
@@ -74,7 +74,7 @@ export class SignIn extends Component {
 		return `
 		<style>
 			#login-card {
-				height: calc(100vh - ${NavbarUtils.height}px);
+				height: 700px;
 			}
 
 			.login-card {
@@ -83,7 +83,6 @@ export class SignIn extends Component {
 
 			#forgot-password, #dont-have-account {
 				font-size: 13px;
-				color: rgb(13, 110, 253);
 			}
 		</style>
     	`;
@@ -142,7 +141,7 @@ export class SignIn extends Component {
 
 	#renderLoader() {
 		return `
-      <div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - ${NavbarUtils.height}px)">
+    	<div class="d-flex justify-content-center align-items-center" style="height: 700px">
           <div class="spinner-border" role="status">
               <span class="visually-hidden">Loading...</span>
           </div>
@@ -261,4 +260,4 @@ export class SignIn extends Component {
 	}
 }
 
-customElements.define("signin-page", SignIn);
+customElements.define("signin-page", SignInPage);

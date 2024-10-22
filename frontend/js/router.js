@@ -15,9 +15,9 @@ const routes = {
 		component: "signin-page",
 		path: "../pages/SignInPage.js",
 	},
-	"/register": {
-		component: "register-page",
-		path: "../pages/RegisterPage.js",
+	"/signup": {
+		component: "signup-page",
+		path: "../pages/SignUpPage.js",
 	},
 	404: {
 		component: "not-found-page",

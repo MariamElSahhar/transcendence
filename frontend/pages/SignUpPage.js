@@ -5,6 +5,7 @@ export class SignUp extends Component {
     super();
   }
 
+  
   render() {
     if (userManagementClient.isAuth()) {
       getRouter().redirect('/');
