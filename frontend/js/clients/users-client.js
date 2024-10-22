@@ -1,19 +1,15 @@
 const BASE_URL = "http://127.0.0.1:8000/api/users";
-import * as HttpRequests from "../utils/http-requests.js";
+import { get, post, patch, del } from "../utils/http-requests.js";
 
 // Fetch all users
 export const fetchUsers = async () => {
-	try {
-		response = HttpRequests.get(`${BASE_URL}/`);
-		if (!response.ok) {
-			throw new Error("Network response was not ok");
-		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Failed to fetch users:", error);
-		throw error;
-	}
+	const { status, body, error } = await get(`${BASE_URL}/`);
+
+	// if there's an error
+	if (error) return { success: false, data: null, error: error };
+
+	// everything's fine - return data
+	return { success: true, data };
 };
 
 // Function user by ID
