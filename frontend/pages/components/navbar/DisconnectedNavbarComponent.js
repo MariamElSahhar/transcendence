@@ -5,8 +5,8 @@ export class DisconnectedNavbarComponent extends HTMLElement {
           <div class="container-fluid">
             <a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
             <div class="d-flex">
-              <button class="btn btn-outline-primary me-2" onclick="window.redirect('/signin')">Sign In</button>
-              <button class="btn btn-outline-secondary" onclick="window.redirect('/signup')">Sign Up</button>
+              <button class="btn btn-outline-primary me-2" onclick="window.redirect('/sign-in')">Sign In</button>
+              <button class="btn btn-outline-secondary" onclick="window.redirect('/sign-up')">Sign Up</button>
             </div>
           </div>
         </nav>

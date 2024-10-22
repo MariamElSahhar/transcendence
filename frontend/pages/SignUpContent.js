@@ -466,4 +466,3 @@ export class SignUpContent extends Component {
 	}
 }
 
-customElements.define("signup-page", SignUpPage);

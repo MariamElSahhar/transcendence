@@ -1,4 +1,4 @@
-import { Component } from "../js/Component.js";
+import { Component } from "./components/Component.js";
 
 export class SignInPage extends Component {
 	constructor() {
@@ -18,7 +18,7 @@ export class SignInPage extends Component {
 
 	render() {
 		// if (userManagementClient.isAuth()) {
-		// 	getRouter().redirect("/");
+		// 	window.redirect("/");
 		// 	return false;
 		// }
 		return `
@@ -260,4 +260,4 @@ export class SignInPage extends Component {
 	}
 }
 
-customElements.define("signin-page", SignInPage);
+customElements.define("sign-in-page", SignInPage);

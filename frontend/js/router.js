@@ -7,16 +7,12 @@ const routes = {
 		component: "home-page",
 		path: "../pages/components/home/Home.js",
 	},
-	"/login": {
-		component: "login-page",
-		path: "../pages/LoginPage.js",
-	},
-	"/signin": {
-		component: "signin-page",
+	"/sign-in": {
+		component: "sign-in-page",
 		path: "../pages/SignInPage.js",
 	},
-	"/signup": {
-		component: "signup-page",
+	"/sign-up": {
+		component: "sign-up-page",
 		path: "../pages/SignUpPage.js",
 	},
 	404: {
