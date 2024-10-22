@@ -5,6 +5,7 @@ from .views import (
     register_view,
     login_view,
     token_refresh_view,
+	token_status_view,
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView, TokenRefreshView)
@@ -26,10 +27,7 @@ urlpatterns = [
     path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
     path("token/refresh/", token_refresh_view, name="token_refresh"),
-
-    # just for testing
-    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("token/status/", token_status_view, name="token_status"),
 
     # API Schema and AutoDocs
     path('schema/', SpectacularAPIView.as_view(), name='api-schema'),
