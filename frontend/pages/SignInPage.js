@@ -12,9 +12,15 @@ class LoginPage extends HTMLElement {
 	}
 
 	render() {
+		if (this.isUserAuthenticated()) {
+			this.redirectToHome();
+			return;
+		}
+		
 		this.innerHTML = `
+		 	<navbar-component></navbar-component>
 			<main id="login-page" class="d-flex flex-column vh-100 vw-100 align-items-center justify-content-center text-align-center">
-				<h1 class="text-white mb-3"> Welcome to Pong </h1>
+				<h2>Sign In</h2>
 				<div class="d-flex flex-column w-75 mw-500 p-3 bg-dark bg-opacity-75 align-items-center rounded">
 					<form id="login-form" class="w-100 d-flex flex-column align-items-center">
 						<div class="mb-3 w-75">
@@ -50,10 +56,7 @@ class LoginPage extends HTMLElement {
 							Submit
 						</button>
 					</form>
-
-					<p class="text-white">
-						New user? <a href="/register" onclick="route(event)">Register here </a>
-					</p>
+					<div id="error-message"></div>
 				</div>
 			</main>
 		`;
@@ -72,8 +75,11 @@ class LoginPage extends HTMLElement {
 		const username = document.getElementById("login-username-input").value;
 		const password = document.getElementById("login-password-input").value;
 
-		if (!username || !password)
-			return alert("Please enter both username and password.");
+		if (!username || !password) {
+			document.getElementById("#error-message").textContent =
+				"Please fill out all fields.";
+			return;
+		}
 
 		const { success, error } = login({ username, password });
 		if (success) {
@@ -82,6 +88,17 @@ class LoginPage extends HTMLElement {
 			alert(error);
 		}
 	}
+
+	isUserAuthenticated() {
+		// Placeholder for actual authentication logic
+		return (
+			window.userManagementClient && window.userManagementClient.isAuth()
+		);
+	}
+
+	redirectToHome() {
+		window.getRouter().redirect("/");
+	}
 }
 
-customElements.define("login-page", LoginPage);
+customElements.define("sign-in-page", SignInPage);

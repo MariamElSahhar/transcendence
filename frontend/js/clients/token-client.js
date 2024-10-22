@@ -24,7 +24,7 @@ export const login = async ({ username, password }) => {
 	}
 };
 
-export const refreshAccessToken = async () => {
+export const refresh = async () => {
 	try {
 		const url = `${BASE_URL}/token/refresh/`;
 		reponse = get(url, credentials);
