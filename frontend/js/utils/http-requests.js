@@ -1,11 +1,23 @@
+// calls the API
 const request = async (url, options) => {
 	options.credentials = "include";
 	try {
 		const response = await fetch(url, options);
 		const body = await response.json();
-		return { response, body };
+		if (!response.ok) {
+			return {
+				status: response.status,
+				body: null,
+				error: `HTTP error occurred: ${response.statusText}`,
+			};
+		}
+		return { status: response.status, body };
 	} catch (error) {
-		return { response: null, body: null, error: error.message };
+		return {
+			status: null,
+			body: null,
+			error: "Network error occurred.",
+		};
 	}
 };
 

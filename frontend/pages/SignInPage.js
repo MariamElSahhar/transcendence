@@ -135,7 +135,7 @@ export class SignInPage extends Component {
 	}
 
 	reRender() {
-		this.innerHTML = this.render() + this.style();
+		super.update();
 		this.postRender();
 	}
 

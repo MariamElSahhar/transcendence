@@ -7,6 +7,10 @@ const routes = {
 		component: "home-page",
 		path: "../pages/components/home/Home.js",
 	},
+	"/login": {
+		component: "login-page",
+		path: "../pages/LoginPage.js",
+	},
 	"/sign-in": {
 		component: "sign-in-page",
 		path: "../pages/SignInPage.js",

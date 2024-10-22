@@ -79,17 +79,13 @@ export class Component extends HTMLElement {
 		this.#componentEventListeners = [];
 	}
 
-	render() {
-		return "";
-	}
-
 	update() {
 		this.innerHTML = this.render() + this.style();
 	}
 
-	style() {
-		return "<style></style>";
-	}
+	render() {}
+
+	style() {}
 
 	postRender() {}
 }
