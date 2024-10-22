@@ -7,7 +7,7 @@ export class ConnectedNavbarComponent extends HTMLElement {
 		this.innerHTML = `
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
           <div class="container-fluid">
-            <a class="navbar-brand" onclick="window.router.navigate('/')">Transcendence</a>
+            <a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -58,8 +58,8 @@ export class ConnectedNavbarComponent extends HTMLElement {
             <span>@${username}</span>
           </span>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-            <li><a class="dropdown-item" onclick="window.router.navigate('/profile/${username}/')">Profile</a></li>
-            <li><a class="dropdown-item" onclick="window.router.navigate('/settings/')">Settings</a></li>
+            <li><a class="dropdown-item" onclick="window.redirect('/profile/${username}/')">Profile</a></li>
+            <li><a class="dropdown-item" onclick="window.redirect('/settings/')">Settings</a></li>
             <li><a class="dropdown-item text-danger" id="logout">Sign out</a></li>
           </ul>
         </div>
