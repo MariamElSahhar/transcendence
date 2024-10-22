@@ -1,23 +1,27 @@
 const routes = {
 	"/": {
-		component: "home-page", // Home component will load HomeContent
-		path: "../pages/HomePage.js", // Dynamically load the Home component
+		component: "home-page",
+		path: "../pages/HomePage.js",
 	},
 	"/home": {
-		component: "home-page", // Home component will load HomeContent
-		path: "../pages/components/home/Home.js", // Dynamically load the Home component
+		component: "home-page",
+		path: "../pages/components/home/Home.js",
 	},
 	"/login": {
 		component: "login-page",
 		path: "../pages/LoginPage.js",
+	},
+	"/signin": {
+		component: "signin-page",
+		path: "../pages/SignInPage.js",
 	},
 	"/register": {
 		component: "register-page",
 		path: "../pages/RegisterPage.js",
 	},
 	404: {
-		component: "not-found-page", // Use a 404 fallback component
-		path: "../pages/NotFound.js", // 404 not found component path
+		component: "not-found-page",
+		path: "../pages/NotFound.js",
 	},
 };
 

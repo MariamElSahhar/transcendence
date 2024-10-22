@@ -1,13 +1,13 @@
 export class Component extends HTMLElement {
     #componentEventListeners;
     #rendered;
-  
+
     constructor() {
       super();
       this.#rendered = false;
       this.#componentEventListeners = [];
     }
-  
+
     connectedCallback() {
       if (!this.#rendered) {
         const render = this.render();
@@ -19,15 +19,15 @@ export class Component extends HTMLElement {
         this.postRender();
       }
     }
-  
+
     disconnectedCallback() {
       this.removeAllComponentEventListeners();
     }
-  
+
     attributeChangedCallback(name, oldValue, newValue) {
       this.update();
     }
-  
+
     addComponentEventListener(element, event, callback, callbackInstance=this) {
       if (!element) {
         return;
@@ -39,10 +39,10 @@ export class Component extends HTMLElement {
       this.#componentEventListeners[event].push({element, eventCallback});
       element.addEventListener(event, eventCallback);
     }
-  
+
     removeComponentEventListener(element, event) {
       const eventListeners = this.#componentEventListeners[event];
-  
+
       if (eventListeners) {
         for (const eventListener of eventListeners) {
           if (eventListener.element === element) {
@@ -52,7 +52,7 @@ export class Component extends HTMLElement {
         }
       }
     }
-  
+
     removeAllComponentEventListeners() {
       for (const event in this.#componentEventListeners) {
         if (this.#componentEventListeners.hasOwnProperty(event)) {
@@ -65,19 +65,19 @@ export class Component extends HTMLElement {
       }
       this.#componentEventListeners = [];
     }
-  
+
     render() {
       return '';
     }
-  
+
     update() {
       this.innerHTML = this.render() + this.style();
     }
-  
+
     style() {
       return '<style></style>';
     }
-  
+
     postRender() {
     }
   }
