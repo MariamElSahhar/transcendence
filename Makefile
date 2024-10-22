@@ -25,5 +25,14 @@ install:
 freeze:
 	pip freeze > backend/requirements.txt
 
-migrate:
+makemigrations:
 	ENV=dev $(PYTHON_ENV) backend/manage.py makemigrations
+
+migrate:
+	ENV=dev $(PYTHON_ENV) backend/manage.py migrate
+
+showmigrations:
+	ENV=dev $(PYTHON_ENV) backend/manage.py showmigrations
+
+createsuperuser:
+	ENV=dev $(PYTHON_ENV) backend/manage.py createsuperuser
