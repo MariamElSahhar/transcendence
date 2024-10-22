@@ -1,0 +1,51 @@
+:root {
+    --dark-hover-brightness: 0.95;
+    --light-hover-brightness: 1.1;
+    --hover-brightness: var(--light-hover-brightness);
+}
+
+@font-face {
+    font-family: 'Fira Code';
+    src: url('/fonts/FiraCode-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Code';
+    src: url('/fonts/FiraCode-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Code';
+    src: url('/fonts/FiraCode-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Fira Code', monospace;
+    font-weight: 300; /* Light */
+}
+
+a {
+    cursor: pointer;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.dynamic-hover:hover {
+    filter: brightness(var(--hover-brightness));
+}
+
+.dark-hover:hover {
+    filter: brightness(var(--dark-hover-brightness));
+}
+
+.light-hover:hover {
+    filter: brightness(var(--light-hover-brightness));
+}
