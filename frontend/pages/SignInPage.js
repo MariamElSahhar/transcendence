@@ -12,6 +12,7 @@ export class SignIn extends Component {
 	}
 
 	async connectedCallback() {
+		await import("./components/Navbar.js");
 		this.render();
 	}
 
