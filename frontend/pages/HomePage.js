@@ -6,7 +6,7 @@ class HomePage extends HTMLElement {
 
 	async connectedCallback() {
 		await import("./components/HomeContent.js");
-		await import("./components/Navbar.js");
+		await import("./components/navbar/Navbar.js");
 		this.render();
 	}
 
