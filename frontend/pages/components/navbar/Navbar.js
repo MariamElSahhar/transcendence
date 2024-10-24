@@ -1,30 +1,28 @@
-// import { userManagementClient } from '../utils/api.js';
-import "./ConnectedNavbarComponent.js";
-import "./DisconnectedNavbarComponent.js";
+import { Component } from "../Component.js";
+import { isAuth } from "../../../js/clients/token-client.js";
 
-export class NavbarComponent extends HTMLElement {
-	connectedCallback() {
+export class Navbar extends Component {
+	constructor() {
+		super();
+	}
+
+	render() {
 		const navActive = this.getAttribute("nav-active");
-		this.render(navActive);
-		this.applyStyle();
-		this.adjustBodyPadding();
-	}
-	render(navActive) {
-		// Always render the connected navbar for simplicity
-		const content = `<disconnected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
-		this.innerHTML = content;
+		if (isAuth()) {
+			return `<connected-navbar-component nav-active="${navActive}"></connected-navbar-component>`;
+		}
+		return `<disconnected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
 	}
 
-	//   render(navActive) {
-	//     // const content = userManagementClient.isAuth()
-	//       ? `<connected-navbar-component nav-active="${navActive}"></connected-navbar-component>`
-	//       : `<connected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
-	//     this.innerHTML = content;
-	//   }
+	async connectedCallback() {
+		await import("./ConnectedNavbar.js");
+		await import("./DisconnectedNavbar.js");
+		super.connectedCallback();
+	}
 
-	applyStyle() {
-		const style = document.createElement("style");
-		style.innerHTML = `
+	style() {
+		return `
+      <style>
       .navbar {
           position: fixed;
           top: 0;
@@ -32,43 +30,48 @@ export class NavbarComponent extends HTMLElement {
           z-index: 9999;
           box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
       }
+
       .navbar-brand {
           font-family: 'JetBrains Mono Bold', monospace;
       }
+
       .nav-link {
           font-family: 'JetBrains Mono Light', monospace;
       }
+      </style>
     `;
-		this.appendChild(style);
 	}
 
-	adjustBodyPadding() {
+	postRender() {
 		const disablePaddingTop = this.getAttribute("disable-padding-top");
-		const navbarHeight = this.querySelector(".navbar")?.offsetHeight || 0;
-		document.body.style.paddingTop =
-			disablePaddingTop === "true" ? "0px" : `${navbarHeight}px`;
+		if (disablePaddingTop !== "true") {
+			const navbarHeight = this.querySelector(".navbar").offsetHeight;
+			document.body.style.paddingTop = navbarHeight + "px";
+		} else {
+			document.body.style.paddingTop = "0px";
+		}
 	}
 
 	hideCollapse() {
 		const navbarToggler = this.querySelector(".navbar-toggler");
-		if (
-			navbarToggler &&
-			window.getComputedStyle(navbarToggler).display !== "none"
-		) {
+		const navbarToggleDisplay = window
+			.getComputedStyle(navbarToggler)
+			.getPropertyValue("display");
+		if (navbarToggleDisplay !== "none") {
 			navbarToggler.click();
 		}
 	}
 
 	get height() {
-		return this.querySelector(".navbar")?.offsetHeight || 0;
+		return this.querySelector(".navbar").offsetHeight;
 	}
 
 	addNotification(notification) {
 		const notificationNav = this.querySelector(
 			"notification-nav-component"
 		);
-		notificationNav?.addNotification(notification);
+		notificationNav.addNotification(notification);
 	}
 }
 
-customElements.define("navbar-component", NavbarComponent);
+customElements.define("navbar-component", Navbar);

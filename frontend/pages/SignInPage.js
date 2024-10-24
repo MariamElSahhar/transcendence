@@ -1,4 +1,5 @@
 import { Component } from "./components/Component.js";
+import { login, isAuth } from "../js/clients/token-client.js";
 
 export class SignInPage extends Component {
 	constructor() {
@@ -13,14 +14,15 @@ export class SignInPage extends Component {
 
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
+		const authenticated = await isAuth();
+		if (authenticated) {
+			window.redirect("/");
+			return false;
+		}
 		super.connectedCallback();
 	}
 
 	render() {
-		// if (userManagementClient.isAuth()) {
-		// 	window.redirect("/");
-		// 	return false;
-		// }
 		return `
 			<navbar-component></navbar-component>
 			<div id="container">
@@ -91,11 +93,11 @@ export class SignInPage extends Component {
 	postRender() {
 		this.forgotPassword = this.querySelector("#forgot-password");
 		super.addComponentEventListener(this.forgotPassword, "click", () => {
-			getRouter().navigate("/reset-password/");
+			window.redirect("/reset-password/");
 		});
 		this.donthaveAccount = this.querySelector("#dont-have-account");
 		super.addComponentEventListener(this.donthaveAccount, "click", () => {
-			getRouter().navigate("/signup/");
+			window.redirect("/signup/");
 		});
 		this.signinBtn = this.querySelector("#signin-btn");
 		super.addComponentEventListener(this.signinBtn, "click", (event) => {
@@ -168,11 +170,11 @@ export class SignInPage extends Component {
 	async #signin() {
 		this.#startLoadButton();
 		try {
-			const { response, body } = await login({
+			const { success, error } = await login({
 				username: this.login.value,
 				password: this.password.value,
 			});
-			if (response.ok) {
+			if (success) {
 				// this.#loadAndCache(body.refresh_token);
 			} else {
 				if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
@@ -180,7 +182,7 @@ export class SignInPage extends Component {
 					return;
 				}
 				this.#resetLoadButton();
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-message", error);
 				this.alertForm.setAttribute("alert-display", "true");
 			}
 		} catch (error) {
@@ -231,7 +233,7 @@ export class SignInPage extends Component {
 	// 		this.errorMessage = "Error, failed to store cache";
 	// 		this.reRender();
 	// 	} else {
-	// 		getRouter().navigate("/");
+	// 		window.redirect("/");
 	// 	}
 	// }
 
@@ -248,9 +250,9 @@ export class SignInPage extends Component {
 
 	#startLoadButton() {
 		this.signinBtn.innerHTML = `
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span class="sr-only">Loading...</span>
-    `;
+			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+			<span class="sr-only">Loading...</span>
+    	`;
 		this.signinBtn.disabled = true;
 	}
 

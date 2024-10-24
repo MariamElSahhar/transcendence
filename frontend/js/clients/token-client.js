@@ -22,7 +22,15 @@ export const refresh = async () => {
 export const register = async ({ username, password }) => {
 	const url = `${BASE_URL}/register/`;
 	const requestBody = { username, password };
-	reponse = await post(url, requestBody);
+	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
 	return { success: true };
+};
+
+// checks if user is authenticated (if access token is valid)
+export const isAuth = async () => {
+	const url = `${BASE_URL}/token/status`;
+	const { status, body, error } = await get(url);
+	if (error) return false;
+	return true;
 };

@@ -1,42 +1,22 @@
-class HomePage extends HTMLElement {
+import { Component } from "./components/Component.js";
+
+export class HomePage extends Component {
 	constructor() {
 		super();
-		this.attachShadow({ mode: "open" });
 	}
-
-	async connectedCallback() {
-		await import("./components/HomeContent.js");
-		await import("./components/Navbar.js");
-		this.render();
-	}
-
 	render() {
-		const isAuthenticated = this.isUserAuthenticated();
-
-		this.shadowRoot.innerHTML = isAuthenticated
-			? `
-          <style>
-            /* Add styles here */
-          </style>
-          <navbar-component nav-active="home"></navbar-component>
-          <friends-sidebar-component main-component="home-content"></friends-sidebar-component>
-        `
-			: `
-          <style>
-            /* Add styles here */
-          </style>
-          <navbar-component nav-active="home"></navbar-component>
-          <home-content></home-content>
-        `;
-	}
-
-	isUserAuthenticated() {
-		// Placeholder for actual authentication logic
-		return (
-			window.userManagementClient && window.userManagementClient.isAuth()
-		);
+		if (userManagementClient.isAuth()) {
+			return `
+      <navbar-component nav-active="home"></navbar-component>
+      <friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
+    `;
+		} else {
+			return `
+        <navbar-component nav-active="home"></navbar-component>
+        <home-content-component></home-content-component>
+      `;
+		}
 	}
 }
 
-// Define the custom element
 customElements.define("home-page", HomePage);

@@ -1,4 +1,5 @@
 import { Component } from "./components/Component.js";
+import { register, isAuth } from "../js/clients/token-client.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -22,10 +23,10 @@ export class SignUpPage extends Component {
 	}
 
 	render() {
-		// if (userManagementClient.isAuth()) {
-		// 	window.redirect("/");
-		// 	return false;
-		// }
+		if (isAuth()) {
+			window.redirect("/");
+			return false;
+		}
 		// const { render } = this.#OAuthReturn();
 		// if (!render) {
 		// 	return false;
