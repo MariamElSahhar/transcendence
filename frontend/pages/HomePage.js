@@ -5,8 +5,19 @@ export class HomePage extends Component {
 	constructor() {
 		super();
 	}
+
+	async connectedCallback() {
+		await import("./components/navbar/Navbar.js");
+		const authenticated = await isAuth();
+		if (authenticated) {
+			window.redirect("/");
+			return false;
+		}
+		super.connectedCallback();
+	}
+
 	render() {
-		if (isAuth()) {
+		if (true) {
 			return `
       <navbar-component nav-active="home"></navbar-component>
       <friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
