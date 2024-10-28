@@ -8,17 +8,9 @@ body {
 
 /* Main content area - positioned towards the bottom of the page */
 #login-page {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
 	background: url("../images/pong_image.gif") no-repeat center center fixed;
 	background-size: cover;
-	width: 100vw; /* Ensure it spans the entire viewport width */
-	height: 100vh; /* Ensure it spans the entire viewport height */
-	padding: 20px;
-	flex-grow: 1;
-	padding-bottom: 60px; /* Extra padding at the bottom to push content up slightly */
+	height: 100vh;
 }
 
 /* Button default width */
@@ -32,17 +24,6 @@ input.form-control {
 	margin: 0 auto;
 	padding: 10px;
 	font-size: 0.9rem;
-}
-
-/* Limit the size of the container and ensure proper centering */
-#login-page .container {
-	background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
-	padding: 20px;
-	border-radius: 10px;
-	max-width: 800px; /* Slightly smaller container */
-	width: 100%;
-	color: white;
-	margin: 0 auto; /* Ensure it's centered */
 }
 
 /* Footer should be pushed to the bottom */
@@ -151,20 +132,6 @@ footer {
 	width: 100%;
 }
 
-/* Ensure labels and inputs are properly aligned */
-form label {
-	display: block; /* Ensure labels are above the fields */
-	text-align: left; /* Left-align the labels */
-	width: 100%; /* Take full width */
-}
-
-form .form-control {
-	margin: 0 auto;
-	text-align: left;
-	width: 100%; /* Make sure input fields span the full width of the container */
-	max-width: 500px; /* You can adjust this size as needed */
-}
-
 /* Responsive Design Adjustments */
 @media (max-width: 768px) {
 	.registration-page .registration-box {
@@ -192,12 +159,54 @@ form .form-control {
 	border-color: #007bff;
 }
 
-.btn-success {
-	background-color: #28a745;
-	border-color: #28a745;
+:root {
+	--dark-hover-brightness: 0.95;
+	--light-hover-brightness: 1.1;
+	--hover-brightness: var(--light-hover-brightness);
 }
 
-.btn-success:hover {
-	background-color: #218838;
-	border-color: #1e7e34;
+@font-face {
+	font-family: "Fira Code";
+	src: url("/fonts/FiraCode-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Fira Code";
+	src: url("/fonts/FiraCode-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Fira Code";
+	src: url("/fonts/FiraCode-Light.woff2") format("woff2");
+	font-weight: 300;
+	font-style: normal;
+}
+
+body {
+	font-family: "Fira Code", monospace;
+	font-weight: 300; /* Light */
+}
+
+a {
+	cursor: pointer;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.dynamic-hover:hover {
+	filter: brightness(var(--hover-brightness));
+}
+
+.dark-hover:hover {
+	filter: brightness(var(--dark-hover-brightness));
+}
+
+.light-hover:hover {
+	filter: brightness(var(--light-hover-brightness));
 }

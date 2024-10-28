@@ -72,6 +72,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://localhost",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 ROOT_URLCONF = "pong.urls"
 
 TEMPLATES = [

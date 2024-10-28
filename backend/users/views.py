@@ -81,8 +81,6 @@ def login_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # REFRESH TOKEN
-
-
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def token_refresh_view(request):
@@ -110,9 +108,12 @@ def token_refresh_view(request):
         return Response(token_serializer.errors,
                         status=status.HTTP_400_BAD_REQUEST)
 
+# STATUS
+@api_view(["GET"])
+def token_status_view(request):
+    return Response({"message": "Token valid"}, status=status.HTTP_200_OK)
+
 # REGISTRATION
-
-
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register_view(request):

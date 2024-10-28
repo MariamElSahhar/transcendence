@@ -1,55 +1,36 @@
 const BASE_URL = "http://127.0.0.1:8000/api";
-import * as HttpRequests from "../utils/http-requests.js";
+import { post, get } from "../utils/http-requests.js";
 
-export const login = async (credentials) => {
-	try {
-		const url = `${BASE_URL}/login/`;
-		reponse = HttpRequests.get(url, credentials);
-
-		if (!response.ok) {
-			throw new Error("Login failed: " + response.statusText);
-		}
-
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Error :", error);
-		throw error;
-	}
+// login and get new access and refresh tokens
+export const login = async ({ username, password }) => {
+	const url = `${BASE_URL}/login/`;
+	const requestBody = { username, password };
+	const { status, body, error } = await post(url, requestBody);
+	if (error) return { success: false, error: error };
+	return { success: true };
 };
 
-export const refreshAccessToken = async () => {
-	try {
-		const url = `${BASE_URL}/token/refresh/`;
-		reponse = HttpRequests.get(url, credentials);
-
-		if (!response.ok) {
-			throw new Error("Refresh failed: " + response.statusText);
-		}
-
-		const data = await response.json();
-		console.log("Access token refreshed", data);
-
-		return data;
-	} catch (error) {
-		console.error("Error refreshing token:", error);
-		throw error;
-	}
+// get new access token
+export const refresh = async () => {
+	const url = `${BASE_URL}/token/refresh/`;
+	const { status, body, error } = await post(url);
+	if (error) return { success: false, error: error };
+	return { success: true };
 };
 
-export const register = async (credentials) => {
-	try {
-		const url = `${BASE_URL}/register/`;
-		reponse = HttpRequests.get(url, credentials);
+// register and get access and refresh tokens
+export const register = async ({ username, email, password }) => {
+	const url = `${BASE_URL}/register/`;
+	const requestBody = { username, email, password };
+	const { status, body, error } = await post(url, requestBody);
+	if (error) return { success: false, error: error };
+	return { success: true };
+};
 
-		if (!response.ok) {
-			throw new Error("Registration failed: " + response.statusText);
-		}
-
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Error :", error);
-		throw error;
-	}
+// checks if user is authenticated (if access token is valid)
+export const isAuth = async () => {
+	const url = `${BASE_URL}/token/status`;
+	const { status, body, error } = await get(url);
+	if (error) return false;
+	return true;
 };
