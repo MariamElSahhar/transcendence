@@ -8,25 +8,22 @@ export class HomePage extends Component {
 
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
-		const authenticated = await isAuth();
-		if (authenticated) {
-			window.redirect("/");
-			return false;
-		}
+		await import("./components/HomeContent.js");
 		super.connectedCallback();
 	}
 
 	render() {
-		if (true) {
+		// if (isAuth()) {
+		if (false) {
 			return `
-      <navbar-component nav-active="home"></navbar-component>
-      <friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
-    `;
+				<navbar-component nav-active="home"></navbar-comfponent>
+				<friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
+			`;
 		} else {
 			return `
-        <navbar-component nav-active="home"></navbar-component>
-        <home-content-component></home-content-component>
-      `;
+				<navbar-component nav-active="home"></navbar-component>
+				<home-content></home-content>
+			`;
 		}
 	}
 }

@@ -176,11 +176,12 @@ export class SignInPage extends Component {
 			});
 			if (success) {
 				// this.#loadAndCache(body.refresh_token);
+				window.redirect("/");
 			} else {
-				if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
-					this.#loadTwoFactorComponent();
-					return;
-				}
+				// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
+				// 	this.#loadTwoFactorComponent();
+				// 	return;
+				// }
 				this.#resetLoadButton();
 				this.alertForm.setAttribute("alert-message", error);
 				this.alertForm.setAttribute("alert-display", "true");
