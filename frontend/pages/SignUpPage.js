@@ -1,5 +1,7 @@
 import { Component } from "./components/Component.js";
 import { register, isAuth } from "../js/clients/token-client.js";
+import { InputValidator } from "../js/utils/input-validator.js";
+import { BootstrapUtils } from "../js/utils/bootstrap-utils.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -19,90 +21,92 @@ export class SignUpPage extends Component {
 
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
+		const authenticated = await isAuth();
+		if (authenticated) {
+			window.redirect("/");
+			return false;
+		}
 		super.connectedCallback();
 	}
 
 	render() {
-		if (isAuth()) {
-			window.redirect("/");
-			return false;
-		}
 		// const { render } = this.#OAuthReturn();
 		// if (!render) {
 		// 	return false;
 		// }
 		return `
-    <navbar-component></navbar-component>
-    <div id="login"
-          class="d-flex justify-content-center align-items-center rounded-3">
-        <div class="login-card card m-3">
-            <div class="card-body m-2">
-                <h2 class="card-title text-center m-5 dynamic-hover">Sign up</h2>
-                <form id="signup-form">
-                    <div class="form-group mb-4">
-                        <div class="input-group has-validation">
-                            <span class="input-group-text"
-                                  id="inputGroupPrepend">@</span>
-                            <input type="text" class="form-control" id="username"
-                                    placeholder="Username" autocomplete="username">
-                            <div id="username-feedback" class="invalid-feedback">
-                                Invalid username.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group mb-4">
-                        <input type="email" class="form-control" id="email"
-                                placeholder="Email" autocomplete="email">
-                        <div id="email-feedback" class="invalid-feedback">
-                            Please enter a valid email.
-                        </div>
-                    </div>
-                    <div class="form-group mb-4">
-                        <div class="input-group has-validation">
-                            <input type="password" class="form-control"
-                                    id="password"
-                                    placeholder="Password">
-                            <span id="password-eye"
-                                  class="input-group-text dynamic-hover">
-                                <i class="bi bi-eye-fill"></i>
-                            </span>
-                            <div id="password-feedback" class="invalid-feedback">
-                                Invalid password.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group mb-4">
-                        <div class="input-group has-validation">
-                            <input type="password" class="form-control"
-                                    id="confirm-password"
-                                    placeholder="Confirm Password">
-                            <span id="confirm-password-eye"
-                                  class="input-group-text dynamic-hover">
-                                <i class="bi bi-eye-fill"></i>
-                            </span>
-                            <div id="confirm-password-feedback" class="invalid-feedback">
-                                Passwords do not match.
-                            </div>
-                        </div>
-                    </div>
-                <alert-component id="alert-form" alert-display="false">
-                </alert-component>
-                <div class="d-flex mb-3">
-                    <a id="have-account">Already have an account?</a>
-                </div>
-                <div class="row d-flex justify-content-center">
-                    <button id="signupBtn" type="submit" class="btn btn-primary" disabled>Sign up</button>
-                </div>
-                </form>
-                <hr class="my-4">
-                <div class="row">
-                  <intra-button-component class="p-0"></intra-button-component>
-                </div>
-            </div>
-        </div>
-    </div>
-    `;
+			<navbar-component></navbar-component>
+			<div id="login"
+				class="d-flex justify-content-center align-items-center rounded-3">
+				<div class="login-card card m-3">
+					<div class="card-body m-2">
+						<h2 class="card-title text-center m-5 dynamic-hover">Sign up</h2>
+						<form id="signup-form">
+							<div class="form-group mb-4">
+								<div class="input-group has-validation">
+									<span class="input-group-text"
+										id="inputGroupPrepend">@</span>
+									<input type="text" class="form-control" id="username"
+											placeholder="Username" autocomplete="username">
+									<div id="username-feedback" class="invalid-feedback">
+										Invalid username.
+									</div>
+								</div>
+							</div>
+							<div class="form-group mb-4">
+								<input type="email" class="form-control" id="email"
+										placeholder="Email" autocomplete="email">
+								<div id="email-feedback" class="invalid-feedback">
+									Please enter a valid email.
+								</div>
+							</div>
+							<div class="form-group mb-4">
+								<div class="input-group has-validation">
+									<input type="password" class="form-control"
+											id="password"
+											placeholder="Password">
+									<span id="password-eye"
+										class="input-group-text dynamic-hover">
+										<i class="bi bi-eye-fill"></i>
+									</span>
+									<div id="password-feedback" class="invalid-feedback">
+										Invalid password.
+									</div>
+								</div>
+							</div>
+							<div class="form-group mb-4">
+								<div class="input-group has-validation">
+									<input type="password" class="form-control"
+											id="confirm-password"
+											placeholder="Confirm Password">
+									<span id="confirm-password-eye"
+										class="input-group-text dynamic-hover">
+										<i class="bi bi-eye-fill"></i>
+									</span>
+									<div id="confirm-password-feedback" class="invalid-feedback">
+										Passwords do not match.
+									</div>
+								</div>
+							</div>
+						<alert-component id="alert-form" alert-display="false">
+						</alert-component>
+						<div class="d-flex mb-3">
+							<a id="have-account">Already have an account?</a>
+						</div>
+						<div class="row d-flex justify-content-center">
+							<button id="signupBtn" type="submit" class="btn btn-primary" disabled>Sign up</button>
+						</div>
+						</form>
+						<hr class="my-4">
+						<div class="row">
+						<intra-button-component class="p-0"></intra-button-component>
+						</div>
+					</div>
+				</div>
+			</div>
+		`;
 	}
+
 	style() {
 		return `
     <style>
@@ -386,20 +390,22 @@ export class SignUpPage extends Component {
 	async #signupHandler() {
 		this.#startLoadButton();
 		try {
-			const { response, body } = await userManagementClient.signUp(
-				this.username.value,
-				this.email.value,
-				this.password.value
-			);
+			const { response, body } = await register({
+				username: this.username.value,
+				email: this.email.value,
+				password: this.password.value,
+			});
 			if (response.ok) {
-				this.#loadEmailVerification();
+				// this.#loadEmailVerification();
+				window.redirect("/");
 			} else {
 				this.#resetLoadButton();
 				this.alertForm.setAttribute("alert-message", body.errors[0]);
 				this.alertForm.setAttribute("alert-display", "true");
 			}
 		} catch (error) {
-			ErrorPage.loadNetworkError();
+			alert("error");
+			// ErrorPage.loadNetworkError();
 		}
 	}
 

@@ -19,9 +19,9 @@ export const refresh = async () => {
 };
 
 // register and get access and refresh tokens
-export const register = async ({ username, password }) => {
+export const register = async ({ username, email, password }) => {
 	const url = `${BASE_URL}/register/`;
-	const requestBody = { username, password };
+	const requestBody = { username, email, password };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
 	return { success: true };
