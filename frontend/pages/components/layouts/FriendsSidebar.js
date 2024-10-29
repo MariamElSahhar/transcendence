@@ -4,11 +4,12 @@ import { Cookies } from "../Cookies.js";
 export class FriendsSidebar extends Component {
 	constructor() {
 		super();
-  }
+	}
 
 	render() {
 		const mainComponent = this.getAttribute("main-component");
-		const navbarHeight = document.querySelector("navbar-component").height;
+		// const navbarHeight = document.querySelector("navbar-component").height;
+		const navbarHeight = 500;
 		const sidebarPosition = Cookies.get("sidebar-position");
 		const sidebarPositionClass =
 			sidebarPosition === "visible" ? "" : "active";
@@ -24,8 +25,8 @@ export class FriendsSidebar extends Component {
           </nav>
       </div>
     `;
-  }
-  
+	}
+
 	style() {
 		return `
       <style>

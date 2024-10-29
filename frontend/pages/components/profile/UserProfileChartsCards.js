@@ -76,7 +76,7 @@ export class UserProfileChartsCards extends Component {
     winRates = winRates.map((rate) => rate.toFixed(2));
     const labels = dates.map((date) => this.#formatDateWithoutTime(date));
     const labelsToolTip = dates.map((date) => this.#formatDateWithTime(date));
-    
+
     return {
       type: 'line',
       data: {

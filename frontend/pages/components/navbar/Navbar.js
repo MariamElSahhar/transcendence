@@ -2,19 +2,24 @@ import { Component } from "../Component.js";
 import { isAuth } from "../../../js/clients/token-client.js";
 
 export class Navbar extends Component {
+	authenticated = false;
+
 	constructor() {
 		super();
 	}
 
 	render() {
 		const navActive = this.getAttribute("nav-active");
-		if (isAuth()) {
+
+		if (this.authenticated) {
 			return `<connected-navbar-component nav-active="${navActive}"></connected-navbar-component>`;
+		} else {
+			return `<disconnected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
 		}
-		return `<disconnected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
 	}
 
 	async connectedCallback() {
+		this.authenticated = await isAuth();
 		await import("./ConnectedNavbar.js");
 		await import("./DisconnectedNavbar.js");
 		super.connectedCallback();

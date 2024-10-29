@@ -1,25 +1,27 @@
-export class ErrorPage {
-  static errorComponentName = 'error-component';
-  static networkErrorMessage = 'Network error, ' +
-    'please check your network connection.';
-  static notFoundMessage = 'Page not found';
+import { Component } from "../components/Component.js";
 
-  static load(message, refresh = false) {
-    window.app.innerHTML = `
+export class ErrorPage extends Component {
+	static errorComponentName = "error-component";
+	static networkErrorMessage =
+		"Network error, " + "please check your network connection.";
+	static notFoundMessage = "Page not found";
+
+	static load(message, refresh = false) {
+		window.app.innerHTML = `
         <navbar-component></navbar-component>
         <${ErrorPage.errorComponentName}
             message="${message}"
             refresh="${refresh}">
         </${ErrorPage.errorComponentName}>`;
-  }
+	}
 
-  static loadNetworkError() {
-    ErrorPage.load(ErrorPage.networkErrorMessage, true);
-  }
+	static loadNetworkError() {
+		this.load(this.networkErrorMessage, true);
+	}
 
-  static loadNotFound() {
-    ErrorPage.load(ErrorPage.notFoundMessage, false);
-  }
+	static loadNotFound() {
+		this.load(this.notFoundMessage, false);
+	}
 }
 
-customElements.define('error-page', ErrorPage);
+customElements.define("error-page", ErrorPage);

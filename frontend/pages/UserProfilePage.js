@@ -53,13 +53,14 @@ export class UserProfilePage extends Component {
 		const { getToken } = await import(
 			"../../../js/clients/token-client.js"
 		);
-		const token = getToken();
+		const token = true;
 		if (token) {
 			const { getUserProfile } = await import(
 				"../../../js/clients/users-client.js"
 			);
 			try {
-				const userProfile = await getUserProfile(token);
+				// const userProfile = await getUserProfile(token);
+				userProfile = {};
 
 				// Pass data to components via attributes
 				this.querySelector("user-profile-header").setAttribute(
