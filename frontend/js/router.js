@@ -7,6 +7,10 @@ const routes = {
 		component: "home-page",
 		path: "../pages/HomePage.js",
 	},
+	"/profile": {
+		component: "user-profile-page",
+		path: "../pages/UserProfilePage.js",
+	},
 	"/login": {
 		component: "login-page",
 		path: "../pages/LoginPage.js",
@@ -25,7 +29,7 @@ const routes = {
 	},
 };
 
-const redirect = (path) => {
+export const redirect = (path) => {
 	window.history.pushState({}, "", path);
 	handleLocation();
 };
