@@ -14,6 +14,7 @@ export class SignInPage extends Component {
 
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
+		await import("./components/buttons/IntraButton.js");
 		// const authenticated = await isAuth();
 		const authenticated = false;
 		if (authenticated) {

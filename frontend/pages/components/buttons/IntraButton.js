@@ -1,13 +1,13 @@
-import {Component} from '@components';
-import {userManagementClient} from '@utils/api';
-import {ErrorPage} from '@utils/ErrorPage.js';
+import { Component } from "../Component.js";
+// import {userManagementClient} from '@utils/api';
+// import {ErrorPage} from '@utils/ErrorPage.js';
 
 export class IntraButton extends Component {
-  constructor() {
-    super();
-  }
-  render() {
-    return (`
+	constructor() {
+		super();
+	}
+	render() {
+		return `
       <button id="intra-btn" class="btn btn-lg btn-outline-dark mb-2 w-100 dark-hover"
               type="submit">
           <svg xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -64,50 +64,54 @@ export class IntraButton extends Component {
           </svg>
           Sign in with 42 Intra
       </button>
-    `);
-  }
-  style() {
-    return (`
+    `;
+	}
+	style() {
+		return `
       <style>
       #intra-btn {
           background-color: #ffffff;
           color: #000000;"
       }
       </style>
-    `);
-  }
+    `;
+	}
 
-  postRender() {
-    this.btn = this.querySelector('#intra-btn');
-    super.addComponentEventListener(this.btn, 'click', this.#connectIntra);
-  }
+	postRender() {
+		this.btn = this.querySelector("#intra-btn");
+		super.addComponentEventListener(this.btn, "click", this.#connectIntra);
+	}
 
-  reRender() {
-    this.innerHTML = this.render() + this.style();
-    this.postRender();
-  }
+	reRender() {
+		this.innerHTML = this.render() + this.style();
+		this.postRender();
+	}
 
-  renderLoader() {
-    return (`
+	renderLoader() {
+		return `
       <button id="intra-btn" class="btn btn-lg btn-outline-dark mb-2 w-100 dark-hover" type="submit" disabled>
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <span class="sr-only">Loading...</span>
       </button>
-    `);
-  }
+    `;
+	}
 
-  async #connectIntra() {
-    this.innerHTML = this.renderLoader() + this.style();
-    try {
-      const source = window.location.origin + window.location.pathname;
-      const {response, body} = await userManagementClient.getOAuthIntra(source);
-      if (response.ok) {
-        window.location.href = body['redirection_url'];
-      } else {
-        this.reRender();
-      }
-    } catch (e) {
-      ErrorPage.loadNetworkError();
-    }
-  }
+	async #connectIntra() {
+		this.innerHTML = this.renderLoader() + this.style();
+		try {
+			const source = window.location.origin + window.location.pathname;
+			const { response, body } = await userManagementClient.getOAuthIntra(
+				source
+			);
+			if (response.ok) {
+				window.location.href = body["redirection_url"];
+			} else {
+				this.reRender();
+			}
+		} catch (e) {
+			ErrorPage.loadNetworkError();
+		}
+	}
 }
+
+customElements.define("intra-button-component", IntraButton);
