@@ -29,8 +29,8 @@ export const register = async ({ username, email, password }) => {
 
 // checks if user is authenticated (if access token is valid)
 export const isAuth = async () => {
-	const url = `${BASE_URL}/token/status`;
-	const { status, body, error } = await get(url);
-	if (error) return false;
+	// const url = `${BASE_URL}/token/status`;
+	// const { status, body, error } = await get(url);
+	// if (error) return false;
 	return true;
 };

@@ -1,16 +1,18 @@
- import {Component} from '../Component.js';
-import {Cookies} from '../Cookies.js';
+import { Component } from "../Component.js";
+import { Cookies } from "../Cookies.js";
 
 export class FriendsSidebar extends Component {
-  constructor() {
-    super();
+	constructor() {
+		super();
   }
-  render() {
-    const mainComponent = this.getAttribute('main-component');
-    const navbarHeight = document.querySelector('navbar-component').height;
-    const sidebarPosition = Cookies.get('sidebar-position');
-    const sidebarPositionClass = sidebarPosition === 'visible' ? '' : 'active';
-    return (`
+
+	render() {
+		const mainComponent = this.getAttribute("main-component");
+		const navbarHeight = document.querySelector("navbar-component").height;
+		const sidebarPosition = Cookies.get("sidebar-position");
+		const sidebarPositionClass =
+			sidebarPosition === "visible" ? "" : "active";
+		return `
       <div id="wrapper">
           <div id="main-content" class="${sidebarPositionClass}">
             <${mainComponent} ${this.getHeritedAttributes()}></${mainComponent}>
@@ -21,10 +23,11 @@ export class FriendsSidebar extends Component {
               </div>
           </nav>
       </div>
-    `);
+    `;
   }
-  style() {
-    return (`
+  
+	style() {
+		return `
       <style>
 .wrapper {
     display: flex;
@@ -83,42 +86,41 @@ a[data-toggle="collapse"] {
     width: 100%;
 }
       </style>
-    `);
-  }
+    `;
+	}
 
-  postRender() {
-  }
+	postRender() {}
 
-  toggleVisibility() {
-    const sidebarMainContent = this.querySelector('#main-content');
-    const sidebarContent = this.querySelector('#sidebar-content');
-    if (sidebarMainContent) {
-      sidebarMainContent.classList.toggle('active');
-    }
-    if (sidebarContent) {
-      sidebarContent.classList.toggle('active');
-    }
-    if (Cookies.get('sidebar-position') === 'visible') {
-      Cookies.add('sidebar-position', 'hidden');
-    } else {
-      Cookies.add('sidebar-position', 'visible');
-    }
-    window.dispatchEvent(new Event('resize'));
-  }
+	toggleVisibility() {
+		const sidebarMainContent = this.querySelector("#main-content");
+		const sidebarContent = this.querySelector("#sidebar-content");
+		if (sidebarMainContent) {
+			sidebarMainContent.classList.toggle("active");
+		}
+		if (sidebarContent) {
+			sidebarContent.classList.toggle("active");
+		}
+		if (Cookies.get("sidebar-position") === "visible") {
+			Cookies.add("sidebar-position", "hidden");
+		} else {
+			Cookies.add("sidebar-position", "visible");
+		}
+		window.dispatchEvent(new Event("resize"));
+	}
 
-  getHeritedAttributes() {
-    const attributeNames = this.getAttributeNames();
-    let attributesString = '';
-    attributeNames.forEach(function(name, index) {
-      if (name !== 'main-component' && name !== 'sidebar-component') {
-        attributesString += `${name}="${this.getAttribute(name)}"`;
-      }
-      if (index < attributeNames.length - 1) {
-        attributesString += ' ';
-      }
-    }, this);
-    return attributesString;
-  }
+	getHeritedAttributes() {
+		const attributeNames = this.getAttributeNames();
+		let attributesString = "";
+		attributeNames.forEach(function (name, index) {
+			if (name !== "main-component" && name !== "sidebar-component") {
+				attributesString += `${name}="${this.getAttribute(name)}"`;
+			}
+			if (index < attributeNames.length - 1) {
+				attributesString += " ";
+			}
+		}, this);
+		return attributesString;
+	}
 }
 
-customElements.define ('friends-sidebar-component', FriendsSidebar);
+customElements.define("friends-sidebar-component", FriendsSidebar);

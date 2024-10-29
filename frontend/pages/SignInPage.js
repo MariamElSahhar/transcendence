@@ -14,7 +14,8 @@ export class SignInPage extends Component {
 
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
-		const authenticated = await isAuth();
+		// const authenticated = await isAuth();
+		const authenticated = false;
 		if (authenticated) {
 			window.redirect("/");
 			return false;

@@ -13,8 +13,7 @@ export class HomePage extends Component {
 	}
 
 	render() {
-		// if (isAuth()) {
-		if (false) {
+		if (isAuth()) {
 			return `
 				<navbar-component nav-active="home"></navbar-comfponent>
 				<friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
