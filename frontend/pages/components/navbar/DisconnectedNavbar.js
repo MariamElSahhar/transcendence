@@ -9,7 +9,7 @@ export class DisconnectedNavbar extends Component {
 		return `
       <nav id="main-navbar" class="navbar navbar-expand-lg bg-body-tertiary">
           <div class="container-fluid">
-              <a class="navbar-brand" onclick="window.router.navigate('/')">Transcendence</a>
+              <a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                       data-bs-target="#navbarSupportedContent"
                       aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -22,11 +22,11 @@ export class DisconnectedNavbar extends Component {
                   <div class="d-flex align-items-center">
                       <theme-button-component class="me-2"></theme-button-component>
                       <button class="btn btn-outline-success"
-                              onclick="window.router.navigate('/signup/')">
+                              onclick="window.redirect('/signup/')">
                           Sign up
                       </button>
                       <button type="button" class="btn btn-primary ms-2"
-                              onclick="window.router.navigate('/signin/')">
+                              onclick="window.redirect('/signin/')">
                           Sign in
                       </button>
                   </div>
