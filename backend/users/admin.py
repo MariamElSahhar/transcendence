@@ -12,31 +12,38 @@ from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     """Define the admin pages for users."""
-    ordering = ['id']
-    list_display = ['email', 'username']
+
+    ordering = ["id"]
+    list_display = ["email", "username"]
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {"fields": ("email", "username", "password")}),
         (
-            ('Permissions'),
+            ("Permissions"),
             {
-                'fields': (
-                    'is_email_verified',
+                "fields": (
+                    "is_email_verified",
+                    "is_staff",
+                    "is_superuser",
                 )
-            }
+            },
         ),
-        (('Important dates'), {'fields': ('last_login',)})
+        (("Important dates"), {"fields": ("last_login",)}),
     )
-    readonly_fields = ['last_login']
+    readonly_fields = ["last_login"]
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': (
-                'email',
-                'password1',
-                'password2',
-                'is_email_verified',
-            )
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "is_email_verified",
+                    "is_staff",
+                ),
+            },
+        ),
     )
 
 

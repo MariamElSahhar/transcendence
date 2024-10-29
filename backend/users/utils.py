@@ -20,8 +20,9 @@ def send_otp(user):
     user.email_otp = otp
     user.save()
     send_mail(
-        'Your Email OTP code', f'Your OTP for email verification is: {otp}',
-        'admin@42ADtranscendence.ae',
+        "Your Email OTP code for 42AD Transcendence",
+        f"Your OTP for email verification is: {otp}\nThis OTP is valid for 5 minutes.",
+        "transcendence.42ad@gmail.com ",
         [user.email],
-        fail_silently=False
+        fail_silently=False,
     )

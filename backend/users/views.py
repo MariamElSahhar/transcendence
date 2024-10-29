@@ -9,7 +9,9 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import AllowAny
 from django.conf import settings
 from rest_framework_simplejwt.serializers import (
-    TokenObtainPairSerializer, TokenRefreshSerializer)
+    TokenObtainPairSerializer,
+    TokenRefreshSerializer,
+)
 
 
 # GET OR CREATE NEW USERS
@@ -23,8 +25,9 @@ def user_list_create_view(request):
     elif request.method == "POST":
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save(password=make_password(
-            serializer.validated_data["password"]))
+        user = serializer.save(
+            password=make_password(serializer.validated_data["password"])
+        )
         send_otp(user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -41,8 +44,7 @@ def user_retrieve_update_destroy_view(request, user_id):
     elif request.method == "PUT":
         serializer = UserSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(password=make_password(
-            serializer.validated_data["password"]))
+        serializer.save(password=make_password(serializer.validated_data["password"]))
         return Response(serializer.data)
 
     elif request.method == "DELETE":
@@ -56,17 +58,14 @@ def user_retrieve_update_destroy_view(request, user_id):
 def login_view(request):
     login_serializer = LoginSerializer(data=request.data)
     if login_serializer.is_valid(raise_exception=True):
-        user = CustomUser.objects.get(
-            username=login_serializer.validated_data['username'])
-        if user.email_otp != login_serializer.validated_data['otp']:
-            return Response({"detail": "Invalid OTP"},
-                            status=status.HTTP_400_BAD_REQUEST)
+        # user = login_serializer.validated_data['user']  # This line is no longer needed
 
         token_serializer = TokenObtainPairSerializer(data=request.data)
         if token_serializer.is_valid(raise_exception=True):
             tokens = token_serializer.validated_data
-            response = Response({"message": "Login successful"},
-                                status=status.HTTP_200_OK)
+            response = Response(
+                {"message": "Login successful"}, status=status.HTTP_200_OK
+            )
             # Access token
             response.set_cookie(
                 key=settings.SIMPLE_JWT["AUTH_COOKIE"],
@@ -78,7 +77,7 @@ def login_view(request):
             )
             # Refresh token
             response.set_cookie(
-                key='refresh_token',
+                key="refresh_token",
                 value=tokens["refresh"],
                 expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
                 secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
@@ -86,8 +85,7 @@ def login_view(request):
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
             return response
-    return Response(login_serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST)
+    return Response(login_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # REFRESH TOKEN
@@ -102,8 +100,9 @@ def token_refresh_view(request):
     token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
     if token_serializer.is_valid():
         tokens = token_serializer.validated_data
-        response = Response({"message": "Refresh successful"},
-                            status=status.HTTP_200_OK)
+        response = Response(
+            {"message": "Refresh successful"}, status=status.HTTP_200_OK
+        )
         # Access token
         response.set_cookie(
             key=settings.SIMPLE_JWT["AUTH_COOKIE"],
@@ -113,10 +112,9 @@ def token_refresh_view(request):
             httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
             samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
         )
-        return (response)
+        return response
     else:
-        return Response(token_serializer.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # REGISTRATION
@@ -125,15 +123,16 @@ def token_refresh_view(request):
 def register_view(request):
     user_serializer = UserSerializer(data=request.data)
     if user_serializer.is_valid():
-        user = user_serializer.save(password=make_password(
-            user_serializer.validated_data["password"]))
+        user = user_serializer.save(
+            password=make_password(user_serializer.validated_data["password"])
+        )
         send_otp(user)
         token_serializer = TokenObtainPairSerializer(data=request.data)
         if token_serializer.is_valid():
             tokens = token_serializer.validated_data
             response = Response(
-                {"message": "Registration successful"},
-                status=status.HTTP_200_OK)
+                {"message": "Registration successful"}, status=status.HTTP_200_OK
+            )
             # Access token
             response.set_cookie(
                 key=settings.SIMPLE_JWT["AUTH_COOKIE"],
@@ -145,18 +144,15 @@ def register_view(request):
             )
             # Refresh token
             response.set_cookie(
-                key='refresh_token',
+                key="refresh_token",
                 value=tokens["refresh"],
                 expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
                 secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
                 httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
-            return (response)
+            return response
         else:
-            return Response(token_serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(user_serializer.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
