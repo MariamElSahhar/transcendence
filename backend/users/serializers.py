@@ -47,7 +47,7 @@ class LoginSerializer(serializers.Serializer):
         # Skip OTP validation for admin users
         if not user.is_staff:
             if not otp:
-                raise ValidationError({"otp": "This field is required123123."})
+                raise ValidationError({"otp": "This field is required."})
             if user.email_otp != otp:
                 raise ValidationError({"otp": "Invalid OTP."})
 

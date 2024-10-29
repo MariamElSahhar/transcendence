@@ -182,15 +182,12 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_SAMESITE": "Lax",
 }
 
-# transcendence.42ad@gmail.com
-# X5RsXLbhpKJnCth
-# Use Django's SMTP email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Gmail SMTP settings
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'transcendence.42ad@gmail.com'          # Your Gmail address
-EMAIL_HOST_PASSWORD = 'uuqp fyzm dtzs cnze'         # App password (recommended for security)
+EMAIL_HOST_USER = 'transcendence.42ad@gmail.com'
+EMAIL_HOST_PASSWORD = 'uuqp fyzm dtzs cnze'
 DEFAULT_FROM_EMAIL = '42AD Transcendence <transcendence.42ad@gmail.com>'   # Optional
