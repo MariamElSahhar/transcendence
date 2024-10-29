@@ -19,6 +19,14 @@ const routes = {
 		component: "sign-up-page",
 		path: "../pages/SignUpPage.js",
 	},
+	"/network-error": {
+		component: "error-content",
+		path: "../pages/utilities/Error.js",
+	},
+	"/settings": {
+		component: "settings-page",
+		path: "../pages/Settings.js",
+	},
 	404: {
 		component: "not-found-page",
 		path: "../pages/NotFound.js",
