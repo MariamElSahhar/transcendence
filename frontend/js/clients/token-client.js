@@ -32,5 +32,7 @@ export const isAuth = async () => {
 	// const url = `${BASE_URL}/token/status`;
 	// const { status, body, error } = await get(url);
 	// if (error) return false;
+	// return true;
+
 	return false;
 };

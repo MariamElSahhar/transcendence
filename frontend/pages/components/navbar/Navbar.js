@@ -10,7 +10,6 @@ export class Navbar extends Component {
 
 	render() {
 		const navActive = this.getAttribute("nav-active");
-
 		if (this.authenticated) {
 			return `<connected-navbar-component nav-active="${navActive}"></connected-navbar-component>`;
 		} else {

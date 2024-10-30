@@ -6,8 +6,8 @@ import { BootstrapUtils } from "../js/utils/bootstrap-utils.js";
 export class SignUpPage extends Component {
 	constructor() {
 		super();
-		this.passwordHiden = true;
-		this.confirmPasswordHiden = true;
+		this.passwordHidden = true;
+		this.confirmPasswordHidden = true;
 		this.startConfirmPassword = false;
 
 		this.InputValidUsername = false;
@@ -21,6 +21,7 @@ export class SignUpPage extends Component {
 
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
+		await import("./components/buttons/IntraButton.js");
 		const authenticated = await isAuth();
 		if (authenticated) {
 			window.redirect("/");
@@ -36,16 +37,14 @@ export class SignUpPage extends Component {
 		// }
 		return `
 			<navbar-component></navbar-component>
-			<div id="login"
-				class="d-flex justify-content-center align-items-center rounded-3">
-				<div class="login-card card m-3">
+			<div id="register" class="d-flex justify-content-center align-items-center w-100 h-100">
+				<div class="register-card card m-3">
 					<div class="card-body m-2">
-						<h2 class="card-title text-center m-5 dynamic-hover">Sign up</h2>
+						<h2 class="card-title text-center m-5 dynamic-hover">Sign Up</h2>
 						<form id="signup-form">
 							<div class="form-group mb-4">
 								<div class="input-group has-validation">
-									<span class="input-group-text"
-										id="inputGroupPrepend">@</span>
+									<span class="input-group-text" id="inputGroupPrepend">@</span>
 									<input type="text" class="form-control" id="username"
 											placeholder="Username" autocomplete="username">
 									<div id="username-feedback" class="invalid-feedback">
@@ -65,8 +64,7 @@ export class SignUpPage extends Component {
 									<input type="password" class="form-control"
 											id="password"
 											placeholder="Password">
-									<span id="password-eye"
-										class="input-group-text dynamic-hover">
+									<span id="password-eye" class="input-group-text dynamic-hover">
 										<i class="bi bi-eye-fill"></i>
 									</span>
 									<div id="password-feedback" class="invalid-feedback">
@@ -88,64 +86,52 @@ export class SignUpPage extends Component {
 									</div>
 								</div>
 							</div>
-						<alert-component id="alert-form" alert-display="false">
-						</alert-component>
-						<div class="d-flex mb-3">
-							<a id="have-account">Already have an account?</a>
-						</div>
-						<div class="row d-flex justify-content-center">
-							<button id="signupBtn" type="submit" class="btn btn-primary" disabled>Sign up</button>
-						</div>
+							<!-- <alert-component id="alert-form" alert-display="false">
+							</alert-component> -->
+							<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
+							<div class="mb-3">
+								<small role="button" id="have-account">Already have an account?</small>
+							</div>
+							<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
 						</form>
 						<hr class="my-4">
-						<div class="row">
-						<intra-button-component class="p-0"></intra-button-component>
-						</div>
+						<intra-button-component></intra-button-component>
 					</div>
 				</div>
 			</div>
 		`;
 	}
 
-	style() {
-		return `
-    <style>
-      #login {
-          /*height: 100vh;*/
-          height: 700px;
-      }
-
-      .login-card {
-          width: 550px;
-      }
-
-      #have-account {
-          font-size: 13px;
-      }
-      </style>
-    `;
-	}
-
 	postRender() {
 		this.username = this.querySelector("#username");
 		this.usernameFeedback = this.querySelector("#username-feedback");
+		this.email = this.querySelector("#email");
+		this.emailFeedback = this.querySelector("#email-feedback");
+		this.password = this.querySelector("#password");
+		this.passwordEyeIcon = this.querySelector("#password-eye");
+		this.passwordFeeback = this.querySelector("#password-feedback");
+		this.confirmPassword = this.querySelector("#confirm-password");
+		this.confirmPasswordEyeIcon = this.querySelector(
+			"#confirm-password-eye"
+		);
+		this.confirmPasswordFeedback = this.querySelector(
+			"#confirm-password-feedback"
+		);
+		this.haveAccount = this.querySelector("#have-account");
+		this.alertForm = this.querySelector("#alert-form");
+		this.signupBtn = this.querySelector("#signupBtn");
+		this.signupForm = this.querySelector("#signup-form");
+
 		super.addComponentEventListener(
 			this.username,
 			"input",
 			this.#usernameHandler
 		);
-
-		this.email = this.querySelector("#email");
-		this.emailFeedback = this.querySelector("#email-feedback");
 		super.addComponentEventListener(
 			this.email,
 			"input",
 			this.#emailHandler
 		);
-
-		this.password = this.querySelector("#password");
-		this.passwordEyeIcon = this.querySelector("#password-eye");
-		this.passwordFeeback = this.querySelector("#password-feedback");
 		super.addComponentEventListener(
 			this.password,
 			"input",
@@ -155,14 +141,6 @@ export class SignUpPage extends Component {
 			this.passwordEyeIcon,
 			"click",
 			this.#togglePasswordVisibility
-		);
-
-		this.confirmPassword = this.querySelector("#confirm-password");
-		this.confirmPasswordEyeIcon = this.querySelector(
-			"#confirm-password-eye"
-		);
-		this.confirmPasswordFeedback = this.querySelector(
-			"#confirm-password-feedback"
 		);
 		super.addComponentEventListener(
 			this.confirmPassword,
@@ -174,42 +152,18 @@ export class SignUpPage extends Component {
 			"click",
 			this.#toggleConfirmPasswordVisibility
 		);
-
-		this.haveAccount = this.querySelector("#have-account");
 		super.addComponentEventListener(this.haveAccount, "click", () =>
-			getRouter().navigate("/signin/")
+			window.redirect("/sign-in")
 		);
-		this.alertForm = this.querySelector("#alert-form");
-		this.signupBtn = this.querySelector("#signupBtn");
-		super.addComponentEventListener(this.signupBtn, "click", (event) => {
-			event.preventDefault();
-			this.#signupHandler();
-		});
-		this.signupForm = this.querySelector("#signup-form");
 		super.addComponentEventListener(this.signupForm, "submit", (event) => {
 			event.preventDefault();
 			this.#signupHandler();
 		});
 		if (this.error) {
-			this.alertForm.setAttribute("alert-message", this.errorMessage);
-			this.alertForm.setAttribute("alert-display", "true");
+			this.alertForm.innerHTML = this.errorMessage;
+			this.alertForm.classList.remove("d-none");
 			this.error = false;
 		}
-	}
-
-	reRender() {
-		this.innerHTML = this.render() + this.style();
-		this.postRender();
-	}
-
-	#renderLoader() {
-		return `
-      <div class="d-flex justify-content-center align-items-center" style="height: 700px)">
-          <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-          </div>
-      </div>
-    `;
 	}
 
 	async #usernameHandler() {
@@ -351,18 +305,18 @@ export class SignUpPage extends Component {
 	}
 
 	#togglePasswordVisibility() {
-		if (this.passwordHiden) {
+		if (this.passwordHidden) {
 			this.password.setAttribute("type", "text");
 		} else {
 			this.password.setAttribute("type", "password");
 		}
 		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-fill");
 		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-slash-fill");
-		this.passwordHiden = !this.passwordHiden;
+		this.passwordHidden = !this.passwordHidden;
 	}
 
 	#toggleConfirmPasswordVisibility() {
-		if (this.confirmPasswordHiden) {
+		if (this.confirmPasswordHidden) {
 			this.confirmPassword.setAttribute("type", "text");
 		} else {
 			this.confirmPassword.setAttribute("type", "password");
@@ -371,7 +325,7 @@ export class SignUpPage extends Component {
 		this.confirmPasswordEyeIcon.children[0].classList.toggle(
 			"bi-eye-slash-fill"
 		);
-		this.confirmPasswordHiden = !this.confirmPasswordHiden;
+		this.confirmPasswordHidden = !this.confirmPasswordHidden;
 	}
 
 	#formHandler() {
@@ -389,27 +343,23 @@ export class SignUpPage extends Component {
 
 	async #signupHandler() {
 		this.#startLoadButton();
-		try {
-			const { response, body } = await register({
-				username: this.username.value,
-				email: this.email.value,
-				password: this.password.value,
-			});
-			if (response.ok) {
-				// this.#loadEmailVerification();
-				window.redirect("/");
-			} else {
-				this.#resetLoadButton();
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
-				this.alertForm.setAttribute("alert-display", "true");
-			}
-		} catch (error) {
-			alert("error");
-			// ErrorPage.loadNetworkError();
+		const { success, error } = await register({
+			username: this.username.value,
+			email: this.email.value,
+			password: this.password.value,
+		});
+		if (success) {
+			// this.#loadEmailVerification();
+			this.alertForm.classList.add("d-none");
+			alert("redirect to otp");
+		} else {
+			this.#resetLoadButton();
+			this.alertForm.innerHTML = error;
+			this.alertForm.classList.remove("d-none");
 		}
 	}
 
-	#OAuthReturn() {
+	/* #OAuthReturn() {
 		if (!this.#isOAuthError()) {
 			return { render: true };
 		}
@@ -439,38 +389,45 @@ export class SignUpPage extends Component {
 			userManagementClient.logout();
 			this.error = true;
 			this.errorMessage = "Error, failed to store cache";
-			this.reRender();
+			super.update();
+			this.postRender();
 		} else {
-			getRouter().navigate("/");
+			window.redirect("/");
 		}
 	}
-
-	#startLoadButton() {
-		this.signupBtn.innerHTML = `
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span class="sr-only">Loading...</span>
-    `;
-		this.signupBtn.disabled = true;
-	}
-
-	#resetLoadButton() {
-		this.signupBtn.innerHTML = "Sign up";
-		this.signupBtn.disabled = false;
-	}
-
 	#loadEmailVerification() {
 		const cardBody = this.querySelector(".card-body");
-		cardBody.innerHTML = this.#renderEmailVerification();
-	}
-
-	#renderEmailVerification() {
-		return `
+		cardBody.innerHTML =  `
 			<h2 class="card-title text-center m-5 dynamic-hover">Activate your account</h2>
 			<p class="text-center">Please verify your email address to continue</p>
 			<div class="d-flex justify-content-center mb-4">
 				<i class="bi bi-envelope-arrow-up" style="font-size: 7rem;"></i>
 			</div>
     	`;
+	}
+
+	#renderLoader() {
+		return `
+			<div class="d-flex justify-content-center align-items-center" style="height: 700px)">
+				<div class="spinner-border" role="status">
+					<span class="d-none">Loading...</span>
+				</div>
+			</div>
+		`;
+	}
+	*/
+
+	#startLoadButton() {
+		this.signupBtn.innerHTML = `
+			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+			<span class="sr-only">Loading...</span>
+    	`;
+		this.signupBtn.disabled = true;
+	}
+
+	#resetLoadButton() {
+		this.signupBtn.innerHTML = "Sign up";
+		this.signupBtn.disabled = false;
 	}
 }
 

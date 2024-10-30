@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import environ
+from pathlib import Path
+from datetime import timedelta
 
 # Read environment variables
 env = environ.Env()
@@ -152,7 +153,6 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-from datetime import timedelta
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
@@ -183,3 +183,13 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_PATH": "/",
     "AUTH_COOKIE_SAMESITE": "Lax",
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Gmail SMTP settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'transcendence.42ad@gmail.com'
+EMAIL_HOST_PASSWORD = 'uuqp fyzm dtzs cnze'
+DEFAULT_FROM_EMAIL = '42AD Transcendence <transcendence.42ad@gmail.com>'   # Optional

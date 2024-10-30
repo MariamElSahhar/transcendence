@@ -85,7 +85,9 @@ export class Component extends HTMLElement {
 
 	render() {}
 
-	style() {}
+	style() {
+		return ``;
+	}
 
 	postRender() {}
 }

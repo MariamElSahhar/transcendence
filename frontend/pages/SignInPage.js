@@ -15,8 +15,7 @@ export class SignInPage extends Component {
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
 		await import("./components/buttons/IntraButton.js");
-		// const authenticated = await isAuth();
-		const authenticated = false;
+		const authenticated = await isAuth();
 		if (authenticated) {
 			window.redirect("/");
 			return false;
@@ -27,12 +26,10 @@ export class SignInPage extends Component {
 	render() {
 		return `
 			<navbar-component></navbar-component>
-			<div id="container">
-			<div id="login-card w-550"
-				class="d-flex justify-content-center align-items-center rounded-3">
+			<div class="d-flex justify-content-center align-items-center rounded-3 h-100">
 				<div class="login-card card m-3">
 					<div class="card-body m-2">
-						<h2 class="card-title text-center m-5">Sign in</h2>
+						<h2 class="card-title text-center m-5">Sign In</h2>
 						<form id="signin-form">
 							<div class="form-group mb-4">
 								<input type="text" class="form-control" id="login"
@@ -52,73 +49,50 @@ export class SignInPage extends Component {
 									</span>
 								</div>
 							</div>
-							<alert-component id="alert-form" alert-dispaly="false">
-							</alert-component>
+							<!-- <alert-component id="alert-form" alert-display="false">
+							</alert-component> -->
+							<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
 							<div class="d-flex justify-content-between mb-3">
-								<a id="dont-have-account">Don't have an account?</a>
-								<a id="forgot-password">Forgot pasword?</a>
+								<small role="button" id="dont-have-account">Don't have an account?</small>
+								<small role="button" id="forgot-password">Forgot pasword?</small>
 							</div>
-							<div class="row d-flex justify-content-center">
-								<button id="signin-btn" class="btn btn-primary" disabled>Sign in
-								</button>
-							</div>
+							<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Sign in</button>
 						</form>
 						<hr class="my-4">
-						<div class="row">
 						<intra-button-component class="p-0"></intra-button-component>
-						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		`;
-	}
-
-	style() {
-		return `
-		<style>
-			#login-card {
-				height: 700px;
-			}
-
-			.login-card {
-				width: 550px;
-			}
-
-			#forgot-password, #dont-have-account {
-				font-size: 13px;
-			}
-		</style>
-    	`;
 	}
 
 	postRender() {
 		this.forgotPassword = this.querySelector("#forgot-password");
-		super.addComponentEventListener(this.forgotPassword, "click", () => {
-			window.redirect("/reset-password/");
-		});
 		this.donthaveAccount = this.querySelector("#dont-have-account");
-		super.addComponentEventListener(this.donthaveAccount, "click", () => {
-			window.redirect("/signup/");
-		});
 		this.signinBtn = this.querySelector("#signin-btn");
-		super.addComponentEventListener(this.signinBtn, "click", (event) => {
-			event.preventDefault();
-			this.#signin();
-		});
 		this.signinForm = this.querySelector("#signin-form");
+		this.login = this.querySelector("#login");
+		this.password = this.querySelector("#password");
+		this.passwordEyeIcon = this.querySelector("#password-eye");
+		this.alertForm = this.querySelector("#alert-form");
+
+		super.addComponentEventListener(this.forgotPassword, "click", () => {
+			// window.redirect("/reset-password");
+			alert("redirect to /reset-password");
+		});
+		super.addComponentEventListener(this.donthaveAccount, "click", () => {
+			window.redirect("/sign-up");
+		});
 		super.addComponentEventListener(this.signinForm, "submit", (event) => {
 			event.preventDefault();
+			console.log("form");
 			this.#signin();
 		});
-		this.login = this.querySelector("#login");
 		super.addComponentEventListener(
 			this.login,
 			"input",
 			this.#loginHandler
 		);
-		this.password = this.querySelector("#password");
-		this.passwordEyeIcon = this.querySelector("#password-eye");
 		super.addComponentEventListener(
 			this.password,
 			"input",
@@ -129,18 +103,11 @@ export class SignInPage extends Component {
 			"click",
 			this.#togglePasswordVisibility
 		);
-
-		this.alertForm = this.querySelector("#alert-form");
 		if (this.error) {
-			this.alertForm.setAttribute("alert-message", this.errorMessage);
-			this.alertForm.setAttribute("alert-display", "true");
+			this.alertForm.innerHTML = this.errorMessage;
+			this.alertForm.classList.remove("d-none");
 			this.error = false;
 		}
-	}
-
-	reRender() {
-		super.update();
-		this.postRender();
 	}
 
 	#renderLoader() {
@@ -171,25 +138,22 @@ export class SignInPage extends Component {
 
 	async #signin() {
 		this.#startLoadButton();
-		try {
-			const { success, error } = await login({
-				username: this.login.value,
-				password: this.password.value,
-			});
-			if (success) {
-				// this.#loadAndCache(body.refresh_token);
-				window.redirect("/");
-			} else {
-				// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
-				// 	this.#loadTwoFactorComponent();
-				// 	return;
-				// }
-				this.#resetLoadButton();
-				this.alertForm.setAttribute("alert-message", error);
-				this.alertForm.setAttribute("alert-display", "true");
-			}
-		} catch (error) {
-			ErrorPage.loadNetworkError();
+		const { success, error } = await login({
+			username: this.login.value,
+			password: this.password.value,
+		});
+		if (success) {
+			// window.redirect(OTP-PATH);
+			this.alertForm.classList.add("d-none");
+			alert("redirect to otp");
+		} else {
+			// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
+			// 	this.#loadTwoFactorComponent();
+			// 	return;
+			// }
+			this.#resetLoadButton();
+			this.alertForm.innerHTML = error;
+			this.alertForm.classList.remove("d-none");
 		}
 	}
 
@@ -204,7 +168,7 @@ export class SignInPage extends Component {
 		container.appendChild(twoFactorComponent);
 	}
 
-	#OAuthReturn() {
+	/* #OAuthReturn() {
 		if (!this.#isOAuthError()) {
 			return { render: true };
 		}
@@ -227,18 +191,19 @@ export class SignInPage extends Component {
 		return true;
 	}
 
-	// async #loadAndCache(refreshToken) {
-	// 	this.innerHTML = this.#renderLoader();
-	// 	userManagementClient.refreshToken = refreshToken;
-	// 	if (!(await userManagementClient.restoreCache())) {
-	// 		userManagementClient.logout();
-	// 		this.error = true;
-	// 		this.errorMessage = "Error, failed to store cache";
-	// 		this.reRender();
-	// 	} else {
-	// 		window.redirect("/");
-	// 	}
-	// }
+	async #loadAndCache(refreshToken) {
+		this.innerHTML = this.#renderLoader();
+		userManagementClient.refreshToken = refreshToken;
+		if (!(await userManagementClient.restoreCache())) {
+			userManagementClient.logout();
+			this.error = true;
+			this.errorMessage = "Error, failed to store cache";
+			super.update();
+			this.postRender();
+		} else {
+			window.redirect("/");
+		}
+	} */
 
 	#togglePasswordVisibility() {
 		if (this.passwordHiden) {

@@ -104,7 +104,7 @@ export class ConnectedNavbar extends Component {
 	}
 
 	#navigate(event) {
-		getRouter().navigate(`/${event.target.id}/`);
+		window.redirect(`/${event.target.id}/`);
 	}
 
 	#logout() {
