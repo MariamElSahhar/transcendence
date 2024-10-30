@@ -18,10 +18,14 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
 
     def validate(self, attrs):
-        if CustomUser.objects.filter(username=attrs["username"]).exists():
-            raise ValidationError({"username": "This username is already taken."})
+        print("validation")
+        username = attrs.get("username")
+        email = attrs.get("email")
 
-        if CustomUser.objects.filter(email=attrs["email"]).exists():
+        if CustomUser.objects.filter(username=username).exists():
+            raise ValidationError({"username": "This username is already in use."})
+
+        if CustomUser.objects.filter(email=email).exists():
             raise ValidationError({"email": "This email is already in use."})
 
         return attrs
@@ -38,7 +42,7 @@ class LoginSerializer(serializers.Serializer):
         try:
             user = CustomUser.objects.get(username=username)
         except CustomUser.DoesNotExist:
-            raise ValidationError({"username": "User not found."})
+            raise ValidationError({"username": "Username not found."})
 
         if not user.check_password(password):
             raise ValidationError({"password": "Incorrect password."})

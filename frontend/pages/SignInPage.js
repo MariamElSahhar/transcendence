@@ -26,7 +26,7 @@ export class SignInPage extends Component {
 	render() {
 		return `
 			<navbar-component></navbar-component>
-			<div class="d-flex justify-content-center align-items-center rounded-3 h-100">
+			<div id="container" class="d-flex justify-content-center align-items-center rounded-3 h-100">
 				<div class="login-card card m-3">
 					<div class="card-body m-2">
 						<h2 class="card-title text-center m-5">Sign In</h2>
@@ -85,7 +85,6 @@ export class SignInPage extends Component {
 		});
 		super.addComponentEventListener(this.signinForm, "submit", (event) => {
 			event.preventDefault();
-			console.log("form");
 			this.#signin();
 		});
 		super.addComponentEventListener(
@@ -143,9 +142,8 @@ export class SignInPage extends Component {
 			password: this.password.value,
 		});
 		if (success) {
-			// window.redirect(OTP-PATH);
 			this.alertForm.classList.add("d-none");
-			alert("redirect to otp");
+			this.#loadTwoFactorComponent();
 		} else {
 			// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
 			// 	this.#loadTwoFactorComponent();
@@ -157,14 +155,12 @@ export class SignInPage extends Component {
 		}
 	}
 
-	#loadTwoFactorComponent() {
-		const twoFactorComponent = document.createElement(
-			"two-factor-auth-component"
-		);
-		twoFactorComponent.login = this.login.value;
-		twoFactorComponent.password = this.password.value;
+	async #loadTwoFactorComponent() {
+		await import("./components/TwoFactorAuth.js");
 		const container = this.querySelector("#container");
 		container.innerHTML = "";
+		const twoFactorComponent = document.createElement("tfa-component");
+		twoFactorComponent.login = this.login.value;
 		container.appendChild(twoFactorComponent);
 	}
 
