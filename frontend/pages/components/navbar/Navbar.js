@@ -63,7 +63,7 @@ export class Navbar extends Component {
 	}
 
 	get height() {
-		return this.querySelector(".navbar").offsetHeight;
+		return document.querySelector("navbar-component").offsetHeight;
 	}
 
 	addNotification(notification) {
