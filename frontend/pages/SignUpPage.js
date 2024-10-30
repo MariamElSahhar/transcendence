@@ -92,12 +92,10 @@ export class SignUpPage extends Component {
 							<div class="mb-3">
 								<small role="button" id="have-account">Already have an account?</small>
 							</div>
-							<div class="row d-flex justify-content-center">
-								<button id="signupBtn" type="submit" class="btn btn-primary" disabled>Sign up</button>
-							</div>
+							<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
 						</form>
 						<hr class="my-4">
-						<intra-button-component class="p-0"></intra-button-component>
+						<intra-button-component></intra-button-component>
 					</div>
 				</div>
 			</div>
@@ -166,16 +164,6 @@ export class SignUpPage extends Component {
 			this.alertForm.classList.remove("d-none");
 			this.error = false;
 		}
-	}
-
-	#renderLoader() {
-		return `
-      <div class="d-flex justify-content-center align-items-center" style="height: 700px)">
-          <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-          </div>
-      </div>
-    `;
 	}
 
 	async #usernameHandler() {
@@ -355,27 +343,23 @@ export class SignUpPage extends Component {
 
 	async #signupHandler() {
 		this.#startLoadButton();
-		try {
-			const { response, body } = await register({
-				username: this.username.value,
-				email: this.email.value,
-				password: this.password.value,
-			});
-			if (response.ok) {
-				// this.#loadEmailVerification();
-				window.redirect("/");
-			} else {
-				this.#resetLoadButton();
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
-				this.alertForm.setAttribute("alert-display", "true");
-			}
-		} catch (error) {
-			alert("error");
-			// ErrorPage.loadNetworkError();
+		const { success, error } = await register({
+			username: this.username.value,
+			email: this.email.value,
+			password: this.password.value,
+		});
+		if (success) {
+			// this.#loadEmailVerification();
+			this.alertForm.classList.add("d-none");
+			alert("redirect to otp");
+		} else {
+			this.#resetLoadButton();
+			this.alertForm.innerHTML = error;
+			this.alertForm.classList.remove("d-none");
 		}
 	}
 
-	#OAuthReturn() {
+	/* #OAuthReturn() {
 		if (!this.#isOAuthError()) {
 			return { render: true };
 		}
@@ -411,6 +395,27 @@ export class SignUpPage extends Component {
 			window.redirect("/");
 		}
 	}
+	#loadEmailVerification() {
+		const cardBody = this.querySelector(".card-body");
+		cardBody.innerHTML =  `
+			<h2 class="card-title text-center m-5 dynamic-hover">Activate your account</h2>
+			<p class="text-center">Please verify your email address to continue</p>
+			<div class="d-flex justify-content-center mb-4">
+				<i class="bi bi-envelope-arrow-up" style="font-size: 7rem;"></i>
+			</div>
+    	`;
+	}
+
+	#renderLoader() {
+		return `
+			<div class="d-flex justify-content-center align-items-center" style="height: 700px)">
+				<div class="spinner-border" role="status">
+					<span class="d-none">Loading...</span>
+				</div>
+			</div>
+		`;
+	}
+	*/
 
 	#startLoadButton() {
 		this.signupBtn.innerHTML = `
@@ -423,21 +428,6 @@ export class SignUpPage extends Component {
 	#resetLoadButton() {
 		this.signupBtn.innerHTML = "Sign up";
 		this.signupBtn.disabled = false;
-	}
-
-	#loadEmailVerification() {
-		const cardBody = this.querySelector(".card-body");
-		cardBody.innerHTML = this.#renderEmailVerification();
-	}
-
-	#renderEmailVerification() {
-		return `
-			<h2 class="card-title text-center m-5 dynamic-hover">Activate your account</h2>
-			<p class="text-center">Please verify your email address to continue</p>
-			<div class="d-flex justify-content-center mb-4">
-				<i class="bi bi-envelope-arrow-up" style="font-size: 7rem;"></i>
-			</div>
-    	`;
 	}
 }
 
