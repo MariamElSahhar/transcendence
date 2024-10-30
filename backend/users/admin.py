@@ -40,6 +40,8 @@ class CustomUserAdmin(UserAdmin):
                     "username",
                     "password1",
                     "password2",
+                    "is_email_verified",
+                    "is_staff",
                 ),
             },
         ),
