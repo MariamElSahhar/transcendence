@@ -1,14 +1,11 @@
 import pyotp
 from django.core.mail import send_mail
+from django.utils import timezone
 
 
 def generate_otp():
     totp = pyotp.TOTP(pyotp.random_base32(), interval=300)
     return totp.now()
-
-
-def verify_otp(otp, user_otp):
-    return otp == user_otp
 
 
 def send_otp(user):
@@ -18,6 +15,7 @@ def send_otp(user):
 
     otp = generate_otp()
     user.email_otp = otp
+    user.otp_created_at = timezone.now()
     user.save()
     send_mail(
         "Your Email OTP for 42AD Transcendence",

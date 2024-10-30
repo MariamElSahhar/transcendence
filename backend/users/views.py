@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import UserSerializer, LoginSerializer
-from .utils import send_otp
+from .serializers import UserSerializer, LoginSerializer, OTPVerificationSerializer
+from .otp_utils import send_otp
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import AllowAny
@@ -58,31 +58,25 @@ def user_retrieve_update_destroy_view(request, user_id):
 def login_view(request):
     login_serializer = LoginSerializer(data=request.data)
     if login_serializer.is_valid(raise_exception=True):
-        token_serializer = TokenObtainPairSerializer(data=request.data)
-        if token_serializer.is_valid(raise_exception=True):
-            tokens = token_serializer.validated_data
-            response = Response(
-                {"message": "Login successful"}, status=status.HTTP_200_OK
+        username = login_serializer.validated_data["username"]
+        password = login_serializer.validated_data["password"]
+
+        request.session['password'] = password
+
+        user = CustomUser.objects.filter(username=username).first()
+
+        if user and user.check_password(password) and user.is_superuser is True:
+            return Response({"message": "Login Successful."}, status=status.HTTP_200_OK)
+        elif user and user.check_password(password) and user.is_superuser is False:
+            send_otp(user)
+            return Response(
+                {"message": "OTP sent to your email."}, status=status.HTTP_200_OK
             )
-            # Access token
-            response.set_cookie(
-                key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-                value=tokens["access"],
-                expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-                secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-                samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+        else:
+            return Response(
+                {"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED
             )
-            # Refresh token
-            response.set_cookie(
-                key="refresh_token",
-                value=tokens["refresh"],
-                expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-                secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-                samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-            )
-            return response
+
     return Response(login_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -92,14 +86,14 @@ def login_view(request):
 def token_refresh_view(request):
     refresh_token = request.COOKIES.get("refresh_token")
     if refresh_token is None:
-        return Response({"detail": "Refresh token not provided"}, status=400)
+        return Response({"detail": "Refresh token not provided."}, status=400)
 
     request.data["refresh"] = refresh_token
     token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
     if token_serializer.is_valid():
         tokens = token_serializer.validated_data
         response = Response(
-            {"message": "Refresh successful"}, status=status.HTTP_200_OK
+            {"message": "Refresh successful."}, status=status.HTTP_200_OK
         )
         # Access token
         response.set_cookie(
@@ -120,18 +114,46 @@ def token_refresh_view(request):
 @permission_classes([AllowAny])
 def register_view(request):
     user_serializer = UserSerializer(data=request.data)
+
+    # Validate and save the new user data
     if user_serializer.is_valid():
         user = user_serializer.save(
             password=make_password(user_serializer.validated_data["password"])
         )
+
+        # Generate and send OTP
         send_otp(user)
-        token_serializer = TokenObtainPairSerializer(data=request.data)
+
+        return Response(
+            {"message": "Registration successful. OTP has been sent to your email."},
+            status=status.HTTP_201_CREATED,
+        )
+
+    return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# OTP VERIFICATION
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def verify_otp_view(request):
+    serializer = OTPVerificationSerializer(data=request.data)
+
+    # The serializer will validate OTP and expiration
+    if serializer.is_valid():
+        user = serializer.validated_data["user"]
+        password = request.session.get('password')
+
+        # Issue tokens here after successful OTP verification
+        token_serializer = TokenObtainPairSerializer(
+            data={"username": user.username, "password": password}
+        )
+
         if token_serializer.is_valid():
             tokens = token_serializer.validated_data
             response = Response(
-                {"message": "Registration successful"}, status=status.HTTP_200_OK
+                {"message": "OTP verified successfully. Login successful."},
+                status=status.HTTP_200_OK,
             )
-            # Access token
             response.set_cookie(
                 key=settings.SIMPLE_JWT["AUTH_COOKIE"],
                 value=tokens["access"],
@@ -140,7 +162,6 @@ def register_view(request):
                 httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
-            # Refresh token
             response.set_cookie(
                 key="refresh_token",
                 value=tokens["refresh"],
@@ -149,8 +170,9 @@ def register_view(request):
                 httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
+            del request.session['password']
             return response
-        else:
-            return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,12 +30,10 @@ class UserSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
-    otp = serializers.CharField(required=False, write_only=True, max_length=6)
 
     def validate(self, attrs):
         username = attrs.get("username")
         password = attrs.get("password")
-        otp = attrs.get("otp")
 
         try:
             user = CustomUser.objects.get(username=username)
@@ -44,12 +43,30 @@ class LoginSerializer(serializers.Serializer):
         if not user.check_password(password):
             raise ValidationError({"password": "Incorrect password."})
 
-        # Skip OTP validation for admin users
-        if not user.is_staff:
-            if not otp:
-                raise ValidationError({"otp": "This field is required."})
-            if user.email_otp != otp:
-                raise ValidationError({"otp": "Invalid OTP."})
+        attrs["user"] = user
+        return attrs
+
+
+class OTPVerificationSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    otp = serializers.CharField(required=True, write_only=True, max_length=6)
+
+    def validate(self, attrs):
+        username = attrs.get("username")
+        otp = attrs.get("otp")
+
+        try:
+            user = CustomUser.objects.get(username=username)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError({"username": "User not found."})
+
+        if user.email_otp != otp:
+            raise serializers.ValidationError({"otp": "Invalid OTP."})
+
+        # Check OTP expiration (5 minutes)
+        otp_age = timezone.now() - user.otp_created_at
+        if otp_age.total_seconds() > 300:
+            raise serializers.ValidationError({"otp": "OTP has expired."})
 
         attrs["user"] = user
         return attrs
