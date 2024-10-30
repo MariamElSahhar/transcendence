@@ -8,15 +8,16 @@ const request = async (url, options) => {
 			return {
 				status: response.status,
 				body: null,
-				error: `HTTP error occurred: ${response.statusText}`,
+				error: body.error,
 			};
 		}
 		return { status: response.status, body };
 	} catch (error) {
+		console.log(error);
 		return {
 			status: null,
 			body: null,
-			error: "Network error occurred.",
+			error,
 		};
 	}
 };

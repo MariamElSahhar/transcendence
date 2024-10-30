@@ -36,3 +36,11 @@ export const isAuth = async () => {
 
 	return false;
 };
+
+export const verifyOTP = async ({ username, otp }) => {
+	const url = `${BASE_URL}/verify-otp/`;
+	const requestBody = { username, otp };
+	const { status, body, error } = await post(url, requestBody);
+	if (error) return { success: false, error: error };
+	return { success: true };
+};
