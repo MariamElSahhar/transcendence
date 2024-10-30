@@ -117,6 +117,8 @@ def register_view(request):
 
     # Validate and save the new user data
     if user_serializer.is_valid():
+        password = user_serializer.validated_data["password"]
+        request.session['password'] = password
         user = user_serializer.save(
             password=make_password(user_serializer.validated_data["password"])
         )
