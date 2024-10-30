@@ -58,7 +58,6 @@ def user_retrieve_update_destroy_view(request, user_id):
 def login_view(request):
     login_serializer = LoginSerializer(data=request.data)
     if login_serializer.is_valid(raise_exception=True):
-
         token_serializer = TokenObtainPairSerializer(data=request.data)
         if token_serializer.is_valid(raise_exception=True):
             tokens = token_serializer.validated_data
