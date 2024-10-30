@@ -11,7 +11,7 @@ export class ConnectedNavbar extends Component {
 		return `
       <nav id="main-navbar" class="navbar navbar-expand-lg bg-body-tertiary">
           <div class="container-fluid">
-              <a class="navbar-brand" onclick="window.router.navigate('/')">Transcendence</a>
+              <a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                       data-bs-target="#navbarSupportedContent"
                       aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -52,9 +52,9 @@ export class ConnectedNavbar extends Component {
                           <ul class="dropdown-menu dropdown-menu-end"
                               aria-labelledby="dropdownMenuLink">
                               <li><a class="dropdown-item"
-                                     onclick="window.router.navigate('/profile/${username}/')">Profile</a></li>
+                                     onclick="window.redirect('/profile/${username}/')">Profile</a></li>
                               <li><a class="dropdown-item"
-                                     onclick="window.router.navigate('/settings/')">Settings</a></li>
+                                     onclick="window.redirect('/settings/')">Settings</a></li>
                               <li><a id="logout" class="dropdown-item text-danger">Sign out</a></li>
                           </ul>
                       </div>
@@ -104,7 +104,7 @@ export class ConnectedNavbar extends Component {
 	}
 
 	#navigate(event) {
-		getRouter().navigate(`/${event.target.id}/`);
+		window.redirect(`/${event.target.id}/`);
 	}
 
 	#logout() {

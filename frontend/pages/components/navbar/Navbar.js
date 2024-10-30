@@ -8,13 +8,14 @@ export class Navbar extends Component {
 
 	render() {
 		const navActive = this.getAttribute("nav-active");
-		if (isAuth()) {
+		if (this.authenticated) {
 			return `<connected-navbar-component nav-active="${navActive}"></connected-navbar-component>`;
 		}
 		return `<disconnected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
 	}
 
 	async connectedCallback() {
+		this.authenticated = await isAuth();
 		await import("./ConnectedNavbar.js");
 		await import("./DisconnectedNavbar.js");
 		super.connectedCallback();
