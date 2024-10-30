@@ -1,11 +1,11 @@
 const routes = {
-	"/home": {
-		component: "home-page",
-		path: "../pages/HomePage.js",
-	},
 	"/": {
 		component: "home-page",
 		path: "../pages/HomePage.js",
+	},
+	"/home": {
+		component: "home-page",
+		path: "../pages/components/home/Home.js",
 	},
 	"/profile": {
 		component: "user-profile-page",
@@ -34,10 +34,10 @@ export const redirect = (path) => {
 	handleLocation();
 };
 
-const route = (event) => {
+const route = (event, str) => {
 	event = event || window.event;
 	event.preventDefault();
-	window.history.pushState({}, "", event.target.href);
+	window.history.pushState({}, "", str);
 	handleLocation();
 };
 
