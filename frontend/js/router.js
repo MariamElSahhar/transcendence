@@ -1,11 +1,27 @@
 const routes = {
+	"/home": {
+		component: "home-page",
+		path: "../pages/HomePage.js",
+	},
+	"/": {
+		component: "home-page",
+		path: "../pages/HomePage.js",
+	},
 	"/login": {
 		component: "login-page",
 		path: "../pages/LoginPage.js",
 	},
-	"/register": {
-		component: "register-page",
-		path: "../pages/RegisterPage.js",
+	"/sign-in": {
+		component: "sign-in-page",
+		path: "../pages/SignInPage.js",
+	},
+	"/sign-up": {
+		component: "sign-up-page",
+		path: "../pages/SignUpPage.js",
+	},
+	404: {
+		component: "not-found-page",
+		path: "../pages/NotFound.js",
 	},
 };
 

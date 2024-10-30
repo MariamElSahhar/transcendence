@@ -1,80 +1,41 @@
 const BASE_URL = "http://127.0.0.1:8000/api/users";
-import * as HttpRequests from "../utils/http-requests.js";
+import { get, post, patch, del } from "../utils/http-requests.js";
 
 // Fetch all users
 export const fetchUsers = async () => {
-	try {
-		response = HttpRequests.get(`${BASE_URL}/`);
-		if (!response.ok) {
-			throw new Error("Network response was not ok");
-		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Failed to fetch users:", error);
-		throw error;
-	}
+	const { status, body, error } = await get(`${BASE_URL}/`);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data };
 };
 
 // Function user by ID
 export const fetchUserById = async (id) => {
-	try {
-		const url = `${BASE_URL}/${id}/`;
-		reponse = HttpRequests.get(url);
-		if (!response.ok) {
-			throw new Error("Network response was not ok");
-		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Failed to fetch user:", error);
-		throw error;
-	}
+	const url = `${BASE_URL}/${id}/`;
+	const { status, body, error } = get(url);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data };
 };
 
 // Create user
 export const createUser = async (userData) => {
-	try {
-		const url = `${BASE_URL}/${id}/`;
-		reponse = HttpRequests.get(url, userData);
-		if (!response.ok) {
-			throw new Error("Network response was not ok");
-		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Failed to create user:", error);
-		throw error;
-	}
+	const url = `${BASE_URL}/${id}/`;
+	const { status, body, error } = post(url, userData);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data };
 };
 
 // Update existing user by id
 export const updateUser = async (id, userData) => {
-	try {
-		const url = `${BASE_URL}/${id}/`;
-		reponse = HttpRequests.get(url, userData);
-		if (!response.ok) {
-			throw new Error("Network response was not ok");
-		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Failed to update user:", error);
-		throw error;
-	}
+	const url = `${BASE_URL}/${id}/`;
+	const { status, body, error } = patch(url, userData);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data };
 };
 
 // Delete user
 export const deleteUser = async (id) => {
-	try {
-		const url = `${BASE_URL}/${id}/`;
-		reponse = HttpRequests.get(url, userData);
-		if (!response.ok) {
-			throw new Error("Network response was not ok");
-		}
-		return true;
-	} catch (error) {
-		console.error("Failed to delete user:", error);
-		throw error;
-	}
+	const url = `${BASE_URL}/${id}/`;
+	const { status, body, error } = del(url, userData);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data };
 };
