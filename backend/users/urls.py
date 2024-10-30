@@ -6,6 +6,7 @@ from .views import (
     login_view,
     token_refresh_view,
 	token_status_view,
+    verify_otp_view
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView, TokenRefreshView)
@@ -27,6 +28,7 @@ urlpatterns = [
     path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
     path("token/refresh/", token_refresh_view, name="token_refresh"),
+    path("verify-otp/", verify_otp_view, name="verify-otp"),
     path("token/status/", token_status_view, name="token_status"),
 
     # API Schema and AutoDocs
