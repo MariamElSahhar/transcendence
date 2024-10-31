@@ -1,61 +1,47 @@
+// UserProfileStatsCards.js
 import { Component } from "../../components/Component.js";
-import { dummyData } from "./dummyData.js"; // Only if needed, or remove
 
 export class UserProfileStatsCards extends Component {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    connectedCallback() {
-        this.render(); // Render the base structure
-        this.loadStatsFromData(); // Load data after rendering
-    }
+  render() {
+    return `
+      <div class="row gx-3 gy-2 mb-3 mt-3">
+        <div class="col-xl-3 col-sm-6">
+          <user-profile-stats-card-component id="elo-card" title="Elo" icon="bi-bar-chart-line" icon-bg="bg-danger" footer-title="Since last week" placeholder="true"></user-profile-stats-card-component>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+          <user-profile-stats-card-component id="win-rate-card" title="Win Rate" icon="bi-trophy" icon-bg="bg-success" footer-title="Since last week" placeholder="true"></user-profile-stats-card-component>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+          <user-profile-stats-card-component id="matches-played-card" title="Played Games" icon="bi-controller" icon-bg="bg-primary" footer-title="Since last week" placeholder="true"></user-profile-stats-card-component>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+          <user-profile-stats-card-component id="friends-card" title="Friends" icon="bi-people" icon-bg="bg-warning" footer-title="Since last week" placeholder="true"></user-profile-stats-card-component>
+        </div>
+      </div>
+    `;
+  }
 
-    render() {
-        return `
-            <div class="row gx-3 gy-2 mb-3 mt-3">
-                <div class="col-xl-3 col-sm-6">
-                    <user-profile-stats-card id="elo-card" title="Elo"
-                                              icon="bi-bar-chart-line" icon-bg="bg-danger"
-                                              footer-title="Since last week">
-                    </user-profile-stats-card>
-                </div>
-                <div class="col-xl-3 col-sm-6">
-                    <user-profile-stats-card id="win-rate-card" title="Win Rate"
-                                              icon="bi-trophy" icon-bg="bg-success"
-                                              footer-title="Since last week">
-                    </user-profile-stats-card>
-                </div>
-                <div class="col-xl-3 col-sm-6">
-                    <user-profile-stats-card id="matches-played-card" title="Played Games"
-                                              icon="bi-controller" icon-bg="bg-primary"
-                                              footer-title="Since last week">
-                    </user-profile-stats-card>
-                </div>
-                <div class="col-xl-3 col-sm-6">
-                    <user-profile-stats-card id="friends-card" title="Friends"
-                                              icon="bi-people" icon-bg="bg-warning"
-                                              footer-title="Since last week">
-                    </user-profile-stats-card>
-                </div>
-            </div>
-        `;
-    }
+  postRender() {
+    this.loadStatsData();
+  }
 
-    loadStatsFromData() {
-        // Extract JSON data from the `data` attribute
-        const statsData = JSON.parse(this.getAttribute("data") || "{}");
+  loadStatsData() {
+    const data = JSON.parse(this.getAttribute('data') || '{}');
+    
+    const { elo = 0, winRate = 0, matchesPlayed = 0, friends = 0 } = data;
 
-        // Set values for each child `user-profile-stats-card`
-        this.querySelector("#elo-card").loadValues(statsData.elo, 10, "pts");
-        this.querySelector("#win-rate-card").loadValues(statsData.winRate, 5, "%");
-        this.querySelector("#matches-played-card").loadValues(statsData.matchesPlayed, 2, "games");
-        this.querySelector("#friends-card").loadValues(statsData.friends, 1, "friends");
-    }
+    this.querySelector('#elo-card').loadValues(elo, 'pts');
+    this.querySelector('#win-rate-card').loadValues(winRate, '%');
+    this.querySelector('#matches-played-card').loadValues(matchesPlayed, 'games');
+    this.querySelector('#friends-card').loadValues(friends, 'friends');
+  }
 }
 
-customElements.define("user-profile-stats-cards", UserProfileStatsCards);
-
+customElements.define('user-profile-stats-cards', UserProfileStatsCards);
 
 // import {Component} from "../../components/Component.js";
 // import { dummyData } from "./dummyData.js";

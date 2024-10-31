@@ -30,10 +30,10 @@ export class UserProfileContent extends Component {
 	}
 
 	async postRender() {
-		// const username = this.getAttribute("username");
-		const username = "marwa";
-		// const userId = await this.getUserId(username);
-		const userId = 3;
+		const username = this.getAttribute("username");
+		// const username = "marwa";
+		const userId = await this.getUserId(username);
+		// const userId = 3;
 		if (!userId) {
 			return;
 		}

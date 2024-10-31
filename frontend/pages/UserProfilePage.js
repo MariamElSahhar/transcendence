@@ -9,34 +9,143 @@ export class UserProfilePage extends Component {
 
     async connectedCallback() {
         await import("./components/navbar/Navbar.js");
+        await import("./components/buttons/FriendsButton.js");
         await import("./components/profile/UserProfileHeader.js");
         await import("./components/profile/UserProfileChart.js");
         await import("./components/profile/UserProfileChartsCards.js");
         await import("./components/profile/UserProfileMatchList.js");
-        // await import("./components/profile/UserProfileStatsCard.js");
-        // await import("./components/profile/UserProfileStatsCards.js");
+        await import("./components/profile/UserProfileStatsCard.js");
+        await import("./components/profile/UserProfileStatsCards.js");
         await import("./components/layouts/FriendsSidebar.js");
 
         // Render the HTML structure and load data into components
-        this.innerHTML = this.render();
+        this.innerHTML = this.render() + this.style();
         this.loadUserProfileData();
     }
 
     render() {
         return `
             <navbar-component></navbar-component>
-            <div class="profile-page">
+            <div class="profile-page container">
                 <user-profile-header></user-profile-header>
-                <div class="profile-content">
+                <div class="profile-content d-flex">
                     <friends-sidebar-component
                         main-component="user-profile-content-component"
                         username="${this.getAttribute("username")}">
                     </friends-sidebar-component>
-                    <user-profile-stats-cards></user-profile-stats-cards>
-                    <user-profile-charts-cards></user-profile-charts-cards>
-                    <user-profile-match-list></user-profile-match-list>
+                    <div class="profile-main-content">
+                        <user-profile-stats-cards></user-profile-stats-cards>
+                        <user-profile-charts-cards></user-profile-charts-cards>
+                        <user-profile-match-list></user-profile-match-list>
+                    </div>
                 </div>
             </div>
+        `;
+    }
+
+    style() {
+        return `
+            <style>
+                .container {
+                    max-width: 1200px;
+                    margin: auto;
+                    padding: 20px;
+                    font-family: Arial, sans-serif;
+                    color: #333;
+                }
+
+                /* Profile Page Layout */
+                .profile-page {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .profile-content {
+                    display: flex;
+                    gap: 20px;
+                    margin-top: 20px;
+                }
+
+                /* Sidebar styling */
+                friends-sidebar-component {
+                    flex: 1;
+                    min-width: 250px;
+                    max-width: 300px;
+                    background-color: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                /* Main content styling */
+                .profile-main-content {
+                    flex: 3;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 30px;
+                }
+
+                /* Stats Cards styling */
+                user-profile-stats-cards {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                    gap: 20px;
+                }
+
+                /* Card styling */
+                user-profile-stats-card-component,
+                user-profile-charts-cards,
+                user-profile-match-list {
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    background-color: #fff;
+                    padding: 20px;
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                }
+
+                /* Card hover effect */
+                user-profile-stats-card-component:hover,
+                user-profile-charts-cards:hover,
+                user-profile-match-list:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                }
+
+                /* Header styling */
+                user-profile-header {
+                    background-color: #6c757d;
+                    color: #fff;
+                    padding: 20px;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                /* Match List specific styling */
+                user-profile-match-list {
+                    margin-top: 20px;
+                }
+                
+                /* Styling for titles */
+                h5 {
+                    font-size: 1.25rem;
+                    font-weight: 600;
+                    color: #495057;
+                }
+
+                /* Button and link styles */
+                .btn, a {
+                    color: #007bff;
+                    text-decoration: none;
+                    transition: color 0.2s ease;
+                }
+
+                .btn:hover, a:hover {
+                    color: #0056b3;
+                }
+            </style>
         `;
     }
 
@@ -57,17 +166,17 @@ export class UserProfilePage extends Component {
             console.error("UserProfileHeader component not found.");
         }
     }
-
+    
     loadStatsCardsData() {
-		const statsCards = this.querySelector('user-profile-stats-cards');
-		if (statsCards) {
-			const statsData = dummyData.stats || { elo: 0, winRate: 0, matchesPlayed: 0, friends: 0 };
-			statsCards.setAttribute('data', JSON.stringify(statsData));
-		} else {
-			console.error("UserProfileStatsCards component not found.");
-		}
-	}
-	
+        const statsCards = this.querySelector('user-profile-stats-cards');
+        if (statsCards) {
+          const statsData = dummyData.stats;
+          statsCards.setAttribute('data', JSON.stringify(statsData));
+        } else {
+          console.error("UserProfileStatsCards component not found.");
+        }
+      }
+
     loadMatchListData() {
         const matchList = this.querySelector('user-profile-match-list');
         if (matchList) {
@@ -92,8 +201,6 @@ export class UserProfilePage extends Component {
 }
 
 customElements.define("user-profile-page", UserProfilePage);
-
-
 
 // import { Component } from "./components/Component.js";
 // import { isAuth } from "../../../js/clients/token-client.js";
