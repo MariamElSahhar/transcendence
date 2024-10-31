@@ -27,6 +27,7 @@ export class SignUpPage extends Component {
 			window.redirect("/");
 			return false;
 		}
+		this.#signupHandler();
 		super.connectedCallback();
 	}
 
@@ -37,7 +38,7 @@ export class SignUpPage extends Component {
 		// }
 		return `
 			<navbar-component></navbar-component>
-			<div id="register" class="d-flex justify-content-center align-items-center w-100 h-100">
+			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
 				<div class="register-card card m-3">
 					<div class="card-body m-2">
 						<h2 class="card-title text-center m-5 dynamic-hover">Sign Up</h2>
@@ -171,29 +172,9 @@ export class SignUpPage extends Component {
 		const { validity, missingRequirements } =
 			InputValidator.isValidUsername(this.username.value);
 		if (validity) {
-			this.usernameTimeout = setTimeout(() => {
-				this.#usernameExist();
-			}, 500);
+			this.#setUsernameInputValidity(true);
 		} else {
 			this.#setUsernameInputValidity(false, missingRequirements[0]);
-		}
-	}
-
-	async #usernameExist() {
-		try {
-			const { response, body } = await userManagementClient.usernameExist(
-				this.username.value
-			);
-			if (response.ok && body.is_taken) {
-				this.#setUsernameInputValidity(
-					false,
-					"Username already taken."
-				);
-			} else {
-				this.#setUsernameInputValidity(true);
-			}
-		} catch (error) {
-			this.#setUsernameInputValidity(true);
 		}
 	}
 
@@ -215,26 +196,9 @@ export class SignUpPage extends Component {
 			this.email.value
 		);
 		if (validity) {
-			this.emailTimeout = setTimeout(() => {
-				this.#emailExist();
-			}, 500);
+			this.#setEmailInputValidity(true);
 		} else {
 			this.#setEmailInputValidity(false, missingRequirements[0]);
-		}
-	}
-
-	async #emailExist() {
-		try {
-			const { response, body } = await userManagementClient.emailExist(
-				this.email.value
-			);
-			if (response.ok && body.is_taken) {
-				this.#setEmailInputValidity(false, "Email already taken.");
-			} else {
-				this.#setEmailInputValidity(true);
-			}
-		} catch (error) {
-			this.#setEmailInputValidity(true);
 		}
 	}
 
@@ -349,9 +313,8 @@ export class SignUpPage extends Component {
 			password: this.password.value,
 		});
 		if (success) {
-			// this.#loadEmailVerification();
 			this.alertForm.classList.add("d-none");
-			alert("redirect to otp");
+			this.#loadTwoFactorComponent();
 		} else {
 			this.#resetLoadButton();
 			this.alertForm.innerHTML = error;
@@ -428,6 +391,15 @@ export class SignUpPage extends Component {
 	#resetLoadButton() {
 		this.signupBtn.innerHTML = "Sign up";
 		this.signupBtn.disabled = false;
+	}
+
+	async #loadTwoFactorComponent() {
+		await import("./components/TwoFactorAuth.js");
+		const container = this.querySelector("#container");
+		container.innerHTML = "";
+		const twoFactorComponent = document.createElement("tfa-component");
+		twoFactorComponent.login = this.username.value;
+		container.appendChild(twoFactorComponent);
 	}
 }
 

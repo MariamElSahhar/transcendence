@@ -57,7 +57,8 @@ def user_retrieve_update_destroy_view(request, user_id):
 @permission_classes([AllowAny])
 def login_view(request):
     login_serializer = LoginSerializer(data=request.data)
-    if login_serializer.is_valid(raise_exception=True):
+
+    if login_serializer.is_valid():
         username = login_serializer.validated_data["username"]
         password = login_serializer.validated_data["password"]
 
@@ -77,8 +78,37 @@ def login_view(request):
                 {"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED
             )
 
-    return Response(login_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    error_messages = []
+    for _, errors in login_serializer.errors.items():
+        error_messages.extend(errors)
+    return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+# REGISTRATION
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def register_view(request):
+    user_serializer = UserSerializer(data=request.data)
+
+    if user_serializer.is_valid():
+        # Save and handle successful registration
+        password = user_serializer.validated_data["password"]
+        request.session['password'] = password
+        user = user_serializer.save(password=make_password(password))
+
+        # Send OTP
+        send_otp(user)
+
+        return Response(
+            {"message": "Registration successful. OTP has been sent to your email."},
+            status=status.HTTP_201_CREATED,
+        )
+
+    error_messages = []
+    for _, errors in user_serializer.errors.items():
+        error_messages.extend(errors)
+    return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
 # REFRESH TOKEN
 @api_view(["POST"])
@@ -86,7 +116,7 @@ def login_view(request):
 def token_refresh_view(request):
     refresh_token = request.COOKIES.get("refresh_token")
     if refresh_token is None:
-        return Response({"detail": "Refresh token not provided."}, status=400)
+        return Response({"error": "Refresh token not provided."}, status=400)
 
     request.data["refresh"] = refresh_token
     token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
@@ -106,38 +136,16 @@ def token_refresh_view(request):
         )
         return response
     else:
-        return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        error_messages = []
+        for _, errors in token_serializer.errors.items():
+            error_messages.extend(errors)
+        return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # STATUS
 @api_view(["GET"])
 def token_status_view(request):
     return Response({"message": "Token valid"}, status=status.HTTP_200_OK)
-
-# REGISTRATION
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def register_view(request):
-    user_serializer = UserSerializer(data=request.data)
-
-    # Validate and save the new user data
-    if user_serializer.is_valid():
-        password = user_serializer.validated_data["password"]
-        request.session['password'] = password
-        user = user_serializer.save(
-            password=make_password(user_serializer.validated_data["password"])
-        )
-
-        # Generate and send OTP
-        send_otp(user)
-
-        return Response(
-            {"message": "Registration successful. OTP has been sent to your email."},
-            status=status.HTTP_201_CREATED,
-        )
-
-    return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 # OTP VERIFICATION
 @api_view(["POST"])
@@ -178,8 +186,13 @@ def verify_otp_view(request):
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
             del request.session['password']
-            return response
-
-        return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            error_messages = []
+            for _, errors in token_serializer.errors.items():
+                error_messages.extend(errors)
+            return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        error_messages = []
+        for _, errors in serializer.errors.items():
+            error_messages.extend(errors)
+        return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)

@@ -10,7 +10,7 @@ docker-down:
 
 # LOCAL
 run-frontend:
-	cd frontend && ENV=dev http-server -P http://localhost:8080? -c-1
+	cd frontend && ENV=dev http-server -P http://localhost:80? -c-1 -p 80
 
 run-backend:
 	ENV=dev $(PYTHON_ENV) backend/manage.py migrate
