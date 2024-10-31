@@ -218,11 +218,12 @@ export class SettingsContent extends Component {
           </div>
       </div>
     `;
-	// this.postRender();
+	this.postRender();
   }
 
 
   async postRender() {
+	console.log("here")
     if (!await this.loadDefaultSettings()) {
       return;
     }
@@ -321,9 +322,13 @@ export class SettingsContent extends Component {
     try {
     //   const {response, body} = await userManagementClient.getMe();
     //   if (response.ok) {
+		console.log("yes")
         this.defaultUsername = body['username'];
+		console.log(this.defaultUsername)
         this.defaultEmail = body['email'];
+		console.log(this.defaultEmail)
         this.defaultHas2FA = body['2fa'];
+		console.log(this.defaultHas2FA)
         this.innerHTML = this.renderWithDefaultSettings() + this.style();
         return true;
     //   } else {
