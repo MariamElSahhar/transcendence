@@ -1,23 +1,24 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
+import { Component } from "./Component.js";
 
-class HomeContent extends HTMLElement {
+class HomeContent extends Component {
 	constructor() {
 		super();
-		this.attachShadow({ mode: "open" });
 		this.scene = null;
 		this.renderer = null;
 		this.camera = null;
+		this.cube = null;
 	}
 
 	async connectedCallback() {
-		this.render();
+		super.connectedCallback();
 		this.initThreeJS();
-		this.addResizeListener();
+		this.render();
 	}
 
 	render() {
-		this.shadowRoot.innerHTML = `
+		return `
         <style>
           #canvas-container {
             width: 100%;
@@ -37,7 +38,7 @@ class HomeContent extends HTMLElement {
 	}
 
 	initThreeJS() {
-		const container = this.shadowRoot.querySelector("#canvas-container");
+		const container = this.querySelector("#canvas-container");
 
 		// Check if WebGL is supported
 		if (!WebGL.isWebGLAvailable()) {
@@ -62,28 +63,26 @@ class HomeContent extends HTMLElement {
 
 		// Load the texture (your image)
 		const textureLoader = new THREE.TextureLoader();
-		const texture = textureLoader.load('./images/pingy_pong.png', () => {
-			// When the texture is loaded, update the material
-			const geometry = new THREE.BoxGeometry(4, 4, 4); // Make the cube larger (4x4x4)
-			const material = new THREE.MeshBasicMaterial({ map: texture }); // Apply the texture
-			const cube = new THREE.Mesh(geometry, material);
-			this.scene.add(cube);
-		}, undefined, (error) => {
-			console.error('Error loading texture:', error);
-		});
+		const texture = textureLoader.load(
+			"./images/pingy_pong.png",
+			() => {
+				// When the texture is loaded, update the material
+				const geometry = new THREE.BoxGeometry(4, 4, 4); // Make the cube larger (4x4x4)
+				const material = new THREE.MeshBasicMaterial({ map: texture }); // Apply the texture
+				const cube = new THREE.Mesh(geometry, material);
+				this.scene.add(cube);
+			},
+			undefined,
+			(error) => {
+				console.error("Error loading texture:", error);
+			}
+		);
 
 		this.animate();
 	}
 
-	addResizeListener() {
-		// Handle window resizing
-		window.addEventListener('resize', () => {
-			this.onWindowResize();
-		});
-	}
-
 	onWindowResize() {
-		const container = this.shadowRoot.querySelector("#canvas-container");
+		const container = this.querySelector("#canvas-container");
 		const width = container.clientWidth;
 		const height = container.clientHeight;
 
@@ -96,6 +95,7 @@ class HomeContent extends HTMLElement {
 	}
 
 	animate() {
+		if (!this.scene) return;
 		requestAnimationFrame(() => this.animate());
 
 		// Example animation logic
@@ -108,15 +108,23 @@ class HomeContent extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-		// Clean up Three.js resources when the element is removed
-		if (this.renderer) {
-			this.renderer.dispose();
-			this.scene = null;
-			this.camera = null;
+		if (this.animationFrameId) {
+			cancelAnimationFrame(this.animationFrameId);
 		}
 
-		// Remove resize listener when the component is disconnected
-		window.removeEventListener('resize', this.onWindowResize);
+		if (this.renderer) {
+			this.renderer.dispose();
+			this.renderer.domElement.remove();
+			this.scene = null;
+			this.camera = null;
+			this.cube = null;
+		}
+
+		super.disconnectedCallback();
+	}
+
+	postRender() {
+		super.addComponentEventListener(window, "resize", this.onWindowResize);
 	}
 }
 
