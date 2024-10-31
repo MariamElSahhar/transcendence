@@ -77,8 +77,8 @@ export class SignInPage extends Component {
 		this.alertForm = this.querySelector("#alert-form");
 
 		super.addComponentEventListener(this.forgotPassword, "click", () => {
-			// window.redirect("/reset-password");
-			alert("redirect to /reset-password");
+			 window.redirect("/reset-password");
+			// alert("redirect to /reset-password");
 		});
 		super.addComponentEventListener(this.donthaveAccount, "click", () => {
 			window.redirect("/sign-up");

@@ -23,6 +23,10 @@ const routes = {
 		component: "sign-up-page",
 		path: "../pages/SignUpPage.js",
 	},
+	"/reset-password": {  // New reset password route
+		component: "reset-password-page",
+		path: "../pages/ResetPasswordPage.js",
+	},
 	404: {
 		component: "not-found-page",
 		path: "../pages/NotFound.js",
