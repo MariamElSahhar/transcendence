@@ -172,29 +172,9 @@ export class SignUpPage extends Component {
 		const { validity, missingRequirements } =
 			InputValidator.isValidUsername(this.username.value);
 		if (validity) {
-			this.usernameTimeout = setTimeout(() => {
-				this.#usernameExist();
-			}, 500);
+			this.#setUsernameInputValidity(true);
 		} else {
 			this.#setUsernameInputValidity(false, missingRequirements[0]);
-		}
-	}
-
-	async #usernameExist() {
-		try {
-			const { response, body } = await userManagementClient.usernameExist(
-				this.username.value
-			);
-			if (response.ok && body.is_taken) {
-				this.#setUsernameInputValidity(
-					false,
-					"Username already taken."
-				);
-			} else {
-				this.#setUsernameInputValidity(true);
-			}
-		} catch (error) {
-			this.#setUsernameInputValidity(true);
 		}
 	}
 
@@ -216,26 +196,9 @@ export class SignUpPage extends Component {
 			this.email.value
 		);
 		if (validity) {
-			this.emailTimeout = setTimeout(() => {
-				this.#emailExist();
-			}, 500);
+			this.#setEmailInputValidity(true);
 		} else {
 			this.#setEmailInputValidity(false, missingRequirements[0]);
-		}
-	}
-
-	async #emailExist() {
-		try {
-			const { response, body } = await userManagementClient.emailExist(
-				this.email.value
-			);
-			if (response.ok && body.is_taken) {
-				this.#setEmailInputValidity(false, "Email already taken.");
-			} else {
-				this.#setEmailInputValidity(true);
-			}
-		} catch (error) {
-			this.#setEmailInputValidity(true);
 		}
 	}
 

@@ -7,7 +7,6 @@ export class SignInPage extends Component {
 		this.isValidEmailInput = false;
 		this.isValidPasswordInput = false;
 		this.passwordHiden = true;
-
 		this.error = false;
 		this.errorMessage = "";
 	}
