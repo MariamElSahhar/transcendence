@@ -1,5 +1,5 @@
 import { Component } from '../Component.js';
-// import { Keys } from '@utils/Keys.js';
+import { Keys } from '../../utils/Keys.js';
 // import { userManagementClient } from '@utils/api';
 import { ErrorPage } from '../../utils/ErrorPage.js';
 import { NavbarUtils } from '../../utils/NavbarUtils.js';
