@@ -19,22 +19,9 @@ class HomeContent extends Component {
 
 	render() {
 		return `
-        <style>
-          #canvas-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-          }
-          canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-          }
-        </style>
-        <div id="canvas-container">
-          <h1> Home Content </h1>
-        </div>
-      `;
+			<div id="canvas-container" class="h-100 w-100">
+			</div>
+      	`;
 	}
 
 	initThreeJS() {
