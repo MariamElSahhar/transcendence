@@ -117,7 +117,7 @@ def register_view(request):
 def token_refresh_view(request):
     refresh_token = request.COOKIES.get("refresh_token")
     if refresh_token is None:
-        return Response({"detail": "Refresh token not provided."}, status=400)
+        return Response({"error": "Refresh token not provided."}, status=400)
 
     request.data["refresh"] = refresh_token
     token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
@@ -137,7 +137,10 @@ def token_refresh_view(request):
         )
         return response
     else:
-        return Response({"error": token_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        error_messages = []
+        for _, errors in token_serializer.errors.items():
+            error_messages.extend(errors)
+        return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # STATUS
@@ -184,8 +187,13 @@ def verify_otp_view(request):
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
             del request.session['password']
-            return response
-
-        return Response({"error": token_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            error_messages = []
+            for _, errors in token_serializer.errors.items():
+                error_messages.extend(errors)
+            return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        error_messages = []
+        for _, errors in serializer.errors.items():
+            error_messages.extend(errors)
+        return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
