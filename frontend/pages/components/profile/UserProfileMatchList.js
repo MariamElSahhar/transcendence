@@ -2,17 +2,17 @@
 import { Component } from "../../components/Component.js";
 
 export class UserProfileMatchList extends Component {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    render() {
-        this.pageNumber = parseInt(this.getAttribute('page-number') || 1);
-        return this.renderPlaceholder();
-    }
+	render() {
+		this.pageNumber = parseInt(this.getAttribute("page-number") || 1);
+		return this.renderPlaceholder();
+	}
 
-    style() {
-        return (`
+	style() {
+		return `
             <style>
                 .hide-placeholder-text {
                     color: var(--bs-secondary-bg)!important;
@@ -42,15 +42,16 @@ export class UserProfileMatchList extends Component {
                     font-weight: 400;
                 }
             </style>
-        `);
-    }
+        `;
+	}
 
-    loadMatchHistory(username, matchHistory) {
-        this.innerHTML = this.#renderMatchHistory(matchHistory);
-    }
+	loadMatchHistory(username, matchHistory) {
+		this.innerHTML = this.#renderMatchHistory(matchHistory);
+	}
 
-    #renderMatchHistory(matchHistory) {
-        return (`
+	#renderMatchHistory(matchHistory) {
+		return (
+			`
             <div class="card mb-3 mt-3">
                 <div class="card-header border-bottom">
                     <h5 class="mb-0">Latest Matches</h5>
@@ -73,19 +74,20 @@ export class UserProfileMatchList extends Component {
                     </table>
                 </div>
             </div>
-        `) + this.style();
-    }
+        ` + this.style()
+		);
+	}
 
-    #renderMatches(matchHistory) {
-        if (!matchHistory.length) {
-            return `<tr><td colspan="6" class="text-center text-secondary">No matches played yet</td></tr>`;
-        }
-        return matchHistory.map((match) => this.#renderMatch(match)).join('');
-    }
+	#renderMatches(matchHistory) {
+		if (!matchHistory.length) {
+			return `<tr><td colspan="6" class="text-center text-secondary">No matches played yet</td></tr>`;
+		}
+		return matchHistory.map((match) => this.#renderMatch(match)).join("");
+	}
 
-    #renderMatch(match) {
-        const date = new Date(match.date).toLocaleDateString();
-        return `
+	#renderMatch(match) {
+		const date = new Date(match.date).toLocaleDateString();
+		return `
             <tr>
                 <td>${match.opponent}</td>
                 <td>${date}</td>
@@ -95,24 +97,37 @@ export class UserProfileMatchList extends Component {
                 <td>${this.#renderMatchWinningChance(match.winningChance)}</td>
             </tr>
         `;
-    }
+	}
 
-    #renderMatchResult(result) {
-        return `
-            <span class="badge badge-dot"><i class="${result === "Win" ? 'bg-success' : 'bg-danger'}"></i>${result}</span>
+	#renderMatchResult(result) {
+		return `
+            <span class="badge badge-dot"><i class="${
+				result === "Win" ? "bg-success" : "bg-danger"
+			}"></i>${result}</span>
         `;
-    }
+	}
 
-    #renderMatchEloDelta(eloDelta) {
-        return `
-            <span class="badge badge-pill ${eloDelta.includes('+') ? 'bg-soft-success' : 'bg-soft-danger'} text-${eloDelta.includes('+') ? 'success' : 'danger'}">${eloDelta}</span>
+	#renderMatchEloDelta(eloDelta) {
+		return `
+            <span class="badge badge-pill ${
+				eloDelta.includes("+") ? "bg-soft-success" : "bg-soft-danger"
+			} text-${
+			eloDelta.includes("+") ? "success" : "danger"
+		}">${eloDelta}</span>
         `;
-    }
+	}
 
-    #renderMatchWinningChance(winningChance) {
-        const value = parseInt(winningChance.replace('%', ''));
-        const bgClass = value < 20 ? 'bg-danger' : value < 40 ? 'bg-warning' : value < 60 ? 'bg-primary' : 'bg-success';
-        return `
+	#renderMatchWinningChance(winningChance) {
+		const value = parseInt(winningChance.replace("%", ""));
+		const bgClass =
+			value < 20
+				? "bg-danger"
+				: value < 40
+				? "bg-warning"
+				: value < 60
+				? "bg-primary"
+				: "bg-success";
+		return `
             <div class="d-flex align-items-center">
                 <span class="me-2">${winningChance}</span>
                 <div class="progress" style="width:100px">
@@ -120,10 +135,10 @@ export class UserProfileMatchList extends Component {
                 </div>
             </div>
         `;
-    }
+	}
 }
 
-customElements.define('user-profile-match-list', UserProfileMatchList);
+customElements.define("user-profile-match-list", UserProfileMatchList);
 
 // import { Component } from "../../components/Component.js";
 // // import { userStatsClient, userManagementClient } from '@utils/api';

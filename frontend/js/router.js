@@ -26,7 +26,7 @@ const routes = {
 		path: "../pages/SignUpPage.js",
 		protected: false,
 	},
-	"/reset-password": {  // New reset password route
+	"/reset-password": {
 		component: "reset-password-page",
 		path: "../pages/ResetPasswordPage.js",
 		protected: false,

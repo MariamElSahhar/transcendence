@@ -1,30 +1,29 @@
 // UserProfilePage.js
 import { Component } from "./components/Component.js";
-import { dummyData } from './components/profile/dummyData.js';
+import { dummyData } from "./components/profile/dummyData.js";
 
 export class UserProfilePage extends Component {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    async connectedCallback() {
-        await import("./components/navbar/Navbar.js");
-        await import("./components/buttons/FriendsButton.js");
-        await import("./components/profile/UserProfileHeader.js");
-        await import("./components/profile/UserProfileChart.js");
-        await import("./components/profile/UserProfileChartsCards.js");
-        await import("./components/profile/UserProfileMatchList.js");
-        await import("./components/profile/UserProfileStatsCard.js");
-        await import("./components/profile/UserProfileStatsCards.js");
-        await import("./components/layouts/FriendsSidebar.js");
+	async connectedCallback() {
+		await import("./components/navbar/Navbar.js");
+		await import("./components/buttons/FriendsButton.js");
+		await import("./components/profile/UserProfileHeader.js");
+		await import("./components/profile/UserProfileChart.js");
+		await import("./components/profile/UserProfileChartsCards.js");
+		await import("./components/profile/UserProfileMatchList.js");
+		await import("./components/profile/UserProfileStatsCard.js");
+		await import("./components/profile/UserProfileStatsCards.js");
+		await import("./components/layouts/FriendsSidebar.js");
 
-        // Render the HTML structure and load data into components
-        this.innerHTML = this.render() + this.style();
-        this.loadUserProfileData();
-    }
+		super.connectedCallback();
+		this.loadUserProfileData();
+	}
 
-    render() {
-        return `
+	render() {
+		return `
             <navbar-component></navbar-component>
             <div class="profile-page container">
                 <user-profile-header></user-profile-header>
@@ -41,10 +40,10 @@ export class UserProfilePage extends Component {
                 </div>
             </div>
         `;
-    }
+	}
 
-    style() {
-        return `
+	style() {
+		return `
             <style>
                 .container {
                     max-width: 1200px;
@@ -127,7 +126,7 @@ export class UserProfilePage extends Component {
                 user-profile-match-list {
                     margin-top: 20px;
                 }
-                
+
                 /* Styling for titles */
                 h5 {
                     font-size: 1.25rem;
@@ -147,57 +146,67 @@ export class UserProfilePage extends Component {
                 }
             </style>
         `;
-    }
+	}
 
-    loadUserProfileData() {
-        // Load data for each component by setting attributes or calling methods
-        this.loadHeaderData();
-        this.loadStatsCardsData();
-        this.loadMatchListData();
-        this.loadChartsData();
-    }
+	loadUserProfileData() {
+		// Load data for each component by setting attributes or calling methods
+		this.loadHeaderData();
+		this.loadStatsCardsData();
+		this.loadMatchListData();
+		this.loadChartsData();
+	}
 
-    loadHeaderData() {
-        const userProfileHeader = this.querySelector('user-profile-header');
-        if (userProfileHeader) {
-            const headerData = dummyData.userProfile || { username: "Guest", profilePicture: "/images/default_profile.svg" };
-            userProfileHeader.setAttribute('data', JSON.stringify(headerData));
-        } else {
-            console.error("UserProfileHeader component not found.");
-        }
-    }
-    
-    loadStatsCardsData() {
-        const statsCards = this.querySelector('user-profile-stats-cards');
-        if (statsCards) {
-          const statsData = dummyData.stats;
-          statsCards.setAttribute('data', JSON.stringify(statsData));
-        } else {
-          console.error("UserProfileStatsCards component not found.");
-        }
-      }
+	loadHeaderData() {
+		const userProfileHeader = this.querySelector("user-profile-header");
+		const headerData = dummyData.userProfile || {
+			username: "Guest",
+			profilePicture: "/images/default_profile.svg",
+		};
+		userProfileHeader.setAttribute("data", JSON.stringify(headerData));
+	}
 
-    loadMatchListData() {
-        const matchList = this.querySelector('user-profile-match-list');
-        if (matchList) {
-            const matchHistory = dummyData.matchHistory || [];
-            matchList.loadMatchHistory(dummyData.userProfile.username, matchHistory);
-        } else {
-            console.error("UserProfileMatchList component not found.");
-        }
-    }
+	loadStatsCardsData() {
+		const statsCards = this.querySelector("user-profile-stats-cards");
+		if (statsCards) {
+			const statsData = dummyData.stats;
+			statsCards.setAttribute("data", JSON.stringify(statsData));
+		} else {
+			console.error("UserProfileStatsCards component not found.");
+		}
+	}
 
-    loadChartsData() {
-        const chartsComponent = this.querySelector('user-profile-charts-cards');
-        if (chartsComponent) {
-            const eloGraph = dummyData.charts?.eloGraph || { graph: [] };
-            const winRateGraph = dummyData.charts?.winRateGraph || { graph: [] };
-            const matchesPlayedGraph = dummyData.charts?.matchesPlayedGraph || { graph: [] };
-            chartsComponent.loadStatistics(eloGraph, winRateGraph, matchesPlayedGraph);
-        } else {
-            console.error("UserProfileChartsCards component not found.");
-        }
-    }
+	loadMatchListData() {
+		const matchList = this.querySelector("user-profile-match-list");
+		if (matchList) {
+			const matchHistory = dummyData.matchHistory || [];
+			matchList.loadMatchHistory(
+				dummyData.userProfile.username,
+				matchHistory
+			);
+		} else {
+			console.error("UserProfileMatchList component not found.");
+		}
+	}
+
+	loadChartsData() {
+		const chartsComponent = this.querySelector("user-profile-charts-cards");
+		if (chartsComponent) {
+			const eloGraph = dummyData.charts?.eloGraph || { graph: [] };
+			const winRateGraph = dummyData.charts?.winRateGraph || {
+				graph: [],
+			};
+			const matchesPlayedGraph = dummyData.charts?.matchesPlayedGraph || {
+				graph: [],
+			};
+			chartsComponent.loadStatistics(
+				eloGraph,
+				winRateGraph,
+				matchesPlayedGraph
+			);
+		} else {
+			console.error("UserProfileChartsCards component not found.");
+		}
+	}
 }
 
 customElements.define("user-profile-page", UserProfilePage);
