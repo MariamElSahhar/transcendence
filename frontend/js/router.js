@@ -1,14 +1,19 @@
 import { isAuth } from "./clients/token-client.js";
 
 const routes = {
-	"/home": {
+	"/": {
 		component: "home-page",
 		path: "../pages/HomePage.js",
 		protected: false,
 	},
-	"/": {
+	"/home": {
 		component: "home-page",
-		path: "../pages/HomePage.js",
+		path: "../pages/components/home/Home.js",
+		protected: false,
+	},
+	"/profile": {
+		component: "user-profile-page",
+		path: "../pages/UserProfilePage.js",
 		protected: false,
 	},
 	"/sign-in": {
@@ -21,6 +26,11 @@ const routes = {
 		path: "../pages/SignUpPage.js",
 		protected: false,
 	},
+	"/reset-password": {
+		component: "reset-password-page",
+		path: "../pages/ResetPasswordPage.js",
+		protected: false,
+	},
 	404: {
 		component: "not-found-page",
 		path: "../pages/NotFound.js",
@@ -28,7 +38,7 @@ const routes = {
 	},
 };
 
-const redirect = (path) => {
+export const redirect = (path) => {
 	window.history.pushState({}, "", path);
 	handleLocation();
 };

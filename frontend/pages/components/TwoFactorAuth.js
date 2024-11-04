@@ -1,7 +1,6 @@
 import { Component } from "./Component.js";
 import { Keys } from "../../js/utils/Keys.js";
 import { verifyOTP } from "../../js/clients/token-client.js";
-// import {NavbarUtils} from '@utils/NavbarUtils.js';
 
 export class TwoFactorAuth extends Component {
 	constructor() {
