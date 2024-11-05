@@ -167,13 +167,13 @@ def verify_otp_view(request):
 
         if token_serializer.is_valid():
             tokens = token_serializer.validated_data
-            response = Response(
-                {"message": "OTP verified successfully. Login successful.",
-                 "body": {
-                     "username": user.username,
-                     "user_id": user.id,
-                     "user_email": user.email,
-                     "avatar": user.image if user.image else None,
+            response = Response({
+                "message": "OTP verified successfully. Login successful.",
+                "data": {
+                    "username": user.username,
+                    "user_id": user.id,
+                    "user_email": user.email,
+                    "avatar": user.avatar.url if user.avatar else None,
                  }},
                 status=status.HTTP_200_OK,
             )

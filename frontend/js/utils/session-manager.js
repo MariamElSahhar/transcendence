@@ -1,22 +1,22 @@
 export function storeUserSession({ username, id, email, avatar }) {
 	sessionStorage.setItem("username", username);
-	sessionStorage.setItem("user_id", id);
-	sessionStorage.setItem("user_email", email);
-	sessionStorage.setItem("user_avatar", avatar);
+	sessionStorage.setItem("id", id);
+	sessionStorage.setItem("email", email);
+	sessionStorage.setItem("avatar", `http://127.0.0.1:8000${avatar}`);
 }
 
 export function getUserSessionData() {
 	return {
 		username: sessionStorage.getItem("username"),
-		user_id: sessionStorage.getItem("user_id"),
-		user_email: sessionStorage.getItem("user_email"),
-		user_avatar: sessionStorage.getItem("user_avatar"),
+		id: sessionStorage.getItem("id"),
+		email: sessionStorage.getItem("email"),
+		avatar: sessionStorage.getItem("avatar"),
 	};
 }
 
 export function clearUserSession() {
 	sessionStorage.removeItem("username");
-	sessionStorage.removeItem("user_id");
-	sessionStorage.removeItem("user_email");
-	sessionStorage.removeItem("user_avatar");
+	sessionStorage.removeItem("id");
+	sessionStorage.removeItem("email");
+	sessionStorage.removeItem("avatar");
 }

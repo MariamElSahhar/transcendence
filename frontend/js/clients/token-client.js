@@ -38,12 +38,9 @@ export const register = async ({ username, email, password }) => {
 
 // checks if user is authenticated (if access token is valid)
 export const isAuth = async () => {
-	// const url = URIS.auth;
-	// const { status, body, error } = await get(url);
-	// if (error) return false;
-	// return true;
-
-	return false;
+	const url = URIS.auth;
+	const { status, body, error } = await get(url);
+	return status == 200 ? true : false;
 };
 
 // verify otp and receive access and refresh token on success

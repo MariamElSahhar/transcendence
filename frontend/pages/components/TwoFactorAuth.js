@@ -130,8 +130,7 @@ export class TwoFactorAuth extends Component {
 		});
 		if (success) {
 			// this.#loadAndCache(body["refresh_token"]);
-			alert("successful login");
-			// window.redirect("/");
+			window.redirect("/");
 		} else {
 			this.#resetLoadButton();
 			this.alertForm.innerHTML = error;
