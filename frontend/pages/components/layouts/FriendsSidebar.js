@@ -14,17 +14,17 @@ export class FriendsSidebar extends Component {
 		const sidebarPositionClass =
 			sidebarPosition === "visible" ? "" : "active";
 		return `
-      <div id="wrapper">
-          <div id="main-content" class="${sidebarPositionClass}">
-            <${mainComponent} ${this.getHeritedAttributes()}></${mainComponent}>
-          </div>
-          <nav id="sidebar-content" class="${sidebarPositionClass}" style="margin-top: ${navbarHeight}px">
-              <div class="m-2 ms-0">
-                  <friends-component></friends-component>
-              </div>
-          </nav>
-      </div>
-    `;
+            <div id="wrapper">
+                <div id="main-content" class="${sidebarPositionClass}">
+                    <${mainComponent} ${this.getHeritedAttributes()}></${mainComponent}>
+                </div>
+                <nav id="sidebar-content" class="${sidebarPositionClass}" style="margin-top: ${navbarHeight}px">
+                    <div class="m-2 ms-0">
+                        <friends-component></friends-component>
+                    </div>
+                </nav>
+            </div>
+        `;
 	}
 
 	style() {

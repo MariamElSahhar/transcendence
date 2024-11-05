@@ -10,8 +10,8 @@ export class Navbar extends Component {
 
 	async connectedCallback() {
 		this.authenticated = await isAuth();
-		await import("./ConnectedNavbar.js");
-		await import("./DisconnectedNavbar.js");
+		if (this.authenticated) await import("./ConnectedNavbar.js");
+		else await import("./DisconnectedNavbar.js");
 
 		// Render the Navbar based on authentication status
 		this.innerHTML = this.render();
@@ -32,24 +32,24 @@ export class Navbar extends Component {
 
 	style() {
 		return `
-      <style>
-      .navbar {
-          position: fixed;
-          top: 0;
-          width: 100%;
-          z-index: 9999;
-          box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
-      }
+			<style>
+				.navbar {
+					position: fixed;
+					top: 0;
+					width: 100%;
+					z-index: 9999;
+					box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
+				}
 
-      .navbar-brand {
-          font-family: 'JetBrains Mono Bold', monospace;
-      }
+				.navbar-brand {
+					font-family: 'JetBrains Mono Bold', monospace;
+				}
 
-      .nav-link {
-          font-family: 'JetBrains Mono Light', monospace;
-      }
-      </style>
-    `;
+				.nav-link {
+					font-family: 'JetBrains Mono Light', monospace;
+				}
+			</style>
+		`;
 	}
 
 	#setNavbarHeight() {

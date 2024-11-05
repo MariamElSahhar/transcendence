@@ -11,15 +11,14 @@ export class HomePage extends Component {
 		await import("./components/navbar/Navbar.js");
 		await import("./components/HomeContent.js");
 		this.authenticated = await isAuth();
-		console.log(this.authenticated);
 		super.connectedCallback();
 	}
 
 	render() {
 		if (this.authenticated) {
 			return `
-			<navbar-component nav-active="home"></navbar-comfponent>
-			<friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
+				<navbar-component nav-active="home"></navbar-comfponent>
+				<friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
 			`;
 		} else {
 			return `
