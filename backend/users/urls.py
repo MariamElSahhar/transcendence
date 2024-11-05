@@ -16,6 +16,9 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     # User Management
     path("users/", user_list_create_view, name="user-list-create"),
@@ -35,4 +38,4 @@ urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path('docs/', SpectacularSwaggerView.as_view(url_name='api-schema'),
          name='api-docs'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

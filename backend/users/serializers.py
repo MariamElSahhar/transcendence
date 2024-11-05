@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "email_otp",
             "is_email_verified",
+            "avatar",
         ]
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
 

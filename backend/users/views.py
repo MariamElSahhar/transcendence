@@ -33,7 +33,7 @@ def user_list_create_view(request):
 
 
 # GET, UPDATE, OR DELETE A USER BY ID
-@api_view(["GET", "PUT", "DELETE"])
+@api_view(["GET", "PATCH", "DELETE"])
 def user_retrieve_update_destroy_view(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
 
@@ -41,10 +41,12 @@ def user_retrieve_update_destroy_view(request, user_id):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
-    elif request.method == "PUT":
-        serializer = UserSerializer(user, data=request.data)
+    elif request.method == "PATCH":
+        serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save(password=make_password(serializer.validated_data["password"]))
+        if "password" in serializer.validated_data:
+            user.password = make_password(serializer.validated_data["password"])
+        serializer.save()
         return Response(serializer.data)
 
     elif request.method == "DELETE":
@@ -166,7 +168,13 @@ def verify_otp_view(request):
         if token_serializer.is_valid():
             tokens = token_serializer.validated_data
             response = Response(
-                {"message": "OTP verified successfully. Login successful."},
+                {"message": "OTP verified successfully. Login successful.",
+                 "body": {
+                     "username": user.username,
+                     "user_id": user.id,
+                     "user_email": user.email,
+                     "avatar": user.image if user.image else None,
+                 }},
                 status=status.HTTP_200_OK,
             )
             response.set_cookie(
@@ -186,6 +194,7 @@ def verify_otp_view(request):
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
             del request.session['password']
+            return response
         else:
             error_messages = []
             for _, errors in token_serializer.errors.items():

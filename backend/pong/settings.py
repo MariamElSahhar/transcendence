@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-import environ
+import environ, os
 from pathlib import Path
 from datetime import timedelta
 
@@ -193,3 +193,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'transcendence.42ad@gmail.com'
 EMAIL_HOST_PASSWORD = 'uuqp fyzm dtzs cnze'
 DEFAULT_FROM_EMAIL = '42AD Transcendence <transcendence.42ad@gmail.com>'   # Optional
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
