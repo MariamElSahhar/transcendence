@@ -1,5 +1,6 @@
 const BASE_URL = "http://127.0.0.1:8000/api";
 import { post, get } from "../utils/http-requests.js";
+import { storeUserSession } from "../utils/session-manager.js";
 
 const URIS = {
 	login: `${BASE_URL}/login/`,
@@ -7,9 +8,9 @@ const URIS = {
 	register: `${BASE_URL}/register/`,
 	auth: `${BASE_URL}/token/status`,
 	verifyOTP: `${BASE_URL}/verify-otp/`,
-}
+};
 
-// login and get new access and refresh tokens
+// login and activate otp verification
 export const login = async ({ username, password }) => {
 	const url = URIS.login;
 	const requestBody = { username, password };
@@ -45,10 +46,17 @@ export const isAuth = async () => {
 	return false;
 };
 
+// verify otp and receive access and refresh token on success
 export const verifyOTP = async ({ username, otp }) => {
 	const url = URIS.verifyOTP;
 	const requestBody = { username, otp };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
+	storeUserSession({
+		username: body.data.username,
+		id: body.data.id,
+		email: body.data.email,
+		avatar: body.data.avatar,
+	});
 	return { success: true };
 };
