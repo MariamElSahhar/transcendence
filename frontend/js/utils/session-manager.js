@@ -35,5 +35,5 @@ export const isAuth = async () => {
 		attempts++;
 	}
 	if (authenticated) return true;
-	else clearUserSession();
+	else clearUserSession(); // NOTE: maybe this isn't the best behavior?
 };
