@@ -7,7 +7,7 @@ export class DisconnectedNavbar extends Component {
 
 	render() {
 		return `
-            <nav id="main-navbar" class="navbar navbar-expand-sm bg-body-tertiary">
+            <nav id="main-navbar" class="navbar navbar-expand-sm bg-body-tertiary fixed-top">
                 <div class="container-fluid">
                     <a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -34,13 +34,6 @@ export class DisconnectedNavbar extends Component {
                 </div>
             </nav>
         `;
-	}
-
-	style() {
-		return `
-      <style>
-      </style>
-    `;
 	}
 
 	postRender() {}

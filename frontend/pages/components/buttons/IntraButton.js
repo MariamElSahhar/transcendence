@@ -66,16 +66,6 @@ export class IntraButton extends Component {
       </button>
     `;
 	}
-	style() {
-		return `
-      <style>
-      #intra-btn {
-          background-color: #ffffff;
-          color: #000000;"
-      }
-      </style>
-    `;
-	}
 
 	postRender() {
 		this.btn = this.querySelector("#intra-btn");

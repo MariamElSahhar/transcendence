@@ -13,7 +13,7 @@ export class ConnectedNavbar extends Component {
 		const username = getUserSessionData().username;
 		const avatar = getUserSessionData().avatar;
 		return `
-			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary">
+			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary fixed-top">
 				<div class="container-fluid">
 					<a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -49,8 +49,7 @@ export class ConnectedNavbar extends Component {
 										data-bs-toggle="dropdown" aria-expanded="false">
 										<img id="nav-profile-img" src="${avatar}"
 										alt="profile image"
-										class="rounded-circle object-fit-cover"
-										style="width: 40px; height: 40px;">
+										class="rounded-circle object-fit-cover w-40px h-40px">
 									<span id="nav-username">@${username}</span>
 								</span>
 								<ul class="dropdown-menu dropdown-menu-end"

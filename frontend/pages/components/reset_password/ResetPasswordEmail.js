@@ -1,69 +1,61 @@
-import { Component } from '../Component.js';
+import { Component } from "../Component.js";
 import { InputValidator } from "../../../js/utils/input-validator.js";
 import { BootstrapUtils } from "../../../js/utils/bootstrap-utils.js";
 // import { userManagementClient } from '@utils/api';
-import { ErrorPage } from '../../utils/ErrorPage.js';
-import { NavbarUtils } from '../../utils/NavbarUtils.js';
+import { ErrorPage } from "../../utils/ErrorPage.js";
+import { NavbarUtils } from "../../utils/NavbarUtils.js";
 
 export class ResetPasswordEmail extends Component {
 	constructor() {
 		super();
 	}
 	render() {
-		return (`
-			<div id="reset-password" class="d-flex justify-content-center align-items-center rounded-3">
-				<div class="reset-password-card card m-3">
-					<div class="card-body m-2">
-						<h2 class="card-title text-center m-5">Reset password</h2>
-						<form id="reset-password-form">
-							<div class="d-flex justify-content-center mb-4">
-								<i class="bi bi-envelope-at-fill" style="font-size: 5rem;"></i>
+		return `
+			<div class="reset-password-card card m-3">
+				<div class="card-body m-2">
+					<h2 class="card-title text-center m-5">Reset password</h2>
+					<form id="reset-password-form">
+						<div class="d-flex justify-content-center mb-4">
+							<i class="bi bi-envelope-at-fill" style="font-size: 5rem;"></i>
+						</div>
+						<div class="form-group mb-4">
+							<input type="email" class="form-control" id="email" placeholder="Email" autocomplete="email">
+							<div id="email-feedback" class="invalid-feedback">
+								Please enter a valid email.
 							</div>
-							<div class="form-group mb-4">
-								<input type="email" class="form-control" id="email" placeholder="Email" autocomplete="email">
-								<div id="email-feedback" class="invalid-feedback">
-									Please enter a valid email.
-								</div>
-							</div>
-							<alert-component id="alert-form" alert-display="false"></alert-component>
-							<div class="row d-flex justify-content-center">
-								<button id="sendEmailBtn" type="submit" class="btn btn-primary" disabled>Send email</button>
-							</div>
-						</form>
-					</div>
+						</div>
+						<alert-component id="alert-form" alert-display="false"></alert-component>
+						<div class="d-flex justify-content-center w-100">
+							<button id="sendEmailBtn" type="submit" class="btn btn-primary w-100" disabled>Send email</button>
+						</div>
+					</form>
 				</div>
 			</div>
-		`);
-	}
-	style() {
-		return (`
-			<style>
-			#reset-password {
-				height: calc(100vh - ${NavbarUtils.height}px);
-			}
-			.reset-password-card {
-				width: 550px;
-			}
-			</style>
-		`);
+		`;
 	}
 
 	postRender() {
-		this.email = this.querySelector('#email');
-		this.emailFeedback = this.querySelector('#email-feedback');
-		this.sendEmailBtn = this.querySelector('#sendEmailBtn');
-		this.form = this.querySelector('#reset-password-form');
-		this.alertForm = this.querySelector('#alert-form');
+		this.email = this.querySelector("#email");
+		this.emailFeedback = this.querySelector("#email-feedback");
+		this.sendEmailBtn = this.querySelector("#sendEmailBtn");
+		this.form = this.querySelector("#reset-password-form");
+		this.alertForm = this.querySelector("#alert-form");
 
-		super.addComponentEventListener(this.email, 'input', this.#emailHandler);
-		super.addComponentEventListener(this.form, 'submit', (event) => {
+		super.addComponentEventListener(
+			this.email,
+			"input",
+			this.#emailHandler
+		);
+		super.addComponentEventListener(this.form, "submit", (event) => {
 			event.preventDefault();
 			this.#sendEmail();
 		});
 	}
 
 	#emailHandler() {
-		const { validity, missingRequirements } = InputValidator.isValidEmail(this.email.value);
+		const { validity, missingRequirements } = InputValidator.isValidEmail(
+			this.email.value
+		);
 		if (validity) {
 			BootstrapUtils.setValidInput(this.email);
 			this.InputValidEmail = true;
@@ -79,13 +71,16 @@ export class ResetPasswordEmail extends Component {
 	async #sendEmail() {
 		this.#startLoadButton();
 		try {
-			const { response, body } = await userManagementClient.sendResetPasswordCode(this.email.value);
+			const { response, body } =
+				await userManagementClient.sendResetPasswordCode(
+					this.email.value
+				);
 			if (response.ok) {
 				this.#notifyEmailSent();
 			} else {
 				this.#resetLoadButton();
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-display', 'true');
+				this.alertForm.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-display", "true");
 			}
 		} catch (error) {
 			ErrorPage.loadNetworkError();
@@ -94,7 +89,9 @@ export class ResetPasswordEmail extends Component {
 
 	#notifyEmailSent() {
 		// Dispatches an event to notify that the email has been successfully sent
-		const emailEvent = new CustomEvent('emailSent', { detail: { email: this.email.value } });
+		const emailEvent = new CustomEvent("emailSent", {
+			detail: { email: this.email.value },
+		});
 		this.dispatchEvent(emailEvent);
 	}
 
@@ -107,10 +104,10 @@ export class ResetPasswordEmail extends Component {
 	}
 
 	#resetLoadButton() {
-		this.sendEmailBtn.innerHTML = 'Send email';
+		this.sendEmailBtn.innerHTML = "Send email";
 		this.sendEmailBtn.disabled = false;
 	}
 }
 
 // Define the custom element for this component
-customElements.define('reset-password-email-component', ResetPasswordEmail);
+customElements.define("reset-password-email-component", ResetPasswordEmail);
