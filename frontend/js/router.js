@@ -1,4 +1,4 @@
-import { isAuth } from "./clients/token-client.js";
+import { isAuth } from "./utils/session-manager.js";
 
 const routes = {
 	"/": {

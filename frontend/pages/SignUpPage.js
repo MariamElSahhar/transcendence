@@ -1,5 +1,6 @@
 import { Component } from "./components/Component.js";
-import { register, isAuth } from "../js/clients/token-client.js";
+import { isAuth } from "../js/utils/session-manager.js";
+import { register } from "../js/clients/token-client.js";
 import { InputValidator } from "../js/utils/input-validator.js";
 import { BootstrapUtils } from "../js/utils/bootstrap-utils.js";
 

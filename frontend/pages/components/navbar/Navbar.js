@@ -1,5 +1,5 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../../js/clients/token-client.js";
+import { isAuth } from "../../../js/utils/session-manager.js";
 
 export class Navbar extends Component {
 	authenticated = false;
@@ -12,9 +12,6 @@ export class Navbar extends Component {
 		this.authenticated = await isAuth();
 		if (this.authenticated) await import("./ConnectedNavbar.js");
 		else await import("./DisconnectedNavbar.js");
-
-		// Render the Navbar based on authentication status
-		this.innerHTML = this.render();
 		super.connectedCallback();
 
 		// Initialize navbar height setup after rendering

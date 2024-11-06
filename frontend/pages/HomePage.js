@@ -1,5 +1,5 @@
 import { Component } from "./components/Component.js";
-import { isAuth } from "../../../js/clients/token-client.js";
+import { isAuth } from "../../../js/utils/session-manager.js";
 
 export class HomePage extends Component {
 	authenticated = false;

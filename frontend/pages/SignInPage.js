@@ -1,5 +1,6 @@
 import { Component } from "./components/Component.js";
-import { login, isAuth } from "../js/clients/token-client.js";
+import { isAuth } from "../js/utils/session-manager.js";
+import { login } from "../js/clients/token-client.js";
 
 export class SignInPage extends Component {
 	constructor() {
@@ -76,7 +77,7 @@ export class SignInPage extends Component {
 		this.alertForm = this.querySelector("#alert-form");
 
 		super.addComponentEventListener(this.forgotPassword, "click", () => {
-			 window.redirect("/reset-password");
+			window.redirect("/reset-password");
 			// alert("redirect to /reset-password");
 		});
 		super.addComponentEventListener(this.donthaveAccount, "click", () => {

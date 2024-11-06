@@ -1,4 +1,7 @@
-import { getUserSessionData } from "../../../js/utils/session-manager.js";
+import {
+	clearUserSession,
+	getUserSessionData,
+} from "../../../js/utils/session-manager.js";
 import { Component } from "../Component.js";
 
 export class ConnectedNavbar extends Component {
@@ -10,7 +13,7 @@ export class ConnectedNavbar extends Component {
 		const username = getUserSessionData().username;
 		const avatar = getUserSessionData().avatar;
 		return `
-			<nav id="main-navbar" class="navbar navbar-expand-lg bg-body-tertiary">
+			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary">
 				<div class="container-fluid">
 					<a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -20,7 +23,7 @@ export class ConnectedNavbar extends Component {
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<ul class="navbar-nav me-auto">
 							<li class="nav-item">
 								${this.#generateNavLink("local")}
 							</li>
@@ -34,7 +37,7 @@ export class ConnectedNavbar extends Component {
 								${this.#generateNavLink("ranking")}
 							</li>
 						</ul>
-						<div class="d-flex align-items-center mb-2 mb-lg-0">
+						<div class="d-flex align-items-center">
 							<search-nav-component class="me-2"></search-nav-component>
 						</div>
 						<div id="log-part" class="d-flex align-items-center">
@@ -100,8 +103,9 @@ export class ConnectedNavbar extends Component {
 		window.redirect(`/${event.target.id}/`);
 	}
 
-	#logout() {
-		// userManagementClient.logout();
+	async #logout() {
+		await clearUserSession();
+		window.redirect("/");
 	}
 
 	#generateNavLink(linkId) {

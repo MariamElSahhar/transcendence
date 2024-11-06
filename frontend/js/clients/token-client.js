@@ -4,6 +4,7 @@ import { storeUserSession } from "../utils/session-manager.js";
 
 const URIS = {
 	login: `${BASE_URL}/login/`,
+	logout: `${BASE_URL}/logout/`,
 	refresh: `${BASE_URL}/token/refresh/`,
 	register: `${BASE_URL}/register/`,
 	auth: `${BASE_URL}/token/status`,
@@ -37,9 +38,16 @@ export const register = async ({ username, email, password }) => {
 };
 
 // checks if user is authenticated (if access token is valid)
-export const isAuth = async () => {
+export const tokenStatus = async () => {
 	const url = URIS.auth;
 	const { status, body, error } = await get(url);
+	return status == 200 ? true : false;
+};
+
+// clears http-only cookies
+export const logout = async () => {
+	const url = URIS.logout;
+	const { status, body, error } = await post(url);
 	return status == 200 ? true : false;
 };
 
