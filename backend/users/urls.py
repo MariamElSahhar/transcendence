@@ -4,6 +4,7 @@ from .views import (
     user_retrieve_update_destroy_view,
     register_view,
     login_view,
+    logout_view,
     token_refresh_view,
 	token_status_view,
     verify_otp_view
@@ -27,9 +28,10 @@ urlpatterns = [
     # Authentication
     path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
+    path("logout/", logout_view, name="logout"),
     path("token/refresh/", token_refresh_view, name="token_refresh"),
-    path("verify-otp/", verify_otp_view, name="verify-otp"),
     path("token/status/", token_status_view, name="token_status"),
+    path("verify-otp/", verify_otp_view, name="verify-otp"),
 
     # API Schema and AutoDocs
     path('schema/', SpectacularAPIView.as_view(), name='api-schema'),

@@ -1,4 +1,7 @@
-import { getUserSessionData } from "../../../js/utils/session-manager.js";
+import {
+	clearUserSession,
+	getUserSessionData,
+} from "../../../js/utils/session-manager.js";
 import { Component } from "../Component.js";
 
 export class ConnectedNavbar extends Component {
@@ -101,7 +104,8 @@ export class ConnectedNavbar extends Component {
 	}
 
 	#logout() {
-		// userManagementClient.logout();
+		clearUserSession();
+		window.redirect("/");
 	}
 
 	#generateNavLink(linkId) {

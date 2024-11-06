@@ -12,9 +12,6 @@ export class Navbar extends Component {
 		this.authenticated = await isAuth();
 		if (this.authenticated) await import("./ConnectedNavbar.js");
 		else await import("./DisconnectedNavbar.js");
-
-		// Render the Navbar based on authentication status
-		this.innerHTML = this.render();
 		super.connectedCallback();
 
 		// Initialize navbar height setup after rendering
