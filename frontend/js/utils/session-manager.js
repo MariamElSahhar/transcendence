@@ -1,4 +1,4 @@
-import { refresh, tokenStatus } from "../clients/token-client.js";
+import { refresh, tokenStatus, logout } from "../clients/token-client.js";
 
 const maxRefreshAttempts = 3;
 const backendURL = "http://127.0.0.1:8000";
@@ -19,11 +19,12 @@ export const getUserSessionData = () => {
 	};
 };
 
-export const clearUserSession = () => {
+export const clearUserSession = async () => {
 	sessionStorage.removeItem("username");
 	sessionStorage.removeItem("id");
 	sessionStorage.removeItem("email");
 	sessionStorage.removeItem("avatar");
+	return await logout();
 };
 
 export const isAuth = async () => {

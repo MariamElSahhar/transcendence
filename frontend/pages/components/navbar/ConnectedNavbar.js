@@ -103,8 +103,8 @@ export class ConnectedNavbar extends Component {
 		window.redirect(`/${event.target.id}/`);
 	}
 
-	#logout() {
-		clearUserSession();
+	async #logout() {
+		await clearUserSession();
 		window.redirect("/");
 	}
 
