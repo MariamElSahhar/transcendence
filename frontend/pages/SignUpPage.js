@@ -28,7 +28,6 @@ export class SignUpPage extends Component {
 			window.redirect("/");
 			return false;
 		}
-		this.#signupHandler();
 		super.connectedCallback();
 	}
 
