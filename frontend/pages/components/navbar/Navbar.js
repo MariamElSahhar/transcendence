@@ -1,5 +1,5 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../../js/clients/token-client.js";
+import { isAuth } from "../../../js/utils/session-manager.js";
 
 export class Navbar extends Component {
 	authenticated = false;
