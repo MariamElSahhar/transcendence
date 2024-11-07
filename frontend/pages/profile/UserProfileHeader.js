@@ -1,20 +1,24 @@
 // UserProfileHeader.js
-import { Component } from "../../components/Component.js";
+import { Component } from "../Component.js";
+import { getUserSessionData } from "../../js/utils/session-manager.js";
 
 export class UserProfileHeader extends Component {
-    static get observedAttributes() { return ['data']; }
+	static get observedAttributes() {
+		return ["data"];
+	}
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'data' && newValue) {
-            this.renderProfile(JSON.parse(newValue));
-        }
-    }
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (name === "data" && newValue) {
+			this.renderProfile(JSON.parse(newValue));
+		}
+	}
 
-    renderProfile(data) {
-        const username = data.username || "Guest";
-        const profilePicture = data.profilePicture || "/images/default_profile.svg";
+	renderProfile(data) {
+		const username = data.username || "Guest";
+		const profilePicture =
+			data.profilePicture || "/images/default_profile.svg";
 
-        this.innerHTML = `
+		this.innerHTML = `
             <div class="profile-card card">
                 <div class="card-body">
                     <div class="banner">
@@ -22,10 +26,14 @@ export class UserProfileHeader extends Component {
                     </div>
                     <div class="profile-info d-flex align-items-center">
                         <div class="profile-img-container">
-                            <img src="${profilePicture}" onerror="this.onerror=null;this.src='/images/default_profile.svg';" alt="Profile Picture" class="profile-img">
+                            <img src="${
+								getUserSessionData().avatar
+							}" onerror="this.onerror=null;this.src='/images/default_profile.svg';" alt="Profile Picture" class="profile-img">
                         </div>
                         <div class="user-info">
-                            <h1 class="username">@${username}</h1>
+                            <h1 class="username">@${
+								getUserSessionData().username
+							}</h1>
                             ${this.renderProfileInteractionButtons()}
                         </div>
                     </div>
@@ -33,14 +41,14 @@ export class UserProfileHeader extends Component {
             </div>
             ${this.style()}
         `;
-    }
+	}
 
-    renderProfileInteractionButtons() {
-        return `<button class="btn btn-sm btn-success">Add Friend</button>`;
-    }
+	renderProfileInteractionButtons() {
+		return `<button class="btn btn-sm btn-success">Add Friend</button>`;
+	}
 
-    style() {
-        return `
+	style() {
+		return `
             <style>
                 .banner {
                     width: 100%;
@@ -99,11 +107,10 @@ export class UserProfileHeader extends Component {
                 }
             </style>
         `;
-    }
+	}
 }
 
 customElements.define("user-profile-header", UserProfileHeader);
-
 
 // import { Component } from "../../components/Component.js";
 // // import { userManagementClient } from '@utils/api';
@@ -119,7 +126,7 @@ customElements.define("user-profile-header", UserProfileHeader);
 // 	render() {
 // 		return this.renderPlaceholder();
 // 	}
-	
+
 // 	async connectedCallback() {
 // 		await import("../../components/buttons/FriendsButton.js");
 // 		// Check if dummy data is provided in the `data` attribute
@@ -152,7 +159,6 @@ customElements.define("user-profile-header", UserProfileHeader);
 // 		`;
 // 	}
 
-	
 // 	style() {
 // 		return (`
 // 		  <style>
@@ -162,12 +168,12 @@ customElements.define("user-profile-header", UserProfileHeader);
 // 			  object-fit: cover;
 // 			  position: relative;
 // 		  }
-		  
+
 // 		  .profile-info {
 // 			  gap: 10px;
 // 			  transform: translateY(-20%);
 // 		  }
-		  
+
 // 		  .profile-img-container {
 // 			  margin-left: 50px;
 // 			  border: 3px solid var(--bs-body-bg);
@@ -175,7 +181,7 @@ customElements.define("user-profile-header", UserProfileHeader);
 // 			  overflow: hidden;
 // 			  background-color: var(--bs-card-bg);
 // 		  }
-		  
+
 // 		  .profile-img {
 // 			  width: 15vw;
 // 			  height: 15vw;
@@ -186,7 +192,7 @@ customElements.define("user-profile-header", UserProfileHeader);
 // 			  object-fit: cover;
 // 			  border-radius: 50%;
 // 		  }
-		  
+
 // 		  @media (max-width: 650px) {
 // 				.user-info {
 // 				  font-size: 1rem;
@@ -213,7 +219,7 @@ customElements.define("user-profile-header", UserProfileHeader);
 // 			return `<button id="friend-action-btn" friend-action="remove-friend" class="btn btn-sm btn-danger me-2">Remove Friend</button>`;
 // 		}
 // 	}
-// } 
+// }
 
 // 	style() {
 // 		return `

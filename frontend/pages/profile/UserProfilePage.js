@@ -1,6 +1,6 @@
 // UserProfilePage.js
-import { Component } from "./components/Component.js";
-import { dummyData } from "./components/profile/dummyData.js";
+import { Component } from "../Component.js";
+import { dummyData } from "./dummyData.js";
 
 export class UserProfilePage extends Component {
 	constructor() {
@@ -8,15 +8,15 @@ export class UserProfilePage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("./components/navbar/Navbar.js");
-		await import("./components/buttons/FriendsButton.js");
-		await import("./components/profile/UserProfileHeader.js");
-		await import("./components/profile/UserProfileChart.js");
-		await import("./components/profile/UserProfileChartsCards.js");
-		await import("./components/profile/UserProfileMatchList.js");
-		await import("./components/profile/UserProfileStatsCard.js");
-		await import("./components/profile/UserProfileStatsCards.js");
-		await import("./components/layouts/FriendsSidebar.js");
+		await import("../navbar/Navbar.js");
+		await import("../buttons/FriendsButton.js");
+		await import("../friends/FriendsSidebar.js");
+		await import("./UserProfileHeader.js");
+		await import("./UserProfileChart.js");
+		await import("./UserProfileChartsCards.js");
+		await import("./UserProfileMatchList.js");
+		await import("./UserProfileStatsCard.js");
+		await import("./UserProfileStatsCards.js");
 
 		super.connectedCallback();
 		this.loadUserProfileData();

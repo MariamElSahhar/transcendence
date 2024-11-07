@@ -1,6 +1,6 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
-import { Component } from "./Component.js";
+import { Component } from "../Component.js";
 
 class HomeContent extends Component {
 	constructor() {

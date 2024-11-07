@@ -1,5 +1,5 @@
 import { Component } from "../Component.js";
-import { Cookies } from "../Cookies.js";
+import { Cookies } from "../utils/Cookies.js";
 
 export class FriendsSidebar extends Component {
 	constructor() {

@@ -1,21 +1,24 @@
-import { Component } from "../../components/Component.js";
+import { Component } from "../Component.js";
 
 export class UserProfileChart extends Component {
-  constructor() {
-    super();
-  }
+	constructor() {
+		super();
+	}
 
-  render() {
-    this.chart = null;
-    this.title = this.getAttribute('title');
-    this.type = this.getAttribute('type');
-    this.placeholder = this.getAttribute('placeholder');
-    return this.placeholder === 'true' ? this.renderPlaceholder() : this.renderChart();
-  }
+	render() {
+		this.chart = null;
+		this.title = this.getAttribute("title");
+		this.type = this.getAttribute("type");
+		this.placeholder = this.getAttribute("placeholder");
+		return this.placeholder === "true"
+			? this.renderPlaceholder()
+			: this.renderChart();
+	}
 
-  renderPlaceholder() {
-    const placeholderClass = 'placeholder placeholder-lg bg-body-secondary rounded hide-placeholder-text';
-    return `
+	renderPlaceholder() {
+		const placeholderClass =
+			"placeholder placeholder-lg bg-body-secondary rounded hide-placeholder-text";
+		return `
       <div class="card placeholder-glow">
           <div class="card-header d-flex align-items-center">
             <h5 class="mb-0 ${placeholderClass} col-6">_</h5>
@@ -28,10 +31,10 @@ export class UserProfileChart extends Component {
           </div>
       </div>
     `;
-  }
+	}
 
-  renderChart() {
-    return `
+	renderChart() {
+		return `
       <div class="card">
           <div class="card-header d-flex align-items-center">
             <h5 class="mb-0">${this.title}</h5>
@@ -41,117 +44,127 @@ export class UserProfileChart extends Component {
           </div>
       </div>
     `;
-  }
+	}
 
-  postRender() {
-    this.canvas = this.querySelector('canvas');
-    this.ctx = this.canvas.getContext('2d');
+	postRender() {
+		this.canvas = this.querySelector("canvas");
+		this.ctx = this.canvas.getContext("2d");
 
-    // Load initial config from the data attribute or fallback to defaults
-    const dataAttr = this.getAttribute('data');
-    let config = dataAttr ? this.getConfigFromData(JSON.parse(dataAttr)) : (this.type === 'line' ? this.lineChartConfig : this.barChartConfig);
+		// Load initial config from the data attribute or fallback to defaults
+		const dataAttr = this.getAttribute("data");
+		let config = dataAttr
+			? this.getConfigFromData(JSON.parse(dataAttr))
+			: this.type === "line"
+			? this.lineChartConfig
+			: this.barChartConfig;
 
-    this.chart = new Chart(this.ctx, config);
-  }
+		this.chart = new Chart(this.ctx, config);
+	}
 
-  loadConfig(newConfig) {
-    if (this.chart) {
-      this.chart.destroy();
-    }
-    this.chart = new Chart(this.ctx, newConfig);
-  }
+	loadConfig(newConfig) {
+		if (this.chart) {
+			this.chart.destroy();
+		}
+		this.chart = new Chart(this.ctx, newConfig);
+	}
 
-  getConfigFromData(chartData) {
-    return {
-      type: this.type || 'bar',
-      data: {
-        labels: chartData.labels,
-        datasets: [{
-          label: this.title,
-          data: chartData.values,
-          backgroundColor: 'rgba(200, 200, 200, 0.6)',
-          borderColor: 'rgb(200, 200, 200)',
-          borderWidth: 1
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    };
-  }
+	getConfigFromData(chartData) {
+		return {
+			type: this.type || "bar",
+			data: {
+				labels: chartData.labels,
+				datasets: [
+					{
+						label: this.title,
+						data: chartData.values,
+						backgroundColor: "rgba(200, 200, 200, 0.6)",
+						borderColor: "rgb(200, 200, 200)",
+						borderWidth: 1,
+					},
+				],
+			},
+			options: { responsive: true, maintainAspectRatio: false },
+		};
+	}
 
-  // Default configuration methods remain the same
-  get barChartConfig() {
-    return {
-      type: 'bar',
-      data: {
-        labels: [
-          'January',
-          'March',
-          'May',
-          'July',
-          'September',
-          'November',
-          'December'
-        ],
-        datasets: [{
-          label: '',
-          data: this.#generateRandomData(7),
-          backgroundColor: 'rgb(200,200,200)',
-          borderColor: 'rgb(200,200,200)',
-          borderWidth: 4,
-          pointRadius: 0,
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: { ticks: { maxTicksLimit: 7 }},
-          y: { ticks: { maxTicksLimit: 7 }},
-        },
-      },
-    };
-  }
+	// Default configuration methods remain the same
+	get barChartConfig() {
+		return {
+			type: "bar",
+			data: {
+				labels: [
+					"January",
+					"March",
+					"May",
+					"July",
+					"September",
+					"November",
+					"December",
+				],
+				datasets: [
+					{
+						label: "",
+						data: this.#generateRandomData(7),
+						backgroundColor: "rgb(200,200,200)",
+						borderColor: "rgb(200,200,200)",
+						borderWidth: 4,
+						pointRadius: 0,
+					},
+				],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				scales: {
+					x: { ticks: { maxTicksLimit: 7 } },
+					y: { ticks: { maxTicksLimit: 7 } },
+				},
+			},
+		};
+	}
 
-  get lineChartConfig() {
-    return {
-      type: 'line',
-      data: {
-        labels: [
-          'January',
-          'March',
-          'May',
-          'July',
-          'September',
-          'November',
-          'December'
-        ],
-        datasets: [{
-          label: '',
-          data: this.#generateRandomData(7),
-          backgroundColor: 'rgb(200,200,200)',
-          borderColor: 'rgb(200,200,200)',
-          borderWidth: 4,
-          pointRadius: 0,
-          cubicInterpolationMode: 'monotone',
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: { ticks: { maxTicksLimit: 7 }},
-          y: { ticks: { maxTicksLimit: 7 }},
-        },
-      },
-    };
-  }
+	get lineChartConfig() {
+		return {
+			type: "line",
+			data: {
+				labels: [
+					"January",
+					"March",
+					"May",
+					"July",
+					"September",
+					"November",
+					"December",
+				],
+				datasets: [
+					{
+						label: "",
+						data: this.#generateRandomData(7),
+						backgroundColor: "rgb(200,200,200)",
+						borderColor: "rgb(200,200,200)",
+						borderWidth: 4,
+						pointRadius: 0,
+						cubicInterpolationMode: "monotone",
+					},
+				],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				scales: {
+					x: { ticks: { maxTicksLimit: 7 } },
+					y: { ticks: { maxTicksLimit: 7 } },
+				},
+			},
+		};
+	}
 
-  #generateRandomData(number) {
-    return Array.from({ length: number }, () => Math.random() * 100);
-  }
+	#generateRandomData(number) {
+		return Array.from({ length: number }, () => Math.random() * 100);
+	}
 
-  style() {
-    return `
+	style() {
+		return `
       <style>
       .hide-placeholder-text {
         color: var(--bs-secondary-bg);
@@ -159,7 +172,7 @@ export class UserProfileChart extends Component {
       }
       </style>
     `;
-  }
+	}
 }
 
 customElements.define("user-profile-chart", UserProfileChart);

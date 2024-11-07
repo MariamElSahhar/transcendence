@@ -1,4 +1,4 @@
-import { Component } from "./components/Component.js";
+import { Component } from "../Component.js";
 import { isAuth } from "../../../js/utils/session-manager.js";
 
 export class HomePage extends Component {
@@ -8,8 +8,8 @@ export class HomePage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("./components/navbar/Navbar.js");
-		await import("./components/HomeContent.js");
+		await import("../navbar/Navbar.js");
+		await import("./HomeContent.js");
 		this.authenticated = await isAuth();
 		super.connectedCallback();
 	}

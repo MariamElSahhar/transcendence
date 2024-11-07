@@ -1,5 +1,4 @@
-// UserProfileMatchList.js
-import { Component } from "../../components/Component.js";
+import { Component } from "../Component.js";
 
 export class UserProfileMatchList extends Component {
 	constructor() {

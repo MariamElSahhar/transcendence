@@ -1,5 +1,4 @@
-// UserProfileStatsCard.js
-import { Component } from "../../components/Component.js";
+import { Component } from "../Component.js";
 
 export class UserProfileStatsCard extends Component {
   constructor() {
@@ -182,7 +181,7 @@ customElements.define('user-profile-stats-card-component', UserProfileStatsCard)
 //           color: var(--bs-secondary-bg);
 //           background-color: var(--bs-secondary-bg)!important;
 //         }
-        
+
 //         .icon-shape {
 //           width: 3rem;
 //           height: 3rem;
@@ -190,11 +189,11 @@ customElements.define('user-profile-stats-card-component', UserProfileStatsCard)
 //           justify-content: center;
 //           align-items: center;
 //         }
-        
+
 //         .bg-soft-success {
 //           background-color: #ccf5e7!important;
 //         }
-        
+
 //         .bg-soft-danger {
 //           background-color: #ffd6e0!important;
 //         }

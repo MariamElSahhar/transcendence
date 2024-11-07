@@ -3,37 +3,37 @@ import { isAuth } from "./utils/session-manager.js";
 const routes = {
 	"/": {
 		component: "home-page",
-		path: "../pages/HomePage.js",
+		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
 	"/home": {
 		component: "home-page",
-		path: "../pages/components/home/Home.js",
+		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
 	"/profile": {
 		component: "user-profile-page",
-		path: "../pages/UserProfilePage.js",
+		path: "../pages/profile/UserProfilePage.js",
 		protected: false,
 	},
 	"/sign-in": {
 		component: "sign-in-page",
-		path: "../pages/SignInPage.js",
+		path: "../pages/auth/SignInPage.js",
 		protected: false,
 	},
 	"/sign-up": {
 		component: "sign-up-page",
-		path: "../pages/SignUpPage.js",
+		path: "../pages/auth/SignUpPage.js",
 		protected: false,
 	},
 	"/reset-password": {
 		component: "reset-password-page",
-		path: "../pages/ResetPasswordPage.js",
+		path: "../pages/auth/ResetPasswordPage.js",
 		protected: false,
 	},
 	404: {
 		component: "not-found-page",
-		path: "../pages/NotFound.js",
+		path: "../pages/error/NotFound.js",
 		protected: false,
 	},
 };

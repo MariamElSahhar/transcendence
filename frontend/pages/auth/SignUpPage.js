@@ -1,8 +1,8 @@
-import { Component } from "./components/Component.js";
-import { isAuth } from "../js/utils/session-manager.js";
-import { register } from "../js/clients/token-client.js";
-import { InputValidator } from "../js/utils/input-validator.js";
-import { BootstrapUtils } from "../js/utils/bootstrap-utils.js";
+import { Component } from "../Component.js";
+import { isAuth } from "../../js/utils/session-manager.js";
+import { register } from "../../js/clients/token-client.js";
+import { InputValidator } from "../../js/utils/input-validator.js";
+import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -21,8 +21,8 @@ export class SignUpPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("./components/navbar/Navbar.js");
-		await import("./components/buttons/IntraButton.js");
+		await import("../navbar/Navbar.js");
+		await import("./IntraButton.js");
 		const authenticated = await isAuth();
 		if (authenticated) {
 			window.redirect("/");

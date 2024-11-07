@@ -1,6 +1,6 @@
 
-import { Component } from "../../components/Component.js";
-import { ErrorPage } from "../../utils/ErrorPage.js";
+import { Component } from "../Component.js";
+import { ErrorPage } from "../errors/ErrorPage.js";
 // import { userManagementClient, userStatsClient } from '@utils/api';
 import { redirect } from "../../../js/router.js";
 import { fetchUsers } from "../../../js/clients/users-client.js";

@@ -1,5 +1,5 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../../js/utils/session-manager.js";
+import { isAuth } from "../../js/utils/session-manager.js";
 
 export class Navbar extends Component {
 	authenticated = false;
@@ -9,8 +9,7 @@ export class Navbar extends Component {
 	}
 
 	async connectedCallback() {
-		// this.authenticated = await isAuth();
-		this.authenticated = true;
+		this.authenticated = await isAuth();
 		if (this.authenticated) await import("./ConnectedNavbar.js");
 		else await import("./DisconnectedNavbar.js");
 		super.connectedCallback();

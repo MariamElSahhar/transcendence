@@ -1,5 +1,4 @@
-// UserProfileStatsCards.js
-import { Component } from "../../components/Component.js";
+import { Component } from "../Component.js";
 
 export class UserProfileStatsCards extends Component {
   constructor() {
@@ -31,7 +30,7 @@ export class UserProfileStatsCards extends Component {
 
   loadStatsData() {
     const data = JSON.parse(this.getAttribute('data') || '{}');
-    
+
     const { elo = 0, winRate = 0, matchesPlayed = 0, friends = 0 } = data;
 
     this.querySelector('#elo-card').loadValues(elo, 'pts');

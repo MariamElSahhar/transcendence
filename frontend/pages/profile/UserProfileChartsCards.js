@@ -1,13 +1,12 @@
-// UserProfileChartsCards.js
-import { Component } from "../../components/Component.js";
+import { Component } from "../Component.js";
 
 export class UserProfileChartsCards extends Component {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    render() {
-        return `
+	render() {
+		return `
             <div class="row gx-3 gy-2 mb-4 mt-3">
                 <div class="col-md-6">
                     <user-profile-chart id="rank-graph"
@@ -25,122 +24,129 @@ export class UserProfileChartsCards extends Component {
                 </div>
             </div>
         `;
-    }
+	}
 
-    postRender() {
-        this.rankGraph = this.querySelector('#rank-graph');
-        this.matchGraph = this.querySelector('#match-graph');
-    }
+	postRender() {
+		this.rankGraph = this.querySelector("#rank-graph");
+		this.matchGraph = this.querySelector("#match-graph");
+	}
 
-    loadStatistics(eloGraph, winRateGraph, matchesPlayedGraph) {
-        const dates = eloGraph.graph.map((obj) => obj.date);
-        const eloScores = eloGraph.graph.map((obj) => obj.value);
-        const winRates = winRateGraph.graph.map((obj) => obj.value);
-        const matchDates = matchesPlayedGraph.graph.map((obj) => obj.date);
-        const matchesPlayed = matchesPlayedGraph.graph.map((obj) => obj.value);
+	loadStatistics(eloGraph, winRateGraph, matchesPlayedGraph) {
+		const dates = eloGraph.graph.map((obj) => obj.date);
+		const eloScores = eloGraph.graph.map((obj) => obj.value);
+		const winRates = winRateGraph.graph.map((obj) => obj.value);
+		const matchDates = matchesPlayedGraph.graph.map((obj) => obj.date);
+		const matchesPlayed = matchesPlayedGraph.graph.map((obj) => obj.value);
 
-        // Rank History Chart Configuration
-        if (this.rankGraph && typeof this.rankGraph.loadConfig === 'function') {
-            const rankConfig = {
-                type: 'line',
-                data: {
-                    labels: dates,
-                    datasets: [
-                        {
-                            label: 'Elo Score',
-                            data: eloScores,
-                            borderWidth: 2,
-                            pointRadius: 5,
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        },
-                        {
-                            label: 'Win Rate (%)',
-                            data: winRates,
-                            borderWidth: 2,
-                            pointRadius: 5,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            yAxisID: 'percentage',
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { ticks: { maxTicksLimit: 5 } },
-                        y: {
-                            beginAtZero: true,
-                            ticks: { maxTicksLimit: 5 },
-                            title: { display: true, text: 'Elo Score' }
-                        },
-                        percentage: {
-                            position: 'right',
-                            min: 0,
-                            max: 100,
-                            ticks: {
-                                maxTicksLimit: 5,
-                                callback: (value) => `${value}%`,
-                            },
-                            title: { display: true, text: 'Win Rate (%)' }
-                        },
-                    },
-                    plugins: {
-                        tooltip: {
-                            enabled: true,
-                            mode: 'index', // Display all datasets for the hovered point
-                            intersect: false,
-                            callbacks: {
-                                label: function (context) {
-                                    const label = context.dataset.label || '';
-                                    const value = context.raw;
-                                    if (label === 'Win Rate (%)') {
-                                        return `${label}: ${value}%`; // Display Win Rate as percentage
-                                    }
-                                    return `${label}: ${value}`; // Display Elo score normally
-                                }
-                            },
-                        },
-                    },
-                    hover: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                },
-            };
-            this.rankGraph.loadConfig(rankConfig);
-        } else {
-            console.error('rankGraph or loadConfig is not properly initialized.');
-        }
+		// Rank History Chart Configuration
+		if (this.rankGraph && typeof this.rankGraph.loadConfig === "function") {
+			const rankConfig = {
+				type: "line",
+				data: {
+					labels: dates,
+					datasets: [
+						{
+							label: "Elo Score",
+							data: eloScores,
+							borderWidth: 2,
+							pointRadius: 5,
+							borderColor: "rgba(54, 162, 235, 1)",
+							backgroundColor: "rgba(54, 162, 235, 0.2)",
+						},
+						{
+							label: "Win Rate (%)",
+							data: winRates,
+							borderWidth: 2,
+							pointRadius: 5,
+							borderColor: "rgba(75, 192, 192, 1)",
+							backgroundColor: "rgba(75, 192, 192, 0.2)",
+							yAxisID: "percentage",
+						},
+					],
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						x: { ticks: { maxTicksLimit: 5 } },
+						y: {
+							beginAtZero: true,
+							ticks: { maxTicksLimit: 5 },
+							title: { display: true, text: "Elo Score" },
+						},
+						percentage: {
+							position: "right",
+							min: 0,
+							max: 100,
+							ticks: {
+								maxTicksLimit: 5,
+								callback: (value) => `${value}%`,
+							},
+							title: { display: true, text: "Win Rate (%)" },
+						},
+					},
+					plugins: {
+						tooltip: {
+							enabled: true,
+							mode: "index", // Display all datasets for the hovered point
+							intersect: false,
+							callbacks: {
+								label: function (context) {
+									const label = context.dataset.label || "";
+									const value = context.raw;
+									if (label === "Win Rate (%)") {
+										return `${label}: ${value}%`; // Display Win Rate as percentage
+									}
+									return `${label}: ${value}`; // Display Elo score normally
+								},
+							},
+						},
+					},
+					hover: {
+						mode: "index",
+						intersect: false,
+					},
+				},
+			};
+			this.rankGraph.loadConfig(rankConfig);
+		} else {
+			console.error(
+				"rankGraph or loadConfig is not properly initialized."
+			);
+		}
 
-        // Matches Played History Chart Configuration
-        if (this.matchGraph && typeof this.matchGraph.loadConfig === 'function') {
-            const matchConfig = {
-                type: 'bar',
-                data: {
-                    labels: matchDates,
-                    datasets: [{
-                        label: 'Number of Games',
-                        data: matchesPlayed,
-                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    }],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: { y: { ticks: { maxTicksLimit: 10 } } },
-                },
-            };
-            this.matchGraph.loadConfig(matchConfig);
-        } else {
-            console.error('matchGraph or loadConfig is not properly initialized.');
-        }
-    }
+		// Matches Played History Chart Configuration
+		if (
+			this.matchGraph &&
+			typeof this.matchGraph.loadConfig === "function"
+		) {
+			const matchConfig = {
+				type: "bar",
+				data: {
+					labels: matchDates,
+					datasets: [
+						{
+							label: "Number of Games",
+							data: matchesPlayed,
+							backgroundColor: "rgba(255, 99, 132, 0.6)",
+						},
+					],
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: { y: { ticks: { maxTicksLimit: 10 } } },
+				},
+			};
+			this.matchGraph.loadConfig(matchConfig);
+		} else {
+			console.error(
+				"matchGraph or loadConfig is not properly initialized."
+			);
+		}
+	}
 }
-customElements.define('user-profile-charts-cards', UserProfileChartsCards);
-
-
+customElements.define("user-profile-charts-cards", UserProfileChartsCards);
 
 // import { Component } from "../../components/Component.js";
 
