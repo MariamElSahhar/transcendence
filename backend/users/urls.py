@@ -1,20 +1,20 @@
 from django.urls import path
-from .views import (
-    user_list_create_view,
-    user_retrieve_update_destroy_view,
-    register_view,
-    login_view,
-    logout_view,
-    token_refresh_view,
-	token_status_view,
-    verify_otp_view
-)
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView, TokenRefreshView)
-
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
+)
+
+from .user_views import (
+    login_view,
+    logout_view,
+    register_view,
+    verify_otp_view,
+)
+from .views import (
+    token_refresh_view,
+    token_status_view,
+    user_list_create_view,
+    user_retrieve_update_destroy_view,
 )
 
 urlpatterns = [
@@ -32,9 +32,9 @@ urlpatterns = [
     path("token/refresh/", token_refresh_view, name="token_refresh"),
     path("token/status/", token_status_view, name="token_status"),
     path("verify-otp/", verify_otp_view, name="verify-otp"),
-
     # API Schema and AutoDocs
-    path('schema/', SpectacularAPIView.as_view(), name='api-schema'),
-    path('docs/', SpectacularSwaggerView.as_view(url_name='api-schema'),
-         name='api-docs'),
+    path("schema/", SpectacularAPIView.as_view(), name="api-schema"),
+    path(
+        "docs/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="api-docs"
+    ),
 ]
