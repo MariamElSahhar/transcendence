@@ -1,9 +1,8 @@
 import { Component } from "../Component.js";
-import { InputValidator } from "../../../js/utils/input-validator.js";
-import { BootstrapUtils } from "../../../js/utils/bootstrap-utils.js";
+import { InputValidator } from "../../js/utils/input-validator.js";
+import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
 // import { userManagementClient } from '@utils/api';
-import { ErrorPage } from "../../utils/ErrorPage.js";
-import { NavbarUtils } from "../../utils/NavbarUtils.js";
+import { ErrorPage } from "../error/ErrorPage.js";
 
 export class ResetPasswordEmail extends Component {
 	constructor() {

@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
 import { Keys } from "../../../js/utils/keys.js";
-import { ErrorPage } from "../../utils/ErrorPage.js";
+import { ErrorPage } from "../error/ErrorPage.js";
 
 export class ResetPasswordCode extends Component {
 	constructor() {

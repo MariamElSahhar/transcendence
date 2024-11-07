@@ -1,4 +1,4 @@
-import { Component } from "../components/Component.js";
+import { Component } from "../Component.js";
 
 export class ErrorPage extends Component {
 	static errorComponentName = "error-component";

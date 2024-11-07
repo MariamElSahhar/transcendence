@@ -1,6 +1,6 @@
 // ResetPasswordPage.js
 
-import { Component } from "./components/Component.js";
+import { Component } from "../Component.js";
 
 export class ResetPasswordPage extends Component {
 	constructor() {
@@ -13,10 +13,10 @@ export class ResetPasswordPage extends Component {
 
 	async connectedCallback() {
 		// Dynamically load the Navbar and other reset password components
-		await import("./components/navbar/Navbar.js");
-		await import("./components/reset_password/ResetPasswordEmail.js");
-		await import("./components/reset_password/ResetPasswordCode.js");
-		await import("./components/reset_password/ResetPasswordNew.js");
+		await import("../navbar/Navbar.js");
+		await import("./ResetPasswordEmail.js");
+		await import("./ResetPasswordCode.js");
+		await import("./ResetPasswordNew.js");
 
 		// Render the HTML structure
 		this.innerHTML = this.render();

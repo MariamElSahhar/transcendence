@@ -28,7 +28,7 @@ const routes = {
 	},
 	"/reset-password": {
 		component: "reset-password-page",
-		path: "../pages/auth/ResetPasswordPage.js",
+		path: "../pages/reset_password/ResetPasswordPage.js",
 		protected: false,
 	},
 	404: {
