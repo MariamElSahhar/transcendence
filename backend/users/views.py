@@ -53,6 +53,25 @@ def user_retrieve_update_destroy_view(request, user_id):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+def set_response_cookie(response, tokens, request):
+    response.set_cookie(
+        key=settings.SIMPLE_JWT["AUTH_COOKIE"],
+        value=tokens["access"],
+        expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+    )
+    response.set_cookie(
+        key="refresh_token",
+        value=tokens["refresh"],
+        expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
+        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+    )
+    del request.session['password']
+    return response
 
 # LOGIN
 @api_view(["POST"])
@@ -67,9 +86,21 @@ def login_view(request):
         request.session['password'] = password
 
         user = CustomUser.objects.filter(username=username).first()
-
-        if user and user.check_password(password) and user.is_superuser is True:
-            return Response({"message": "Login Successful."}, status=status.HTTP_200_OK)
+        userinfo=login_serializer.validated_data['user']
+        if user and user.check_password(password) and ((user.is_superuser is True) or (user.enable_otp is False)):
+            token_serializer = TokenObtainPairSerializer(
+                data={"username": userinfo.username, "password": password}
+            )
+            if token_serializer.is_valid():
+                tokens = token_serializer.validated_data
+                response = Response({"message": "Login Successful.",
+                    "data": {
+                    "username": userinfo.username,
+                    "user_id": userinfo.id,
+                    "user_email": userinfo.email,
+                    "avatar": userinfo.avatar.url if user.avatar else None,
+                }}, status=status.HTTP_200_OK)
+            return set_response_cookie(response,tokens,request)
         elif user and user.check_password(password) and user.is_superuser is False:
             send_otp(user)
             return Response(
@@ -154,7 +185,6 @@ def token_status_view(request):
 @permission_classes([AllowAny])
 def verify_otp_view(request):
     serializer = OTPVerificationSerializer(data=request.data)
-
     # The serializer will validate OTP and expiration
     if serializer.is_valid():
         user = serializer.validated_data["user"]
@@ -177,23 +207,7 @@ def verify_otp_view(request):
                  }},
                 status=status.HTTP_200_OK,
             )
-            response.set_cookie(
-                key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-                value=tokens["access"],
-                expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-                secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-                samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-            )
-            response.set_cookie(
-                key="refresh_token",
-                value=tokens["refresh"],
-                expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-                secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-                samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-            )
-            del request.session['password']
+            response = set_response_cookie(response, tokens, request)
             return response
         else:
             error_messages = []

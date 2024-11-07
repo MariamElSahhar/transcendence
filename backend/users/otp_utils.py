@@ -17,6 +17,7 @@ def send_otp(user):
     user.email_otp = otp
     user.otp_created_at = timezone.now()
     user.save()
+    # print(otp)
     send_mail(
         "Your Email OTP for 42AD Transcendence",
         f"Your OTP for email verification for 42AD Transcendence is: {otp}\nThis OTP is valid for 5 minutes.",
