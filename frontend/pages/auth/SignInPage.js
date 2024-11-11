@@ -32,7 +32,7 @@ export class SignInPage extends Component {
 						<form id="signin-form">
 							<div class="form-group mb-4">
 								<input type="text" class="form-control" id="login"
-									placeholder="Username or email">
+									placeholder="Username">
 								<div id="login-feedback" class="invalid-feedback">
 									Please enter a valid login.
 								</div>
