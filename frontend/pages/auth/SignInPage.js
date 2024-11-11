@@ -155,7 +155,7 @@ export class SignInPage extends Component {
 	}
 
 	async #loadTwoFactorComponent() {
-		await import("./components/TwoFactorAuth.js");
+		await import("./TwoFactorAuth.js");
 		const container = this.querySelector("#container");
 		container.innerHTML = "";
 		const twoFactorComponent = document.createElement("tfa-component");
