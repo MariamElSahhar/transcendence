@@ -1,4 +1,4 @@
-PYTHON_ENV := python3
+PYTHON_ENV := python
 
 # DOCKER
 docker-up:
