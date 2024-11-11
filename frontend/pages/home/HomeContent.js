@@ -51,7 +51,7 @@ class HomeContent extends Component {
 		// Load the texture (your image)
 		const textureLoader = new THREE.TextureLoader();
 		const texture = textureLoader.load(
-			"./images/pingy_pong.png",
+			"../../images/pingy_pong.png",
 			() => {
 				// When the texture is loaded, update the material
 				const geometry = new THREE.BoxGeometry(4, 4, 4); // Make the cube larger (4x4x4)

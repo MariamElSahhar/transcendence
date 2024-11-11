@@ -1,7 +1,7 @@
 import {
 	clearUserSession,
 	getUserSessionData,
-} from "../../../js/utils/session-manager.js";
+} from "../../js/utils/session-manager.js";
 import { Component } from "../Component.js";
 
 export class ConnectedNavbar extends Component {
