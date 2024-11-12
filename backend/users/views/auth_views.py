@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from ..models import CustomUser
-from ..utils import send_otp, set_response_cookie
+from ..utils import send_otp, set_response_cookie, update_user_activity
 from ..serializers import LoginSerializer, OTPVerificationSerializer, UserSerializer
 
 
@@ -47,7 +47,8 @@ def login_view(request):
                     },
                     status=status.HTTP_200_OK,
                 )
-            return set_response_cookie(response, tokens, request)
+                update_user_activity(user, True)
+            return set_response_cookie(response, tokens)
         elif user and user.check_password(password) and user.is_superuser is False:
             send_otp(user)
             return Response(
@@ -78,6 +79,7 @@ def register_view(request):
 
         # Send OTP
         send_otp(user)
+        update_user_activity(user, True)
 
         return Response(
             {"message": "Registration successful. OTP has been sent to your email."},
@@ -119,7 +121,7 @@ def verify_otp_view(request):
                 },
                 status=status.HTTP_200_OK,
             )
-            response = set_response_cookie(response, tokens, request)
+            response = set_response_cookie(response, tokens)
             del request.session["password"]
             return response
         else:
@@ -140,6 +142,7 @@ def verify_otp_view(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def logout_view(request):
+    user = request.user
     response = Response(
         {
             "message": "Logout successful.",
@@ -162,4 +165,5 @@ def logout_view(request):
         httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
         samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
     )
+    update_user_activity(user, False)
     return response

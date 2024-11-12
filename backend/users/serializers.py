@@ -6,8 +6,8 @@ from django.utils import timezone
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ["id", "username", "avatar"]
-    
+        fields = ["id", "username", "avatar", "is_online", "last_seen"]
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

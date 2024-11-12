@@ -8,7 +8,6 @@ def generate_otp():
     totp = pyotp.TOTP(pyotp.random_base32(), interval=300)
     return totp.now()
 
-
 def send_otp(user):
     """
     Utility function to generate and send OTP
@@ -27,9 +26,8 @@ def send_otp(user):
         fail_silently=False,
     )
 
-
 # ADD ACCESS TOKEN COOKIE TO RESPONSE
-def set_response_cookie(response, tokens, request):
+def set_response_cookie(response, tokens, refresh=True):
     response.set_cookie(
         key=settings.SIMPLE_JWT["AUTH_COOKIE"],
         value=tokens["access"],
@@ -38,12 +36,22 @@ def set_response_cookie(response, tokens, request):
         httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
         samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
     )
-    response.set_cookie(
-        key="refresh_token",
-        value=tokens["refresh"],
-        expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
+    if refresh:
+        response.set_cookie(
+            key="refresh_token",
+            value=tokens["refresh"],
+            expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
+            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+        )
     return response
+
+# UPDATE USER ACTIVITY
+def update_user_activity(user, isActive):
+    if isActive:
+        user.is_online = True
+        user.last_seen = timezone.now()
+    else:
+        user.is_online = False
+    user.save()
