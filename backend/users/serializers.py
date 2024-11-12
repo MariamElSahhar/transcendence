@@ -3,7 +3,11 @@ from .models import CustomUser
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["id", "username", "avatar"]
+    
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -15,8 +19,10 @@ class UserSerializer(serializers.ModelSerializer):
             "email_otp",
             "is_email_verified",
             "avatar",
+            "friends",
         ]
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
+    friends = FriendSerializer(many=True, read_only=True)
 
     def validate(self, attrs):
         print("validation")
@@ -30,8 +36,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise ValidationError({"email": "This email is already in use."})
 
         return attrs
-
-
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
@@ -50,7 +54,6 @@ class LoginSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs
-
 
 class OTPVerificationSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)

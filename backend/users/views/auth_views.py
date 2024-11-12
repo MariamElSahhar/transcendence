@@ -6,9 +6,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import CustomUser
-from .otp_utils import send_otp
-from .serializers import LoginSerializer, OTPVerificationSerializer, UserSerializer
+from ..models import CustomUser
+from ..utils import send_otp, set_response_cookie
+from ..serializers import LoginSerializer, OTPVerificationSerializer, UserSerializer
 
 
 # LOGIN
@@ -88,26 +88,6 @@ def register_view(request):
     for _, errors in user_serializer.errors.items():
         error_messages.extend(errors)
     return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
-
-
-def set_response_cookie(response, tokens, request):
-    response.set_cookie(
-        key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-        value=tokens["access"],
-        expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
-    response.set_cookie(
-        key="refresh_token",
-        value=tokens["refresh"],
-        expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
-    return response
 
 
 # OTP VERIFICATION
