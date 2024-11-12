@@ -1,9 +1,11 @@
-from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+
+from ..utils import set_response_cookie, update_user_activity
+
 
 # REFRESH TOKEN
 @api_view(["POST"])
@@ -21,14 +23,8 @@ def token_refresh_view(request):
             {"message": "Refresh successful."}, status=status.HTTP_200_OK
         )
         # Access token
-        response.set_cookie(
-            key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-            value=tokens["access"],
-            expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-        )
+        user = request.user
+        response = set_response_cookie(response, tokens, user, False)
         return response
     else:
         error_messages = []
@@ -40,4 +36,5 @@ def token_refresh_view(request):
 # TOKEN STATUS
 @api_view(["GET"])
 def token_status_view(request):
+    update_user_activity(request.user, True)
     return Response({"message": "Token valid"}, status=status.HTTP_200_OK)
