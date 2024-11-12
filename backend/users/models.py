@@ -11,5 +11,10 @@ class CustomUser(AbstractUser):
     enable_otp = models.BooleanField(default=True)
     otp_created_at = models.DateTimeField(null=True, blank=True)
 
+    friends = models.ManyToManyField('self', symmetrical=True, blank=True)
+
     def __str__(self):
         return self.username
+
+    def get_friends(self):
+        return self.friends.all()
