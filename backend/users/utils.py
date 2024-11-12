@@ -1,8 +1,7 @@
 from django.conf import settings
-import pyotp
-from django.core.mail import send_mail
 from django.utils import timezone
-
+from django.core.mail import send_mail
+import pyotp
 
 def generate_otp():
     totp = pyotp.TOTP(pyotp.random_base32(), interval=300)
@@ -27,7 +26,8 @@ def send_otp(user):
     )
 
 # ADD ACCESS TOKEN COOKIE TO RESPONSE
-def set_response_cookie(response, tokens, refresh=True):
+def set_response_cookie(response, tokens, user, set_refresh=True):
+    update_user_activity(user, True)
     response.set_cookie(
         key=settings.SIMPLE_JWT["AUTH_COOKIE"],
         value=tokens["access"],
@@ -36,7 +36,8 @@ def set_response_cookie(response, tokens, refresh=True):
         httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
         samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
     )
-    if refresh:
+    # we set refresh token if it's the first time authenticating
+    if set_refresh:
         response.set_cookie(
             key="refresh_token",
             value=tokens["refresh"],
@@ -49,9 +50,6 @@ def set_response_cookie(response, tokens, refresh=True):
 
 # UPDATE USER ACTIVITY
 def update_user_activity(user, isActive):
-    if isActive:
-        user.is_online = True
-        user.last_seen = timezone.now()
-    else:
-        user.is_online = False
+    user.last_seen = timezone.now()
+    user.is_online = isActive
     user.save()

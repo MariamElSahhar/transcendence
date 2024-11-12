@@ -47,8 +47,7 @@ def login_view(request):
                     },
                     status=status.HTTP_200_OK,
                 )
-                update_user_activity(user, True)
-            return set_response_cookie(response, tokens)
+            return set_response_cookie(response, tokens, user, True)
         elif user and user.check_password(password) and user.is_superuser is False:
             send_otp(user)
             return Response(
@@ -79,7 +78,6 @@ def register_view(request):
 
         # Send OTP
         send_otp(user)
-        update_user_activity(user, True)
 
         return Response(
             {"message": "Registration successful. OTP has been sent to your email."},
@@ -121,7 +119,7 @@ def verify_otp_view(request):
                 },
                 status=status.HTTP_200_OK,
             )
-            response = set_response_cookie(response, tokens)
+            response = set_response_cookie(response, tokens, user, True)
             del request.session["password"]
             return response
         else:

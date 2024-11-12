@@ -1,4 +1,3 @@
-from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -24,7 +23,8 @@ def token_refresh_view(request):
             {"message": "Refresh successful."}, status=status.HTTP_200_OK
         )
         # Access token
-        response = set_response_cookie(response, tokens, refresh=False)
+        user = request.user
+        response = set_response_cookie(response, tokens, user, False)
         return response
     else:
         error_messages = []

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from datetime import timedelta
 
 
 class CustomUser(AbstractUser):
@@ -20,3 +21,13 @@ class CustomUser(AbstractUser):
 
     def get_friends(self):
         return self.friends.all()
+
+    def save(self, *args, **kwargs):
+        self.check_online_status()
+        super().save(*args, **kwargs)
+
+    def check_online_status(self):
+        if self.is_online:
+            timeout = timezone.now() - timedelta(minutes=5)
+            self.is_online = self.last_seen >= timeout
+

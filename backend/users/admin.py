@@ -25,6 +25,7 @@ class CustomUserAdmin(UserAdmin):
                     "is_superuser",
                     "is_staff",
                     "enable_otp",
+                    "is_online",
                 )
             },
         ),
