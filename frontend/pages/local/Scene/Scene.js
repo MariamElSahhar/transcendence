@@ -137,7 +137,7 @@ export class Scene {
 
 
 
- //import * as TWEEN from "../../../../node_modules/@tweenjs/tween.js/dist/tween.umd.js";
+//  //import * as TWEEN from "../../../../node_modules/@tweenjs/tween.js/dist/tween.umd.js";
 // //import * as THREE from "../../../../node_modules/three/build/three.module.js";
 // import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 // import * as TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.umd.js";
