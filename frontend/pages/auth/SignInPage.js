@@ -142,7 +142,13 @@ export class SignInPage extends Component {
 		});
 		if (success) {
 			this.alertForm.classList.add("d-none");
-			this.#loadTwoFactorComponent();
+			const authenticated = await isAuth();
+			if (authenticated) {
+				window.redirect("/");
+				return false;
+			}
+			else
+				{this.#loadTwoFactorComponent();}
 		} else {
 			// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
 			// 	this.#loadTwoFactorComponent();
