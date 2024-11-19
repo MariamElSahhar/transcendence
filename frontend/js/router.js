@@ -1,23 +1,40 @@
+import { isAuth } from "./utils/session-manager.js";
+
 const routes = {
-	"/home": {
-		component: "home-page",
-		path: "../pages/HomePage.js",
-	},
 	"/": {
 		component: "home-page",
-		path: "../pages/HomePage.js",
+		path: "../pages/home/HomePage.js",
+		protected: false,
 	},
-	"/login": {
-		component: "login-page",
-		path: "../pages/LoginPage.js",
+	"/home": {
+		component: "home-page",
+		path: "../pages/home/HomePage.js",
+		protected: false,
+	},
+	"/profile": {
+		component: "user-profile-page",
+		path: "../pages/profile/UserProfilePage.js",
+		protected: false,
 	},
 	"/sign-in": {
 		component: "sign-in-page",
-		path: "../pages/SignInPage.js",
+		path: "../pages/auth/SignInPage.js",
+		protected: false,
 	},
 	"/sign-up": {
 		component: "sign-up-page",
-		path: "../pages/SignUpPage.js",
+		path: "../pages/auth/SignUpPage.js",
+		protected: false,
+	},
+	"/play-match": {
+		component: "game-page",
+		path: "../pages/local/GamePage.js",
+		protected: false,
+	},
+	"/reset-password": {
+		component: "reset-password-page",
+		path: "../pages/reset_password/ResetPasswordPage.js",
+		protected: false,
 	},
 	"/network-error": {
 		component: "error-content",
@@ -29,47 +46,36 @@ const routes = {
 	},
 	404: {
 		component: "not-found-page",
-		path: "../pages/NotFound.js",
+		path: "../pages/error/NotFound.js",
+		protected: false,
 	},
 };
 
-const redirect = (path) => {
+export const redirect = (path) => {
 	window.history.pushState({}, "", path);
-	handleLocation();
-};
-
-const route = (event) => {
-	event = event || window.event;
-	event.preventDefault();
-	window.history.pushState({}, "", event.target.href);
 	handleLocation();
 };
 
 const handleLocation = async () => {
 	const path = window.location.pathname;
-	const component = routes[path].component || routes[404].component;
-	const componentPath = routes[path].path || routes[404].path;
+	let route = routes[path] || routes[404];
+	const isProtected = route.protected;
 	const root = document.getElementById("root");
 	root.innerHTML = "";
 
-	if (component && componentPath) {
-		try {
-			await import(componentPath);
-			const element = document.createElement(component);
-			root.appendChild(element);
-		} catch (error) {
-			console.error(
-				`Failed to load component at ${componentPath}`,
-				error
-			);
-		}
-	} else {
+	if (isProtected) {
+		const authenticated = await isAuth();
+		if (!authenticated) route = routes[404];
+	}
+	try {
+		await import(route.path);
 		const element = document.createElement(route.component);
 		root.appendChild(element);
+	} catch (error) {
+		console.error(`Failed to load component at ${route.path}`, error);
 	}
 };
 
 window.onpopstate = handleLocation;
-window.route = route;
 window.redirect = redirect;
 handleLocation();

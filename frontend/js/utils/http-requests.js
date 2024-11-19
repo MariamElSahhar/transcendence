@@ -8,7 +8,7 @@ const request = async (url, options) => {
 			return {
 				status: response.status,
 				body: null,
-				error: `HTTP error occurred: ${response.statusText}`,
+				error: body.error,
 			};
 		}
 		return { status: response.status, body };
@@ -16,7 +16,7 @@ const request = async (url, options) => {
 		return {
 			status: null,
 			body: null,
-			error: "Network error occurred.",
+			error: "Network error.",
 		};
 	}
 };
