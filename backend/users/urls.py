@@ -1,17 +1,5 @@
 from django.urls import path
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularSwaggerView,
-)
 
-from .views.users_views import (
-    user_list_create_view,
-    user_retrieve_update_destroy_view,
-)
-from .views.token_views import (
-    token_refresh_view,
-    token_status_view,
-)
 from .views.auth_views import (
     login_view,
     logout_view,
@@ -21,6 +9,14 @@ from .views.auth_views import (
 from .views.friends_views import (
     get_add_friends_view,
     remove_friend_view,
+)
+from .views.token_views import (
+    token_refresh_view,
+    token_status_view,
+)
+from .views.users_views import (
+    user_list_create_view,
+    user_retrieve_update_destroy_view,
 )
 
 urlpatterns = [
@@ -42,10 +38,4 @@ urlpatterns = [
     # Friends
     path("friends/", get_add_friends_view, name="add-get-friends"),
     path("friends/<int:friend_id>", remove_friend_view, name="remove-friend"),
-
-    # API Schema and AutoDocs
-    path("schema/", SpectacularAPIView.as_view(), name="api-schema"),
-    path(
-        "docs/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="api-docs"
-    ),
 ]
