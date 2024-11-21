@@ -26,6 +26,11 @@ const routes = {
 		path: "../pages/auth/SignUpPage.js",
 		protected: false,
 	},
+	"/play-AI-match": {
+		component: "AI-game-page",
+		path: "../pages/AI/AIGamePage.js",
+		protected: false,
+	},
 	"/play-match": {
 		component: "game-page",
 		path: "../pages/local/GamePage.js",
