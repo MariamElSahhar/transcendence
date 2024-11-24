@@ -1,4 +1,4 @@
-PYTHON_ENV := python
+PYTHON_ENV := python3
 
 # DOCKER
 docker-up:
@@ -20,10 +20,10 @@ run-db:
 	docker compose up db
 
 install:
-	pip install -r backend/requirements.txt
+	pip3 install -r backend/requirements.txt --break-system-packages
 
 freeze:
-	pip freeze > backend/requirements.txt
+	pip3 freeze > backend/requirements.txt
 
 makemigrations:
 	ENV=dev $(PYTHON_ENV) backend/manage.py makemigrations

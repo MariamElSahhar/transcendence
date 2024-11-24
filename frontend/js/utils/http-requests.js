@@ -3,15 +3,22 @@ const request = async (url, options) => {
 	options.credentials = "include";
 	try {
 		const response = await fetch(url, options);
+
+		console.log('RESPONSE', response);
+
 		const body = await response.json();
+
+		console.log('BODY', body);
+
 		if (!response.ok) {
 			return {
 				status: response.status,
 				body: null,
 				error: body.error,
+				headers: response.headers,
 			};
 		}
-		return { status: response.status, body };
+		return { status: response.status, body, headers: response.headers };
 	} catch (error) {
 		return {
 			status: null,

@@ -11,13 +11,16 @@ const URIS = {
 	verifyOTP: `${BASE_URL}/verify-otp/`,
 };
 
-// login and activate otp verification
+// login 
 export const login = async ({ username, password }) => {
 	const url = URIS.login;
 	const requestBody = { username, password };
-	const { status, body, error } = await post(url, requestBody);
+	const { status, body, error, headers } = await post(url, requestBody, {
+		"Content-Type": "application/json",
+		credentials: "include",
+	});
 	if (error) return { success: false, error: error };
-	return { success: true };
+	return { success: true, body, headers };
 };
 
 // get new access token
@@ -28,7 +31,7 @@ export const refresh = async () => {
 	return { success: true };
 };
 
-// register and get access and refresh tokens
+// register
 export const register = async ({ username, email, password }) => {
 	const url = URIS.register;
 	const requestBody = { username, email, password };

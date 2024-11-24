@@ -314,7 +314,9 @@ export class SignUpPage extends Component {
 		});
 		if (success) {
 			this.alertForm.classList.add("d-none");
-			this.#loadTwoFactorComponent();
+
+			window.redirect("/sign-in")
+			// this.#loadTwoFactorComponent();
 		} else {
 			this.#resetLoadButton();
 			this.alertForm.innerHTML = error;

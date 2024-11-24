@@ -11,6 +11,11 @@ const routes = {
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
+	"/tictactoe": {
+		component: "tic-tac-toe-page",
+		path: "../pages/tictactoe/TictactoePage.js",
+		protected: false,
+	},
 	"/profile": {
 		component: "user-profile-page",
 		path: "../pages/profile/UserProfilePage.js",

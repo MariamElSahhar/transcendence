@@ -6,8 +6,8 @@ from django.utils import timezone
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ["id", "username", "avatar", "is_online", "last_seen"]
-
+        fields = ["id", "username", "avatar"]
+    
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -20,13 +20,10 @@ class UserSerializer(serializers.ModelSerializer):
             "is_email_verified",
             "avatar",
             "friends",
-            "is_online",
-            "last_seen",
         ]
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
     friends = FriendSerializer(many=True, read_only=True)
-    is_online = serializers.SerializerMethodField()
-    
+
     def validate(self, attrs):
         print("validation")
         username = attrs.get("username")
@@ -39,10 +36,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise ValidationError({"email": "This email is already in use."})
 
         return attrs
-
-    def get_is_online(self, obj):
-        obj.check_online_status()
-        return obj.is_online
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)

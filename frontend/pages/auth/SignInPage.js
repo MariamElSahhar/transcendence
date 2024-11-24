@@ -1,6 +1,7 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../js/utils/session-manager.js";
+import { isAuth, storeUserSession } from "../../js/utils/session-manager.js";
 import { login } from "../../js/clients/token-client.js";
+
 export class SignInPage extends Component {
 	constructor() {
 		super();
@@ -136,19 +137,41 @@ export class SignInPage extends Component {
 
 	async #signin() {
 		this.#startLoadButton();
-		const { success, error } = await login({
+		const { success, error, body, headers } = await login({
 			username: this.login.value,
 			password: this.password.value,
 		});
 		if (success) {
 			this.alertForm.classList.add("d-none");
+
+			storeUserSession({
+				username: body.data.username,
+				id: body.data.user_id,
+				email: body.data.user_email,
+				avatar: body.data.avatar,
+				accessToken: headers.cookie.access_token,
+				refreshToken: headers.cookie.refresh_token,
+			});
+
+			console.log("Stored user session", {
+				username: body.data.username,
+				id: body.data.user_id,
+				email: body.data.user_email,
+				avatar: body.data.avatar,
+				accessToken: body.data.access_token,
+				refreshToken: body.data.refresh_token,
+			});
+
 			const authenticated = await isAuth();
+
+			console.log('authenticated', authenticated);
+
 			if (authenticated) {
 				window.redirect("/");
 				return false;
 			}
-			else
-				{this.#loadTwoFactorComponent();}
+			// Do nothing, user have to try again
+			
 		} else {
 			// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
 			// 	this.#loadTwoFactorComponent();
