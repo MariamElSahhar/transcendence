@@ -1,4 +1,4 @@
-import {Component} from '../Component.js';
+import {Component} from '../../Component.js';
 import {NavbarUtils} from '../../../js/utils/navbar-utils.js';
 
 export class ErrorContent extends Component {

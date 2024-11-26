@@ -46,6 +46,7 @@ def set_response_cookie(response, tokens, user, set_refresh=True):
             httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
             samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
         )
+    # (response.cookies)
     return response
 
 # UPDATE USER ACTIVITY

@@ -16,7 +16,6 @@ from ..serializers import LoginSerializer, OTPVerificationSerializer, UserSerial
 @permission_classes([AllowAny])
 def login_view(request):
     login_serializer = LoginSerializer(data=request.data)
-
     if login_serializer.is_valid():
         username = login_serializer.validated_data["username"]
         password = login_serializer.validated_data["password"]
@@ -42,6 +41,7 @@ def login_view(request):
                             "username": userinfo.username,
                             "user_id": userinfo.id,
                             "user_email": userinfo.email,
+                            "otp": user.enable_otp,
                             "avatar": userinfo.avatar.url if user.avatar else None,
                         },
                     },
@@ -114,6 +114,7 @@ def verify_otp_view(request):
                         "username": user.username,
                         "user_id": user.id,
                         "user_email": user.email,
+                        "otp": user.enable_otp,
                         "avatar": user.avatar.url if user.avatar else None,
                     },
                 },
@@ -141,6 +142,11 @@ def verify_otp_view(request):
 @permission_classes([AllowAny])
 def logout_view(request):
     user = request.user
+    if user.is_anonymous:
+        return Response(
+            {"message": "User is not authenticated."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
     response = Response(
         {
             "message": "Logout successful.",

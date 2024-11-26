@@ -1,4 +1,5 @@
-import {Component} from './components/Component.js';
+import {Component} from '../Component.js';
+import { isAuth } from "../../js/utils/session-manager.js";
 // import {userManagementClient} from '@utils/api';
 // import {getRouter} from '../js/router.js';
 
@@ -10,9 +11,14 @@ export class Settings extends Component {
 	async connectedCallback() {
 
 		// await import("./components/HomeContent.js");
-		await import("./components/navbar/Navbar.js");
-		await import("./components/layouts/FriendsSidebar.js");
-		await import("./components/layouts/FriendsSidebar.js");
+		const authenticated = await isAuth();
+		console.log(authenticated)
+		if (!authenticated) {
+			window.redirect("/");
+			return false;
+		}
+		await import("../navbar/Navbar.js");
+		await import("../components/layouts/FriendsSidebar.js");
 		this.render();
 	}
 

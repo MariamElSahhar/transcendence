@@ -48,3 +48,21 @@ def user_retrieve_update_destroy_view(request, user_id):
     elif request.method == "DELETE":
         user.delete()
         return Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(["GET"])
+def check_username_exists(request, username):
+    exists = CustomUser.objects.filter(username=username).exists()
+    print(exists)
+    if exists:
+        return Response({"exists": True, "message": "Username exists."})
+    else:
+        return Response({"exists": False, "message": "Username does not exist."})
+
+@api_view(["GET"])
+def check_email_exists(request, email):
+
+    exists = CustomUser.objects.filter(email=email).exists()
+    if exists:
+        return Response({"exists": True, "message": "email exists."})
+    else:
+        return Response({"exists": False, "message": "email does not exist."})

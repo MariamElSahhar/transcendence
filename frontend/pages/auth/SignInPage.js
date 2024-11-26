@@ -143,7 +143,9 @@ export class SignInPage extends Component {
 		if (success) {
 			this.alertForm.classList.add("d-none");
 			const authenticated = await isAuth();
-			if (authenticated) {
+			console.log(authenticated)
+			if (authenticated)
+				{
 				window.redirect("/");
 				return false;
 			}

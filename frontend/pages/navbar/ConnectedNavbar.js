@@ -15,7 +15,7 @@ export class ConnectedNavbar extends Component {
 		return `
 			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary fixed-top">
 				<div class="container-fluid">
-					<a class="navbar-brand" onclick="window.redirect('/')">Transcendence</a>
+					<a class="navbar-brand" target="window.redirect('/')">Transcendence</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 							data-bs-target="#navbarSupportedContent"
 							aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -25,16 +25,13 @@ export class ConnectedNavbar extends Component {
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav me-auto">
 							<li class="nav-item">
-								${this.#generateNavLink("local")}
+								${this.#generateNavLink("games")}
 							</li>
 							<li class="nav-item">
-								${this.#generateNavLink("multiplayer")}
+								${this.#generateNavLink("dashboard")}
 							</li>
 							<li class="nav-item">
-								${this.#generateNavLink("tournaments")}
-							</li>
-							<li class="nav-item">
-								${this.#generateNavLink("ranking")}
+								${this.#generateNavLink("friends")}
 							</li>
 						</ul>
 						<div class="d-flex align-items-center">
@@ -55,9 +52,7 @@ export class ConnectedNavbar extends Component {
 								<ul class="dropdown-menu dropdown-menu-end"
 									aria-labelledby="dropdownMenuLink">
 									<li><a class="dropdown-item"
-											onclick="window.redirect('/profile/${username}/')">Profile</a></li>
-									<li><a class="dropdown-item"
-											onclick="window.redirect('/settings/')">Settings</a></li>
+											onclick="window.redirect('/settings')">Settings</a></li>
 									<li><a id="logout" class="dropdown-item text-danger">Sign out</a></li>
 								</ul>
 							</div>
@@ -69,23 +64,15 @@ export class ConnectedNavbar extends Component {
 	}
 
 	postRender() {
-		this.local = this.querySelector("#local");
-		this.multiplayer = this.querySelector("#multiplayer");
-		this.tournaments = this.querySelector("#tournaments");
-		this.ranking = this.querySelector("#ranking");
+		this.games = this.querySelector("#games");
+		this.dashboard = this.querySelector("#dashboard");
+		this.friends = this.querySelector("#friends");
+		// this.ranking = this.querySelector("#ranking");
 
-		super.addComponentEventListener(this.local, "click", this.#navigate);
-		super.addComponentEventListener(
-			this.multiplayer,
-			"click",
-			this.#navigate
-		);
-		super.addComponentEventListener(
-			this.tournaments,
-			"click",
-			this.#navigate
-		);
-		super.addComponentEventListener(this.ranking, "click", this.#navigate);
+		super.addComponentEventListener(this.games, "click", this.#navigate);
+		super.addComponentEventListener(this.friends,"click",this.#navigate);
+		super.addComponentEventListener(this.dashboard,"click",this.#navigate);
+		// super.addComponentEventListener(this.ranking, "click", this.#navigate);
 
 		const disablePaddingTop = this.getAttribute("disable-padding-top");
 		if (disablePaddingTop !== "true") {
