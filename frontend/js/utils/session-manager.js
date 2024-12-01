@@ -3,13 +3,12 @@ import { refresh, tokenStatus, logout } from "../clients/token-client.js";
 const maxRefreshAttempts = 3;
 const backendURL = "http://127.0.0.1:8000";
 
-export const storeUserSession = ({ username, id, email, avatar, accessToken, refreshToken }) => {
+export const storeUserSession = ({ username, id, email, avatar , otp}) => {
 	sessionStorage.setItem("username", username);
 	sessionStorage.setItem("id", id);
 	sessionStorage.setItem("email", email);
 	sessionStorage.setItem("avatar", `${backendURL}${avatar}`);
-	sessionStorage.setItem("accessToken", accessToken);
-	sessionStorage.setItem("refreshToken", refreshToken);
+	sessionStorage.setItem("otp", otp);
 };
 
 export const getUserSessionData = () => {
@@ -18,8 +17,7 @@ export const getUserSessionData = () => {
 		id: sessionStorage.getItem("id"),
 		email: sessionStorage.getItem("email"),
 		avatar: sessionStorage.getItem("avatar"),
-		accessToken: sessionStorage.getItem("accessToken"),
-		refreshToken: sessionStorage.getItem("refreshToken"),
+		otp: sessionStorage.getItem("otp"),
 	};
 };
 
@@ -28,16 +26,24 @@ export const clearUserSession = async () => {
 	sessionStorage.removeItem("id");
 	sessionStorage.removeItem("email");
 	sessionStorage.removeItem("avatar");
-	sessionStorage.removeItem("accessToken");
-	sessionStorage.removeItem("refreshToken");
+	sessionStorage.removeItem("otp");
 	return await logout();
 };
 
+
+function isTokenExpired(token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const now = Math.floor(Date.now() / 1000);
+    return payload.exp < now;
+}
+
+
 export const isAuth = async () => {
-	const authenticated = await tokenStatus();
+	let authenticated = await tokenStatus();
 	let attempts = 0;
 	while (!authenticated && attempts < maxRefreshAttempts) {
-		refresh();
+		await refresh();
+		authenticated = await tokenStatus();
 		attempts++;
 	}
 	if (authenticated) return true;

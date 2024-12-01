@@ -31,7 +31,7 @@ const routes = {
 		path: "../pages/auth/SignUpPage.js",
 		protected: false,
 	},
-	"/play-match": {
+	"/games": {
 		component: "game-page",
 		path: "../pages/local/GamePage.js",
 		protected: false,
@@ -40,6 +40,14 @@ const routes = {
 		component: "reset-password-page",
 		path: "../pages/reset_password/ResetPasswordPage.js",
 		protected: false,
+	},
+	"/network-error": {
+		component: "error-content",
+		path: "../pages/utilities/Error.js",
+	},
+	"/settings": {
+		component: "settings-page",
+		path: "../pages/settings/Settings.js",
 	},
 	404: {
 		component: "not-found-page",

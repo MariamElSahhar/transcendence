@@ -18,7 +18,8 @@ const request = async (url, options) => {
 				headers: response.headers,
 			};
 		}
-		return { status: response.status, body, headers: response.headers };
+		console.log(url, body, response)
+		return { status: response.status, body };
 	} catch (error) {
 		return {
 			status: null,

@@ -21,19 +21,21 @@ def token_refresh_view(request):
             {"message": "Refresh successful."}, status=status.HTTP_200_OK
         )
         # Access token
-        response.set_cookie(
-            key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-            value=tokens["access"],
-            expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-        )
+        user = request.user
+        if user.is_anonymous:
+            reponse = Response({"error": "User not authenticated."}, status=401)
+            response.delete_cookie("refresh_token")
+            response.delete_cookie("access_token")
+            return response
+
+        response = set_response_cookie(response, tokens, user, False)
         return response
     else:
         error_messages = []
         for _, errors in token_serializer.errors.items():
             error_messages.extend(errors)
+        # response.delete_cookie("refresh")
+        # response.delete_cookie("access_token")
         return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
 

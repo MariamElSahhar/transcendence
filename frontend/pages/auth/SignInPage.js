@@ -163,10 +163,9 @@ export class SignInPage extends Component {
 			});
 
 			const authenticated = await isAuth();
-
-			console.log('authenticated', authenticated);
-
-			if (authenticated) {
+			console.log(authenticated)
+			if (authenticated)
+				{
 				window.redirect("/");
 				return false;
 			}

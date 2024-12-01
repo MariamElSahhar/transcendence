@@ -1,6 +1,6 @@
 const BASE_URL = "http://127.0.0.1:8000/api";
 import { post, get } from "../utils/http-requests.js";
-import { storeUserSession } from "../utils/session-manager.js";
+import { storeUserSession, isAuth } from "../utils/session-manager.js";
 
 const URIS = {
 	login: `${BASE_URL}/login/`,
@@ -20,7 +20,17 @@ export const login = async ({ username, password }) => {
 		credentials: "include",
 	});
 	if (error) return { success: false, error: error };
-	return { success: true, body, headers };
+	const authenticated = await isAuth()
+	if (authenticated) {
+		storeUserSession({
+			username: body.data.username,
+			id: body.data.user_id,
+			email: body.data.user_email,
+			avatar: body.data.avatar,
+			otp: body.data.otp,
+		});
+	}
+	return { success: true };
 };
 
 // get new access token
@@ -62,9 +72,10 @@ export const verifyOTP = async ({ username, otp }) => {
 	if (error) return { success: false, error: error };
 	storeUserSession({
 		username: body.data.username,
-		id: body.data.id,
-		email: body.data.email,
+		id: body.data.user_id,
+		email: body.data.user_email,
 		avatar: body.data.avatar,
+		otp: body.data.otp,
 	});
 	return { success: true };
 };

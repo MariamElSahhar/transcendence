@@ -38,12 +38,15 @@ def set_response_cookie(response, tokens, request):
         httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
         samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
     )
-    response.set_cookie(
-        key="refresh_token",
-        value=tokens["refresh"],
-        expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
+    # we set refresh token if it's the first time authenticating
+    if set_refresh:
+        response.set_cookie(
+            key="refresh_token",
+            value=tokens["refresh"],
+            expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
+            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+        )
+    # (response.cookies)
     return response
