@@ -1,11 +1,25 @@
 .mw-500 {
 	max-width: 500px;
 }
+
+.minw-200 {
+	min-width: 200px;
+}
+
 .w-40px {
 	width: 40px;
 }
+
+.w-400px {
+	width: 400px;
+}
+
 .h-40px {
 	height: 40px;
+}
+
+.h-60px {
+	height: 60px;
 }
 
 .navbar {
