@@ -45,7 +45,7 @@ urlpatterns = [
 
     # Friends
     path("friends/", get_add_friends_view, name="add-get-friends"),
-    path("friends/<int:friend_id>", remove_friend_view, name="remove-friend"),
+    path("friends/<int:friend_id>/", remove_friend_view, name="remove-friend"),
 
     # API Schema and AutoDocs
     path("schema/", SpectacularAPIView.as_view(), name="api-schema"),

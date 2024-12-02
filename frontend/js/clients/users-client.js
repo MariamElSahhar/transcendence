@@ -10,7 +10,7 @@ export const fetchUsers = async () => {
 	const url = URIs.fetchUsers;
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, data: body };
 };
 
 // Function user by ID
@@ -18,7 +18,7 @@ export const fetchUserById = async (id) => {
 	const url = `${URIs.users}${id}/`;
 	const { status, body, error } = get(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, body };
 };
 
 // Create user
@@ -26,7 +26,7 @@ export const createUser = async (userData) => {
 	const url = `${URIs.users}${id}/`;
 	const { status, body, error } = post(url, userData);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, data: body };
 };
 
 // Update existing user by id
@@ -34,7 +34,7 @@ export const updateUser = async (id, userData) => {
 	const url = `${URIs.users}${id}/`;
 	const { status, body, error } = patch(url, userData);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, data: body };
 };
 
 // Delete user
@@ -42,7 +42,7 @@ export const deleteUser = async (id) => {
 	const url = `${URIs.users}${id}/`;
 	const { status, body, error } = del(url, userData);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, data: body };
 };
 
 export const usernameExist = async (username) => {
@@ -60,4 +60,3 @@ export const emailExist = async (email) => {
 	if (error) return { success: false, error: error };
 	return { success: true, body };
 };
-

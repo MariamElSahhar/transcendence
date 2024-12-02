@@ -21,14 +21,6 @@ export class UserProfileContent extends Component {
     `;
 	}
 
-	style() {
-		return `
-      <style>
-        /* Custom styles here if needed */
-      </style>
-    `;
-	}
-
 	async postRender() {
 		const username = this.getAttribute("username");
 		// const username = "marwa";

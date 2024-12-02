@@ -7,7 +7,7 @@ export class UserProfileMatchList extends Component {
 
 	render() {
 		this.pageNumber = parseInt(this.getAttribute("page-number") || 1);
-		return this.renderPlaceholder();
+		// return this.renderPlaceholder();
 	}
 
 	style() {

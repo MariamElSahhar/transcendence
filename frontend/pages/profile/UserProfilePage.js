@@ -28,10 +28,8 @@ export class UserProfilePage extends Component {
             <div class="profile-page container">
                 <user-profile-header></user-profile-header>
                 <div class="profile-content d-flex">
-                    <friends-sidebar-component
-                        main-component="user-profile-content-component"
-                        username="${this.getAttribute("username")}">
-                    </friends-sidebar-component>
+                    <friends-sidebar>
+                    </friends-sidebar>
                     <div class="profile-main-content">
                         <user-profile-stats-cards></user-profile-stats-cards>
                         <user-profile-charts-cards></user-profile-charts-cards>
@@ -66,8 +64,8 @@ export class UserProfilePage extends Component {
                     margin-top: 20px;
                 }
 
-                /* Sidebar styling */
-                friends-sidebar-component {
+                /* Sidebar styling
+                friends-sidebar {
                     flex: 1;
                     min-width: 250px;
                     max-width: 300px;
@@ -75,7 +73,7 @@ export class UserProfilePage extends Component {
                     padding: 15px;
                     border-radius: 8px;
                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                }
+                }  */
 
                 /* Main content styling */
                 .profile-main-content {

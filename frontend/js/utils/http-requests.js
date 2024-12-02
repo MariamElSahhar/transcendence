@@ -3,21 +3,20 @@ const request = async (url, options) => {
 	options.credentials = "include";
 	try {
 		const response = await fetch(url, options);
-		const body = await response.json();
+		const body = response.status != 204 ? await response.json() : null;
 		if (!response.ok) {
 			return {
 				status: response.status,
 				body: null,
-				error: body.error,
+				error: body ? body.detail || body.error : null,
 			};
 		}
-		console.log(url, body, response)
 		return { status: response.status, body };
 	} catch (error) {
 		return {
 			status: null,
 			body: null,
-			error: "Network error.",
+			error: "Unknown error.",
 		};
 	}
 };
