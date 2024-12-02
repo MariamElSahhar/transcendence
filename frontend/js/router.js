@@ -1,19 +1,10 @@
 import { isAuth } from "./utils/session-manager.js";
 
 const routes = {
+	// PUBLIC SCREENS
 	"/": {
-		component: "home-page",
-		path: "../pages/home/HomePage.js",
-		protected: false,
-	},
-	"/home": {
-		component: "home-page",
-		path: "../pages/home/HomePage.js",
-		protected: false,
-	},
-	"/profile": {
-		component: "user-profile-page",
-		path: "../pages/profile/UserProfilePage.js",
+		component: "landing-page",
+		path: "../pages/landing/LandingPage.js",
 		protected: false,
 	},
 	"/sign-in": {
@@ -24,6 +15,26 @@ const routes = {
 	"/sign-up": {
 		component: "sign-up-page",
 		path: "../pages/auth/SignUpPage.js",
+		protected: false,
+	},
+	404: {
+		component: "not-found-page",
+		path: "../pages/error/NotFound.js",
+		protected: false,
+	},
+	"/network-error": {
+		component: "error-content",
+		path: "../pages/utilities/Error.js",
+	},
+	// PROTECTED SCREENS
+	"/home": {
+		component: "home-page",
+		path: "../pages/home/HomePage.js",
+		protected: false,
+	},
+	"/profile": {
+		component: "user-profile-page",
+		path: "../pages/profile/UserProfilePage.js",
 		protected: false,
 	},
 	"/games": {
@@ -41,18 +52,9 @@ const routes = {
 		path: "../pages/reset_password/ResetPasswordPage.js",
 		protected: false,
 	},
-	"/network-error": {
-		component: "error-content",
-		path: "../pages/utilities/Error.js",
-	},
 	"/settings": {
 		component: "settings-page",
 		path: "../pages/settings/Settings.js",
-	},
-	404: {
-		component: "not-found-page",
-		path: "../pages/error/NotFound.js",
-		protected: false,
 	},
 };
 

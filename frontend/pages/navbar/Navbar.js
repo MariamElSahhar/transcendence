@@ -29,7 +29,7 @@ export class Navbar extends Component {
 		return `
 			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary fixed-top">
 				<div class="container-fluid">
-					<a class="navbar-brand">Transcendence</a>
+					<a class="navbar-brand" onclick="window.redirect('/home')">Transcendence</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 							data-bs-target="#navbarSupportedContent"
 							aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -55,9 +55,8 @@ export class Navbar extends Component {
 								</span>
 								<ul class="dropdown-menu dropdown-menu-end"
 									aria-labelledby="dropdownMenuLink">
-									<li><a class="dropdown-item"
-											onclick="window.redirect('/settings')">Settings</a></li>
-									<li><a id="logout" class="dropdown-item text-danger">Sign out</a></li>
+									<li id="settings" class="dropdown-item" onclick="window.redirect('/settings')">Settings</li>
+									<li id="logout" class="dropdown-item text-danger">Sign out</li>
 								</ul>
 							</div>
 						</div>
@@ -75,13 +74,16 @@ export class Navbar extends Component {
 			navbarItem.setAttribute("role", "button");
 			navbarItem.textContent = link.label;
 			navbarList.appendChild(navbarItem);
-			navbarItem.addEventListener("click", () => {
+
+			super.addComponentEventListener(navbarItem, "click", () => {
 				window.redirect(link.path);
 			});
 		});
-		this.querySelector(".navbar-brand").addEventListener("click", () => {
-			window.redirect("/");
-		});
+		super.addComponentEventListener(
+			this.querySelector("#logout"),
+			"click",
+			this.#logout
+		);
 
 		const disablePaddingTop = this.getAttribute("disable-padding-top");
 		if (disablePaddingTop !== "true") {
@@ -90,8 +92,6 @@ export class Navbar extends Component {
 		} else {
 			document.body.style.paddingTop = "0px";
 		}
-		const logout = this.querySelector("#logout");
-		super.addComponentEventListener(logout, "click", this.#logout);
 	}
 
 	async #logout() {

@@ -35,15 +35,6 @@ export class DisconnectedNavbar extends Component {
             </nav>
         `;
 	}
-
-	postRender() {}
-
-	addNotification(notification) {
-		const notificationNav = this.querySelector(
-			"notification-nav-component"
-		);
-		notificationNav.addNotification(notification);
-	}
 }
 
 customElements.define("disconnected-navbar-component", DisconnectedNavbar);
