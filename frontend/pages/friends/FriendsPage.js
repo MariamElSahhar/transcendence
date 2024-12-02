@@ -16,8 +16,7 @@ export class FriendsPage extends Component {
 	render() {
 		return `
 			<navbar-component></navbar-component>
-			<div class="p-3 d-flex flex-row justify-content-between w-100">
-				<h1 class="">My Friends</h1>
+			<div class="p-3 d-flex flex-row justify-content-end w-100">
 				<div class="d-flex align-items-end">
 					<small>${this.friends.length} Total Friends</small>
 				</div>
@@ -33,25 +32,34 @@ export class FriendsPage extends Component {
 	async renderFriends() {
 		const friendsList = this.querySelector("#friends-list");
 		friendsList.innerHTML = "";
-		this.friends.forEach((friend) => {
-			const friendCard = document.createElement("div");
-			friendCard.innerHTML = this.renderFriendCard(friend);
-			friendsList.appendChild(friendCard);
+		if (this.friends.length == 0) {
+			friendsList.innerHTML = `
+			<div class="d-flex flex-column justify-content-start align-items-center w-100">
+				<p class="text-secondary">No friends yet :(</p>
+				<p class="text-secondary">Try searching for users in the search bar</p>
+			</div>
+			`;
+		} else {
+			this.friends.forEach((friend) => {
+				const friendCard = document.createElement("div");
+				friendCard.innerHTML = this.renderFriendCard(friend);
+				friendsList.appendChild(friendCard);
 
-			friendCard
-				.querySelector(".user-info")
-				.addEventListener("click", () => {
-					window.redirect(`/profile/${friend.id}`);
-				});
+				friendCard
+					.querySelector(".user-info")
+					.addEventListener("click", () => {
+						window.redirect(`/profile/${friend.id}`);
+					});
 
-			friendCard
-				.querySelector(".remove-friend")
-				.addEventListener("click", async () => {
-					await this.removeFriend(friend.id);
-					await this.fetchFriends();
-					this.renderFriends();
-				});
-		});
+				friendCard
+					.querySelector(".remove-friend")
+					.addEventListener("click", async () => {
+						await this.removeFriend(friend.id);
+						await this.fetchFriends();
+						this.renderFriends();
+					});
+			});
+		}
 	}
 
 	renderFriendCard({ id, username, avatar, is_online }) {
@@ -59,9 +67,9 @@ export class FriendsPage extends Component {
 		<div class="p-2 d-flex flex-row w-400px minw-200 h-60px p-auto justify-content-between bg-light rounded">
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
 				<img src=${avatar} class="h-100 rounded-circle"/>
-				<h4>${username}</h4>
+				<h4 class="m-0 link-dark">${username}</h4>
 			</div>
-			<p role="button" class="remove-friend p-1">X</p>
+			<p role="button" class="remove-friend p-1 link-secondary">X</p>
 		</div>
 		`;
 	}
@@ -105,6 +113,7 @@ export class FriendsPage extends Component {
 				last_seen: "2024-11-12T22:13:17.193941Z",
 			},
 		];
+		this.friends = [];
 	}
 }
 
