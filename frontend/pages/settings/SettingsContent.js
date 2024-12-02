@@ -1,7 +1,7 @@
-import { Component } from '../Component.js';
-import { InputValidator } from '../../js/utils/input-validator.js';
-import { BootstrapUtils } from '../../js/utils/bootstrap-utils.js';
-import {usernameExist, emailExist} from "../../js/clients/users-client.js"
+import { Component } from "../Component.js";
+import { InputValidator } from "../../js/utils/input-validator.js";
+import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
+import { usernameExist, emailExist } from "../../js/clients/users-client.js";
 import {
 	clearUserSession,
 	getUserSessionData,
@@ -10,7 +10,7 @@ import {
 // import {userManagementClient} from '@utils/api';
 // import {routes} from '../js/router.js';
 // import {Modal} from 'bootstrap';
-import { NavbarUtils } from '../../js/utils/navbar-utils.js';
+import { NavbarUtils } from "../../js/utils/navbar-utils.js";
 
 export class SettingsContent extends Component {
 	constructor() {
@@ -28,7 +28,7 @@ export class SettingsContent extends Component {
 		this.base64Avatar = null;
 
 		this.error = false;
-		this.errorMessage = '';
+		this.errorMessage = "";
 	}
 
 	async connectedCallback() {
@@ -46,7 +46,7 @@ export class SettingsContent extends Component {
 	}
 
 	renderWithDefaultSettings() {
-		return (`
+		return `
       <div id="settings"
            class="d-flex justify-content-center align-items-center rounded-3">
           <div class="settings-card card m-3">
@@ -55,7 +55,9 @@ export class SettingsContent extends Component {
                   <form id="settings-form">
                       <div class="form-group mb-4 d-flex justify-content-center position-relative">
                           <div class="position-relative">
-                              <img id="avatar" src=${getUserSessionData().avatar} alt="Unavailable"
+                              <img id="avatar" src=${
+									getUserSessionData().avatar
+								} alt="Unavailable"
                                    class="rounded-circle object-fit-cover" style="width: 125px; height: 125px;">
                               <button id="trash-icon" type="button"
                                       class="btn btn-danger btn-sm position-absolute bottom-0 end-0">
@@ -68,7 +70,9 @@ export class SettingsContent extends Component {
                                     <span class="input-group-text"
                                           id="inputGroupPrepend">@</span>
                               <input type="text" class="form-control" id="username"
-                                     placeholder="New username" value=${getUserSessionData().username}
+                                     placeholder="New username" value=${
+											getUserSessionData().username
+										}
                                      autocomplete="username">
                               <div id="username-feedback" class="invalid-feedback">
                                   Invalid username.
@@ -77,7 +81,9 @@ export class SettingsContent extends Component {
                       </div>
                       <div class="form-group mb-4">
                           <input type="email" class="form-control" id="email"
-                                 placeholder="New email" value=${getUserSessionData().email}
+                                 placeholder="New email" value=${
+										getUserSessionData().email
+									}
                                  autocomplete="email">
                           <div id="email-feedback" class="invalid-feedback">
                               Please enter a valid email.
@@ -113,7 +119,13 @@ export class SettingsContent extends Component {
                       </div>
                       <div class="form-group mb-4">
                           <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="two-fa-switch" ${ getUserSessionData().otp == 'true' ? 'checked' : '' ? 'checked' : ''}>
+                              <input class="form-check-input" type="checkbox" id="two-fa-switch" ${
+									getUserSessionData().otp == "true"
+										? "checked"
+										: ""
+										? "checked"
+										: ""
+								}>
                               <label class="form-check-label" for="two-fa-switch">Two-factor authentication</label>
                           </div>
                       </div>
@@ -153,11 +165,11 @@ export class SettingsContent extends Component {
               </div>
           </div>
       </div>
-    `);
+    `;
 	}
 
 	style() {
-		return (`
+		return `
       <style>
       #settings {
           height: calc(100vh - ${NavbarUtils.height}px);
@@ -181,12 +193,13 @@ export class SettingsContent extends Component {
         background-color: var(--bs-secondary-bg)!important;
       }
       </style>
-    `);
+    `;
 	}
 
 	renderPlaceholder() {
-		const placeholderClass = 'placeholder placeholder-lg' +
-			'bg-body-secondary rounded hide-placeholder-text';
+		const placeholderClass =
+			"placeholder placeholder-lg" +
+			"bg-body-secondary rounded hide-placeholder-text";
 		this.innerHTML = `
       <div id="settings"
            class="d-flex justify-content-center align-items-center rounded-3">
@@ -227,95 +240,129 @@ export class SettingsContent extends Component {
 		this.postRender();
 	}
 
-
 	async postRender() {
-		if (!await this.loadDefaultSettings()) {
+		if (!(await this.loadDefaultSettings())) {
 			return;
 		}
-		this.avatar = this.querySelector('#avatar');
-		super.addComponentEventListener(this.avatar, 'click', this.#avatarHandler);
-
-		this.trashIcon = this.querySelector('#trash-icon');
+		this.avatar = this.querySelector("#avatar");
 		super.addComponentEventListener(
-			this.trashIcon, 'click', this.#trashAvatarHandler,
+			this.avatar,
+			"click",
+			this.#avatarHandler
 		);
 
-		this.username = this.querySelector('#username');
-		this.usernameFeedback = this.querySelector('#username-feedback');
-		super.addComponentEventListener(this.username, 'input',
-			this.#usernameHandler);
+		this.trashIcon = this.querySelector("#trash-icon");
+		super.addComponentEventListener(
+			this.trashIcon,
+			"click",
+			this.#trashAvatarHandler
+		);
 
-		this.email = this.querySelector('#email');
-		this.emailFeedback = this.querySelector('#email-feedback');
-		super.addComponentEventListener(this.email, 'input',
-			this.#emailHandler);
+		this.username = this.querySelector("#username");
+		this.usernameFeedback = this.querySelector("#username-feedback");
+		super.addComponentEventListener(
+			this.username,
+			"input",
+			this.#usernameHandler
+		);
 
-		this.password = this.querySelector('#password');
-		this.passwordEyeIcon = this.querySelector('#password-eye');
-		this.passwordFeeback = this.querySelector('#password-feedback');
-		super.addComponentEventListener(this.password, 'input',
-			this.#passwordHandler);
-		super.addComponentEventListener(this.passwordEyeIcon, 'click',
-			this.#togglePasswordVisibility);
+		this.email = this.querySelector("#email");
+		this.emailFeedback = this.querySelector("#email-feedback");
+		super.addComponentEventListener(
+			this.email,
+			"input",
+			this.#emailHandler
+		);
 
-		this.confirmPassword = this.querySelector('#confirm-password');
+		this.password = this.querySelector("#password");
+		this.passwordEyeIcon = this.querySelector("#password-eye");
+		this.passwordFeeback = this.querySelector("#password-feedback");
+		super.addComponentEventListener(
+			this.password,
+			"input",
+			this.#passwordHandler
+		);
+		super.addComponentEventListener(
+			this.passwordEyeIcon,
+			"click",
+			this.#togglePasswordVisibility
+		);
+
+		this.confirmPassword = this.querySelector("#confirm-password");
 		this.confirmPasswordEyeIcon = this.querySelector(
-			'#confirm-password-eye');
+			"#confirm-password-eye"
+		);
 		this.confirmPasswordFeedback = this.querySelector(
-			'#confirm-password-feedback');
-		super.addComponentEventListener(this.confirmPassword, 'input',
-			this.#confirmPasswordHandler);
-		super.addComponentEventListener(this.confirmPasswordEyeIcon, 'click',
-			this.#toggleConfirmPasswordVisibility);
+			"#confirm-password-feedback"
+		);
+		super.addComponentEventListener(
+			this.confirmPassword,
+			"input",
+			this.#confirmPasswordHandler
+		);
+		super.addComponentEventListener(
+			this.confirmPasswordEyeIcon,
+			"click",
+			this.#toggleConfirmPasswordVisibility
+		);
 
-		this.alertForm = this.querySelector('#alert-form');
-		this.alertDelete = this.querySelector('#alert-delete');
+		this.alertForm = this.querySelector("#alert-form");
+		this.alertDelete = this.querySelector("#alert-delete");
 
-		this.saveButton = this.querySelector('#save-button');
-		super.addComponentEventListener(this.saveButton, 'click', (event) => {
+		this.saveButton = this.querySelector("#save-button");
+		super.addComponentEventListener(this.saveButton, "click", (event) => {
 			event.preventDefault();
 			this.#saveHandler();
 		});
-		this.settingsForm = this.querySelector('#settings-form');
-		super.addComponentEventListener(this.settingsForm, 'submit', (event) => {
-			event.preventDefault();
-			this.#saveHandler();
-		});
+		this.settingsForm = this.querySelector("#settings-form");
+		super.addComponentEventListener(
+			this.settingsForm,
+			"submit",
+			(event) => {
+				event.preventDefault();
+				this.#saveHandler();
+			}
+		);
 
 		if (this.error) {
-			this.alertForm.setAttribute('alert-message', this.errorMessage);
-			this.alertForm.setAttribute('alert-type', 'error');
-			this.alertForm.setAttribute('alert-display', 'true');
+			this.alertForm.setAttribute("alert-message", this.errorMessage);
+			this.alertForm.setAttribute("alert-type", "error");
+			this.alertForm.setAttribute("alert-display", "true");
 			this.error = false;
 		}
 
-		this.twoFASwitch = this.querySelector('#two-fa-switch');
-		super.addComponentEventListener(this.twoFASwitch, 'change', (event) => {
+		this.twoFASwitch = this.querySelector("#two-fa-switch");
+		super.addComponentEventListener(this.twoFASwitch, "change", (event) => {
 			this.#formHandler();
 		});
 
-		const deleteModal = document.getElementById('confirm-delete-modal');
+		const deleteModal = document.getElementById("confirm-delete-modal");
 		this.deleteModal = new Modal(deleteModal);
-		super.addComponentEventListener(deleteModal, 'hidden.bs.modal', () => {
-			this.alertDelete.setAttribute('alert-message', '');
-			this.alertForm.setAttribute('alert-type', 'error');
-			this.alertDelete.setAttribute('alert-display', 'false');
+		super.addComponentEventListener(deleteModal, "hidden.bs.modal", () => {
+			this.alertDelete.setAttribute("alert-message", "");
+			this.alertForm.setAttribute("alert-type", "error");
+			this.alertDelete.setAttribute("alert-display", "false");
 		});
 
-
-		this.deleteButton = this.querySelector('#delete-button');
+		this.deleteButton = this.querySelector("#delete-button");
 		super.addComponentEventListener(
-			this.deleteButton, 'click', this.#deleteHandler,
+			this.deleteButton,
+			"click",
+			this.#deleteHandler
 		);
 
-		this.deleteAccountButton = this.querySelector('#delete-account-btn');
+		this.deleteAccountButton = this.querySelector("#delete-account-btn");
 		super.addComponentEventListener(
-			this.deleteAccountButton, 'click', this.#deleteAccountHandler,
+			this.deleteAccountButton,
+			"click",
+			this.#deleteAccountHandler
 		);
 
-		this.cancelButton = this.querySelector('#cancel-button');
+		this.cancelButton = this.querySelector("#cancel-button");
 		super.addComponentEventListener(
-			this.cancelButton, 'click', this.#cancelHandler,
+			this.cancelButton,
+			"click",
+			this.#cancelHandler
 		);
 	}
 
@@ -324,7 +371,7 @@ export class SettingsContent extends Component {
 			this.innerHTML = this.renderWithDefaultSettings() + this.style();
 			return true;
 		} catch (error) {
-			loadNetworkError().then(errorContent => {
+			loadNetworkError().then((errorContent) => {
 				this.innerHTML = errorContent;
 			});
 		}
@@ -332,28 +379,31 @@ export class SettingsContent extends Component {
 	}
 
 	async #avatarHandler() {
-		const input = document.createElement('input');
-		input.type = 'file';
-		input.accept = 'image/jpeg, image/png';
+		const input = document.createElement("input");
+		input.type = "file";
+		input.accept = "image/jpeg, image/png";
 		input.onchange = (event) => {
 			const file = event.target.files[0];
 			try {
-				if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+				if (
+					!file.type.match("image/jpeg") &&
+					!file.type.match("image/png")
+				) {
 					this.alertForm.setAttribute(
-						'alert-message',
-						'Invalid file format. Please select a JPEG or PNG image.',
+						"alert-message",
+						"Invalid file format. Please select a JPEG or PNG image."
 					);
-					this.alertForm.setAttribute('alert-type', 'error');
-					this.alertForm.setAttribute('alert-display', 'true');
+					this.alertForm.setAttribute("alert-type", "error");
+					this.alertForm.setAttribute("alert-display", "true");
 					return;
 				}
 			} catch (error) {
 				this.alertForm.setAttribute(
-					'alert-message',
-					'Invalid file format. Please select a JPEG or PNG image.',
+					"alert-message",
+					"Invalid file format. Please select a JPEG or PNG image."
 				);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
+				this.alertForm.setAttribute("alert-type", "error");
+				this.alertForm.setAttribute("alert-display", "true");
 				return;
 			}
 			const reader = new FileReader();
@@ -361,11 +411,11 @@ export class SettingsContent extends Component {
 				const sizeInMB = file.size / (1024 * 1024);
 				if (sizeInMB > 1) {
 					this.alertForm.setAttribute(
-						'alert-message',
-						'File too large, maximum allowed is 1Mb',
+						"alert-message",
+						"File too large, maximum allowed is 1Mb"
 					);
-					this.alertForm.setAttribute('alert-type', 'error');
-					this.alertForm.setAttribute('alert-display', 'true');
+					this.alertForm.setAttribute("alert-type", "error");
+					this.alertForm.setAttribute("alert-display", "true");
 					return;
 				}
 				this.base64Avatar = event.target.result;
@@ -382,7 +432,7 @@ export class SettingsContent extends Component {
 		event.preventDefault();
 		this.hasChangeAvatar = true;
 		this.base64Avatar = null;
-		this.avatar.src = '/img/default_avatar.png';
+		this.avatar.src = "/img/default_avatar.png";
 		this.#formHandler();
 	}
 
@@ -405,21 +455,22 @@ export class SettingsContent extends Component {
 
 	async #usernameExist() {
 		try {
-			let response = await usernameExist({
-				username: "afarheen",
-			});
+			let response = await usernameExist("afarheen");
 
 			if (response.body.exists) {
-				this.#setUsernameInputValidity(false, 'Username already taken.');
+				this.#setUsernameInputValidity(
+					false,
+					"Username already taken."
+				);
 			} else {
-			    this.#setUsernameInputValidity(true);
+				this.#setUsernameInputValidity(true);
 			}
 		} catch (error) {
 			this.#setUsernameInputValidity(true);
 		}
 	}
 
-	#setUsernameInputValidity(validity, message = '') {
+	#setUsernameInputValidity(validity, message = "") {
 		if (validity === null) {
 			BootstrapUtils.setDefaultInputValidity(this.username);
 			this.inputValidUsername = false;
@@ -440,8 +491,9 @@ export class SettingsContent extends Component {
 			this.#setEmailInputValidity(null);
 			return;
 		}
-		const { validity, missingRequirements } =
-			InputValidator.isValidEmail(this.email.value);
+		const { validity, missingRequirements } = InputValidator.isValidEmail(
+			this.email.value
+		);
 		if (validity) {
 			this.emailTimeout = setTimeout(() => {
 				this.#emailExist();
@@ -457,7 +509,7 @@ export class SettingsContent extends Component {
 				email: "a@gmail.com",
 			});
 			if (response.body.exists) {
-				this.#setEmailInputValidity(false, 'Email already taken.');
+				this.#setEmailInputValidity(false, "Email already taken.");
 			} else {
 				this.#setEmailInputValidity(true);
 			}
@@ -466,7 +518,7 @@ export class SettingsContent extends Component {
 		}
 	}
 
-	#setEmailInputValidity(validity, message = '') {
+	#setEmailInputValidity(validity, message = "") {
 		if (validity === null) {
 			BootstrapUtils.setDefaultInputValidity(this.email);
 			this.inputValidEmail = false;
@@ -490,8 +542,10 @@ export class SettingsContent extends Component {
 				if (this.confirmPassword.value === this.password.value) {
 					this.#setInputConfirmPasswordValidity(true);
 				} else {
-					this.#setInputConfirmPasswordValidity(false,
-						'Passwords do not match.');
+					this.#setInputConfirmPasswordValidity(
+						false,
+						"Passwords do not match."
+					);
 				}
 			}
 		} else {
@@ -509,7 +563,7 @@ export class SettingsContent extends Component {
 		this.#passwordHandler();
 	}
 
-	#setInputPasswordValidity(validity, message = '') {
+	#setInputPasswordValidity(validity, message = "") {
 		if (validity) {
 			BootstrapUtils.setValidInput(this.password);
 			this.inputValidPassword = true;
@@ -521,7 +575,7 @@ export class SettingsContent extends Component {
 		this.#formHandler();
 	}
 
-	#setInputConfirmPasswordValidity(validity, message = '') {
+	#setInputConfirmPasswordValidity(validity, message = "") {
 		if (validity) {
 			BootstrapUtils.setValidInput(this.confirmPassword);
 			this.inputValidConfirmPassword = true;
@@ -535,32 +589,36 @@ export class SettingsContent extends Component {
 
 	#togglePasswordVisibility() {
 		if (this.passwordHiden) {
-			this.password.setAttribute('type', 'text');
+			this.password.setAttribute("type", "text");
 		} else {
-			this.password.setAttribute('type', 'password');
+			this.password.setAttribute("type", "password");
 		}
-		this.passwordEyeIcon.children[0].classList.toggle('bi-eye-fill');
-		this.passwordEyeIcon.children[0].classList.toggle('bi-eye-slash-fill');
+		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-fill");
+		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-slash-fill");
 		this.passwordHiden = !this.passwordHiden;
 	}
 
 	#toggleConfirmPasswordVisibility() {
 		if (this.confirmPasswordHiden) {
-			this.confirmPassword.setAttribute('type', 'text');
+			this.confirmPassword.setAttribute("type", "text");
 		} else {
-			this.confirmPassword.setAttribute('type', 'password');
+			this.confirmPassword.setAttribute("type", "password");
 		}
-		this.confirmPasswordEyeIcon.children[0].classList.toggle('bi-eye-fill');
+		this.confirmPasswordEyeIcon.children[0].classList.toggle("bi-eye-fill");
 		this.confirmPasswordEyeIcon.children[0].classList.toggle(
-			'bi-eye-slash-fill');
+			"bi-eye-slash-fill"
+		);
 		this.confirmPasswordHiden = !this.confirmPasswordHiden;
 	}
 
 	#formHandler() {
-		if (this.hasChangeAvatar || this.inputValidUsername ||
+		if (
+			this.hasChangeAvatar ||
+			this.inputValidUsername ||
 			this.inputValidEmail ||
 			this.defaultHas2FA !== this.twoFASwitch.checked ||
-			(this.inputValidPassword && this.inputValidConfirmPassword)) {
+			(this.inputValidPassword && this.inputValidConfirmPassword)
+		) {
 			this.saveButton.disabled = false;
 		} else {
 			this.saveButton.disabled = true;
@@ -570,13 +628,16 @@ export class SettingsContent extends Component {
 	async #saveHandler() {
 		this.#startLoadButton();
 		if (this.hasChangeAvatar) {
-			if (!await this.#changeAvatar()) {
+			if (!(await this.#changeAvatar())) {
 				this.#resetLoadButton();
 				return;
 			}
 		}
-		if (this.inputValidUsername || this.inputValidEmail ||
-			(this.inputValidPassword && this.inputValidConfirmPassword)) {
+		if (
+			this.inputValidUsername ||
+			this.inputValidEmail ||
+			(this.inputValidPassword && this.inputValidConfirmPassword)
+		) {
 			const result = await this.#updateInfo();
 			if (result === false) {
 				this.#resetLoadButton();
@@ -593,7 +654,6 @@ export class SettingsContent extends Component {
 		window.location.reload();
 	}
 
-
 	async #changeAvatar() {
 		if (this.base64Avatar === null) {
 			return await this.#deleteAvatar();
@@ -604,12 +664,12 @@ export class SettingsContent extends Component {
 	async #deleteAvatar() {
 		try {
 			const { response, body } = await userManagementClient.deleteAvatar(
-				userManagementClient.username,
+				userManagementClient.username
 			);
 			if (!response.ok) {
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
+				this.alertForm.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-type", "error");
+				this.alertForm.setAttribute("alert-display", "true");
 				return false;
 			}
 			return true;
@@ -622,12 +682,13 @@ export class SettingsContent extends Component {
 	async #updateAvatar() {
 		try {
 			const { response, body } = await userManagementClient.changeAvatar(
-				this.base64Avatar, userManagementClient.username,
+				this.base64Avatar,
+				userManagementClient.username
 			);
 			if (!response.ok) {
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
+				this.alertForm.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-type", "error");
+				this.alertForm.setAttribute("alert-display", "true");
 				return false;
 			}
 			return true;
@@ -638,23 +699,29 @@ export class SettingsContent extends Component {
 	}
 
 	async #updateInfo() {
-		const newUsername = this.inputValidUsername ? this.username.value : null;
+		const newUsername = this.inputValidUsername
+			? this.username.value
+			: null;
 		const newEmail = this.inputValidEmail ? this.email.value : null;
 		const newPassword =
-			this.inputValidPassword && this.inputValidConfirmPassword ?
-				this.password.value : null;
+			this.inputValidPassword && this.inputValidConfirmPassword
+				? this.password.value
+				: null;
 		try {
 			const { response, body } = await userManagementClient.updateInfo(
-				newUsername, newEmail, newPassword);
+				newUsername,
+				newEmail,
+				newPassword
+			);
 			if (response.ok) {
 				if (this.inputValidUsername) {
 					userManagementClient.username = newUsername;
 				}
 				return true;
 			} else {
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
+				this.alertForm.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-type", "error");
+				this.alertForm.setAttribute("alert-display", "true");
 				return false;
 			}
 		} catch (error) {
@@ -677,8 +744,10 @@ export class SettingsContent extends Component {
 			if (response.ok) {
 				const result = await response.blob();
 				const url = window.URL.createObjectURL(result);
-				const settings2FA = document.createElement('settings-2fa-component');
-				settings2FA.setAttribute('qr-code', url);
+				const settings2FA = document.createElement(
+					"settings-2fa-component"
+				);
+				settings2FA.setAttribute("qr-code", url);
 				this.innerHTML = settings2FA.outerHTML;
 				return false;
 			} else {
@@ -697,9 +766,9 @@ export class SettingsContent extends Component {
 			if (response.ok) {
 				return true;
 			}
-			this.alertForm.setAttribute('alert-message', body.errors[0]);
-			this.alertForm.setAttribute('alert-type', 'error');
-			this.alertForm.setAttribute('alert-display', 'true');
+			this.alertForm.setAttribute("alert-message", body.errors[0]);
+			this.alertForm.setAttribute("alert-type", "error");
+			this.alertForm.setAttribute("alert-display", "true");
 			return false;
 		} catch (error) {
 			window.loadNetworkError();
@@ -725,24 +794,24 @@ export class SettingsContent extends Component {
     `;
 		this.deleteAccountButton.disabled = true;
 		try {
-			const { response, body } = await userManagementClient.deleteAccount();
+			const { response, body } =
+				await userManagementClient.deleteAccount();
 			if (response.ok) {
 				userManagementClient.logout();
 				this.deleteModal.hide();
 				// routes.navigate('/signin/');
 				return;
 			} else {
-				this.alertDelete.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertDelete.setAttribute('alert-display', 'true');
+				this.alertDelete.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-type", "error");
+				this.alertDelete.setAttribute("alert-display", "true");
 			}
-			this.deleteAccountButton.innerHTML = 'Delete';
+			this.deleteAccountButton.innerHTML = "Delete";
 			this.deleteAccountButton.disabled = false;
 		} catch (error) {
 			window.loadNetworkError();
 		}
 	}
-
 
 	#startLoadButton() {
 		this.saveButton.innerHTML = `
@@ -753,9 +822,9 @@ export class SettingsContent extends Component {
 	}
 
 	#resetLoadButton() {
-		this.saveButton.innerHTML = 'Save changes';
+		this.saveButton.innerHTML = "Save changes";
 		this.saveButton.disabled = false;
 	}
 }
 
-customElements.define('settings-content-component', SettingsContent);
+customElements.define("settings-content-component", SettingsContent);

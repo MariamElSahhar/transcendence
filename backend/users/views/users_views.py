@@ -51,7 +51,7 @@ def user_retrieve_update_destroy_view(request, user_id):
 
 @api_view(["GET"])
 def check_username_exists(request, username):
-    exists = CustomUser.objects.filter(username=username).exists()
+    exists = CustomUser.objects.filter(username__iexact=username).exists()
     print(exists)
     if exists:
         return Response({"exists": True, "message": "Username exists."})
@@ -60,8 +60,7 @@ def check_username_exists(request, username):
 
 @api_view(["GET"])
 def check_email_exists(request, email):
-
-    exists = CustomUser.objects.filter(email=email).exists()
+    exists = CustomUser.objects.filter(email__iexact=email).exists()
     if exists:
         return Response({"exists": True, "message": "email exists."})
     else:

@@ -5,6 +5,10 @@ import { dummyData } from "./dummyData.js";
 export class UserProfilePage extends Component {
 	constructor() {
 		super();
+		this.username = window.location.pathname
+			.replace("/profile/", "")
+			.replace(/\/+$/, "");
+		console.log(this.username);
 	}
 
 	async connectedCallback() {

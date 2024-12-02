@@ -47,15 +47,15 @@ export const deleteUser = async (id) => {
 
 export const usernameExist = async (username) => {
 	// console.log(username.username)
-	const url = `${URIs.users}username/${username.username}/exists/`;
+	const url = `${URIs.users}username/${username}/exists/`;
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, error: error };
-	return { success: true, body };
+	return { success: true, exists: body.exists };
 };
 
 export const emailExist = async (email) => {
 	// console.log(email.email)
-	const url = `${URIs.users}email/${email.email}/exists/`;
+	const url = `${URIs.users}email/${email}/exists/`;
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, error: error };
 	return { success: true, body };

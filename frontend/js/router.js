@@ -1,4 +1,5 @@
 import { isAuth } from "./utils/session-manager.js";
+import { usernameExist } from "./clients/users-client.js";
 
 const routes = {
 	// PUBLIC SCREENS
@@ -65,11 +66,17 @@ export const redirect = (path) => {
 
 const handleLocation = async () => {
 	const path = window.location.pathname;
-	let route = routes[path] || routes[404];
-	const isProtected = route.protected;
+	let route;
+	if (path.startsWith("/profile/")) {
+		route = (await validProfilePath(window.location.pathname))
+			? routes["/profile"]
+			: routes[404];
+	} else route = routes[path] || routes[404];
+
 	const root = document.getElementById("root");
 	root.innerHTML = "";
 
+	const isProtected = route.protected;
 	if (isProtected) {
 		const authenticated = await isAuth();
 		if (!authenticated) route = routes[404];
@@ -80,6 +87,19 @@ const handleLocation = async () => {
 		root.appendChild(element);
 	} catch (error) {
 		console.error(`Failed to load component at ${route.path}`, error);
+	}
+};
+
+const validProfilePath = async (path) => {
+	const username = window.location.pathname
+		.replace("/profile/", "")
+		.replace(/\/+$/, "");
+	const response = await usernameExist(username);
+	if (response.success) return response.exists;
+	else {
+		// NOTE: HANDLE ERRORS
+		console.log(response.error);
+		return false;
 	}
 };
 
