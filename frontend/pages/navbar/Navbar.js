@@ -7,6 +7,20 @@ import { Component } from "../Component.js";
 export class Navbar extends Component {
 	constructor() {
 		super();
+		this.links = [
+			{
+				label: "Games",
+				path: "/games",
+			},
+			{
+				label: "Dashboard",
+				path: "/profile",
+			},
+			{
+				label: "Friends",
+				path: "/friends",
+			},
+		];
 	}
 
 	render() {
@@ -23,17 +37,7 @@ export class Navbar extends Component {
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav me-auto">
-							<li class="nav-item">
-								${this.#generateNavLink("games")}
-							</li>
-							<li class="nav-item">
-								${this.#generateNavLink("dashboard")}
-							</li>
-							<li class="nav-item">
-								${this.#generateNavLink("friends")}
-							</li>
-						</ul>
+						<ul class="navbar-nav me-auto"></ul>
 						<div class="d-flex align-items-center">
 							<search-nav-component class="me-2"></search-nav-component>
 						</div>
@@ -64,19 +68,17 @@ export class Navbar extends Component {
 	}
 
 	postRender() {
-		this.games = this.querySelector("#games");
-		this.dashboard = this.querySelector("#dashboard");
-		this.friends = this.querySelector("#friends");
-		// this.ranking = this.querySelector("#ranking");
-
-		super.addComponentEventListener(this.games, "click", this.#navigate);
-		super.addComponentEventListener(this.friends, "click", this.#navigate);
-		super.addComponentEventListener(
-			this.dashboard,
-			"click",
-			this.#navigate
-		);
-		// super.addComponentEventListener(this.ranking, "click", this.#navigate);
+		const navbarList = this.querySelector(".navbar-nav");
+		this.links.forEach((link) => {
+			const navbarItem = document.createElement("li");
+			navbarItem.classList.add("mx-2");
+			navbarItem.setAttribute("role", "button");
+			navbarItem.textContent = link.label;
+			navbarList.appendChild(navbarItem);
+			navbarItem.addEventListener("click", () => {
+				window.redirect(link.path);
+			});
+		});
 
 		const disablePaddingTop = this.getAttribute("disable-padding-top");
 		if (disablePaddingTop !== "true") {
@@ -108,15 +110,6 @@ export class Navbar extends Component {
 		}
 		navLink.text = linkId.charAt(0).toUpperCase() + linkId.slice(1);
 		return navLink.outerHTML;
-	}
-
-	addNotification(notification) {
-		const notificationNav = this.querySelector(
-			"notification-nav-component"
-		);
-		if (notificationNav) {
-			notificationNav.addNotification(notification);
-		}
 	}
 }
 
