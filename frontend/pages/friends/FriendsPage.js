@@ -82,38 +82,38 @@ export class FriendsPage extends Component {
 	}
 
 	async fetchFriends() {
-		// const { success, data, error } = await fetchFriends();
+		const { success, data, error } = await fetchFriends();
 		// Fetch friends
-		// if (success) {
-		// 	this.friends = data;
-		// } else {
-		// 	console.error("Failed to fetch friends:", error);
-		// }
+		if (success) {
+			this.friends = data;
+		} else {
+			console.error("Failed to fetch friends:", error);
+		}
+
 		// Dummy friends data
-		this.friends = [
-			{
-				id: 33,
-				username: "mariam",
-				avatar: "http://127.0.0.1:8000/media/images/default.jpg",
-				is_online: true,
-				last_seen: "2024-11-12T22:13:17.193941Z",
-			},
-			{
-				id: 33,
-				username: "mariam",
-				avatar: "http://127.0.0.1:8000/media/images/default.jpg",
-				is_online: true,
-				last_seen: "2024-11-12T22:13:17.193941Z",
-			},
-			{
-				id: 33,
-				username: "mariam",
-				avatar: "http://127.0.0.1:8000/media/images/default.jpg",
-				is_online: true,
-				last_seen: "2024-11-12T22:13:17.193941Z",
-			},
-		];
-		this.friends = [];
+		// this.friends = [
+		// 	{
+		// 		id: 33,
+		// 		username: "mariam",
+		// 		avatar: "http://127.0.0.1:8000/media/images/default.jpg",
+		// 		is_online: true,
+		// 		last_seen: "2024-11-12T22:13:17.193941Z",
+		// 	},
+		// 	{
+		// 		id: 33,
+		// 		username: "mariam",
+		// 		avatar: "http://127.0.0.1:8000/media/images/default.jpg",
+		// 		is_online: true,
+		// 		last_seen: "2024-11-12T22:13:17.193941Z",
+		// 	},
+		// 	{
+		// 		id: 33,
+		// 		username: "mariam",
+		// 		avatar: "http://127.0.0.1:8000/media/images/default.jpg",
+		// 		is_online: true,
+		// 		last_seen: "2024-11-12T22:13:17.193941Z",
+		// 	},
+		// ];
 	}
 }
 

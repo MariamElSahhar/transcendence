@@ -11,7 +11,7 @@ export const fetchFriends = async () => {
 	const url = URIs.friends;
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, data: body.data };
 };
 
 // Add friend
@@ -19,14 +19,14 @@ export const addFriend = async ({ friend_id }) => {
 	const url = URIs.friends;
 	const requestBody = { friend_id };
 	const { status, body, error } = await post(url, requestBody);
-	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	if (error) return { success: false, error };
+	return { success: true };
 };
 
 // Remove friend
 export const removeFriend = async (id) => {
 	const url = `${URIs.friends}${id}/`;
 	const { status, body, error } = await del(url);
-	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	if (error) return { success: false, error };
+	return { success: true };
 };
