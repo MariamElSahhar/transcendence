@@ -1,62 +1,113 @@
+import {
+	clearUserSession,
+	getUserSessionData,
+} from "../../js/utils/session-manager.js";
 import { Component } from "../Component.js";
-import { isAuth } from "../../js/utils/session-manager.js";
 
 export class Navbar extends Component {
-	authenticated = false;
-
 	constructor() {
 		super();
 	}
 
-	async connectedCallback() {
-		this.authenticated = await isAuth();
-		if (this.authenticated) await import("./ConnectedNavbar.js");
-		else await import("./DisconnectedNavbar.js");
-		super.connectedCallback();
-
-		// Initialize navbar height setup after rendering
-		this.#setNavbarHeight();
-	}
-
 	render() {
-		const navActive = this.getAttribute("nav-active");
-		if (this.authenticated) {
-			return `<connected-navbar-component nav-active="${navActive}"></connected-navbar-component>`;
+		const username = getUserSessionData().username;
+		const avatar = getUserSessionData().avatar;
+		return `
+			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary fixed-top">
+				<div class="container-fluid">
+					<a class="navbar-brand" target="window.redirect('/')">Transcendence</a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+							data-bs-target="#navbarSupportedContent"
+							aria-controls="navbarSupportedContent" aria-expanded="false"
+							aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav me-auto">
+							<li class="nav-item">
+								${this.#generateNavLink("games")}
+							</li>
+							<li class="nav-item">
+								${this.#generateNavLink("dashboard")}
+							</li>
+							<li class="nav-item">
+								${this.#generateNavLink("friends")}
+							</li>
+						</ul>
+						<div class="d-flex align-items-center">
+							<search-nav-component class="me-2"></search-nav-component>
+						</div>
+						<div id="log-part" class="d-flex align-items-center">
+							<theme-button-component class="me-1"></theme-button-component>
+							<friends-button-component class="me-1"></friends-button-component>
+							<notification-nav-component class="me-1"></notification-nav-component>
+							<div class="dropdown mx-2">
+								<span class="dropdown-toggle" id="dropdownMenuLink"
+										data-bs-toggle="dropdown" aria-expanded="false">
+										<img id="nav-profile-img" src="${avatar}"
+										alt="profile image"
+										class="rounded-circle object-fit-cover w-40px h-40px">
+									<span id="nav-username">@${username}</span>
+								</span>
+								<ul class="dropdown-menu dropdown-menu-end"
+									aria-labelledby="dropdownMenuLink">
+									<li><a class="dropdown-item"
+											onclick="window.redirect('/settings')">Settings</a></li>
+									<li><a id="logout" class="dropdown-item text-danger">Sign out</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nav>
+    	`;
+	}
+
+	postRender() {
+		this.games = this.querySelector("#games");
+		this.dashboard = this.querySelector("#dashboard");
+		this.friends = this.querySelector("#friends");
+		// this.ranking = this.querySelector("#ranking");
+
+		super.addComponentEventListener(this.games, "click", this.#navigate);
+		super.addComponentEventListener(this.friends, "click", this.#navigate);
+		super.addComponentEventListener(
+			this.dashboard,
+			"click",
+			this.#navigate
+		);
+		// super.addComponentEventListener(this.ranking, "click", this.#navigate);
+
+		const disablePaddingTop = this.getAttribute("disable-padding-top");
+		if (disablePaddingTop !== "true") {
+			const navbarHeight = this.querySelector(".navbar").offsetHeight;
+			document.body.style.paddingTop = navbarHeight + "px";
 		} else {
-			return `<disconnected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
+			document.body.style.paddingTop = "0px";
 		}
+		const logout = this.querySelector("#logout");
+		super.addComponentEventListener(logout, "click", this.#logout);
 	}
 
-	#setNavbarHeight() {
-		// Check if navbar exists and get its height
-		const navbar = this.querySelector(".navbar");
-		if (navbar) {
-			const disablePaddingTop = this.getAttribute("disable-padding-top");
-			if (disablePaddingTop !== "true") {
-				const navbarHeight = navbar.offsetHeight;
-				document.body.style.paddingTop = navbarHeight + "px";
-			} else {
-				document.body.style.paddingTop = "0px";
-			}
-		} else {
-			// Retry setting the navbar height if not yet available
-			setTimeout(() => this.#setNavbarHeight(), 50);
-		}
+	#navigate(event) {
+		window.redirect(`/${event.target.id}/`);
 	}
 
-	hideCollapse() {
-		const navbarToggler = this.querySelector(".navbar-toggler");
-		const navbarToggleDisplay = window
-			.getComputedStyle(navbarToggler)
-			.getPropertyValue("display");
-		if (navbarToggleDisplay !== "none") {
-			navbarToggler.click();
-		}
+	async #logout() {
+		await clearUserSession();
+		window.redirect("/");
 	}
 
-	get height() {
-		const navbar = this.querySelector(".navbar");
-		return navbar ? navbar.offsetHeight : 0; // Return 0 if navbar not yet available
+	#generateNavLink(linkId) {
+		const activeLink = this.getAttribute("nav-active");
+		const navLink = document.createElement("a");
+		navLink.setAttribute("id", linkId);
+		navLink.classList.add("nav-link");
+		if (activeLink === linkId) {
+			navLink.classList.add("active");
+		}
+		navLink.text = linkId.charAt(0).toUpperCase() + linkId.slice(1);
+		return navLink.outerHTML;
 	}
 
 	addNotification(notification) {
@@ -70,85 +121,3 @@ export class Navbar extends Component {
 }
 
 customElements.define("navbar-component", Navbar);
-
-// import { Component } from "../Component.js";
-// import { isAuth } from "../../../js/clients/token-client.js";
-
-// export class Navbar extends Component {
-// 	authenticated = false;
-
-// 	constructor() {
-// 		super();
-// 	}
-
-// 	render() {
-// 		const navActive = this.getAttribute("nav-active");
-// 		if (this.authenticated) {
-// 			return `<connected-navbar-component nav-active="${navActive}"></connected-navbar-component>`;
-// 		} else {
-// 			return `<disconnected-navbar-component nav-active="${navActive}"></disconnected-navbar-component>`;
-// 		}
-// 	}
-
-// 	async connectedCallback() {
-// 		this.authenticated = await isAuth();
-// 		await import("./ConnectedNavbar.js");
-// 		await import("./DisconnectedNavbar.js");
-// 		super.connectedCallback();
-// 	}
-
-// 	style() {
-// 		return `
-//       <style>
-//       .navbar {
-//           position: fixed;
-//           top: 0;
-//           width: 100%;
-//           z-index: 9999;
-//           box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
-//       }
-
-//       .navbar-brand {
-//           font-family: 'JetBrains Mono Bold', monospace;
-//       }
-
-//       .nav-link {
-//           font-family: 'JetBrains Mono Light', monospace;
-//       }
-//       </style>
-//     `;
-// 	}
-
-// 	postRender() {
-// 		const disablePaddingTop = this.getAttribute("disable-padding-top");
-// 		if (disablePaddingTop !== "true") {
-// 			const navbarHeight = this.querySelector(".navbar").offsetHeight;
-// 			document.body.style.paddingTop = navbarHeight + "px";
-// 		} else {
-// 			document.body.style.paddingTop = "0px";
-// 		}
-// 	}
-
-// 	hideCollapse() {
-// 		const navbarToggler = this.querySelector(".navbar-toggler");
-// 		const navbarToggleDisplay = window
-// 			.getComputedStyle(navbarToggler)
-// 			.getPropertyValue("display");
-// 		if (navbarToggleDisplay !== "none") {
-// 			navbarToggler.click();
-// 		}
-// 	}
-
-// 	get height() {
-// 		return this.querySelector(".navbar").offsetHeight;
-// 	}
-
-// 	addNotification(notification) {
-// 		const notificationNav = this.querySelector(
-// 			"notification-nav-component"
-// 		);
-// 		notificationNav.addNotification(notification);
-// 	}
-// }
-
-// customElements.define("navbar-component", Navbar);

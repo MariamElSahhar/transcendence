@@ -32,6 +32,7 @@ export class Settings extends Component {
 	// console.log("plshere")
 	// this.innerHTML=`<connected-navbar-component></connected-navbar-component>`
 	this.innerHTML=`<navbar-component></navbar-component>
+
 	<friends-sidebar-component main-component="settings-content-component"></friends-sidebar-component>`;
 }
 //   <friends-sidebar-component main-component="settings-content-component"></friends-sidebar-component>`

@@ -17,7 +17,7 @@ export class HomePage extends Component {
 	render() {
 		if (this.authenticated) {
 			return `
-				<navbar-component nav-active="home"></navbar-comfponent>
+				<navbar-component></navbar-component>
 				<friends-sidebar-component main-component="home-content-component"></friends-sidebar-component>
 			`;
 		} else {
