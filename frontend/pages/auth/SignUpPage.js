@@ -21,7 +21,6 @@ export class SignUpPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../navbar/Navbar.js");
 		await import("./IntraButton.js");
 		const authenticated = await isAuth();
 		if (authenticated) {
@@ -37,7 +36,6 @@ export class SignUpPage extends Component {
 		// 	return false;
 		// }
 		return `
-			<navbar-component></navbar-component>
 			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
 				<div class="register-card card m-3">
 					<div class="card-body m-2">
@@ -91,7 +89,7 @@ export class SignUpPage extends Component {
 							</alert-component> -->
 							<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
 							<div class="mb-3">
-								<small role="button" id="have-account">Already have an account?</small>
+								<small role="button" id="have-account">Already have an account? Log In</small>
 							</div>
 							<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
 						</form>

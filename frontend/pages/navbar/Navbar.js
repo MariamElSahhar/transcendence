@@ -29,7 +29,7 @@ export class Navbar extends Component {
 		return `
 			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary fixed-top">
 				<div class="container-fluid">
-					<a class="navbar-brand" target="window.redirect('/')">Transcendence</a>
+					<a class="navbar-brand">Transcendence</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 							data-bs-target="#navbarSupportedContent"
 							aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -79,6 +79,9 @@ export class Navbar extends Component {
 				window.redirect(link.path);
 			});
 		});
+		this.querySelector(".navbar-brand").addEventListener("click", () => {
+			window.redirect("/");
+		});
 
 		const disablePaddingTop = this.getAttribute("disable-padding-top");
 		if (disablePaddingTop !== "true") {
@@ -91,25 +94,9 @@ export class Navbar extends Component {
 		super.addComponentEventListener(logout, "click", this.#logout);
 	}
 
-	#navigate(event) {
-		window.redirect(`/${event.target.id}/`);
-	}
-
 	async #logout() {
 		await clearUserSession();
 		window.redirect("/");
-	}
-
-	#generateNavLink(linkId) {
-		const activeLink = this.getAttribute("nav-active");
-		const navLink = document.createElement("a");
-		navLink.setAttribute("id", linkId);
-		navLink.classList.add("nav-link");
-		if (activeLink === linkId) {
-			navLink.classList.add("active");
-		}
-		navLink.text = linkId.charAt(0).toUpperCase() + linkId.slice(1);
-		return navLink.outerHTML;
 	}
 }
 

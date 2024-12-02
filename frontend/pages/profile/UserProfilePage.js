@@ -10,7 +10,7 @@ export class UserProfilePage extends Component {
 	async connectedCallback() {
 		await import("../navbar/Navbar.js");
 		await import("../buttons/FriendsButton.js");
-		await import("../friends/FriendsSidebar.js");
+		// await import("../friends/FriendsSidebar.js");
 		await import("./UserProfileHeader.js");
 		await import("./UserProfileChart.js");
 		await import("./UserProfileChartsCards.js");

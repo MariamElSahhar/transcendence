@@ -12,7 +12,6 @@ export class SignInPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../navbar/Navbar.js");
 		await import("./IntraButton.js");
 		const authenticated = await isAuth();
 		if (authenticated) {
@@ -24,7 +23,6 @@ export class SignInPage extends Component {
 
 	render() {
 		return `
-			<navbar-component></navbar-component>
 			<div id="container" class="d-flex justify-content-center align-items-center rounded-3 h-100">
 				<div class="login-card card m-3">
 					<div class="card-body m-2">
@@ -51,9 +49,8 @@ export class SignInPage extends Component {
 							<!-- <alert-component id="alert-form" alert-display="false">
 							</alert-component> -->
 							<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
-							<div class="d-flex justify-content-between mb-3">
-								<small role="button" id="dont-have-account">Don't have an account?</small>
-								<small role="button" id="forgot-password">Forgot pasword?</small>
+							<div class="d-flex mb-3">
+								<small role="button" id="dont-have-account">Don't have an account? Sign up</small>
 							</div>
 							<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Sign in</button>
 						</form>
@@ -143,14 +140,13 @@ export class SignInPage extends Component {
 		if (success) {
 			this.alertForm.classList.add("d-none");
 			const authenticated = await isAuth();
-			console.log(authenticated)
-			if (authenticated)
-				{
+			console.log(authenticated);
+			if (authenticated) {
 				window.redirect("/");
 				return false;
+			} else {
+				this.#loadTwoFactorComponent();
 			}
-			else
-				{this.#loadTwoFactorComponent();}
 		} else {
 			// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
 			// 	this.#loadTwoFactorComponent();
