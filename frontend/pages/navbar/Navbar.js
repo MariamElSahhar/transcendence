@@ -51,10 +51,10 @@ export class Navbar extends Component {
 										<img id="nav-profile-img" src="${avatar}"
 										alt="profile image"
 										class="rounded-circle object-fit-cover w-40px h-40px">
-									<span id="nav-username">@${username}</span>
 								</span>
 								<ul class="dropdown-menu dropdown-menu-end"
 									aria-labelledby="dropdownMenuLink">
+									<li class="dropdown-item"><strong>${username}</strong></li>
 									<li id="settings" class="dropdown-item" onclick="window.redirect('/settings')">Settings</li>
 									<li id="logout" class="dropdown-item text-danger">Sign out</li>
 								</ul>

@@ -72,7 +72,7 @@ export class UserProfileHeader extends Component {
                 .profile-img-container {
                     width: 120px; /* Set width and height of container */
                     height: 120px;
-                    border: 3px solid var(--bs-body-bg);
+                    border: 4px solid ${this.data.is_online ? "green" : "grey"};
                     border-radius: 50%;
                     overflow: hidden;
                     background-color: var(--bs-card-bg);

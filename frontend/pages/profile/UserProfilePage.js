@@ -7,12 +7,11 @@ import { getUserSessionData } from "../../js/utils/session-manager.js";
 export class UserProfilePage extends Component {
 	constructor() {
 		super();
+		this.user = {};
 		if (window.location.pathname.startsWith("/profile/")) {
-			this.user = {
-				userid: window.location.pathname
-					.replace("/profile/", "")
-					.replace(/\/+$/, ""),
-			};
+			this.user.userid = window.location.pathname
+				.replace("/profile/", "")
+				.replace(/\/+$/, "");
 		} else this.me = true;
 	}
 
@@ -147,7 +146,7 @@ export class UserProfilePage extends Component {
 			avatar: this.user.avatar,
 			is_friend: this.user.is_friend,
 			is_online: this.user.is_online,
-			is_me: this.user.userid == getUserSessionData().userid,
+			is_me: this.user.is_me,
 		};
 		userProfileHeader.setAttribute("data", JSON.stringify(headerData));
 	}
@@ -196,14 +195,27 @@ export class UserProfilePage extends Component {
 	}
 
 	async getUserData() {
-		if (this.user.userid == "") return "me";
-		const { success, data, error } = await fetchUserById(this.user.userid);
-		if (success) {
-			this.user.username = data.username;
-			this.user.avatar = data.avatar;
-			this.user.is_friend = data.is_friend;
+		const mydata = getUserSessionData();
+		if (this.me) {
+			this.user.username = mydata.username;
+			this.user.avatar = mydata.avatar;
+			this.user.is_me = true;
+			this.user.is_online = true;
+			this.user.is_friend = true;
 		} else {
-			console.log(error);
+			const { success, data, error } = await fetchUserById(
+				this.user.userid
+			);
+
+			if (success) {
+				this.user.username = data.username;
+				this.user.avatar = data.avatar;
+				this.user.is_friend = data.is_friend;
+				this.user.is_me = mydata.userid == data.id;
+				this.user.is_online = data.is_online;
+			} else {
+				console.log(error);
+			}
 		}
 	}
 }
