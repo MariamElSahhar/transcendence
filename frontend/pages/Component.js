@@ -81,6 +81,7 @@ export class Component extends HTMLElement {
 
 	update() {
 		this.innerHTML = this.render() + this.style();
+		this.postRender();
 	}
 
 	render() {}

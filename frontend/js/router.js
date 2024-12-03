@@ -1,5 +1,5 @@
-import { isAuth } from "./utils/session-manager.js";
-import { usernameExist } from "./clients/users-client.js";
+import { isAuth, getUserSessionData } from "./utils/session-manager.js";
+import { fetchUserById, usernameExist } from "./clients/users-client.js";
 
 const routes = {
 	// PUBLIC SCREENS
@@ -26,6 +26,7 @@ const routes = {
 	"/network-error": {
 		component: "error-content",
 		path: "../pages/utilities/Error.js",
+		protected: false,
 	},
 	// PROTECTED SCREENS
 	"/home": {
@@ -77,10 +78,12 @@ const handleLocation = async () => {
 	root.innerHTML = "";
 
 	const isProtected = route.protected;
-	if (isProtected) {
-		const authenticated = await isAuth();
-		if (!authenticated) route = routes[404];
-	}
+	const authenticated = await isAuth();
+	// if (isProtected && !authenticated && route != routes[404]) {
+	// 	route = routes[404];
+	// } else if (!isProtected && authenticated && route != routes[404]) {
+	// 	route = routes["/home"];
+	// }
 	try {
 		await import(route.path);
 		const element = document.createElement(route.component);
@@ -91,13 +94,12 @@ const handleLocation = async () => {
 };
 
 const validProfilePath = async (path) => {
-	const username = window.location.pathname
+	const userid = window.location.pathname
 		.replace("/profile/", "")
 		.replace(/\/+$/, "");
-	const response = await usernameExist(username);
-	if (response.success) return response.exists;
+	const response = await fetchUserById(userid);
+	if (response.data) return true;
 	else {
-		// NOTE: HANDLE ERRORS
 		console.log(response.error);
 		return false;
 	}

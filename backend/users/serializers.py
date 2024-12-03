@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
     friends = FriendSerializer(many=True, read_only=True)
     is_online = serializers.SerializerMethodField()
-    
+
     def validate(self, attrs):
         print("validation")
         username = attrs.get("username")
@@ -85,3 +85,12 @@ class OTPVerificationSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "username",
+            "avatar",
+        ]

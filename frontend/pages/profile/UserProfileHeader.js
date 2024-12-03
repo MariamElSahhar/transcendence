@@ -1,61 +1,70 @@
-// UserProfileHeader.js
 import { Component } from "../Component.js";
 import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { addFriend, removeFriend } from "../../js/clients/friends-client.js";
 
 export class UserProfileHeader extends Component {
+	constructor() {
+		super();
+		this.data = {};
+	}
+
 	static get observedAttributes() {
 		return ["data"];
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (name === "data" && newValue) {
-			this.renderProfile(JSON.parse(newValue));
+			this.data = JSON.parse(newValue);
+			this.update();
 		}
 	}
 
-	renderProfile(data) {
-		const username = data.username || "Guest";
-		const profilePicture =
-			data.profilePicture || "/images/default_profile.svg";
-
-		this.innerHTML = `
+	render() {
+		return `
             <div class="profile-card card">
                 <div class="card-body">
-                    <div class="banner">
-                        <img src="/images/user_profile_banner.jpg" alt="Profile Banner" class="banner img-fluid">
-                    </div>
                     <div class="profile-info d-flex align-items-center">
                         <div class="profile-img-container">
                             <img src="${
-								getUserSessionData().avatar
+								this.data.avatar
 							}" onerror="this.onerror=null;this.src='/images/default_profile.svg';" alt="Profile Picture" class="profile-img">
                         </div>
                         <div class="user-info">
-                            <h1 class="username">@${
-								getUserSessionData().username
-							}</h1>
-                            ${this.renderProfileInteractionButtons()}
+                            <h1 class="username">${this.data.username}</h1>
+                            ${
+								this.data.is_me
+									? ""
+									: `<button id="add-remove-friend" class="btn btn-sm btn-success">
+										${this.data.is_friend ? "Remove Friend" : "Add Friend"}
+									</button>`
+							}
                         </div>
                     </div>
                 </div>
             </div>
-            ${this.style()}
         `;
 	}
 
-	renderProfileInteractionButtons() {
-		return `<button class="btn btn-sm btn-success">Add Friend</button>`;
+	postRender() {
+		super.addComponentEventListener(
+			this.querySelector("#add-remove-friend"),
+			"click",
+			async () => {
+				if (this.data.is_friend) {
+					if (await removeFriend(this.data.userid))
+						this.data.is_friend = false;
+				} else {
+					if (await addFriend(this.data.userid))
+						this.data.is_friend = true;
+				}
+				this.update();
+			}
+		);
 	}
 
 	style() {
 		return `
             <style>
-                .banner {
-                    width: 100%;
-                    height: 17vh;
-                    object-fit: cover;
-                }
-
                 .profile-info {
                     gap: 10px;
                     padding: 10px;

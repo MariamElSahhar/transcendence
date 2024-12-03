@@ -14,7 +14,7 @@ export const storeUserSession = ({ username, id, email, avatar , otp}) => {
 export const getUserSessionData = () => {
 	return {
 		username: sessionStorage.getItem("username"),
-		id: sessionStorage.getItem("id"),
+		userid: sessionStorage.getItem("id"),
 		email: sessionStorage.getItem("email"),
 		avatar: sessionStorage.getItem("avatar"),
 		otp: sessionStorage.getItem("otp"),

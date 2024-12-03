@@ -16,6 +16,14 @@ export const fetchUsers = async () => {
 // Function user by ID
 export const fetchUserById = async (id) => {
 	const url = `${URIs.users}${id}/`;
+	const { status, body, error } = await get(url);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data: body };
+};
+
+// Function user by ID
+export const fetchUserByUsername = async (username) => {
+	const url = `${URIs.users}`;
 	const { status, body, error } = get(url);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, body };

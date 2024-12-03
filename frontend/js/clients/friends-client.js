@@ -15,9 +15,9 @@ export const fetchFriends = async () => {
 };
 
 // Add friend
-export const addFriend = async ({ friend_id }) => {
+export const addFriend = async (id) => {
 	const url = URIs.friends;
-	const requestBody = { friend_id };
+	const requestBody = { friend_id: id };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };

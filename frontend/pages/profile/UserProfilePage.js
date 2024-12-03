@@ -1,20 +1,24 @@
 // UserProfilePage.js
 import { Component } from "../Component.js";
+import { fetchUserById } from "../../js/clients/users-client.js";
 import { dummyData } from "./dummyData.js";
+import { getUserSessionData } from "../../js/utils/session-manager.js";
 
 export class UserProfilePage extends Component {
 	constructor() {
 		super();
-		this.username = window.location.pathname
-			.replace("/profile/", "")
-			.replace(/\/+$/, "");
-		console.log(this.username);
+		if (window.location.pathname.startsWith("/profile/")) {
+			this.user = {
+				userid: window.location.pathname
+					.replace("/profile/", "")
+					.replace(/\/+$/, ""),
+			};
+		} else this.me = true;
 	}
 
 	async connectedCallback() {
 		await import("../navbar/Navbar.js");
 		await import("../buttons/FriendsButton.js");
-		// await import("../friends/FriendsSidebar.js");
 		await import("./UserProfileHeader.js");
 		await import("./UserProfileChart.js");
 		await import("./UserProfileChartsCards.js");
@@ -23,6 +27,7 @@ export class UserProfilePage extends Component {
 		await import("./UserProfileStatsCards.js");
 
 		super.connectedCallback();
+		await this.getUserData();
 		this.loadUserProfileData();
 	}
 
@@ -32,8 +37,6 @@ export class UserProfilePage extends Component {
             <div class="profile-page container">
                 <user-profile-header></user-profile-header>
                 <div class="profile-content d-flex">
-                    <friends-sidebar>
-                    </friends-sidebar>
                     <div class="profile-main-content">
                         <user-profile-stats-cards></user-profile-stats-cards>
                         <user-profile-charts-cards></user-profile-charts-cards>
@@ -160,9 +163,12 @@ export class UserProfilePage extends Component {
 
 	loadHeaderData() {
 		const userProfileHeader = this.querySelector("user-profile-header");
-		const headerData = dummyData.userProfile || {
-			username: "Guest",
-			profilePicture: "/images/default_profile.svg",
+		const headerData = {
+			userid: this.user.userid,
+			username: this.user.username,
+			avatar: this.user.avatar,
+			is_friend: this.user.is_friend,
+			is_me: this.user.userid == getUserSessionData().userid,
 		};
 		userProfileHeader.setAttribute("data", JSON.stringify(headerData));
 	}
@@ -207,6 +213,18 @@ export class UserProfilePage extends Component {
 			);
 		} else {
 			console.error("UserProfileChartsCards component not found.");
+		}
+	}
+
+	async getUserData() {
+		if (this.user.userid == "") return "me";
+		const { success, data, error } = await fetchUserById(this.user.userid);
+		if (success) {
+			this.user.username = data.username;
+			this.user.avatar = data.avatar;
+			this.user.is_friend = data.is_friend;
+		} else {
+			console.log(error);
 		}
 	}
 }

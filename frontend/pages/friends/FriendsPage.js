@@ -26,10 +26,6 @@ export class FriendsPage extends Component {
 	}
 
 	async postRender() {
-		await this.renderFriends();
-	}
-
-	async renderFriends() {
 		const friendsList = this.querySelector("#friends-list");
 		friendsList.innerHTML = "";
 		if (this.friends.length == 0) {
@@ -45,19 +41,22 @@ export class FriendsPage extends Component {
 				friendCard.innerHTML = this.renderFriendCard(friend);
 				friendsList.appendChild(friendCard);
 
-				friendCard
-					.querySelector(".user-info")
-					.addEventListener("click", () => {
+				super.addComponentEventListener(
+					friendCard.querySelector(".user-info"),
+					"click",
+					() => {
 						window.redirect(`/profile/${friend.id}`);
-					});
-
-				friendCard
-					.querySelector(".remove-friend")
-					.addEventListener("click", async () => {
+					}
+				);
+				super.addComponentEventListener(
+					friendCard.querySelector(".remove-friend"),
+					"click",
+					async () => {
 						await this.removeFriend(friend.id);
 						await this.fetchFriends();
-						this.renderFriends();
-					});
+						this.update();
+					}
+				);
 			});
 		}
 	}

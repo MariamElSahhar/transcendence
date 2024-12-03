@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from ..models import CustomUser
 from ..utils import send_otp
-from ..serializers import UserSerializer
+from ..serializers import UserSerializer, ProfileSerializer
 
 
 # GET OR CREATE NEW USERS
@@ -34,8 +34,11 @@ def user_retrieve_update_destroy_view(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
 
     if request.method == "GET":
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
+        serializer = ProfileSerializer(user)
+        response_data = serializer.data
+        response_data["is_friend"] = user in request.user.friends.all()
+
+        return Response(response_data)
 
     elif request.method == "PATCH":
         serializer = UserSerializer(user, data=request.data, partial=True)
@@ -52,7 +55,6 @@ def user_retrieve_update_destroy_view(request, user_id):
 @api_view(["GET"])
 def check_username_exists(request, username):
     exists = CustomUser.objects.filter(username__iexact=username).exists()
-    print(exists)
     if exists:
         return Response({"exists": True, "message": "Username exists."})
     else:
