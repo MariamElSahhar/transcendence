@@ -28,6 +28,9 @@ export class ConnectedNavbar extends Component {
 								${this.#generateNavLink("games")}
 							</li>
 							<li class="nav-item">
+								${this.#generateNavLink("tictactoe")}
+							</li>
+							<li class="nav-item">
 								${this.#generateNavLink("dashboard")}
 							</li>
 							<li class="nav-item">
@@ -65,11 +68,13 @@ export class ConnectedNavbar extends Component {
 
 	postRender() {
 		this.games = this.querySelector("#games");
+		this.tictactoe = this.querySelector("#tictactoe");
 		this.dashboard = this.querySelector("#dashboard");
 		this.friends = this.querySelector("#friends");
 		// this.ranking = this.querySelector("#ranking");
 
 		super.addComponentEventListener(this.games, "click", this.#navigate);
+		super.addComponentEventListener(this.tictactoe,"click",this.#navigate);
 		super.addComponentEventListener(this.friends,"click",this.#navigate);
 		super.addComponentEventListener(this.dashboard,"click",this.#navigate);
 		// super.addComponentEventListener(this.ranking, "click", this.#navigate);
@@ -86,7 +91,7 @@ export class ConnectedNavbar extends Component {
 	}
 
 	#navigate(event) {
-		window.redirect(`/${event.target.id}/`);
+		window.redirect(`/${event.target.id}`);
 	}
 
 	async #logout() {

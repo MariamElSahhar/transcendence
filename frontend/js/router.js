@@ -31,6 +31,11 @@ const routes = {
 		path: "../pages/local/GamePage.js",
 		protected: false,
 	},
+	"/tictactoe": {
+		component: "tic-tac-toe-page",
+		path: "../pages/tictactoe/TictactoePage.js",
+		protected: false,
+	},
 	"/reset-password": {
 		component: "reset-password-page",
 		path: "../pages/reset_password/ResetPasswordPage.js",
