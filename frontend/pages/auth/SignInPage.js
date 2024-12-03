@@ -13,11 +13,6 @@ export class SignInPage extends Component {
 
 	async connectedCallback() {
 		await import("./IntraButton.js");
-		const authenticated = await isAuth();
-		if (authenticated) {
-			window.redirect("/");
-			return false;
-		}
 		super.connectedCallback();
 	}
 
@@ -142,7 +137,7 @@ export class SignInPage extends Component {
 			const authenticated = await isAuth();
 			console.log(authenticated);
 			if (authenticated) {
-				window.redirect("/");
+				window.redirect("/home");
 				return false;
 			} else {
 				this.#loadTwoFactorComponent();

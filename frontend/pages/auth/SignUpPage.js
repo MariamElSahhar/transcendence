@@ -22,11 +22,6 @@ export class SignUpPage extends Component {
 
 	async connectedCallback() {
 		await import("./IntraButton.js");
-		const authenticated = await isAuth();
-		if (authenticated) {
-			window.redirect("/");
-			return false;
-		}
 		super.connectedCallback();
 	}
 

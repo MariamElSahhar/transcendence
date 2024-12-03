@@ -116,17 +116,6 @@ export class UserProfilePage extends Component {
                     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
                 }
 
-                /* Header styling */
-                user-profile-header {
-                    background-color: #6c757d;
-                    color: #fff;
-                    padding: 20px;
-                    border-radius: 8px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-
                 /* Match List specific styling */
                 user-profile-match-list {
                     margin-top: 20px;
@@ -137,17 +126,6 @@ export class UserProfilePage extends Component {
                     font-size: 1.25rem;
                     font-weight: 600;
                     color: #495057;
-                }
-
-                /* Button and link styles */
-                .btn, a {
-                    color: #007bff;
-                    text-decoration: none;
-                    transition: color 0.2s ease;
-                }
-
-                .btn:hover, a:hover {
-                    color: #0056b3;
                 }
             </style>
         `;
@@ -168,6 +146,7 @@ export class UserProfilePage extends Component {
 			username: this.user.username,
 			avatar: this.user.avatar,
 			is_friend: this.user.is_friend,
+			is_online: this.user.is_online,
 			is_me: this.user.userid == getUserSessionData().userid,
 		};
 		userProfileHeader.setAttribute("data", JSON.stringify(headerData));

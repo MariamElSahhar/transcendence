@@ -66,7 +66,10 @@ export class FriendsPage extends Component {
 		<div class="p-2 d-flex flex-row w-400px minw-200 h-60px p-auto justify-content-between bg-light rounded">
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
 				<img src=${avatar} class="h-100 rounded-circle"/>
-				<h4 class="m-0 link-dark">${username}</h4>
+				<div>
+					<h4 class="m-0 link-dark">${username}</h4>
+					<small class="m-0 link-dark">${is_online ? "Online" : "Offline"}</small>
+				</div>
 			</div>
 			<p role="button" class="remove-friend p-1 link-secondary">X</p>
 		</div>

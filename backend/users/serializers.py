@@ -93,4 +93,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             "id",
             "username",
             "avatar",
+            "is_online",
         ]

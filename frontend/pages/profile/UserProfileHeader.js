@@ -21,15 +21,15 @@ export class UserProfileHeader extends Component {
 
 	render() {
 		return `
-            <div class="profile-card card">
-                <div class="card-body">
+            <div class="profile-card card mw-100">
+                <div class="card-body d-flex justify-content-center">
                     <div class="profile-info d-flex align-items-center">
                         <div class="profile-img-container">
                             <img src="${
 								this.data.avatar
 							}" onerror="this.onerror=null;this.src='/images/default_profile.svg';" alt="Profile Picture" class="profile-img">
                         </div>
-                        <div class="user-info">
+                        <div class="user-info d-flex flex-column gap-1">
                             <h1 class="username">${this.data.username}</h1>
                             ${
 								this.data.is_me
@@ -67,14 +67,11 @@ export class UserProfileHeader extends Component {
             <style>
                 .profile-info {
                     gap: 10px;
-                    padding: 10px;
-                    transform: translateY(-20%);
                 }
 
                 .profile-img-container {
                     width: 120px; /* Set width and height of container */
                     height: 120px;
-                    margin-left: 50px;
                     border: 3px solid var(--bs-body-bg);
                     border-radius: 50%;
                     overflow: hidden;
@@ -85,13 +82,6 @@ export class UserProfileHeader extends Component {
                     width: 100%;
                     height: 100%;
                     object-fit: cover; /* Ensures the image covers the container fully */
-                    border-radius: 50%; /* Ensures a circular crop */
-                }
-
-                .user-info {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
                 }
 
                 .username {
