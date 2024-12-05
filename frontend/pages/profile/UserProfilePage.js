@@ -8,6 +8,7 @@ export class UserProfilePage extends Component {
 	constructor() {
 		super();
 		this.user = {};
+		this.gamelog = {};
 		if (window.location.pathname.startsWith("/profile/")) {
 			this.user.userid = window.location.pathname
 				.replace("/profile/", "")
@@ -27,7 +28,12 @@ export class UserProfilePage extends Component {
 
 		super.connectedCallback();
 		await this.getUserData();
-		this.loadUserProfileData();
+		await this.getGameLog();
+		this.loadHeaderData();
+		this.loadMatchListData();
+		// this.loadStatsCardsData();
+		// this.loadChartsData();
+
 	}
 
 	render() {
@@ -37,8 +43,6 @@ export class UserProfilePage extends Component {
                 <user-profile-header></user-profile-header>
                 <div class="profile-content d-flex">
                     <div class="profile-main-content">
-                        <user-profile-stats-cards></user-profile-stats-cards>
-                        <user-profile-charts-cards></user-profile-charts-cards>
                         <user-profile-match-list></user-profile-match-list>
                     </div>
                 </div>
@@ -130,25 +134,15 @@ export class UserProfilePage extends Component {
         `;
 	}
 
-	loadUserProfileData() {
-		// Load data for each component by setting attributes or calling methods
-		this.loadHeaderData();
-		this.loadStatsCardsData();
-		this.loadMatchListData();
-		this.loadChartsData();
-	}
-
 	loadHeaderData() {
-		const userProfileHeader = this.querySelector("user-profile-header");
-		const headerData = {
+		this.querySelector("user-profile-header").loadUserData({
 			userid: this.user.userid,
 			username: this.user.username,
 			avatar: this.user.avatar,
 			is_friend: this.user.is_friend,
 			is_online: this.user.is_online,
 			is_me: this.user.is_me,
-		};
-		userProfileHeader.setAttribute("data", JSON.stringify(headerData));
+		});
 	}
 
 	loadStatsCardsData() {
@@ -162,16 +156,9 @@ export class UserProfilePage extends Component {
 	}
 
 	loadMatchListData() {
-		const matchList = this.querySelector("user-profile-match-list");
-		if (matchList) {
-			const matchHistory = dummyData.matchHistory || [];
-			matchList.loadMatchHistory(
-				dummyData.userProfile.username,
-				matchHistory
-			);
-		} else {
-			console.error("UserProfileMatchList component not found.");
-		}
+		this.querySelector("user-profile-match-list").renderMatchHistory(
+			this.gamelog
+		);
 	}
 
 	loadChartsData() {
@@ -217,6 +204,26 @@ export class UserProfilePage extends Component {
 				console.log(error);
 			}
 		}
+	}
+
+	async getGameLog() {
+		// const { success, data, error } = await getUserGameLog(this.user.userid);
+		// if (success) {
+		// 	this.log.local = data;
+		// }
+		this.gamelog = {
+			local: [
+				{
+					date: "20/11/2024",
+					opponent: "Player 2",
+					my_score: "3",
+					opponent_score: "2",
+					result: "Win",
+				},
+			],
+			remote: [],
+			ttt: [],
+		};
 	}
 }
 

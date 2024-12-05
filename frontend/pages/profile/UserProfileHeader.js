@@ -8,15 +8,9 @@ export class UserProfileHeader extends Component {
 		this.data = {};
 	}
 
-	static get observedAttributes() {
-		return ["data"];
-	}
-
-	attributeChangedCallback(name, oldValue, newValue) {
-		if (name === "data" && newValue) {
-			this.data = JSON.parse(newValue);
-			this.update();
-		}
+	loadUserData(user) {
+		this.data = user;
+		this.update();
 	}
 
 	render() {

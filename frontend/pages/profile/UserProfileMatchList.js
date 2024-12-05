@@ -3,11 +3,7 @@ import { Component } from "../Component.js";
 export class UserProfileMatchList extends Component {
 	constructor() {
 		super();
-	}
-
-	render() {
-		this.pageNumber = parseInt(this.getAttribute("page-number") || 1);
-		// return this.renderPlaceholder();
+		this.gamelog = {};
 	}
 
 	style() {
@@ -44,58 +40,86 @@ export class UserProfileMatchList extends Component {
         `;
 	}
 
-	loadMatchHistory(username, matchHistory) {
-		this.innerHTML = this.#renderMatchHistory(matchHistory);
+	renderMatchHistory(matchHistory) {
+		this.gamelog = matchHistory;
+		this.update();
 	}
 
-	#renderMatchHistory(matchHistory) {
-		return (
-			`
-            <div class="card mb-3 mt-3">
-                <div class="card-header border-bottom">
-                    <h5 class="mb-0">Latest Matches</h5>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover table-nowrap mb-1">
-                        <thead>
-                            <tr>
-                                <th scope="col">Adversary</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Result</th>
-                                <th scope="col">Score</th>
-                                <th scope="col">Elo</th>
-                                <th scope="col">Winning Chance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${this.#renderMatches(matchHistory)}
-                        </tbody>
-                    </table>
+	render() {
+		this.pageNumber = parseInt(this.getAttribute("page-number") || 1);
+		return `
+            <div class="mb-3 mt-3">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-local-tab" data-bs-toggle="pill" data-bs-target="#pills-local" type="button" role="tab" aria-controls="pills-local" aria-selected="true">Local Pong</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-remote-tab" data-bs-toggle="pill" data-bs-target="#pills-remote" type="button" role="tab" aria-controls="pills-remote" aria-selected="false">Online Pong</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-ttt-tab" data-bs-toggle="pill" data-bs-target="#pills-ttt" type="button" role="tab" aria-controls="pills-ttt" aria-selected="false">Tic Tac Toe</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-local" role="tabpanel" aria-labelledby="pills-local-tab">
+                        ${this.#renderMatches(
+							this.gamelog.local,
+							"#pills-local"
+						)}
+                    </div>
+                    <div class="tab-pane fade" id="pills-remote" role="tabpanel" aria-labelledby="pills-remote-tab">
+                        ${this.#renderMatches(
+							this.gamelog.remote,
+							"#pills-remote"
+						)}
+                    </div>
+                    <div class="tab-pane fade" id="pills-ttt" role="tabpanel" aria-labelledby="pills-ttt-tab">
+                        ${this.#renderMatches(this.gamelog.ttt, "#pills-ttt")}
+                    </div>
                 </div>
             </div>
-        ` + this.style()
-		);
-	}
-
-	#renderMatches(matchHistory) {
-		if (!matchHistory.length) {
-			return `<tr><td colspan="6" class="text-center text-secondary">No matches played yet</td></tr>`;
-		}
-		return matchHistory.map((match) => this.#renderMatch(match)).join("");
-	}
-
-	#renderMatch(match) {
-		const date = new Date(match.date).toLocaleDateString();
-		return `
-            <tr>
-                <td>${match.opponent}</td>
-                <td>${date}</td>
-                <td>${this.#renderMatchResult(match.result)}</td>
-                <td>${match.score}</td>
-                <td>${this.#renderMatchEloDelta(match.eloDelta)}</td>
-                <td>${this.#renderMatchWinningChance(match.winningChance)}</td>
-            </tr>
         `;
+	}
+
+	#renderMatches(gamelog) {
+		if (!gamelog || gamelog.length === 0) {
+			return `
+                <div class="d-flex flex-column justify-content-start align-items-center w-100">
+                    <p class="text-secondary">No games yet :(</p>
+                    <p class="text-secondary">Go to the home page to start playing!</p>
+                </div>`;
+		}
+		const rows = gamelog
+			.map(
+				(game) => `
+                    <tr>
+                        <td><span class="badge badge-dot"><i class="${
+							game.result === "Win" ? "bg-success" : "bg-danger"
+						}"></i></span>${game.result}</td>
+                        <td>${game.opponent}</td>
+                        <td>${game.my_score} - ${game.opponent_score} </td>
+                        <td>${game.date}</td>
+                    </tr>
+                `
+			)
+			.join("");
+
+		return `
+            <div class="table-responsive">
+                <table class="table table-hover table-nowrap mb-1">
+                    <thead>
+                        <tr>
+                            <th scope="col">Result</th>
+                            <th scope="col">Opponent</th>
+                            <th scope="col">Score</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+            </div>`;
 	}
 
 	#renderMatchResult(result) {
@@ -103,36 +127,6 @@ export class UserProfileMatchList extends Component {
             <span class="badge badge-dot"><i class="${
 				result === "Win" ? "bg-success" : "bg-danger"
 			}"></i>${result}</span>
-        `;
-	}
-
-	#renderMatchEloDelta(eloDelta) {
-		return `
-            <span class="badge badge-pill ${
-				eloDelta.includes("+") ? "bg-soft-success" : "bg-soft-danger"
-			} text-${
-			eloDelta.includes("+") ? "success" : "danger"
-		}">${eloDelta}</span>
-        `;
-	}
-
-	#renderMatchWinningChance(winningChance) {
-		const value = parseInt(winningChance.replace("%", ""));
-		const bgClass =
-			value < 20
-				? "bg-danger"
-				: value < 40
-				? "bg-warning"
-				: value < 60
-				? "bg-primary"
-				: "bg-success";
-		return `
-            <div class="d-flex align-items-center">
-                <span class="me-2">${winningChance}</span>
-                <div class="progress" style="width:100px">
-                    <div class="progress-bar ${bgClass}" style="width:${winningChance}"></div>
-                </div>
-            </div>
         `;
 	}
 }
