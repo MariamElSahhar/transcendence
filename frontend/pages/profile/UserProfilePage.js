@@ -8,6 +8,7 @@ export class UserProfilePage extends Component {
 	constructor() {
 		super();
 		this.user = {};
+		this.stats = {};
 		this.gamelog = {};
 		if (window.location.pathname.startsWith("/profile/")) {
 			this.user.userid = window.location.pathname
@@ -31,7 +32,7 @@ export class UserProfilePage extends Component {
 		await this.getGameLog();
 		this.querySelector("user-profile-header").renderUserData(this.user);
 		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
-		this.querySelector("game-stats").renderGameStats(this.gamelog);
+		this.querySelector("game-stats").renderGameStats(this.stats);
 		// this.loadChartsData();
 	}
 
@@ -43,6 +44,7 @@ export class UserProfilePage extends Component {
                 <div class="profile-content d-flex">
                     <div class="profile-main-content">
 						<game-stats></game-stats>
+						<game-heat-map></game-heat-map>
                         <gamelog-table></gamelog-table>
                     </div>
                 </div>
@@ -196,6 +198,28 @@ export class UserProfilePage extends Component {
 			],
 			remote: [],
 			ttt: [],
+		};
+
+		// DUMMY DATA
+		const localPlayed = 20;
+		const localWon = 10;
+		const remotePlayed = 10;
+		const remoteWon = 5;
+		const tttPlayed = 10;
+		const tttWon = 5;
+		const totalPlayed = localPlayed + remotePlayed + tttPlayed;
+		const totalPlayedGames = localPlayed + tttPlayed + remotePlayed;
+		const totalWonGames = localWon + tttWon + remoteWon;
+		this.stats = {
+			localPlayed,
+			localWon,
+			remotePlayed,
+			remoteWon,
+			tttPlayed,
+			tttWon,
+			totalPlayed,
+			totalPlayedGames,
+			totalWonGames,
 		};
 	}
 }

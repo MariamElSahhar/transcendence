@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
 
-export class GameStatsCard extends Component {
+export class GameHeatMap extends Component {
 	constructor() {
 		super();
 		this.stats = {};
@@ -145,4 +145,4 @@ export class GameStatsCard extends Component {
 	}
 }
 
-customElements.define("game-stats", GameStatsCard);
+customElements.define("game-heat-map", GameHeatMap);
