@@ -21,11 +21,9 @@ export class UserProfilePage extends Component {
 		await import("../navbar/Navbar.js");
 		await import("./UserProfileHeader.js");
 		await import("../buttons/FriendsButton.js");
-		await import("./GameLogTable.js");
-		await import("./GameStatsCard.js");
-
-		await import("./UserProfileChart.js");
-		await import("./UserProfileChartsCards.js");
+		await import("./components/GameLogTable.js");
+		await import("./components/GameStatsCard.js");
+		await import("./components/GameHeatMap.js");
 
 		super.connectedCallback();
 		await this.getUserData();
@@ -33,7 +31,6 @@ export class UserProfilePage extends Component {
 		this.querySelector("user-profile-header").renderUserData(this.user);
 		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
 		this.querySelector("game-stats").renderGameStats(this.stats);
-		// this.loadChartsData();
 	}
 
 	render() {
