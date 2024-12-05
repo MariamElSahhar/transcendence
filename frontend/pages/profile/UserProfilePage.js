@@ -18,22 +18,21 @@ export class UserProfilePage extends Component {
 
 	async connectedCallback() {
 		await import("../navbar/Navbar.js");
-		await import("../buttons/FriendsButton.js");
 		await import("./UserProfileHeader.js");
+		await import("../buttons/FriendsButton.js");
+		await import("./GameLogTable.js");
+		await import("./GameStatsCard.js");
+
 		await import("./UserProfileChart.js");
 		await import("./UserProfileChartsCards.js");
-		await import("./UserProfileMatchList.js");
-		await import("./UserProfileStatsCard.js");
-		await import("./UserProfileStatsCards.js");
 
 		super.connectedCallback();
 		await this.getUserData();
 		await this.getGameLog();
-		this.loadHeaderData();
-		this.loadMatchListData();
-		// this.loadStatsCardsData();
+		this.querySelector("user-profile-header").renderUserData(this.user);
+		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
+		this.querySelector("game-stats").renderGameStats(this.gamelog);
 		// this.loadChartsData();
-
 	}
 
 	render() {
@@ -43,7 +42,8 @@ export class UserProfilePage extends Component {
                 <user-profile-header></user-profile-header>
                 <div class="profile-content d-flex">
                     <div class="profile-main-content">
-                        <user-profile-match-list></user-profile-match-list>
+						<game-stats></game-stats>
+                        <gamelog-table></gamelog-table>
                     </div>
                 </div>
             </div>
@@ -132,33 +132,6 @@ export class UserProfilePage extends Component {
                 }
             </style>
         `;
-	}
-
-	loadHeaderData() {
-		this.querySelector("user-profile-header").loadUserData({
-			userid: this.user.userid,
-			username: this.user.username,
-			avatar: this.user.avatar,
-			is_friend: this.user.is_friend,
-			is_online: this.user.is_online,
-			is_me: this.user.is_me,
-		});
-	}
-
-	loadStatsCardsData() {
-		const statsCards = this.querySelector("user-profile-stats-cards");
-		if (statsCards) {
-			const statsData = dummyData.stats;
-			statsCards.setAttribute("data", JSON.stringify(statsData));
-		} else {
-			console.error("UserProfileStatsCards component not found.");
-		}
-	}
-
-	loadMatchListData() {
-		this.querySelector("user-profile-match-list").renderMatchHistory(
-			this.gamelog
-		);
 	}
 
 	loadChartsData() {

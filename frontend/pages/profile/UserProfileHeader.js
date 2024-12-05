@@ -8,7 +8,7 @@ export class UserProfileHeader extends Component {
 		this.data = {};
 	}
 
-	loadUserData(user) {
+	renderUserData(user) {
 		this.data = user;
 		this.update();
 	}
