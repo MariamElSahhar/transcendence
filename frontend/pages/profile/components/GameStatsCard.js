@@ -17,7 +17,7 @@ export class GameStatsCard extends Component {
 
 	render() {
 		return `
-            <div class="game-stats d-flex flex-row w-50 gap-5 justify-content-start w-100 p-3">
+            <div class="game-stats d-flex flex-row  h-100 w-100 gap-5 justify-content-start w-100 p-3">
                 <div class="circle">
                     <div class="stats-text">
                          <span class="stats-fraction">${
@@ -68,6 +68,8 @@ export class GameStatsCard extends Component {
             display: flex;
             justify-content: center;
             align-items: center;
+            min-width: 150px;
+            min-height: 150px;
         }
 
         .circle::after {

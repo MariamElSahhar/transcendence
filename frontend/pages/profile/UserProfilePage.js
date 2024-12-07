@@ -38,11 +38,11 @@ export class UserProfilePage extends Component {
             <navbar-component></navbar-component>
             <div class="profile-page container">
                 <user-profile-header></user-profile-header>
-                <div class="profile-content d-flex w-100">
+                <div class="profile-content d-flex w-100 row-gap-5">
                     <div class="profile-main-content d-flex flex-column w-100">
-						<div class="d-flex flex-row w-100">
-							<game-stats class="w-50"></game-stats>
-							<game-heat-map class="w-50"></game-heat-map>
+						<div class="d-flex flex-row w-100 h-50 column-gap-2">
+							<game-stats class="w-50 h-100 rounded"></game-stats>
+							<game-heat-map class="w-50 h-100 rounded"></game-heat-map>
 						</div>
                         <gamelog-table></gamelog-table>
                     </div>
