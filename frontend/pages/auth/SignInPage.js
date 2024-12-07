@@ -18,39 +18,42 @@ export class SignInPage extends Component {
 
 	render() {
 		return `
-			<div id="container" class="d-flex justify-content-center align-items-center rounded-3 h-100">
-				<div class="login-card card m-3">
-					<div class="card-body m-2">
-						<h2 class="card-title text-center m-5">Sign In</h2>
-						<form id="signin-form">
-							<div class="form-group mb-4">
-								<input type="text" class="form-control" id="login"
-									placeholder="Username">
-								<div id="login-feedback" class="invalid-feedback">
-									Please enter a valid login.
+			<div class="d-flex flex-column w-100 vh-100">
+				<h3 class="w-100 py-2">
+					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
+				</h3>
+				<div id="container" class="d-flex justify-content-center align-items-start mt-5 rounded-3">
+					<div class="login-card card m-3">
+						<div class="card-body m-2">
+							<h2 class="card-title text-center m-5">Sign In</h2>
+							<form id="signin-form">
+								<div class="form-group mb-4">
+									<input type="text" class="form-control" id="login"
+										placeholder="Username">
+									<div id="login-feedback" class="invalid-feedback">
+										Please enter a valid login.
+									</div>
 								</div>
-							</div>
-							<div class="form-group mb-4">
-								<div class="input-group">
-									<input type="password" class="form-control"
-										id="password"
-										placeholder="Password">
-									<span id="password-eye"
-										class="input-group-text dynamic-hover">
-										<i class="bi bi-eye-fill"></i>
-									</span>
+								<div class="form-group mb-4">
+									<div class="input-group">
+										<input type="password" class="form-control"
+											id="password"
+											placeholder="Password">
+										<span id="password-eye"
+											class="input-group-text dynamic-hover">
+											<i class="bi bi-eye-fill"></i>
+										</span>
+									</div>
 								</div>
-							</div>
-							<!-- <alert-component id="alert-form" alert-display="false">
-							</alert-component> -->
-							<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
-							<div class="d-flex mb-3">
-								<small role="button" id="dont-have-account">Don't have an account? Sign up</small>
-							</div>
-							<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Sign in</button>
-						</form>
-						<hr class="my-4">
-						<intra-button-component class="p-0"></intra-button-component>
+								<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
+								<div class="d-flex mb-3">
+									<small role="button" id="dont-have-account">Don't have an account? Sign up</small>
+								</div>
+								<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Sign in</button>
+							</form>
+							<hr class="my-4">
+							<intra-button-component class="p-0"></intra-button-component>
+						</div>
 					</div>
 				</div>
 			</div>

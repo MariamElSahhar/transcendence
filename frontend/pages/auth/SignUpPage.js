@@ -31,65 +31,68 @@ export class SignUpPage extends Component {
 		// 	return false;
 		// }
 		return `
-			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
-				<div class="register-card card m-3">
-					<div class="card-body m-2">
-						<h2 class="card-title text-center m-5 dynamic-hover">Sign Up</h2>
-						<form id="signup-form">
-							<div class="form-group mb-4">
-								<div class="input-group has-validation">
-									<span class="input-group-text" id="inputGroupPrepend">@</span>
-									<input type="text" class="form-control" id="username"
-											placeholder="Username" autocomplete="username">
-									<div id="username-feedback" class="invalid-feedback">
-										Invalid username.
+			<div class="d-flex flex-column w-100 vh-100">
+				<h3 class="w-100 py-2">
+					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
+				</h3>
+				<div id="container" class="d-flex justify-content-center align-items-center rounded-3 flex-grow-1">
+					<div class="register-card card m-3">
+						<div class="card-body m-2">
+							<h2 class="card-title text-center m-5 dynamic-hover">Sign Up</h2>
+							<form id="signup-form">
+								<div class="form-group mb-4">
+									<div class="input-group has-validation">
+										<span class="input-group-text" id="inputGroupPrepend">@</span>
+										<input type="text" class="form-control" id="username"
+												placeholder="Username" autocomplete="username">
+										<div id="username-feedback" class="invalid-feedback">
+											Invalid username.
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="form-group mb-4">
-								<input type="email" class="form-control" id="email"
-										placeholder="Email" autocomplete="email">
-								<div id="email-feedback" class="invalid-feedback">
-									Please enter a valid email.
-								</div>
-							</div>
-							<div class="form-group mb-4">
-								<div class="input-group has-validation">
-									<input type="password" class="form-control"
-											id="password"
-											placeholder="Password">
-									<span id="password-eye" class="input-group-text dynamic-hover">
-										<i class="bi bi-eye-fill"></i>
-									</span>
-									<div id="password-feedback" class="invalid-feedback">
-										Invalid password.
+								<div class="form-group mb-4">
+									<input type="email" class="form-control" id="email"
+											placeholder="Email" autocomplete="email">
+									<div id="email-feedback" class="invalid-feedback">
+										Please enter a valid email.
 									</div>
 								</div>
-							</div>
-							<div class="form-group mb-4">
-								<div class="input-group has-validation">
-									<input type="password" class="form-control"
-											id="confirm-password"
-											placeholder="Confirm Password">
-									<span id="confirm-password-eye"
-										class="input-group-text dynamic-hover">
-										<i class="bi bi-eye-fill"></i>
-									</span>
-									<div id="confirm-password-feedback" class="invalid-feedback">
-										Passwords do not match.
+								<div class="form-group mb-4">
+									<div class="input-group has-validation">
+										<input type="password" class="form-control"
+												id="password"
+												placeholder="Password">
+										<span id="password-eye" class="input-group-text dynamic-hover">
+											<i class="bi bi-eye-fill"></i>
+										</span>
+										<div id="password-feedback" class="invalid-feedback">
+											Invalid password.
+										</div>
 									</div>
 								</div>
-							</div>
-							<!-- <alert-component id="alert-form" alert-display="false">
-							</alert-component> -->
-							<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
-							<div class="mb-3">
-								<small role="button" id="have-account">Already have an account? Log In</small>
-							</div>
-							<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
-						</form>
-						<hr class="my-4">
-						<intra-button-component></intra-button-component>
+								<div class="form-group mb-4">
+									<div class="input-group has-validation">
+										<input type="password" class="form-control"
+												id="confirm-password"
+												placeholder="Confirm Password">
+										<span id="confirm-password-eye"
+											class="input-group-text dynamic-hover">
+											<i class="bi bi-eye-fill"></i>
+										</span>
+										<div id="confirm-password-feedback" class="invalid-feedback">
+											Passwords do not match.
+										</div>
+									</div>
+								</div>
+								<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
+								<div class="mb-3">
+									<small role="button" id="have-account">Already have an account? Log In</small>
+								</div>
+								<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
+							</form>
+							<hr class="my-4">
+							<intra-button-component></intra-button-component>
+						</div>
 					</div>
 				</div>
 			</div>

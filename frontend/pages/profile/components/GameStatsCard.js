@@ -17,7 +17,7 @@ export class GameStatsCard extends Component {
 
 	render() {
 		return `
-            <div class="game-stats d-flex flex-row w-50 gap-5 justify-content-start">
+            <div class="game-stats d-flex flex-row w-50 gap-5 justify-content-start w-100 p-3">
                 <div class="circle">
                     <div class="stats-text">
                          <span class="stats-fraction">${
@@ -29,8 +29,8 @@ export class GameStatsCard extends Component {
 							}%</span>
                     </div>
                 </div>
-                <div class="d-flex flex-column">
-                    <p>
+                <div class="d-flex flex-column w-50">
+                <p>
                         ${this.stats.localWon}/${
 			this.stats.localPlayed
 		} Local Pong
