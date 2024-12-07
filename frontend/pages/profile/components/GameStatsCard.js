@@ -20,12 +20,12 @@ export class GameStatsCard extends Component {
             <div class="game-stats d-flex flex-row  h-100 w-100 gap-5 justify-content-start w-100 p-3">
                 <div class="circle">
                     <div class="stats-text">
-                         <span class="stats-fraction">${
-								this.stats.totalWonGames
-							}/${this.stats.totalPlayedGames}</span>
+                         <span class="stats-fraction">${this.stats.totalWon}/${
+			this.stats.totalPlayed
+		}</span>
                          <span class="stats-percent ">${
-								(this.stats.totalWonGames * 100) /
-								this.stats.totalPlayedGames
+								(this.stats.totalWon * 100) /
+								this.stats.totalPlayed
 							}%</span>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 // UserProfilePage.js
 import { Component } from "../Component.js";
 import { fetchUserById } from "../../js/clients/users-client.js";
+import { fetchUserGameLog } from "../../js/clients/gamelog-client.js";
 import { dummyData } from "./dummyData.js";
 import { getUserSessionData } from "../../js/utils/session-manager.js";
 
@@ -181,34 +182,22 @@ export class UserProfilePage extends Component {
 	}
 
 	async getGameLog() {
-		// const { success, data, error } = await getUserGameLog(this.user.userid);
-		// if (success) {
-		// 	this.log.local = data;
-		// }
-		this.gamelog = {
-			local: [
-				{
-					date: "20/11/2024",
-					opponent: "Player 2",
-					my_score: "3",
-					opponent_score: "2",
-					result: "Win",
-				},
-			],
-			remote: [],
-			ttt: [],
-		};
+		const { success, data } = await fetchUserGameLog(this.user.userid);
+		if (!success) {
+			console.log("Error fetching gamelog");
+			return;
+		}
+		this.gamelog = data;
+		const localPlayed = this.gamelog.local.length;
+		const remotePlayed = this.gamelog.remote.length;
+		const tttPlayed = this.gamelog.ttt.length;
 
 		// DUMMY DATA
-		const localPlayed = 20;
-		const localWon = 10;
-		const remotePlayed = 10;
 		const remoteWon = 5;
-		const tttPlayed = 10;
+		const localWon = 10;
 		const tttWon = 5;
 		const totalPlayed = localPlayed + remotePlayed + tttPlayed;
-		const totalPlayedGames = localPlayed + tttPlayed + remotePlayed;
-		const totalWonGames = localWon + tttWon + remoteWon;
+		const totalWon = localWon + tttWon + remoteWon;
 		this.stats = {
 			localPlayed,
 			localWon,
@@ -217,8 +206,7 @@ export class UserProfilePage extends Component {
 			tttPlayed,
 			tttWon,
 			totalPlayed,
-			totalPlayedGames,
-			totalWonGames,
+			totalWon,
 		};
 	}
 }
