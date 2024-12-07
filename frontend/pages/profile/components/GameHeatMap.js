@@ -5,7 +5,7 @@ export class GameHeatMap extends Component {
 		super();
 	}
 
-	renderGameHeatMap(stats) {
+	renderGameHeatMap(gamelog) {
 		this.update();
 	}
 
@@ -92,4 +92,4 @@ export class GameHeatMap extends Component {
 	}
 }
 
-customElements.define("game-heat-map", GameHeatMap);
+customElements.define("game-heatmap", GameHeatMap);

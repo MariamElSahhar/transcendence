@@ -17,30 +17,48 @@ export class GameStatsCard extends Component {
 
 	render() {
 		return `
-            <div class="game-stats d-flex flex-row  h-100 w-100 gap-5 justify-content-start w-100 p-3">
-                <div class="circle">
-                    <div class="stats-text">
-                         <span class="stats-fraction">${this.stats.totalWon}/${
-			this.stats.totalPlayed
-		}</span>
-                         <span class="stats-percent ">${
+            <div class="game-stats d-flex flex-row h-100 w-100 gap-5 justify-content-start align-items-center p-3">
+                <div class="circle d-flex justify-content-center align-items-center">
+                    <div class="stats-text d-flex flex-column justify-content-center align-items-center">
+                        <span class="stats-fraction position-absolute">
+                            ${this.stats.totalWon}/${this.stats.totalPlayed}
+                        </span>
+                         <span class="stats-percent position-absolute">
+                            ${Math.round(
 								(this.stats.totalWon * 100) /
-								this.stats.totalPlayed
-							}%</span>
+									this.stats.totalPlayed
+							)}%
+                        </span>
                     </div>
                 </div>
-                <div class="d-flex flex-column w-50">
-                <p>
-                        ${this.stats.localWon}/${
-			this.stats.localPlayed
-		} Local Pong
+                <div class="d-flex flex-column w-40">
+                    <p class="d-flex align-items-baseline">
+                        <span>
+                            <i class="bi bi-joystick"></i>
+                            Local Pong
+                        </span>
+                        <span class="ms-auto">
+                            ${this.stats.localWon}/${this.stats.localPlayed}
+                        </span>
                     </p>
-                                <p>${this.stats.remoteWon}/${
-			this.stats.remotePlayed
-		} Remote Pong</p>
-                                <p>${this.stats.tttWon}/${
-			this.stats.tttPlayed
-		} Tic Tac Toe</p>
+                    <p class="d-flex align-items-baseline">
+                        <span>
+                        <i class="bi bi-people-fill"></i>
+                        Remote Pong
+                        </span>
+                        <span class="ms-auto">
+                            ${this.stats.remoteWon}/${this.stats.remotePlayed}
+                        </span>
+                    </p>
+                    <p class="d-flex align-items-baseline">
+                        <span>
+                            <i class="bi bi-grid-3x3-gap-fill"></i>
+                            Tic Tac Toe
+                        </span>
+                        <span class="ms-auto">
+                            ${this.stats.tttWon}/${this.stats.tttPlayed}
+                        </span>
+                    </p>
                 </div>
             </div>
         `;
@@ -49,57 +67,55 @@ export class GameStatsCard extends Component {
 	style() {
 		return `
         <style>
-        .game-stats {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+            .game-stats {
+                position: relative;
+                width: 150px;
+                height: 150px;
+            }
 
-        .circle {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: conic-gradient(
-                lightgreen 0% 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-width: 150px;
-            min-height: 150px;
-        }
+            .circle {
+                position: relative;
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                min-width: 150px;
+                min-height: 150px;
+            }
 
-        .circle::after {
-            content: '';
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 50%;
-        }
+            .circle::after {
+                content: '';
+                position: absolute;
+                width: 120px;
+                height: 120px;
+                background: white;
+                border-radius: 50%;
+            }
 
-        .stats-text {
-            position: absolute;
-            font-size: 1.25rem;
-            font-weight: bold;
-            text-align: center;
-            z-index: 1;
-        }
+            .stats-text {
+                position: absolute;
+                font-size: 1.25rem;
+                font-weight: bold;
+                text-align: center;
+                z-index: 1;
+            }
 
-        .stats-percent {
-            display: none;
-        }
+            .stats-percent {
+                opacity: 0;
+                transition: opacity 0.3s ease-in-out;
+            }
 
-        .circle:hover .stats-percent {
-            display: inline;
-        }
+            .stats-fraction {
+                opacity: 1;
+                transition: opacity 0.3s ease-in-out;
+            }
 
-        .circle:hover .stats-fraction {
-            display: none;
-        }
+            .circle:hover .stats-percent {
+                opacity: 1;
+            }
+
+            .circle:hover .stats-fraction {
+                opacity: 0;
+            }
         </style>`;
 	}
 

@@ -32,6 +32,7 @@ export class UserProfilePage extends Component {
 		this.querySelector("user-profile-header").renderUserData(this.user);
 		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
 		this.querySelector("game-stats").renderGameStats(this.stats);
+		this.querySelector("game-heatmap").renderGameHeatMap(this.gamelog);
 	}
 
 	render() {
@@ -43,7 +44,7 @@ export class UserProfilePage extends Component {
                     <div class="profile-main-content d-flex flex-column w-100">
 						<div class="d-flex flex-row w-100 h-50 column-gap-2">
 							<game-stats class="w-50 h-100 rounded"></game-stats>
-							<game-heat-map class="w-50 h-100 rounded"></game-heat-map>
+							<game-heatmap class="w-50 h-100 rounded"></game-heatmap>
 						</div>
                         <gamelog-table></gamelog-table>
                     </div>
@@ -192,10 +193,15 @@ export class UserProfilePage extends Component {
 		const remotePlayed = this.gamelog.remote.length;
 		const tttPlayed = this.gamelog.ttt.length;
 
-		// DUMMY DATA
-		const remoteWon = 5;
-		const localWon = 10;
-		const tttWon = 5;
+		const remoteWon = this.gamelog.remote.filter(
+			(item) => item.is_win === true
+		).length;
+		const localWon = this.gamelog.local.filter(
+			(item) => item.is_win === true
+		).length;
+		const tttWon = this.gamelog.ttt.filter(
+			(item) => item.is_win === true
+		).length;
 		const totalPlayed = localPlayed + remotePlayed + tttPlayed;
 		const totalWon = localWon + tttWon + remoteWon;
 		this.stats = {
