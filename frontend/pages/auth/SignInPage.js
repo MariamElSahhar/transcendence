@@ -103,16 +103,6 @@ export class SignInPage extends Component {
 		}
 	}
 
-	#renderLoader() {
-		return `
-    	<div class="d-flex justify-content-center align-items-center" style="height: 700px">
-          <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-          </div>
-      </div>
-    `;
-	}
-
 	#loginHandler() {
 		this.isValidEmailInput = this.login.value.length > 0;
 		this.#formHandler();
@@ -146,10 +136,6 @@ export class SignInPage extends Component {
 				this.#loadTwoFactorComponent();
 			}
 		} else {
-			// if (body.hasOwnProperty("2fa") && body["2fa"] === true) {
-			// 	this.#loadTwoFactorComponent();
-			// 	return;
-			// }
 			this.#resetLoadButton();
 			this.alertForm.innerHTML = error;
 			this.alertForm.classList.remove("d-none");
@@ -186,20 +172,6 @@ export class SignInPage extends Component {
 			return false;
 		}
 		return true;
-	}
-
-	async #loadAndCache(refreshToken) {
-		this.innerHTML = this.#renderLoader();
-		userManagementClient.refreshToken = refreshToken;
-		if (!(await userManagementClient.restoreCache())) {
-			userManagementClient.logout();
-			this.error = true;
-			this.errorMessage = "Error, failed to store cache";
-			super.update();
-			this.postRender();
-		} else {
-			window.redirect("/");
-		}
 	} */
 
 	#togglePasswordVisibility() {

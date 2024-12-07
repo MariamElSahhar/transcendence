@@ -340,40 +340,6 @@ export class SignUpPage extends Component {
 		}
 		return true;
 	}
-
-	async #loadAndCache(refreshToken) {
-		this.innerHTML = this.#renderLoader();
-		userManagementClient.refreshToken = refreshToken;
-		if (!(await userManagementClient.restoreCache())) {
-			userManagementClient.logout();
-			this.error = true;
-			this.errorMessage = "Error, failed to store cache";
-			super.update();
-			this.postRender();
-		} else {
-			window.redirect("/");
-		}
-	}
-	#loadEmailVerification() {
-		const cardBody = this.querySelector(".card-body");
-		cardBody.innerHTML =  `
-			<h2 class="card-title text-center m-5 dynamic-hover">Activate your account</h2>
-			<p class="text-center">Please verify your email address to continue</p>
-			<div class="d-flex justify-content-center mb-4">
-				<i class="bi bi-envelope-arrow-up" style="font-size: 7rem;"></i>
-			</div>
-    	`;
-	}
-
-	#renderLoader() {
-		return `
-			<div class="d-flex justify-content-center align-items-center" style="height: 700px)">
-				<div class="spinner-border" role="status">
-					<span class="d-none">Loading...</span>
-				</div>
-			</div>
-		`;
-	}
 	*/
 
 	#startLoadButton() {
