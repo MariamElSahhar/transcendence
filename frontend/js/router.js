@@ -62,6 +62,13 @@ const routes = {
 	"/settings": {
 		component: "settings-page",
 		path: "../pages/settings/Settings.js",
+		protected: false,
+	},
+	// test screen
+	"/layout": {
+		component: "main-layout",
+		path: "../pages/layout/MainLayout.js",
+		protected: false,
 	},
 };
 
