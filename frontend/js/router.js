@@ -34,12 +34,12 @@ const routes = {
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
-	"/profile": {
-		component: "user-profile-page",
-		path: "../pages/profile/UserProfilePage.js",
+	"/play-AI-match": {
+		component: "AI-game-page",
+		path: "../pages/AI/AIGamePage.js",
 		protected: false,
 	},
-	"/games": {
+	"/play-match": {
 		component: "game-page",
 		path: "../pages/local/GamePage.js",
 		protected: false,
