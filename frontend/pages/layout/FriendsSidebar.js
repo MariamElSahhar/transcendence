@@ -14,9 +14,8 @@ export class FriendsSidebar extends Component {
 		return `
             <div id="friends-sidebar" class="pe-5 ps-4 py-2">
             	<div id="friends-sidebar" class="p-3 bg-light rounded-2">
-                	<h6 class="mb-4">Online Friends</h6>
-					<div id="friends-list">
-            		</div>
+                	<h6 class="mb-4">My Friends</h6>
+					<div id="friends-list" class="d-flex flex-column justify-content-start align-items-start w-100"></div>
             	</div>
             </div>
         `;
@@ -33,15 +32,14 @@ export class FriendsSidebar extends Component {
 
 		if (this.friends.length == 0) {
 			friendsList.innerHTML = `
-			<div class="d-flex flex-column justify-content-start align-items-start w-100" gap-0>
 				<p class="text-secondary my-0">No friends yet. Try searching for users in the search bar</p>
-			</div>
 			`;
 		} else {
-			this.friends.forEach((friend) => {
+			this.friends.slice(0, 7).forEach((friend) => {
 				const friendCard = document.createElement("div");
 				friendCard.innerHTML = this.renderFriendCard(friend);
 				friendsList.appendChild(friendCard);
+				friendsList.classList.add("gap-1");
 
 				super.addComponentEventListener(
 					friendCard.querySelector(".user-info"),
