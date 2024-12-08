@@ -34,6 +34,11 @@ const routes = {
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
+	"/profile": {
+		component: "user-profile-page",
+		path: "../pages/profile/UserProfilePage.js",
+		protected: false,
+	},
 	"/play-AI-match": {
 		component: "AI-game-page",
 		path: "../pages/AI/AIGamePage.js",
