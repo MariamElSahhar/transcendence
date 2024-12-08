@@ -3,16 +3,22 @@ import { Component } from "../../Component.js";
 export class GameHeatMap extends Component {
 	constructor() {
 		super();
+		this.stats = {};
+		this.gamelog = {};
+		this.gamecount = [];
 	}
 
-	renderGameHeatMap(gamelog) {
+	renderGameHeatMap(gamelog, stats) {
+		this.stats = stats;
+		this.gamecount = this.countGames(gamelog);
 		this.update();
 	}
 
 	render() {
 		return `
-            <div class="heatmap-container h-100 w-100 p-3 overflow-scroll d-flex justify-content-center align-items-center">
-                <div class="heatmap-grid d-grid justify-content-start"></div>
+            <div class="h-100 w-100 p-3 flex-column d-flex justify-content-center align-items-start">
+                <small class="my-0">${this.stats.totalPlayed} games played in the last year</small>
+                <div class="heatmap-grid d-grid justify-content-start overflow-scroll w-100"></div>
             </div>
         `;
 	}
@@ -40,15 +46,6 @@ export class GameHeatMap extends Component {
 	}
 
 	postRender() {
-		const contributions = [
-			{ date: "2024-11-22", count: 3 },
-			{ date: "2024-11-24", count: 3 },
-			{ date: "2024-11-25", count: 3 },
-			{ date: "2024-11-30", count: 3 },
-			{ date: "2024-12-01", count: 3 },
-			{ date: "2024-12-02", count: 3 },
-			{ date: "2024-12-05", count: 7 },
-		];
 		const heatmap = this.querySelector(".heatmap-grid");
 
 		const getLevel = (count) => {
@@ -59,36 +56,48 @@ export class GameHeatMap extends Component {
 			return "";
 		};
 
-		const container = this.querySelector(".heatmap-container");
-		const containerWidth = container.offsetWidth;
-		const cellsPerRow = Math.floor(containerWidth / (12 + 2)) - 5;
-		const weeksToShow = cellsPerRow;
-
-		const dates = contributions.map((c) => new Date(c.date));
-		const latestDate = new Date(Math.max(...dates));
-
-		let startDate = new Date(latestDate);
-		startDate.setDate(latestDate.getDate() - weeksToShow * 7);
-		while (startDate.getDay() !== 1) {
-			startDate.setDate(startDate.getDate() - 1);
-		}
-
+		const latestDate = new Date();
+		const startDate = new Date(latestDate.getFullYear(), 0, 1);
 		const currentDate = new Date(startDate);
+
 		while (currentDate <= latestDate) {
 			const dateString = currentDate.toISOString().split("T")[0];
 
-			const contribution = contributions.find(
-				(c) => c.date === dateString
-			);
-			const count = contribution ? contribution.count : 0;
+			const game = this.gamecount.find((c) => c.date === dateString);
+			const count = game ? game.count : 0;
 
 			const cell = document.createElement("div");
 			cell.className = `day ${getLevel(count)}`;
-			cell.setAttribute("data-tooltip", `${dateString}: ${count} games`);
+			cell.setAttribute("data-bs-toggle", `tooltip`);
+			cell.setAttribute("data-bs-title", `${dateString}: ${count} games`);
+			new bootstrap.Tooltip(cell);
 
 			heatmap.appendChild(cell);
 			currentDate.setDate(currentDate.getDate() + 1);
 		}
+		heatmap.scrollLeft = heatmap.scrollWidth;
+	}
+
+	countGames(gamelog) {
+		const allGames = [...gamelog.remote, ...gamelog.local, ...gamelog.ttt];
+
+		const dateCounts = allGames.reduce((counts, game) => {
+			const gameDate = game.date;
+			if (!counts[gameDate]) {
+				counts[gameDate] = 0;
+			}
+			counts[gameDate]++;
+			return counts;
+		}, {});
+
+		const gameCount = Object.entries(dateCounts).map(([date, count]) => ({
+			date,
+			count,
+		}));
+
+		gameCount.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+		return gameCount;
 	}
 }
 

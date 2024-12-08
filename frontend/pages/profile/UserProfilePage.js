@@ -32,21 +32,24 @@ export class UserProfilePage extends Component {
 		this.querySelector("user-profile-header").renderUserData(this.user);
 		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
 		this.querySelector("game-stats").renderGameStats(this.stats);
-		this.querySelector("game-heatmap").renderGameHeatMap(this.gamelog);
+		this.querySelector("game-heatmap").renderGameHeatMap(
+			this.gamelog,
+			this.stats
+		);
 	}
 
 	render() {
 		return `
             <navbar-component></navbar-component>
-            <div class="profile-page container">
+            <div class="profile-page container d-flex flex-column gap-3 my-3">
                 <user-profile-header></user-profile-header>
                 <div class="profile-content d-flex w-100 row-gap-5">
-                    <div class="profile-main-content d-flex flex-column w-100">
-						<div class="d-flex flex-row w-100 h-50 column-gap-2">
-							<game-stats class="w-50 h-100 rounded"></game-stats>
-							<game-heatmap class="w-50 h-100 rounded"></game-heatmap>
+                    <div class="profile-main-content d-flex flex-column w-100 gap-3">
+						<div class="graphs d-flex w-100 column-gap-2">
+							<game-stats class="flex-fill h-100 rounded"></game-stats>
+							<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
 						</div>
-                        <gamelog-table></gamelog-table>
+                        <gamelog-table class=""></gamelog-table>
                     </div>
                 </div>
             </div>
@@ -55,106 +58,23 @@ export class UserProfilePage extends Component {
 
 	style() {
 		return `
-            <style>
-                .container {
-                    max-width: 1200px;
-                    margin: auto;
-                    padding: 20px;
-                    font-family: Arial, sans-serif;
-                    color: #333;
-                }
-
-                /* Profile Page Layout */
-                .profile-page {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 20px;
-                }
-
-                .profile-content {
-                    display: flex;
-                    gap: 20px;
-                    margin-top: 20px;
-                }
-
-                /* Sidebar styling
-                friends-sidebar {
-                    flex: 1;
-                    min-width: 250px;
-                    max-width: 300px;
-                    background-color: #f8f9fa;
-                    padding: 15px;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                }  */
-
-                /* Main content styling */
-                .profile-main-content {
-                    flex: 3;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 30px;
-                }
-
-                /* Stats Cards styling */
-                user-profile-stats-cards {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                    gap: 20px;
-                }
-
-                /* Card styling */
-                user-profile-stats-card-component,
-                user-profile-charts-cards,
-                user-profile-match-list {
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                    border-radius: 8px;
-                    background-color: #fff;
-                    padding: 20px;
-                    transition: transform 0.2s ease, box-shadow 0.2s ease;
-                }
-
-                /* Card hover effect */
-                user-profile-stats-card-component:hover,
-                user-profile-charts-cards:hover,
-                user-profile-match-list:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                }
-
-                /* Match List specific styling */
-                user-profile-match-list {
-                    margin-top: 20px;
-                }
-
-                /* Styling for titles */
-                h5 {
-                    font-size: 1.25rem;
-                    font-weight: 600;
-                    color: #495057;
-                }
-            </style>
-        `;
-	}
-
-	loadChartsData() {
-		const chartsComponent = this.querySelector("user-profile-charts-cards");
-		if (chartsComponent) {
-			const eloGraph = dummyData.charts?.eloGraph || { graph: [] };
-			const winRateGraph = dummyData.charts?.winRateGraph || {
-				graph: [],
-			};
-			const matchesPlayedGraph = dummyData.charts?.matchesPlayedGraph || {
-				graph: [],
-			};
-			chartsComponent.loadStatistics(
-				eloGraph,
-				winRateGraph,
-				matchesPlayedGraph
-			);
-		} else {
-			console.error("UserProfileChartsCards component not found.");
-		}
+			<style>
+				.graphs {
+					flex-direction: column;
+				}
+				.game-heatmap {
+					width: 100%;
+				}
+				@media (min-width: 992px) {
+					.graphs {
+						flex-direction: row;
+					}
+					.game-heatmap {
+						width: 50%;
+					}
+				}
+			</style>
+		`;
 	}
 
 	async getUserData() {
@@ -218,92 +138,3 @@ export class UserProfilePage extends Component {
 }
 
 customElements.define("user-profile-page", UserProfilePage);
-
-// import { Component } from "./components/Component.js";
-// import { isAuth } from "../../../js/clients/token-client.js";
-
-// export class UserProfilePage extends Component {
-// 	constructor() {
-// 		super();
-// 	}
-
-// 	async connectedCallback() {
-// 		//Authenticate the user
-// 		const authenticated = await isAuth();
-// 		if (!authenticated) {
-// 			window.redirect("/sign-in");
-// 			return;
-// 		}
-// 		await import("./components/navbar/Navbar.js");
-// 		await import("./components/profile/UserProfileHeader.js");
-// 		await import("./components/profile/UserProfileContent.js");
-// 		await import("./components/profile/UserProfileChart.js");
-// 		await import("./components/profile/UserProfileChartsCards.js");
-// 		await import("./components/profile/UserProfileMatchList.js");
-// 		await import("./components/profile/UserProfileStatsCard.js");
-// 		await import("./components/profile/UserProfileStatsCards.js");
-// 		await import("./components/layouts/FriendsSidebar.js");
-
-// 		// Set the inner HTML layout
-// 		this.innerHTML = this.render();
-
-// 		// Load user data into components after rendering
-// 		this.loadUserProfileData();
-// 	}
-
-// 	render() {
-// 		return `
-//       <navbar-component></navbar-component>
-//       <div class="profile-page">
-//         <user-profile-header></user-profile-header>
-//         <div class="profile-content">
-//           <friends-sidebar-component
-//             main-component="user-profile-content-component"
-//             username="${this.getAttribute("username")}">
-//           </friends-sidebar-component>
-//           <user-profile-content></user-profile-content>
-//           <user-profile-charts-cards></user-profile-charts-cards>
-//           <user-profile-match-list></user-profile-match-list>
-//           <user-profile-stats-cards></user-profile-stats-cards>
-//         </div>
-//       </div>
-//     `;
-// 	}
-
-// 	async loadUserProfileData() {
-// 		const { getToken } = await import(
-// 			"../../../js/clients/token-client.js"
-// 		);
-// 		const token = true;
-// 		if (token) {
-// 			const { getUserProfile } = await import(
-// 				"../../../js/clients/users-client.js"
-// 			);
-// 			try {
-// 				// const userProfile = await getUserProfile(token);
-// 				userProfile = {};
-
-// 				// Pass data to components via attributes
-// 				this.querySelector("user-profile-header").setAttribute(
-// 					"data",
-// 					JSON.stringify(userProfile)
-// 				);
-// 				this.querySelector("user-profile-content").setAttribute(
-// 					"data",
-// 					JSON.stringify(userProfile)
-// 				);
-// 				this.querySelector("user-profile-stats-cards").setAttribute(
-// 					"data",
-// 					JSON.stringify(userProfile)
-// 				);
-// 			} catch (error) {
-// 				console.error("Failed to load profile data:", error);
-// 			}
-// 		} else {
-// 			window.redirect("/sign-in");
-// 		}
-// 	}
-// }
-
-// // Register the main profile page component
-// customElements.define("user-profile-page", UserProfilePage);

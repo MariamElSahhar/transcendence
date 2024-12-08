@@ -18,14 +18,14 @@ export const fetchUserGameLog = async (userid) => {
 	const gamelog = {
 		local: [
 			{
-				date: "20/11/2024",
+				date: "2024-11-20",
 				opponent: "Player 2",
 				my_score: "3",
 				opponent_score: "2",
 				is_win: true,
 			},
 			{
-				date: "20/11/2024",
+				date: "2024-11-20",
 				opponent: "Player 2",
 				my_score: "3",
 				opponent_score: "2",
@@ -34,11 +34,18 @@ export const fetchUserGameLog = async (userid) => {
 		],
 		remote: [
 			{
-				date: "20/11/2024",
+				date: "2024-11-20",
 				opponent: "Player 2",
 				my_score: "3",
 				opponent_score: "2",
 				is_win: true,
+			},
+			{
+				date: "2024-09-19",
+				opponent: "Player 2",
+				my_score: "3",
+				opponent_score: "2",
+				is_win: false,
 			},
 		],
 		ttt: [],
