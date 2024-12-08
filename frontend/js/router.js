@@ -39,7 +39,12 @@ const routes = {
 		path: "../pages/profile/UserProfilePage.js",
 		protected: false,
 	},
-	"/games": {
+	"/play-AI-match": {
+		component: "AI-game-page",
+		path: "../pages/AI/AIGamePage.js",
+		protected: false,
+	},
+	"/play-match": {
 		component: "game-page",
 		path: "../pages/local/GamePage.js",
 		protected: false,
@@ -57,6 +62,13 @@ const routes = {
 	"/settings": {
 		component: "settings-page",
 		path: "../pages/settings/Settings.js",
+		protected: false,
+	},
+	// test screen
+	"/layout": {
+		component: "main-layout",
+		path: "../pages/layout/MainLayout.js",
+		protected: false,
 	},
 };
 
