@@ -1,8 +1,8 @@
 import {
 	clearUserSession,
 	getUserSessionData,
-} from "../../js/utils/session-manager.js";
-import { Component } from "../Component.js";
+} from "../../../../js/utils/session-manager.js";
+import { Component } from "../../../Component.js";
 
 export class Navbar extends Component {
 	constructor() {
@@ -23,6 +23,11 @@ export class Navbar extends Component {
 		];
 	}
 
+	async connectedCallback() {
+		await import("./SearchNav.js");
+		super.connectedCallback();
+	}
+
 	render() {
 		const username = getUserSessionData().username;
 		const avatar = getUserSessionData().avatar;
@@ -38,13 +43,8 @@ export class Navbar extends Component {
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav me-auto"></ul>
-						<div class="d-flex align-items-center">
-							<search-nav-component class="me-2"></search-nav-component>
-						</div>
+						<navbar-searchbar class="me-2"></navbar-searchbar>
 						<div id="log-part" class="d-flex align-items-center">
-							<theme-button-component class="me-1"></theme-button-component>
-							<friends-button-component class="me-1"></friends-button-component>
-							<notification-nav-component class="me-1"></notification-nav-component>
 							<div class="dropdown mx-2">
 								<span class="dropdown-toggle" id="dropdownMenuLink"
 										data-bs-toggle="dropdown" aria-expanded="false">
@@ -54,7 +54,7 @@ export class Navbar extends Component {
 								</span>
 								<ul class="dropdown-menu dropdown-menu-end"
 									aria-labelledby="dropdownMenuLink">
-									<li class="dropdown-item"><strong>${username}</strong></li>
+									<p><strong>${username}</strong></p>
 									<li id="settings" class="dropdown-item" onclick="window.redirect('/settings')">Settings</li>
 									<li id="logout" class="dropdown-item text-danger">Sign out</li>
 								</ul>

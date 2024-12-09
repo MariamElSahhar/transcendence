@@ -10,9 +10,9 @@ export class MainLayout extends Component {
 	}
 
 	async connectedCallback() {
-		await import("./Navbar.js");
-		await import("./ProfileHeader.js");
-		await import("./FriendsSidebar.js");
+		await import("./components/navbar/Navbar.js");
+		await import("./components/ProfileHeader.js");
+		await import("./components/FriendsSidebar.js");
 
 		this.user = getUserSessionData();
 		// this.friends = fetchFriends();

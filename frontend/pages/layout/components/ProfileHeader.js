@@ -1,6 +1,6 @@
-import { Component } from "../Component.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
-import { addFriend, removeFriend } from "../../js/clients/friends-client.js";
+import { Component } from "../../Component.js";
+import { getUserSessionData } from "../../../js/utils/session-manager.js";
+import { addFriend, removeFriend } from "../../../js/clients/friends-client.js";
 
 export class ProfileHeader extends Component {
 	constructor() {
