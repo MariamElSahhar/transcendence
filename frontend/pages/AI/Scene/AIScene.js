@@ -1,9 +1,7 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import * as TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.umd.js";
 import { SceneSky } from "./SceneSky.js";
-//import { PaddleBoundingBox } from './PaddleBoundingBox.js';
 import { PaddleBoundingBox } from '../../local/Scene/PaddleBoundingBox.js'
-
 import { Match } from "./AIMatch.js";
 
 export class Scene {
