@@ -13,6 +13,7 @@ export class MainLayout extends Component {
 		await import("./components/navbar/Navbar.js");
 		await import("./components/ProfileHeader.js");
 		await import("./components/FriendsSidebar.js");
+		await import("./components/Footer.js");
 
 		this.user = getUserSessionData();
 		// this.friends = fetchFriends();
@@ -53,15 +54,18 @@ export class MainLayout extends Component {
 
 	render() {
 		return `
-            <layout-navbar-component></layout-navbar-component>
-			<div class="d-flex flex-row">
-				<div class="d-flex flex-column w-25">
-					<profile-header></profile-header>
-					<friends-sidebar></friends-sidebar>
+			<div class="h-100vh d-flex flex-column">
+				<layout-navbar-component></layout-navbar-component>
+				<div class="d-flex flex-row">
+					<div class="d-flex flex-column w-25">
+						<profile-header></profile-header>
+						<friends-sidebar></friends-sidebar>
+					</div>
+					<div class="w-75">
+						<slot name="page-content"></slot>
+					</div>
 				</div>
-				<div class="w-75">
-					<h1>page content</h1>
-				</div>
+				<footer-component class="mt-auto"></footer-component>
 			</div>
         `;
 	}

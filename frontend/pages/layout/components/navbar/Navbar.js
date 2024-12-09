@@ -32,7 +32,7 @@ export class Navbar extends Component {
 		const username = getUserSessionData().username;
 		const avatar = getUserSessionData().avatar;
 		return `
-			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary fixed-top">
+			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary">
 				<div class="container-fluid">
 					<a class="navbar-brand" onclick="window.redirect('/home')">Transcendence</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -84,14 +84,6 @@ export class Navbar extends Component {
 			"click",
 			this.#logout
 		);
-
-		const disablePaddingTop = this.getAttribute("disable-padding-top");
-		if (disablePaddingTop !== "true") {
-			const navbarHeight = this.querySelector(".navbar").offsetHeight;
-			document.body.style.paddingTop = navbarHeight + "px";
-		} else {
-			document.body.style.paddingTop = "0px";
-		}
 	}
 
 	async #logout() {

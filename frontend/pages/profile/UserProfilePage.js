@@ -2,7 +2,6 @@
 import { Component } from "../Component.js";
 import { fetchUserById } from "../../js/clients/users-client.js";
 import { fetchUserGameLog } from "../../js/clients/gamelog-client.js";
-import { dummyData } from "./dummyData.js";
 import { getUserSessionData } from "../../js/utils/session-manager.js";
 
 export class UserProfilePage extends Component {
@@ -20,7 +19,6 @@ export class UserProfilePage extends Component {
 
 	async connectedCallback() {
 		await import("../navbar/Navbar.js");
-		await import("./UserProfileHeader.js");
 		await import("../buttons/FriendsButton.js");
 		await import("./components/GameLogTable.js");
 		await import("./components/GameStatsCard.js");
@@ -29,7 +27,6 @@ export class UserProfilePage extends Component {
 		super.connectedCallback();
 		await this.getUserData();
 		await this.getGameLog();
-		this.querySelector("user-profile-header").renderUserData(this.user);
 		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
 		this.querySelector("game-stats").renderGameStats(this.stats);
 		this.querySelector("game-heatmap").renderGameHeatMap(
@@ -40,9 +37,7 @@ export class UserProfilePage extends Component {
 
 	render() {
 		return `
-            <navbar-component></navbar-component>
             <div class="profile-page container d-flex flex-column gap-3 my-3">
-                <user-profile-header></user-profile-header>
                 <div class="profile-content d-flex w-100 row-gap-5">
                     <div class="profile-main-content d-flex flex-column w-100 gap-3">
 						<div class="graphs d-flex w-100 column-gap-2">
