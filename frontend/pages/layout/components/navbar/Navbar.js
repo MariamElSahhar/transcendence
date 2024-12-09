@@ -10,7 +10,7 @@ export class Navbar extends Component {
 		this.links = [
 			{
 				label: "Games",
-				path: "/games",
+				path: "/home",
 			},
 			{
 				label: "Dashboard",

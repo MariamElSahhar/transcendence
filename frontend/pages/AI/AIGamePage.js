@@ -9,29 +9,26 @@ export class AIGamePage extends Component {
 
   async connectedCallback() {
     console.log("GamePage connected to the DOM");
-  
+
     try {
       await import ("../Component.js");
-      await import("../navbar/Navbar.js");
-      await import("./AIGameContent.js"); 
+      await import("./AIGameContent.js");
       super.connectedCallback();
-  
+
       this.render();
-  
+
     } catch (error) {
       console.error("Error in connectedCallback import:", error);
     }
   }
-  
+
   render() {
     // Conditionally render the page content based on authentication status
     this.innerHTML = this.authenticated
       ? `
-        <navbar-component nav-active="game"></navbar-component>
         <p class="text-center mt-5">Please sign in to play the game.</p>
       `
       : `
-        <navbar-component nav-active="game"></navbar-component>
         <div class="game-container">
           <game-content-component></game-content-component>
         </div>

@@ -13,6 +13,10 @@ export class ProfileHeader extends Component {
 		this.update();
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+	}
+
 	render() {
 		return `
             <div class="d-flex justify-content-start p-4">

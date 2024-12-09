@@ -30,36 +30,37 @@ const routes = {
 	},
 	// PROTECTED SCREENS
 	"/home": {
+		layout: "main",
 		component: "home-page",
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
 	"/profile": {
+		layout: "main",
 		component: "user-profile-page",
 		path: "../pages/profile/UserProfilePage.js",
 		protected: false,
 	},
 	"/play-AI-match": {
+		layout: "main",
 		component: "AI-game-page",
 		path: "../pages/AI/AIGamePage.js",
 		protected: false,
 	},
 	"/play-match": {
+		layout: "main",
 		component: "game-page",
 		path: "../pages/local/GamePage.js",
 		protected: false,
 	},
 	"/friends": {
+		layout: "main",
 		component: "friends-page",
 		path: "../pages/friends/FriendsPage.js",
 		protected: false,
 	},
-	"/reset-password": {
-		component: "reset-password-page",
-		path: "../pages/reset_password/ResetPasswordPage.js",
-		protected: false,
-	},
 	"/settings": {
+		layout: "main",
 		component: "settings-page",
 		path: "../pages/settings/Settings.js",
 		protected: false,
@@ -69,6 +70,23 @@ const routes = {
 		component: "main-layout",
 		path: "../pages/layout/MainLayout.js",
 		protected: false,
+	},
+	"/sidebar": {
+		layout: "main",
+		component: "sidebar-component",
+		path: "../pages/layout/components/Sidebar.js",
+		protected: false,
+	},
+};
+
+const layouts = {
+	main: {
+		component: "main-layout",
+		path: "../pages/layout/MainLayout.js",
+	},
+	sidebar: {
+		component: "main-layout",
+		path: "../pages/layout/MainLayout.js",
 	},
 };
 
@@ -96,12 +114,25 @@ const handleLocation = async () => {
 	// } else if (!isProtected && authenticated && route != routes[404]) {
 	// 	route = routes["/home"];
 	// }
-	try {
-		await import(route.path);
+	const layout = layouts[route.layout];
+	loadRoute(route, layout);
+};
+
+const loadRoute = async (route, layout) => {
+	await import(route.path);
+	// layout
+	if (layout) {
+		// layout already active
+		await import(layout.path);
+		const layoutComponent = document.createElement(layout.component);
+		const routeComponent = document.createElement(route.component);
+		root.appendChild(layoutComponent);
+		layoutComponent.renderSlot(routeComponent.outerHTML);
+	}
+	// no layout
+	else {
 		const element = document.createElement(route.component);
 		root.appendChild(element);
-	} catch (error) {
-		console.error(`Failed to load component at ${route.path}`, error);
 	}
 };
 

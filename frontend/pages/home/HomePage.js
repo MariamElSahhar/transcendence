@@ -8,7 +8,6 @@ export class HomePage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../navbar/Navbar.js");
 		await import("./HomeContent.js");
 		this.authenticated = await isAuth();
 		super.connectedCallback();
@@ -16,7 +15,6 @@ export class HomePage extends Component {
 
 	render() {
 		return `
-				<navbar-component></navbar-component>
 				<home-content></home-content>
 			`;
 	}
