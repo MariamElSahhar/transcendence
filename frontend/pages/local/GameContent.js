@@ -34,7 +34,7 @@ export class GameContent extends Component {
             </div>
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
-        
+
         this.container = this.querySelector("#container");
         this.setupPlayerForm();
     }
@@ -61,7 +61,7 @@ export class GameContent extends Component {
 
         if (WebGL.isWebGLAvailable()) {
             this.createOverlay();
-            const countdownStart = Date.now() / 1000 + 5;
+            const countdownStart = Date.now() / 1000 + 3;
             this.startCountdown(countdownStart);
         } else {
             console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
@@ -82,7 +82,7 @@ export class GameContent extends Component {
           console.error("Invalid player index:", playerIndex);
       }
   }
-  
+
 
     startCountdown(startDateInSeconds) {
         let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
@@ -136,7 +136,7 @@ export class GameContent extends Component {
     addEndGameCard(playerScore, opponentScore) {
       const playerName = this.players[0];
       const opponentName = this.players[1];
-  
+
       this.createOverlay();
       this.overlay.innerHTML = `
         <div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
