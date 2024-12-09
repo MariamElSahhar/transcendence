@@ -18,7 +18,7 @@ export class MainLayout extends Component {
 
 	render() {
 		return `
-			<div class="h-100vh d-flex flex-column">
+			<div id="main-layout" class="h-100vh d-flex flex-column">
 				<layout-navbar-component></layout-navbar-component>
 				<div id="slot" slot="page-content">${this.slot}</div>
 				<footer-component class="mt-auto"></footer-component>
@@ -27,6 +27,7 @@ export class MainLayout extends Component {
 	}
 
 	renderSlot(content) {
+		this.slot = "";
 		this.slot = content;
 	}
 }

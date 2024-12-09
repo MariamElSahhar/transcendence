@@ -1,5 +1,5 @@
 import { isAuth, getUserSessionData } from "./utils/session-manager.js";
-import { fetchUserById, usernameExist } from "./clients/users-client.js";
+import { fetchUserById } from "./clients/users-client.js";
 
 const routes = {
 	// PUBLIC SCREENS
@@ -104,9 +104,6 @@ const handleLocation = async () => {
 			: routes[404];
 	} else route = routes[path] || routes[404];
 
-	const root = document.getElementById("root");
-	root.innerHTML = "";
-
 	const isProtected = route.protected;
 	const authenticated = await isAuth();
 	// if (isProtected && !authenticated && route != routes[404]) {
@@ -119,20 +116,25 @@ const handleLocation = async () => {
 };
 
 const loadRoute = async (route, layout) => {
+	const root = document.getElementById("root");
+	const routeComponent = document.createElement(route.component);
 	await import(route.path);
 	// layout
 	if (layout) {
-		// layout already active
-		await import(layout.path);
-		const layoutComponent = document.createElement(layout.component);
-		const routeComponent = document.createElement(route.component);
-		root.appendChild(layoutComponent);
+		// loading a new layout
+		let layoutComponent = document.querySelector(layout.component);
+		if (!layoutComponent) {
+			root.innerHTML = "";
+			await import(layout.path);
+			layoutComponent = document.createElement(layout.component);
+			root.appendChild(layoutComponent);
+			console.log("appended layout");
+		}
 		layoutComponent.renderSlot(routeComponent.outerHTML);
-	}
-	// no layout
-	else {
-		const element = document.createElement(route.component);
-		root.appendChild(element);
+		layoutComponent.update();
+	} else {
+		root.innerHTML = "";
+		root.appendChild(routeComponent);
 	}
 };
 
