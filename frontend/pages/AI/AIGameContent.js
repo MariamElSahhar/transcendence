@@ -1,16 +1,8 @@
 import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./AIEngine.js";
-import { Theme } from "../utils/Theme.js";
+//import { Theme } from "../utils/Theme.js";
 import { getUserSessionData } from "../../js/utils/session-manager.js";
-
-
-// import { Component } from "../Component.js";
-// import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
-// import { Engine } from "./Engine.js";
-// import { Theme } from "../utils/Theme.js";
-// import { getUserSessionData } from "../../js/utils/session-manager.js";
-
 
 export class GameContent extends Component {
     constructor() {
@@ -89,7 +81,7 @@ export class GameContent extends Component {
     }
 
     postRender() {
-        this.addComponentEventListener(document, Theme.event, this.themeEvent.bind(this));
+        //this.addComponentEventListener(document, Theme.event, this.themeEvent.bind(this));
 
         if (WebGL.isWebGLAvailable()) {
             this.createOverlay();

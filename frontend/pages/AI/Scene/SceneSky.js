@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Sky } from "../controls/Sky.js";
-import { Theme } from "../../utils/Theme.js";
+//import { Theme } from "../../utils/Theme.js";
 
 export class SceneSky {
     #sky;
@@ -21,10 +21,11 @@ export class SceneSky {
 
     //Apply theme-based sky colors at initialization
     applyTheme() {
-        if (Theme.get() === 'light') {
-            this.setBrighterDay();
+        // if (Theme.get() === 'light') {
+        //     this.setBrighterDay();
 
-        }
+        // }
+        this.setBrighterDay();
         console.log("only Brighter daylight sky theme applied" );
     }
 
