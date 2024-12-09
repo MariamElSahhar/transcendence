@@ -28,8 +28,6 @@ export class GamePage extends Component {
       ? `
         <navbar-component nav-active="game"></navbar-component>
         <div class="game-container">
-          <start-game-button></start-game-button>
-          <end-game-button></end-game-button>
           <game-content-component></game-content-component>
         </div>
       `

@@ -21,10 +21,6 @@ export class SceneSky {
 
     //Apply theme-based sky colors at initialization
     applyTheme() {
-        // if (Theme.get() === 'light') {
-        //     this.setBrighterDay();
-
-        // }
         this.setBrighterDay();
         console.log("only Brighter daylight sky theme applied" );
     }

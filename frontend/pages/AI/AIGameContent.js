@@ -185,11 +185,11 @@ export class GameContent extends Component {
         `;
     }
 
-    themeEvent() {
-        if (Theme.get() === "light") {
-            this.engine?.scene?.setLightTheme();
-          }
-    }
+    // themeEvent() {
+    //     if (Theme.get() === "light") {
+    //         this.engine?.scene?.setLightTheme();
+    //       }
+    // }
 
     endGame() {
         this.addEndGameCard(this.scores[0], this.scores[1]); // Display the final score when the game ends
