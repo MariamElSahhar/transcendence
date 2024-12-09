@@ -8,20 +8,20 @@ export class GamePage extends Component {
 
   async connectedCallback() {
     console.log("GamePage connected to the DOM");
-
+  
     try {
       await import ("../Component.js");
       await import("../navbar/Navbar.js");
       await import("./GameContent.js");
       super.connectedCallback();
-
+  
       this.render();
-
+  
     } catch (error) {
       console.error("Error in connectedCallback import:", error);
     }
   }
-
+  
   render() {
     // Conditionally render the page content based on authentication status
     this.innerHTML = !this.authenticated
