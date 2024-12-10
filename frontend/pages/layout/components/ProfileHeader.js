@@ -52,7 +52,7 @@ export class ProfileHeader extends Component {
 			"click",
 			async () => {
 				if (this.data.is_friend) {
-					const { success } = await addFriend(this.data.userid);
+					const { success } = await removeFriend(this.data.userid);
 					if (success) this.data.is_friend = false;
 				} else {
 					const { success } = await addFriend(this.data.userid);

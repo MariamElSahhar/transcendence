@@ -61,6 +61,7 @@ export class SidebarLayout extends Component {
 			is_me: this.user.is_me,
 			is_online: this.user.is_online,
 			is_friend: this.user.is_friend,
+			userid: this.user.userid,
 		});
 		this.querySelector("friends-sidebar").renderFriends(this.friends);
 	}
