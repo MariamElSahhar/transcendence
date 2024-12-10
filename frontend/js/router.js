@@ -30,13 +30,13 @@ const routes = {
 	},
 	// PROTECTED SCREENS
 	"/home": {
-		layout: "main",
+		layout: "sidebar",
 		component: "home-page",
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
 	"/profile": {
-		layout: "main",
+		layout: "sidebar",
 		component: "user-profile-page",
 		path: "../pages/profile/UserProfilePage.js",
 		protected: false,
@@ -85,8 +85,8 @@ const layouts = {
 		path: "../pages/layout/MainLayout.js",
 	},
 	sidebar: {
-		component: "main-layout",
-		path: "../pages/layout/MainLayout.js",
+		component: "sidebar-layout",
+		path: "../pages/layout/SidebarLayout.js",
 	},
 };
 
@@ -119,16 +119,14 @@ const loadRoute = async (route, layout) => {
 	const root = document.getElementById("root");
 	const routeComponent = document.createElement(route.component);
 	await import(route.path);
-	// layout
 	if (layout) {
-		// loading a new layout
 		let layoutComponent = document.querySelector(layout.component);
+		// load layout if it isn't already there
 		if (!layoutComponent) {
 			root.innerHTML = "";
 			await import(layout.path);
 			layoutComponent = document.createElement(layout.component);
 			root.appendChild(layoutComponent);
-			console.log("appended layout");
 		}
 		layoutComponent.renderSlot(routeComponent.outerHTML);
 		layoutComponent.update();

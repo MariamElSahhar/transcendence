@@ -3,7 +3,7 @@ import { Component } from "../../Component.js";
 export class GameStatsCard extends Component {
 	constructor() {
 		super();
-		this.stats = {};
+		this.stats;
 		this.colors = {
 			localWonColor: "cornflowerblue",
 			localPlayedColor: "aliceblue",
@@ -20,11 +20,14 @@ export class GameStatsCard extends Component {
 	}
 
 	postRender() {
-		this.updateGameStats();
+		console.log("post render", this.stats);
+		if (this.stats) this.updateGameStats();
 	}
 
 	render() {
-		return `
+		return (
+			this.stats &&
+			`
             <div class="game-stats d-flex h-100 w-100 justify-content-between align-items-center p-4">
                 <div class="circle d-flex justify-content-center align-items-center">
                     <div class="stats-text d-flex flex-column justify-content-center align-items-center">
@@ -75,7 +78,8 @@ export class GameStatsCard extends Component {
                     </p>
                 </div>
             </div>
-        `;
+        `
+		);
 	}
 
 	style() {

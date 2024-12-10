@@ -71,8 +71,8 @@ export class ProfileHeader extends Component {
                 }
 
                 .profile-img-container {
-                    width: 100px;
-                    height: 100px;
+                    width: 90px;
+                    height: 90px;
                     border: 4px solid ${this.data.is_online ? "green" : "grey"};
                     border-radius: 50%;
                     overflow: hidden;

@@ -7,14 +7,13 @@ import { getUserSessionData } from "../../js/utils/session-manager.js";
 export class UserProfilePage extends Component {
 	constructor() {
 		super();
-		this.user = {};
 		this.stats = {};
 		this.gamelog = {};
-		if (window.location.pathname.startsWith("/profile/")) {
-			this.user.userid = window.location.pathname
-				.replace("/profile/", "")
-				.replace(/\/+$/, "");
-		} else this.me = true;
+		this.userid = window.location.pathname.startsWith("/profile/")
+			? window.location.pathname
+					.replace("/profile/", "")
+					.replace(/\/+$/, "")
+			: getUserSessionData().userid;
 	}
 
 	async connectedCallback() {
@@ -25,14 +24,16 @@ export class UserProfilePage extends Component {
 		await import("./components/GameHeatMap.js");
 
 		super.connectedCallback();
-		await this.getUserData();
-		await this.getGameLog();
-		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
-		this.querySelector("game-stats").renderGameStats(this.stats);
-		this.querySelector("game-heatmap").renderGameHeatMap(
-			this.gamelog,
-			this.stats
-		);
+
+		await this.getGameLog().then(() => {
+			console.log("rendering data");
+			this.querySelector("gamelog-table").renderGameLog(this.gamelog);
+			this.querySelector("game-stats").renderGameStats(this.stats);
+			this.querySelector("game-heatmap").renderGameHeatMap(
+				this.gamelog,
+				this.stats
+			);
+		});
 	}
 
 	render() {
@@ -72,33 +73,8 @@ export class UserProfilePage extends Component {
 		`;
 	}
 
-	async getUserData() {
-		const mydata = getUserSessionData();
-		if (this.me) {
-			this.user.username = mydata.username;
-			this.user.avatar = mydata.avatar;
-			this.user.is_me = true;
-			this.user.is_online = true;
-			this.user.is_friend = true;
-		} else {
-			const { success, data, error } = await fetchUserById(
-				this.user.userid
-			);
-
-			if (success) {
-				this.user.username = data.username;
-				this.user.avatar = data.avatar;
-				this.user.is_friend = data.is_friend;
-				this.user.is_me = mydata.userid == data.id;
-				this.user.is_online = data.is_online;
-			} else {
-				console.log(error);
-			}
-		}
-	}
-
 	async getGameLog() {
-		const { success, data } = await fetchUserGameLog(this.user.userid);
+		const { success, data } = await fetchUserGameLog(this.userid);
 		if (!success) {
 			console.log("Error fetching gamelog");
 			return;
