@@ -3,7 +3,7 @@ import { Component } from "../../Component.js";
 export class GameStatsCard extends Component {
 	constructor() {
 		super();
-		this.stats;
+		this.stats = {};
 		this.colors = {
 			localWonColor: "cornflowerblue",
 			localPlayedColor: "aliceblue",
@@ -20,8 +20,7 @@ export class GameStatsCard extends Component {
 	}
 
 	postRender() {
-		console.log("post render", this.stats);
-		if (this.stats) this.updateGameStats();
+		this.updateGameStats();
 	}
 
 	render() {
@@ -181,8 +180,10 @@ export class GameStatsCard extends Component {
 	}
 
 	updateGameStats() {
-		const adjustedTotal = 100 - 6;
+		const circle = document.querySelector(".circle");
+		if (!circle) return;
 
+		const adjustedTotal = 100 - 6;
 		const localPercent =
 			(this.stats.localPlayed / this.stats.totalPlayed) * adjustedTotal;
 		const localWonPercent =
@@ -196,7 +197,6 @@ export class GameStatsCard extends Component {
 		const tttWonPercent =
 			(this.stats.tttWon / this.stats.totalPlayed) * adjustedTotal;
 
-		const circle = document.querySelector(".circle");
 		circle.style.background = `conic-gradient(
             white 0% 2%,
 

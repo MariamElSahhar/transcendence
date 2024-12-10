@@ -9,11 +9,7 @@ export class SidebarLayout extends Component {
 		this.slot;
 		this.user = {};
 		this.friends = {};
-		if (window.location.pathname.startsWith("/profile/")) {
-			this.user.userid = window.location.pathname
-				.replace("/profile/", "")
-				.replace(/\/+$/, "");
-		} else this.me = true;
+		this.me;
 	}
 
 	async connectedCallback() {
@@ -23,7 +19,12 @@ export class SidebarLayout extends Component {
 			import("./components/navbar/Navbar.js"),
 			import("./components/Footer.js"),
 		]);
-
+		if (window.location.pathname.startsWith("/profile/")) {
+			this.user.userid = window.location.pathname
+				.replace("/profile/", "")
+				.replace(/\/+$/, "");
+			this.me = false;
+		} else this.me = true;
 		// this.friends = fetchFriends();
 		this.friends = [
 			{
@@ -48,15 +49,18 @@ export class SidebarLayout extends Component {
 				last_seen: "2024-11-12T22:13:17.193941Z",
 			},
 		];
-		super.connectedCallback();
 
-		await this.getUserData;
+		await this.getUserData();
+		super.connectedCallback();
+	}
+
+	postRender() {
 		this.querySelector("profile-header").renderUserData({
 			username: this.user.username,
 			avatar: this.user.avatar,
-			is_me: true,
-			is_online: true,
-			is_friend: true,
+			is_me: this.user.is_me,
+			is_online: this.user.is_online,
+			is_friend: this.user.is_friend,
 		});
 		this.querySelector("friends-sidebar").renderFriends(this.friends);
 	}
@@ -77,14 +81,25 @@ export class SidebarLayout extends Component {
         `;
 	}
 
-	renderSlot(content) {
-		this.slot = "";
+	async update() {
+		if (window.location.pathname.startsWith("/profile/")) {
+			this.user.userid = window.location.pathname
+				.replace("/profile/", "")
+				.replace(/\/+$/, "");
+			this.me = false;
+		} else this.me = true;
+		await this.getUserData();
+		super.update();
+	}
+
+	async renderSlot(content) {
 		this.slot = content;
+		if (super.isRendered()) await this.update();
 	}
 
 	async getUserData() {
+		const mydata = getUserSessionData();
 		if (this.me) {
-			const mydata = getUserSessionData();
 			this.user.username = mydata.username;
 			this.user.avatar = mydata.avatar;
 			this.user.is_me = true;

@@ -62,26 +62,26 @@ export class GameLogTable extends Component {
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-local" role="tabpanel" aria-labelledby="pills-local-tab">
-                        ${this.#renderMatches(
+                        ${this.renderMatches(
 							this.gamelog.local,
 							"#pills-local"
 						)}
                     </div>
                     <div class="tab-pane fade" id="pills-remote" role="tabpanel" aria-labelledby="pills-remote-tab">
-                        ${this.#renderMatches(
+                        ${this.renderMatches(
 							this.gamelog.remote,
 							"#pills-remote"
 						)}
                     </div>
                     <div class="tab-pane fade" id="pills-ttt" role="tabpanel" aria-labelledby="pills-ttt-tab">
-                        ${this.#renderMatches(this.gamelog.ttt, "#pills-ttt")}
+                        ${this.renderMatches(this.gamelog.ttt, "#pills-ttt")}
                     </div>
                 </div>
             </div>
         `;
 	}
 
-	#renderMatches(gamelog) {
+	renderMatches(gamelog) {
 		if (!gamelog || gamelog.length === 0) {
 			return `
                 <div class="d-flex flex-column justify-content-start align-items-center w-100">

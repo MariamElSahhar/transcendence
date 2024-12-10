@@ -72,9 +72,8 @@ const routes = {
 		protected: false,
 	},
 	"/sidebar": {
-		layout: "main",
-		component: "sidebar-component",
-		path: "../pages/layout/components/Sidebar.js",
+		component: "sidebar-layout",
+		path: "../pages/layout/SidebarLayout.js",
 		protected: false,
 	},
 };
@@ -128,8 +127,7 @@ const loadRoute = async (route, layout) => {
 			layoutComponent = document.createElement(layout.component);
 			root.appendChild(layoutComponent);
 		}
-		layoutComponent.renderSlot(routeComponent.outerHTML);
-		layoutComponent.update();
+		await layoutComponent.renderSlot(routeComponent.outerHTML);
 	} else {
 		root.innerHTML = "";
 		root.appendChild(routeComponent);

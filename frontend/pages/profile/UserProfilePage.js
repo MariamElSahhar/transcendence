@@ -25,15 +25,13 @@ export class UserProfilePage extends Component {
 
 		super.connectedCallback();
 
-		await this.getGameLog().then(() => {
-			console.log("rendering data");
-			this.querySelector("gamelog-table").renderGameLog(this.gamelog);
-			this.querySelector("game-stats").renderGameStats(this.stats);
-			this.querySelector("game-heatmap").renderGameHeatMap(
-				this.gamelog,
-				this.stats
-			);
-		});
+		await this.getGameLog();
+		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
+		this.querySelector("game-stats").renderGameStats(this.stats);
+		this.querySelector("game-heatmap").renderGameHeatMap(
+			this.gamelog,
+			this.stats
+		);
 	}
 
 	render() {

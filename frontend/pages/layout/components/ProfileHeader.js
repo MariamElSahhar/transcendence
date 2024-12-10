@@ -1,5 +1,4 @@
 import { Component } from "../../Component.js";
-import { getUserSessionData } from "../../../js/utils/session-manager.js";
 import { addFriend, removeFriend } from "../../../js/clients/friends-client.js";
 
 export class ProfileHeader extends Component {
@@ -18,17 +17,18 @@ export class ProfileHeader extends Component {
 	}
 
 	render() {
+		if (!this.data) return "";
 		return `
             <div class="d-flex justify-content-start p-4">
                 <div class="profile-info d-flex align-items-center">
                     <div class="profile-img-container">
                         <img src="${this.data.avatar}"
-                            onerror="this.onerror=null;this.src='/images/default_profile.svg';" alt="Profile Picture"
+                            onerror="this.onerror=null;this.src='/images/default_profile.svg';"
                             class="profile-img w-100 h-100  rounded-circle"
                         >
                     </div>
                     <div class="user-info d-flex flex-column gap-1">
-                        <h3 class="username">${this.data.username}</h3>
+                        <h2 class="username">${this.data.username}</h2>
                         ${
 							this.data.is_me
 								? ""
@@ -52,11 +52,11 @@ export class ProfileHeader extends Component {
 			"click",
 			async () => {
 				if (this.data.is_friend) {
-					if (await removeFriend(this.data.userid))
-						this.data.is_friend = false;
+					const { success } = await addFriend(this.data.userid);
+					if (success) this.data.is_friend = false;
 				} else {
-					if (await addFriend(this.data.userid))
-						this.data.is_friend = true;
+					const { success } = await addFriend(this.data.userid);
+					if (success) this.data.is_friend = true;
 				}
 				this.update();
 			}
