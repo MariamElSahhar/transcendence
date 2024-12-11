@@ -41,13 +41,13 @@ const routes = {
 		path: "../pages/profile/UserProfilePage.js",
 		protected: false,
 	},
-	"/play-AI-match": {
+	"/play/computer": {
 		layout: "main",
 		component: "AI-game-page",
 		path: "../pages/AI/AIGamePage.js",
 		protected: false,
 	},
-	"/play-match": {
+	"/play/local": {
 		layout: "main",
 		component: "game-page",
 		path: "../pages/local/GamePage.js",

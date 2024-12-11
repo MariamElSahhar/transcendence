@@ -4,6 +4,7 @@ export class GameLogTable extends Component {
 	constructor() {
 		super();
 		this.gamelog = {};
+		this.pagenumber = 0;
 	}
 
 	style() {
@@ -46,7 +47,6 @@ export class GameLogTable extends Component {
 	}
 
 	render() {
-		this.pageNumber = parseInt(this.getAttribute("page-number") || 1);
 		return `
             <div class="mb-3 mt-3">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -76,6 +76,15 @@ export class GameLogTable extends Component {
                     <div class="tab-pane fade" id="pills-ttt" role="tabpanel" aria-labelledby="pills-ttt-tab">
                         ${this.renderMatches(this.gamelog.ttt, "#pills-ttt")}
                     </div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination pagination-sm justify-content-center">
+                            <li class="page-item"><a class="page-link">Previous</a></li>
+                            <li class="page-item"><a class="page-link">1</a></li>
+                            <li class="page-item"><a class="page-link">2</a></li>
+                            <li class="page-item"><a class="page-link">3</a></li>
+                            <li class="page-item"><a class="page-link">Next</a></li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         `;
@@ -90,6 +99,7 @@ export class GameLogTable extends Component {
                 </div>`;
 		}
 		const rows = gamelog
+			.slice(this.pagenumber * 5, this.pagenumber * 5 + 5)
 			.map(
 				(game) => `
                     <tr>

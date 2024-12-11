@@ -19,37 +19,8 @@ export class SidebarLayout extends Component {
 			import("./components/navbar/Navbar.js"),
 			import("./components/Footer.js"),
 		]);
-		if (window.location.pathname.startsWith("/profile/")) {
-			this.user.userid = window.location.pathname
-				.replace("/profile/", "")
-				.replace(/\/+$/, "");
-			this.me = false;
-		} else this.me = true;
-		// this.friends = fetchFriends();
-		this.friends = [
-			{
-				id: 33,
-				username: "mariam",
-				avatar: "http://127.0.0.1:8000/media/images/default.jpg",
-				is_online: true,
-				last_seen: "2024-11-12T22:13:17.193941Z",
-			},
-			{
-				id: 33,
-				username: "mariam",
-				avatar: "http://127.0.0.1:8000/media/images/default.jpg",
-				is_online: true,
-				last_seen: "2024-11-12T22:13:17.193941Z",
-			},
-			{
-				id: 33,
-				username: "mariam",
-				avatar: "http://127.0.0.1:8000/media/images/default.jpg",
-				is_online: true,
-				last_seen: "2024-11-12T22:13:17.193941Z",
-			},
-		];
-
+		this.checkPath();
+		await this.getUserFriends();
 		await this.getUserData();
 		super.connectedCallback();
 	}
@@ -83,13 +54,9 @@ export class SidebarLayout extends Component {
 	}
 
 	async update() {
-		if (window.location.pathname.startsWith("/profile/")) {
-			this.user.userid = window.location.pathname
-				.replace("/profile/", "")
-				.replace(/\/+$/, "");
-			this.me = false;
-		} else this.me = true;
+		this.checkPath();
 		await this.getUserData();
+		await this.getUserFriends();
 		super.update();
 	}
 
@@ -121,6 +88,20 @@ export class SidebarLayout extends Component {
 				console.log(error);
 			}
 		}
+	}
+
+	async getUserFriends() {
+		const { success, data } = await fetchFriends();
+		this.friends = success ? data : [];
+	}
+
+	checkPath() {
+		if (window.location.pathname.startsWith("/profile/")) {
+			this.user.userid = window.location.pathname
+				.replace("/profile/", "")
+				.replace(/\/+$/, "");
+			this.me = false;
+		} else this.me = true;
 	}
 }
 
