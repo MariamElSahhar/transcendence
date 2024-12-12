@@ -17,7 +17,6 @@ export class UserProfilePage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../navbar/Navbar.js");
 		await import("../buttons/FriendsButton.js");
 		await import("./components/GameLogTable.js");
 		await import("./components/GameStatsCard.js");
