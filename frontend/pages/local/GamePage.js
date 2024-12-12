@@ -6,7 +6,6 @@ export class GamePage extends Component {
 
 	async connectedCallback() {
 		console.log("GamePage connected to the DOM");
-
 		await import("./GameContent.js");
 		super.connectedCallback();
 	}

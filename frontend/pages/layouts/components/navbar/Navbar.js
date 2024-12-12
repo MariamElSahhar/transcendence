@@ -92,4 +92,4 @@ export class Navbar extends Component {
 	}
 }
 
-customElements.define("layout-navbar-component", Navbar);
+customElements.define("navbar-component", Navbar);

@@ -40,7 +40,7 @@ export class SidebarLayout extends Component {
 	render() {
 		return `
 			<div class="h-100vh d-flex flex-column">
-				<layout-navbar-component></layout-navbar-component>
+				<navbar-component></navbar-component>
 				<div class="d-flex h-100">
 					<div class="d-flex flex-column w-25">
 						<profile-header></profile-header>

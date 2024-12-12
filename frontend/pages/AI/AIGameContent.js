@@ -43,6 +43,7 @@ export class GameContent extends Component {
 		this.container = this.querySelector("#container");
 		this.setupPlayerForm();
 	}
+
 	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
 		const playAgainstAICheckbox = this.querySelector("#play-against-ai");
@@ -88,7 +89,7 @@ export class GameContent extends Component {
 
 		if (WebGL.isWebGLAvailable()) {
 			this.createOverlay();
-			const countdownStart = Date.now() / 1000 + 5;
+			const countdownStart = Date.now() / 1000 + 3;
 			this.startCountdown(countdownStart);
 		} else {
 			console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());

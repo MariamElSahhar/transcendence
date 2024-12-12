@@ -68,12 +68,12 @@ const routes = {
 	// test screen
 	"/layout": {
 		component: "main-layout",
-		path: "../pages/layout/MainLayout.js",
+		path: "../pages/layouts/MainLayout.js",
 		protected: false,
 	},
 	"/sidebar": {
 		component: "sidebar-layout",
-		path: "../pages/layout/SidebarLayout.js",
+		path: "../pages/layouts/SidebarLayout.js",
 		protected: false,
 	},
 };
@@ -81,11 +81,11 @@ const routes = {
 const layouts = {
 	main: {
 		component: "main-layout",
-		path: "../pages/layout/MainLayout.js",
+		path: "../pages/layouts/MainLayout.js",
 	},
 	sidebar: {
 		component: "sidebar-layout",
-		path: "../pages/layout/SidebarLayout.js",
+		path: "../pages/layouts/SidebarLayout.js",
 	},
 };
 
