@@ -24,7 +24,9 @@ export class GameStatsCard extends Component {
 	}
 
 	render() {
-		return `
+		return (
+			this.stats &&
+			`
             <div class="game-stats d-flex h-100 w-100 justify-content-between align-items-center p-4">
                 <div class="circle d-flex justify-content-center align-items-center">
                     <div class="stats-text d-flex flex-column justify-content-center align-items-center">
@@ -75,7 +77,8 @@ export class GameStatsCard extends Component {
                     </p>
                 </div>
             </div>
-        `;
+        `
+		);
 	}
 
 	style() {
@@ -177,8 +180,10 @@ export class GameStatsCard extends Component {
 	}
 
 	updateGameStats() {
-		const adjustedTotal = 100 - 6;
+		const circle = document.querySelector(".circle");
+		if (!circle) return;
 
+		const adjustedTotal = 100 - 6;
 		const localPercent =
 			(this.stats.localPlayed / this.stats.totalPlayed) * adjustedTotal;
 		const localWonPercent =
@@ -192,7 +197,6 @@ export class GameStatsCard extends Component {
 		const tttWonPercent =
 			(this.stats.tttWon / this.stats.totalPlayed) * adjustedTotal;
 
-		const circle = document.querySelector(".circle");
 		circle.style.background = `conic-gradient(
             white 0% 2%,
 

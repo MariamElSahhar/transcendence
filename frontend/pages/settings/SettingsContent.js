@@ -10,7 +10,6 @@ import {
 // import {userManagementClient} from '@utils/api';
 // import {routes} from '../js/router.js';
 // import {Modal} from 'bootstrap';
-import { NavbarUtils } from "../../js/utils/navbar-utils.js";
 
 export class SettingsContent extends Component {
 	constructor() {
@@ -172,7 +171,7 @@ export class SettingsContent extends Component {
 		return `
       <style>
       #settings {
-          height: calc(100vh - ${NavbarUtils.height}px);
+          height: 100%;
       }
 
       .settings-card {

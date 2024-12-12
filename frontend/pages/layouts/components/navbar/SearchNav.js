@@ -1,7 +1,5 @@
-import { Component } from "@components";
-import { userManagementClient } from "@utils/api";
-import { getRouter } from "@js/Router.js";
-import { ErrorPage } from "@utils/ErrorPage.js";
+import { Component } from "../../../Component.js";
+import { ErrorPage } from "../../../error/ErrorPage.js";
 
 export class SearchNav extends Component {
 	constructor() {
@@ -10,36 +8,36 @@ export class SearchNav extends Component {
 
 	render() {
 		return `
-      <div class="position-relative z-1">
-          <form id="search-form" class="d-flex" role="search">
-              <input id="search-bar" class="form-control" type="search"
-                     placeholder="Search users..." aria-label="Search" autocomplete="off">
-          </form>
-          <div id="search-results" class="rounded">
-          </div>
-      </div>
-    `;
+			<div class="position-relative z-1">
+				<form id="search-form" class="d-flex" role="search">
+					<input id="search-bar" class="form-control" type="search"
+							placeholder="Search users..." aria-label="Search" autocomplete="off">
+				</form>
+				<div id="search-results" class="rounded">
+				</div>
+			</div>
+		`;
 	}
 
 	style() {
 		return `
-      <style>
-      #search-results {
-          position: absolute;
-          width: 100%;
-          max-height: 200px;
-          overflow-y: auto;
-          display: none;
-          z-index: 2;
-      }
+			<style>
+				#search-results {
+					position: absolute;
+					width: 100%;
+					max-height: 200px;
+					overflow-y: auto;
+					display: none;
+					z-index: 2;
+				}
 
-      .result-item {
-          cursor: pointer;
-          background-color: var(--bs-body-bg);
-          border: 1px solid var(--bs-border-color);
-      }
-      </style>
-    `;
+				.result-item {
+					cursor: pointer;
+					background-color: var(--bs-body-bg);
+					border: 1px solid var(--bs-border-color);
+				}
+			</style>
+		`;
 	}
 
 	postRender() {
@@ -121,3 +119,5 @@ export class SearchNav extends Component {
 		}
 	}
 }
+
+customElements.define("navbar-searchbar", SearchNav);
