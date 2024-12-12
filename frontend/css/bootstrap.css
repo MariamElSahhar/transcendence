@@ -10,6 +10,10 @@
 	width: 40px;
 }
 
+.w-40 {
+	width: 40%;
+}
+
 .w-400px {
 	width: 400px;
 }
@@ -28,6 +32,10 @@
 
 .h-60px {
 	height: 60px;
+}
+
+.h-100vh {
+	height: 100vh;
 }
 
 .navbar {

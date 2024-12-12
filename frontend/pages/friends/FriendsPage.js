@@ -8,14 +8,12 @@ export class FriendsPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../navbar/Navbar.js");
 		await this.fetchFriends();
 		super.connectedCallback();
 	}
 
 	render() {
 		return `
-			<navbar-component></navbar-component>
 			<div class="p-3 d-flex flex-row justify-content-end w-100">
 				<div class="d-flex align-items-end">
 					<small>${this.friends.length} Total Friends</small>

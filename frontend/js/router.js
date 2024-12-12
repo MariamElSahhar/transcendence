@@ -1,5 +1,5 @@
 import { isAuth, getUserSessionData } from "./utils/session-manager.js";
-import { fetchUserById, usernameExist } from "./clients/users-client.js";
+import { fetchUserById } from "./clients/users-client.js";
 
 const routes = {
 	// PUBLIC SCREENS
@@ -30,36 +30,37 @@ const routes = {
 	},
 	// PROTECTED SCREENS
 	"/home": {
+		layout: "sidebar",
 		component: "home-page",
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
 	"/profile": {
+		layout: "sidebar",
 		component: "user-profile-page",
 		path: "../pages/profile/UserProfilePage.js",
 		protected: false,
 	},
-	"/play-AI-match": {
+	"/play/computer": {
+		layout: "main",
 		component: "AI-game-page",
 		path: "../pages/AI/AIGamePage.js",
 		protected: false,
 	},
-	"/play-match": {
+	"/play/local": {
+		layout: "main",
 		component: "game-page",
 		path: "../pages/local/GamePage.js",
 		protected: false,
 	},
 	"/friends": {
+		layout: "main",
 		component: "friends-page",
 		path: "../pages/friends/FriendsPage.js",
 		protected: false,
 	},
-	"/reset-password": {
-		component: "reset-password-page",
-		path: "../pages/reset_password/ResetPasswordPage.js",
-		protected: false,
-	},
 	"/settings": {
+		layout: "main",
 		component: "settings-page",
 		path: "../pages/settings/Settings.js",
 		protected: false,
@@ -67,8 +68,24 @@ const routes = {
 	// test screen
 	"/layout": {
 		component: "main-layout",
-		path: "../pages/layout/MainLayout.js",
+		path: "../pages/layouts/MainLayout.js",
 		protected: false,
+	},
+	"/sidebar": {
+		component: "sidebar-layout",
+		path: "../pages/layouts/SidebarLayout.js",
+		protected: false,
+	},
+};
+
+const layouts = {
+	main: {
+		component: "main-layout",
+		path: "../pages/layouts/MainLayout.js",
+	},
+	sidebar: {
+		component: "sidebar-layout",
+		path: "../pages/layouts/SidebarLayout.js",
 	},
 };
 
@@ -86,9 +103,6 @@ const handleLocation = async () => {
 			: routes[404];
 	} else route = routes[path] || routes[404];
 
-	const root = document.getElementById("root");
-	root.innerHTML = "";
-
 	const isProtected = route.protected;
 	const authenticated = await isAuth();
 	// if (isProtected && !authenticated && route != routes[404]) {
@@ -96,12 +110,27 @@ const handleLocation = async () => {
 	// } else if (!isProtected && authenticated && route != routes[404]) {
 	// 	route = routes["/home"];
 	// }
-	try {
-		await import(route.path);
-		const element = document.createElement(route.component);
-		root.appendChild(element);
-	} catch (error) {
-		console.error(`Failed to load component at ${route.path}`, error);
+	const layout = layouts[route.layout];
+	loadRoute(route, layout);
+};
+
+const loadRoute = async (route, layout) => {
+	const root = document.getElementById("root");
+	const routeComponent = document.createElement(route.component);
+	await import(route.path);
+	if (layout) {
+		let layoutComponent = document.querySelector(layout.component);
+		// load layout if it isn't already there
+		if (!layoutComponent) {
+			root.innerHTML = "";
+			await import(layout.path);
+			layoutComponent = document.createElement(layout.component);
+			root.appendChild(layoutComponent);
+		}
+		await layoutComponent.renderSlot(routeComponent.outerHTML);
+	} else {
+		root.innerHTML = "";
+		root.appendChild(routeComponent);
 	}
 };
 

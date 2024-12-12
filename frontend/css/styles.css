@@ -4,6 +4,9 @@ body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
 /* Main content area - positioned towards the bottom of the page */
