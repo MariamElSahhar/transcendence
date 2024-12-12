@@ -33,8 +33,11 @@ urlpatterns = [
         user_retrieve_update_destroy_view,
         name="user-retrieve-update-destroy",
     ),
+
+    # Existing username/email
     path("users/username/<str:username>/exists/", check_username_exists, name="username-exists"),
 	path("users/email/<str:email>/exists/", check_email_exists, name="email-exists"),
+
     # Authentication
 	path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
