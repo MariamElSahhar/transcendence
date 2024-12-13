@@ -96,9 +96,9 @@ export class SidebarLayout extends Component {
 	}
 
 	checkPath() {
-		if (window.location.pathname.startsWith("/profile/")) {
+		if (window.location.pathname.startsWith("/dashboard/")) {
 			this.user.userid = window.location.pathname
-				.replace("/profile/", "")
+				.replace("/dashboard/", "")
 				.replace(/\/+$/, "");
 			this.me = false;
 		} else this.me = true;
