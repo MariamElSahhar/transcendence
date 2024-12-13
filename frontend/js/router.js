@@ -62,7 +62,7 @@ const routes = {
 	"/settings": {
 		layout: "main",
 		component: "settings-page",
-		path: "../pages/settings/Settings.js",
+		path: "../pages/settings/SettingsPage.js",
 		protected: false,
 	},
 	// test screen

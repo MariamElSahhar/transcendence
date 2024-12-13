@@ -11,7 +11,7 @@ import {
 // import {routes} from '../js/router.js';
 // import {Modal} from 'bootstrap';
 
-export class SettingsContent extends Component {
+export class SettingsPage extends Component {
 	constructor() {
 		super();
 		this.passwordHiden = true;
@@ -33,7 +33,7 @@ export class SettingsContent extends Component {
 	async connectedCallback() {
 		// console.log( getUserSessionData().otp == 'true' ? 'checked' : '');
 		await import("../../js/utils/error-page.js");
-		this.render();
+		super.connectedCallback();
 		// let response = await usernameExist({
 		// 	username: "afaheen",
 		// });
@@ -236,7 +236,6 @@ export class SettingsContent extends Component {
           </div>
       </div>
     `;
-		this.postRender();
 	}
 
 	async postRender() {
@@ -826,4 +825,4 @@ export class SettingsContent extends Component {
 	}
 }
 
-customElements.define("settings-content-component", SettingsContent);
+customElements.define("settings-page", SettingsPage);
