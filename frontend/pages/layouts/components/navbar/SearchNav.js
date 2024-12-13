@@ -1,6 +1,6 @@
 import { Component } from "../../../Component.js";
 import { ErrorPage } from "../../../error/ErrorPage.js";
-import { fetchUsersByUsername } from "../../../../js/clients/users-client.js";
+import { usersSearch } from "../../../../js/clients/users-client.js";
 
 export class SearchNav extends Component {
 	constructor() {
@@ -64,16 +64,13 @@ export class SearchNav extends Component {
 	async #searchBarHandler(event) {
 		if (event.target.value.length < 2) {
 			this.searchResults.style.display = "none";
-			// this.searchResults.classList.add("d-none");
 			return;
 		}
-		const { success, body, error } = await fetchUsersByUsername(
-			event.target.value
-		);
+		const { success, body, error } = await usersSearch(event.target.value);
 		this.searchResults.innerHTML = "";
 		if (success) {
-			this.searchResults.innerHTML = this.#renderSearchResults(body);
-			if (body.length > 0) {
+			this.searchResults.innerHTML = this.#renderSearchResults(body.data);
+			if (body.data && body.data.length > 0) {
 				this.searchResults.style.display = "block";
 			} else {
 				this.searchResults.style.display = "none";
@@ -84,14 +81,13 @@ export class SearchNav extends Component {
 		}
 	}
 
-	#renderSearchResults(users) {
-		console.log(users);
-		if (!users || !users.length) return "";
-		return users
+	#renderSearchResults(results) {
+		if (!results || !results.length) return "";
+		return results
 			.slice(0, 3)
 			.map((user) => {
 				return `
-					<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.userid}/')">
+					<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.id}/')">
 						<img src="${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
 						${user.username}
 					</div>

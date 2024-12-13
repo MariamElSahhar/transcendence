@@ -30,7 +30,8 @@ export const get = async (url, headers = {}) => {
 			...headers,
 		},
 	};
-	return await request(url, options);
+	const response = await request(url, options);
+	return response;
 };
 
 // post request
