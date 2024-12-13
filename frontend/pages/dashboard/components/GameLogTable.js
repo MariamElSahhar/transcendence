@@ -6,7 +6,6 @@ export class GameLogTable extends Component {
 		this.gamelog = {};
 		this.pagenumber = 0;
 	}
-
 	style() {
 		return `
             <style>
@@ -76,15 +75,6 @@ export class GameLogTable extends Component {
                     <div class="tab-pane fade" id="pills-ttt" role="tabpanel" aria-labelledby="pills-ttt-tab">
                         ${this.renderMatches(this.gamelog.ttt, "#pills-ttt")}
                     </div>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination pagination-sm justify-content-center">
-                            <li class="page-item"><a class="page-link">Previous</a></li>
-                            <li class="page-item"><a class="page-link">1</a></li>
-                            <li class="page-item"><a class="page-link">2</a></li>
-                            <li class="page-item"><a class="page-link">3</a></li>
-                            <li class="page-item"><a class="page-link">Next</a></li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
         `;
@@ -129,7 +119,53 @@ export class GameLogTable extends Component {
                         ${rows}
                     </tbody>
                 </table>
-            </div>`;
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm justify-content-center">
+                    <li class="
+                        page-item ${this.pagenumber === 0 ? "disabled" : ""}
+                    ">
+                        <a class="page-link" data-page="previous">Previous</a>
+                    </li>
+                    ${Array.from({
+						length: Math.ceil(gamelog.length / 5) || 1,
+					})
+						.map(
+							(_, i) => `
+                    <li class="page-item ${
+						this.pagenumber === i ? "active" : ""
+					}">
+                        <a class="page-link" data-page="${i}">${i + 1}</a>
+                    </li>`
+						)
+						.join("")}
+                    <li class="page-item ${
+						this.pagenumber ===
+						Math.ceil((gamelog.length || 0) / 5) - 1
+							? "disabled"
+							: ""
+					}">
+                        <a class="page-link" data-page="next">Next</a>
+                    </li>
+                </ul>
+            </nav>`;
+	}
+
+	postRender() {
+		console.log("postrender");
+		this.querySelectorAll(".page-link").forEach((link) => {
+			const page = link.getAttribute("data-page");
+			super.addComponentEventListener(link, "click", (event) => {
+				if (page === "previous") {
+					this.pagenumber--;
+				} else if (page === "next") {
+					this.pagenumber++;
+				} else if (!isNaN(parseInt(page))) {
+					this.pagenumber = parseInt(page);
+				}
+				this.update();
+			});
+		});
 	}
 }
 

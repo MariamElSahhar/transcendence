@@ -68,7 +68,7 @@ export const fetchUserGameLog = async (userid) => {
 			},
 			{
 				date: "2024-11-20",
-				opponent: "Player 2",
+				opponent: "Player 20",
 				my_score: "3",
 				opponent_score: "2",
 				is_win: true,
@@ -82,7 +82,7 @@ export const fetchUserGameLog = async (userid) => {
 			},
 			{
 				date: "2024-11-20",
-				opponent: "Player 2",
+				opponent: "Player 3",
 				my_score: "3",
 				opponent_score: "2",
 				is_win: true,
