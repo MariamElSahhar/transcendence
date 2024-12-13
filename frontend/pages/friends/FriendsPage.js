@@ -43,7 +43,7 @@ export class FriendsPage extends Component {
 					friendCard.querySelector(".user-info"),
 					"click",
 					() => {
-						window.redirect(`/profile/${friend.id}`);
+						window.redirect(`/dashboard/${friend.id}`);
 					}
 				);
 				super.addComponentEventListener(
