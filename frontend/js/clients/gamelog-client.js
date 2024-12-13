@@ -120,10 +120,10 @@ export const addRemoteGame = async (gameData) => {
 
 // Add local game to gamelog
 export const addLocalGame = async (gameData) => {
-	const url = URIs.gamelogLocal;
-	const requestBody = { data: gameData };
-	const { status, body, error } = await post(url, requestBody);
-	if (error) return { success: false, error };
+	// const url = URIs.gamelogLocal;
+	// const requestBody = { data: gameData };
+	// const { status, body, error } = await post(url, requestBody);
+	// if (error) return { success: false, error };
 	return { success: true };
 };
 

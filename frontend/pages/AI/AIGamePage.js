@@ -204,10 +204,6 @@ export class AIGamePage extends Component {
 	//         this.engine?.scene?.setLightTheme();
 	//       }
 	// }
-
-	endGame() {
-		this.addEndGameCard(this.scores[0], this.scores[1]); // Display the final score when the game ends
-	}
 }
 
 customElements.define("ai-game-page", AIGamePage);

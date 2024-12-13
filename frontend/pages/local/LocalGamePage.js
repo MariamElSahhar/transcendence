@@ -2,6 +2,7 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { addLocalGame } from "../../js/clients/gamelog-client.js";
 
 export class LocalGamePage extends Component {
 	constructor() {
@@ -175,10 +176,6 @@ export class LocalGamePage extends Component {
 	//         this.engine?.scene?.setLightTheme();
 	//     }
 	// }
-
-	endGame() {
-		this.addEndGameCard(); // Display the final score when the game ends
-	}
 }
 
 customElements.define("local-game-page", LocalGamePage);
