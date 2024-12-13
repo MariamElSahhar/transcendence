@@ -35,10 +35,10 @@ const routes = {
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
-	"/profile": {
+	"/dashboard": {
 		layout: "sidebar",
-		component: "user-profile-page",
-		path: "../pages/profile/UserProfilePage.js",
+		component: "dashboard-page",
+		path: "../pages/dashboard/DashboardPage.js",
 		protected: false,
 	},
 	"/play/computer": {
@@ -97,9 +97,9 @@ export const redirect = (path) => {
 const handleLocation = async () => {
 	const path = window.location.pathname;
 	let route;
-	if (path.startsWith("/profile/")) {
-		route = (await validProfilePath(window.location.pathname))
-			? routes["/profile"]
+	if (path.startsWith("/dashboard/")) {
+		route = (await validDashboardPath(window.location.pathname))
+			? routes["/dashboard"]
 			: routes[404];
 	} else route = routes[path] || routes[404];
 
@@ -134,9 +134,9 @@ const loadRoute = async (route, layout) => {
 	}
 };
 
-const validProfilePath = async (path) => {
+const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
-		.replace("/profile/", "")
+		.replace("/dashboard/", "")
 		.replace(/\/+$/, "");
 	const response = await fetchUserById(userid);
 	if (response.data) return true;

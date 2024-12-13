@@ -1,17 +1,16 @@
 // UserProfilePage.js
 import { Component } from "../Component.js";
-import { fetchUserById } from "../../js/clients/users-client.js";
 import { fetchUserGameLog } from "../../js/clients/gamelog-client.js";
 import { getUserSessionData } from "../../js/utils/session-manager.js";
 
-export class UserProfilePage extends Component {
+export class DashboardPage extends Component {
 	constructor() {
 		super();
 		this.stats = {};
 		this.gamelog = {};
-		this.userid = window.location.pathname.startsWith("/profile/")
+		this.userid = window.location.pathname.startsWith("/dashboard/")
 			? window.location.pathname
-					.replace("/profile/", "")
+					.replace("/dashboard/", "")
 					.replace(/\/+$/, "")
 			: getUserSessionData().userid;
 	}
@@ -104,4 +103,4 @@ export class UserProfilePage extends Component {
 	}
 }
 
-customElements.define("user-profile-page", UserProfilePage);
+customElements.define("dashboard-page", DashboardPage);
