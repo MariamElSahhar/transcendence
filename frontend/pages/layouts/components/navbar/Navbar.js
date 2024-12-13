@@ -14,7 +14,7 @@ export class Navbar extends Component {
 			},
 			{
 				label: "Dashboard",
-				path: "/profile",
+				path: "/dashboard",
 			},
 			{
 				label: "Friends",

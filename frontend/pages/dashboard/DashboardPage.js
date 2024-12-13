@@ -33,9 +33,9 @@ export class DashboardPage extends Component {
 
 	render() {
 		return `
-            <div class="profile-page container d-flex flex-column gap-3 my-3">
-                <div class="profile-content d-flex w-100 row-gap-5">
-                    <div class="profile-main-content d-flex flex-column w-100 gap-3">
+            <div class="container d-flex flex-column gap-3 my-3">
+                <div class="d-flex w-100 row-gap-5">
+                    <div class="d-flex flex-column w-100 gap-3">
 						<div class="graphs d-flex w-100 column-gap-2">
 							<game-stats class="flex-fill h-100 rounded"></game-stats>
 							<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
