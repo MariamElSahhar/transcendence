@@ -43,14 +43,14 @@ const routes = {
 	},
 	"/play/computer": {
 		layout: "main",
-		component: "AI-game-page",
+		component: "ai-game-page",
 		path: "../pages/AI/AIGamePage.js",
 		protected: false,
 	},
 	"/play/local": {
 		layout: "main",
-		component: "game-page",
-		path: "../pages/local/GamePage.js",
+		component: "local-game-page",
+		path: "../pages/local/LocalGamePage.js",
 		protected: false,
 	},
 	"/friends": {
