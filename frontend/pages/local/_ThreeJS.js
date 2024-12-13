@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-import { OrbitControls } from "./controls/OrbitControls.js";
-import { RectAreaLightUniformsLib } from "./controls/RectAreaLightUniformsLib.js";
+import { OrbitControls } from "../utils/controls/OrbitControls.js";
+import { RectAreaLightUniformsLib } from "../utils/controls/RectAreaLightUniformsLib.js";
 
 export class _ThreeJS {
 	#renderer;
@@ -43,7 +43,7 @@ export class _ThreeJS {
 			parseInt(marginTop) -
 			parseInt(marginBottom)
 		);
-  }
+	}
 
 	#initRenderer() {
 		this.#renderer = new THREE.WebGLRenderer({ antialias: true });

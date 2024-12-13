@@ -193,7 +193,7 @@ export class GameContent extends Component {
                   <p class="display-6 fw-bold">${opponentScore}</p>
                 </div>
               </div>
-              <button class="btn btn-primary mt-3" onclick="window.location.href='/'">Go Home</button>
+              <button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
             </div>
           </div>
         `;
