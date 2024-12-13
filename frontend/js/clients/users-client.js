@@ -22,11 +22,17 @@ export const fetchUserById = async (id) => {
 };
 
 // Function user by ID
-export const fetchUserByUsername = async (username) => {
-	const url = `${URIs.users}`;
-	const { status, body, error } = get(url);
-	if (error) return { success: false, data: null, error: error };
-	return { success: true, body };
+export const fetchUsersByUsername = async (username) => {
+	// const url = `${URIs.users}`;
+	// const { status, body, error } = get(url);
+	// if (error) return { success: false, data: null, error: error };
+	return {
+		success: true,
+		body: [
+			{ username: "res1", userid: "33" },
+			{ username: "res1", userid: "33" },
+		],
+	};
 };
 
 // Create user

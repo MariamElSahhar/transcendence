@@ -1,5 +1,6 @@
 import { Component } from "../../../Component.js";
 import { ErrorPage } from "../../../error/ErrorPage.js";
+import { fetchUsersByUsername } from "../../../../js/clients/users-client.js";
 
 export class SearchNav extends Component {
 	constructor() {
@@ -9,12 +10,11 @@ export class SearchNav extends Component {
 	render() {
 		return `
 			<div class="position-relative z-1">
-				<form id="search-form" class="d-flex" role="search">
+				<form id="search-form" class="d-flex my-0" role="search">
 					<input id="search-bar" class="form-control" type="search"
 							placeholder="Search users..." aria-label="Search" autocomplete="off">
 				</form>
-				<div id="search-results" class="rounded">
-				</div>
+				<div id="search-results" class="rounded"></div>
 			</div>
 		`;
 	}
@@ -64,39 +64,38 @@ export class SearchNav extends Component {
 	async #searchBarHandler(event) {
 		if (event.target.value.length < 2) {
 			this.searchResults.style.display = "none";
+			// this.searchResults.classList.add("d-none");
 			return;
 		}
-		try {
-			const { response, body } =
-				await userManagementClient.searchUsername(event.target.value);
-			this.searchResults.innerHTML = "";
-			if (response.ok) {
-				this.searchResults.innerHTML = this.#renderSearchResults(
-					body["users"]
-				);
-				if (body["users"].length > 0) {
-					this.searchResults.style.display = "block";
-				} else {
-					this.searchResults.style.display = "none";
-				}
+		const { success, body, error } = await fetchUsersByUsername(
+			event.target.value
+		);
+		this.searchResults.innerHTML = "";
+		if (success) {
+			this.searchResults.innerHTML = this.#renderSearchResults(body);
+			if (body.length > 0) {
+				this.searchResults.style.display = "block";
+			} else {
+				this.searchResults.style.display = "none";
 			}
-		} catch (error) {
-			ErrorPage.loadNetworkError();
+		} else {
+			// ErrorPage.loadNetworkError();
+			console.log(error);
 		}
 	}
 
 	#renderSearchResults(users) {
+		console.log(users);
+		if (!users || !users.length) return "";
 		return users
 			.slice(0, 3)
-			.map((username) => {
+			.map((user) => {
 				return `
-      <div class="result-item p-1" onclick="window.redirect('/profile/${username}/')" username="${username}">
-        <img src="${userManagementClient.getURLAvatar(
-			username
-		)}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
-        ${username}
-      </div>
-    `;
+					<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.userid}/')">
+						<img src="${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
+						${user.username}
+					</div>
+				`;
 			})
 			.join("");
 	}
@@ -113,10 +112,6 @@ export class SearchNav extends Component {
 
 	#searchFormHandler(event) {
 		event.preventDefault();
-		const username = this.searchBar.value;
-		if (username.length > 0) {
-			window.redirect(`/profile/${username}/`);
-		}
 	}
 }
 

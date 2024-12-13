@@ -152,7 +152,6 @@ export class GameLogTable extends Component {
 	}
 
 	postRender() {
-		console.log("postrender");
 		this.querySelectorAll(".page-link").forEach((link) => {
 			const page = link.getAttribute("data-page");
 			super.addComponentEventListener(link, "click", (event) => {
