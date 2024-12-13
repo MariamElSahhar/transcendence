@@ -53,6 +53,11 @@ const routes = {
 		path: "../pages/local/GamePage.js",
 		protected: false,
 	},
+	"/join-match": {
+		component: "tournament-page",
+		path: "../pages/tournament/TournamentPage.js",
+		protected: false,
+	},
 	"/friends": {
 		layout: "main",
 		component: "friends-page",
