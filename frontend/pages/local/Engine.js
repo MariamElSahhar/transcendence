@@ -10,11 +10,13 @@ export class Engine {
 	#keyHookHandler;
 	#scene;
 	#component;
+	#isAIGame;
 
 	constructor(component, isAIGame = false) {
 		this.#component = component;
+		this.#isAIGame = isAIGame;
 		this.#threeJS = new _ThreeJS(this);
-		this.#keyHookHandler = new _KeyHookHandler(this, isAIGame);
+		this.#keyHookHandler = new _KeyHookHandler(this, this.#isAIGame);
 		this.#scene = new Scene();
 	}
 
@@ -43,6 +45,10 @@ export class Engine {
 
 	renderFrame() {
 		this.#threeJS.renderFrame(this.#scene.threeJSScene);
+	}
+
+	get isAIGame() {
+		return this.#isAIGame;
 	}
 
 	get scene() {
