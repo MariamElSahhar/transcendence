@@ -22,7 +22,6 @@ button {
 
 /* Smaller input boxes */
 input.form-control {
-	max-width: 300px;
 	margin: 0 auto;
 	padding: 10px;
 	font-size: 0.9rem;

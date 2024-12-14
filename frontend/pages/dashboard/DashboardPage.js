@@ -1,24 +1,21 @@
 // UserProfilePage.js
 import { Component } from "../Component.js";
-import { fetchUserById } from "../../js/clients/users-client.js";
 import { fetchUserGameLog } from "../../js/clients/gamelog-client.js";
 import { getUserSessionData } from "../../js/utils/session-manager.js";
 
-export class UserProfilePage extends Component {
+export class DashboardPage extends Component {
 	constructor() {
 		super();
 		this.stats = {};
 		this.gamelog = {};
-		this.userid = window.location.pathname.startsWith("/profile/")
+		this.userid = window.location.pathname.startsWith("/dashboard/")
 			? window.location.pathname
-					.replace("/profile/", "")
+					.replace("/dashboard/", "")
 					.replace(/\/+$/, "")
 			: getUserSessionData().userid;
 	}
 
 	async connectedCallback() {
-		await import("../navbar/Navbar.js");
-		await import("../buttons/FriendsButton.js");
 		await import("./components/GameLogTable.js");
 		await import("./components/GameStatsCard.js");
 		await import("./components/GameHeatMap.js");
@@ -36,9 +33,9 @@ export class UserProfilePage extends Component {
 
 	render() {
 		return `
-            <div class="profile-page container d-flex flex-column gap-3 my-3">
-                <div class="profile-content d-flex w-100 row-gap-5">
-                    <div class="profile-main-content d-flex flex-column w-100 gap-3">
+            <div class="container d-flex flex-column gap-3 my-3">
+                <div class="d-flex w-100 row-gap-5">
+                    <div class="d-flex flex-column w-100 gap-3">
 						<div class="graphs d-flex w-100 column-gap-2">
 							<game-stats class="flex-fill h-100 rounded"></game-stats>
 							<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
@@ -106,4 +103,4 @@ export class UserProfilePage extends Component {
 	}
 }
 
-customElements.define("user-profile-page", UserProfilePage);
+customElements.define("dashboard-page", DashboardPage);

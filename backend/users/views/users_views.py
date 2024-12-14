@@ -14,8 +14,12 @@ from ..serializers import UserSerializer, ProfileSerializer
 @api_view(["GET", "POST"])
 def user_list_create_view(request):
     if request.method == "GET":
-        users = CustomUser.objects.all()
-        serializer = UserSerializer(users, many=True)
+        username = request.query_params.get('username', None)
+        if username:
+            users = CustomUser.objects.filter(username__istartswith=username)
+        else:
+            users = CustomUser.objects.all()
+        serializer = ProfileSerializer(users, many=True)
         return Response({"message": "Users retrieved", "data": serializer.data})
 
     elif request.method == "POST":
@@ -67,3 +71,5 @@ def check_email_exists(request, email):
         return Response({"exists": True, "message": "email exists."})
     else:
         return Response({"exists": False, "message": "email does not exist."})
+
+

@@ -35,22 +35,16 @@ const routes = {
 		path: "../pages/home/HomePage.js",
 		protected: false,
 	},
-	"/profile": {
+	"/dashboard": {
 		layout: "sidebar",
-		component: "user-profile-page",
-		path: "../pages/profile/UserProfilePage.js",
-		protected: false,
-	},
-	"/play/computer": {
-		layout: "main",
-		component: "AI-game-page",
-		path: "../pages/AI/AIGamePage.js",
+		component: "dashboard-page",
+		path: "../pages/dashboard/DashboardPage.js",
 		protected: false,
 	},
 	"/play/local": {
 		layout: "main",
-		component: "game-page",
-		path: "../pages/local/GamePage.js",
+		component: "local-game-page",
+		path: "../pages/local/LocalGamePage.js",
 		protected: false,
 	},
 	"/join-match": {
@@ -67,18 +61,18 @@ const routes = {
 	"/settings": {
 		layout: "main",
 		component: "settings-page",
-		path: "../pages/settings/Settings.js",
+		path: "../pages/settings/SettingsPage.js",
 		protected: false,
 	},
 	// test screen
 	"/layout": {
 		component: "main-layout",
-		path: "../pages/layout/MainLayout.js",
+		path: "../pages/layouts/MainLayout.js",
 		protected: false,
 	},
 	"/sidebar": {
 		component: "sidebar-layout",
-		path: "../pages/layout/SidebarLayout.js",
+		path: "../pages/layouts/SidebarLayout.js",
 		protected: false,
 	},
 };
@@ -86,11 +80,11 @@ const routes = {
 const layouts = {
 	main: {
 		component: "main-layout",
-		path: "../pages/layout/MainLayout.js",
+		path: "../pages/layouts/MainLayout.js",
 	},
 	sidebar: {
 		component: "sidebar-layout",
-		path: "../pages/layout/SidebarLayout.js",
+		path: "../pages/layouts/SidebarLayout.js",
 	},
 };
 
@@ -102,9 +96,9 @@ export const redirect = (path) => {
 const handleLocation = async () => {
 	const path = window.location.pathname;
 	let route;
-	if (path.startsWith("/profile/")) {
-		route = (await validProfilePath(window.location.pathname))
-			? routes["/profile"]
+	if (path.startsWith("/dashboard/")) {
+		route = (await validDashboardPath(window.location.pathname))
+			? routes["/dashboard"]
 			: routes[404];
 	} else route = routes[path] || routes[404];
 
@@ -139,9 +133,9 @@ const loadRoute = async (route, layout) => {
 	}
 };
 
-const validProfilePath = async (path) => {
+const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
-		.replace("/profile/", "")
+		.replace("/dashboard/", "")
 		.replace(/\/+$/, "");
 	const response = await fetchUserById(userid);
 	if (response.data) return true;

@@ -14,7 +14,7 @@ export class Navbar extends Component {
 			},
 			{
 				label: "Dashboard",
-				path: "/profile",
+				path: "/dashboard",
 			},
 			{
 				label: "Friends",
@@ -54,7 +54,7 @@ export class Navbar extends Component {
 								</span>
 								<ul class="dropdown-menu dropdown-menu-end"
 									aria-labelledby="dropdownMenuLink">
-									<p><strong>${username}</strong></p>
+									<li class="dropdown-item fw-bolder" onclick="window.redirect('/dashboard')">${username}</li>
 									<li id="settings" class="dropdown-item" onclick="window.redirect('/settings')">Settings</li>
 									<li id="logout" class="dropdown-item text-danger">Sign out</li>
 								</ul>
@@ -92,4 +92,4 @@ export class Navbar extends Component {
 	}
 }
 
-customElements.define("layout-navbar-component", Navbar);
+customElements.define("navbar-component", Navbar);

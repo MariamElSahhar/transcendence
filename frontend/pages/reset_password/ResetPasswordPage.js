@@ -13,20 +13,17 @@ export class ResetPasswordPage extends Component {
 
 	async connectedCallback() {
 		// Dynamically load the Navbar and other reset password components
-		await import("../navbar/Navbar.js");
 		await import("./ResetPasswordEmail.js");
 		await import("./ResetPasswordCode.js");
 		await import("./ResetPasswordNew.js");
 
 		// Render the HTML structure
-		this.innerHTML = this.render();
-		this.postRender();
+		super.connectedCallback();
 	}
 
 	render() {
 		return `
 			<div id="reset-password-page" class="h-100">
-				<navbar-component></navbar-component>
 				<div id="container" class="d-flex justify-content-center align-items-center h-100">${this.#renderCurrentComponent()}</div>
 			</div>
 		`;
