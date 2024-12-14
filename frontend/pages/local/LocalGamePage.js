@@ -12,6 +12,7 @@ export class LocalGamePage extends Component {
 		this.overlay = null;
 		this.players = []; // Stores player names
 		this.scores = [0, 0]; // Tracks scores for both players
+		this.isAIEnabled = false;
 	}
 
 	connectedCallback() {
@@ -23,13 +24,17 @@ export class LocalGamePage extends Component {
             <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
               <h3 class="text-center">Setup Players</h3>
               <form id="player-form">
-                <div id="player-names">
+				<div id="player-names">
                   <div class="mb-3">
-                    <label for="player2-name" class="form-label text-center d-block">PLEASE ENTER PLAYER'S NAME:</label>
-                    <input type="text" id="player2-name" name="player2-name" class="form-control" required />
+                    <label for="player2-name" class="form-label d-block"></label>
+                    <input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100"  placeholder="Player 2 display name"/>
                   </div>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3 w-100">Start Game</button>
+				<div class="form-check mb-3">
+                  <input type="checkbox" class="form-check-input" id="play-against-ai">
+                  <label class="form-check-label" for="play-against-ai">Play against computer</label>
+                </div>
+                <button id="submit-players" type="submit" class="btn btn-primary mt-3 w-100" disabled>Start Game</button>
               </form>
             </div>
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
@@ -41,13 +46,38 @@ export class LocalGamePage extends Component {
 
 	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
+		const submit = this.querySelector("#submit-players");
+		const AICheckbox = this.querySelector("#play-against-ai");
+		const player2NameInput = this.querySelector("#player2-name");
+
+		AICheckbox.addEventListener("change", () => {
+			if (AICheckbox.checked) {
+				player2NameInput.setAttribute("disabled", "");
+				player2NameInput.value = "Computer";
+				submit.removeAttribute("disabled");
+			} else {
+				player2NameInput.removeAttribute("disabled");
+				submit.setAttribute("disabled", "");
+				player2NameInput.value = "";
+			}
+		});
+		player2NameInput.addEventListener("input", () => {
+			if (player2NameInput.value) {
+				submit.removeAttribute("disabled");
+			} else {
+				submit.setAttribute("disabled", "");
+			}
+		});
 
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
 			this.players = [this.players[0]];
 
-			const player2Name = form.querySelector("#player2-name").value;
+			const player2Name = AICheckbox.checked
+				? "Computer"
+				: player2NameInput.value;
 			this.players.push(player2Name || "Player 2");
+			this.isAIEnabled = AICheckbox.checked;
 
 			this.querySelector("#player-setup").style.display = "none";
 			this.container.style.display = "block";
@@ -69,7 +99,7 @@ export class LocalGamePage extends Component {
 	}
 
 	startGame() {
-		this.engine = new Engine(this);
+		this.engine = new Engine(this, this.isAIEnabled);
 		this.engine.startGame();
 		this.removeOverlay();
 	}

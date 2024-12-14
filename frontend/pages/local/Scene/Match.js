@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Player } from "./player/Player.js";
-import { Ball } from "./Ball.js";
+import { Ball } from "../../local/Scene/Ball.js";
 import { addLocalGame } from "../../../js/clients/gamelog-client.js";
 
 export class Match {
@@ -11,7 +11,7 @@ export class Match {
 	#ball;
 	#ballIsWaiting;
 	#ballStartTime;
-	#pointsToWinMatch = 5;
+	#pointsToWinMatch = 1;
 	#matchIsOver = false;
 	#points = [0, 0];
 
@@ -19,29 +19,39 @@ export class Match {
 
 	async init(engine) {
 		this.#engine = engine;
-
+		console.log("ai enabled:", engine.isAIGame);
+		// Initialize the ball
 		this.#ball = new Ball();
 		this.prepare_ball_for_match();
 		this.#threeJSGroup.add(this.#ball.threeJSGroup);
 
 		this.#threeJSGroup.position.set(30, 23.75, 0);
 
+		// Initialize players, setting one as AI if specified
 		for (let i = 0; i < 2; i++) {
-			this.#players[i] = new Player();
+			const isAIControlled = engine.isAIGame && i === 1; // Make the second player AI-controlled
+			this.#players[i] = new Player(isAIControlled);
 			await this.#players[i].init(i, this.#pointsToWinMatch);
 			this.#threeJSGroup.add(this.#players[i].threeJSGroup);
 		}
 	}
 
 	updateFrame(timeDelta, currentTime, paddleBoundingBox, boardSize) {
+		const ballPosition = this.#ball.getPosition();
+
+		// Update players' frames, passing the ball position for AI player
 		this.#players[0].updateFrame(timeDelta, paddleBoundingBox);
-		this.#players[1].updateFrame(timeDelta, paddleBoundingBox);
+		this.#players[1].updateFrame(
+			timeDelta,
+			paddleBoundingBox,
+			ballPosition
+		);
 
 		if (!this.#matchIsOver) {
 			if (this.#ballIsWaiting && currentTime >= this.#ballStartTime) {
 				this.#ballIsWaiting = false;
 			}
-			if (this.#ballIsWaiting === false) {
+			if (!this.#ballIsWaiting) {
 				this.#ball.updateFrame(timeDelta, boardSize, this);
 			}
 		}
@@ -63,10 +73,10 @@ export class Match {
 
 	async endGame() {
 		this.#matchIsOver = true;
-		this.ball.removeBall();
+		this.#ball.removeBall();
 		this.#engine.component.addEndGameCard(this.#points[0], this.#points[1]);
-    const { success, error } = await addLocalGame({});
-    if (error) console.error("Failed to save game to gamelog")
+		const { success, error } = await addLocalGame({});
+		if (error) console.error("Failed to save game to gamelog");
 		return;
 	}
 

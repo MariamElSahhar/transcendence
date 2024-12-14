@@ -1,125 +1,131 @@
-
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import * as TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.umd.js";
-
 
 import { _ThreeJS } from "./_ThreeJS.js";
 import { _KeyHookHandler } from "./_KeyHookHandler.js";
 import { Scene } from "./Scene/Scene.js";
 
 export class Engine {
-  #threeJS;
-  #keyHookHandler;
-  #scene;
-  #component;
+	#threeJS;
+	#keyHookHandler;
+	#scene;
+	#component;
+	#isAIGame;
 
-  constructor(component) {
-    this.#component = component;
-    this.#threeJS = new _ThreeJS(this);
-    this.#keyHookHandler = new _KeyHookHandler(this);
-    this.#scene = new Scene();
-  }
+	constructor(component, isAIGame = false) {
+		this.#component = component;
+		this.#isAIGame = isAIGame;
+		this.#threeJS = new _ThreeJS(this);
+		this.#keyHookHandler = new _KeyHookHandler(this, this.#isAIGame);
+		this.#scene = new Scene();
+	}
 
-  async startGame() {
-    if (!this.#component.container) {
-      console.error("Container not found in component; delaying initialization.");
-      return;
-    }
-  
-    await this.#scene.init(this);
-    if (this.#scene) {
-      this.#scene.updateCamera();
-      this.startListeningForKeyHooks();
-      this.displayGameScene();
-    } else {
-      console.error("Scene initialization failed");
-    }
-  }
-  
-  cleanUp() {
-    this.clearScene(this.#scene.threeJSScene);
-    this.#threeJS.clearRenderer();
-  }
+	async startGame() {
+		if (!this.#component.container) {
+			console.error(
+				"Container not found in component; delaying initialization."
+			);
+			return;
+		}
 
-  renderFrame() {
-    this.#threeJS.renderFrame(this.#scene.threeJSScene);
-  }
+		await this.#scene.init(this);
+		if (this.#scene) {
+			this.#scene.updateCamera();
+			this.startListeningForKeyHooks();
+			this.displayGameScene();
+		} else {
+			console.error("Scene initialization failed");
+		}
+	}
 
-  get scene() {
-    return this.#scene;
-  }
+	cleanUp() {
+		this.clearScene(this.#scene.threeJSScene);
+		this.#threeJS.clearRenderer();
+	}
 
-  set scene(newScene) {
-    this.clearScene(this.#scene.threeJSScene);
-    this.#scene = newScene;
-  }
+	renderFrame() {
+		this.#threeJS.renderFrame(this.#scene.threeJSScene);
+	}
 
-  clearScene(scene) {
-    while (scene.children.length > 0) {
-      this.clearScene(scene.children[0]);
-      scene.remove(scene.children[0]);
-    }
-    if (scene.geometry) {
-      scene.geometry.dispose();
-    }
-    if (scene.material) {
-      scene.material.dispose();
-    }
-  }
+	get isAIGame() {
+		return this.#isAIGame;
+	}
 
-  setAnimationLoop(loopFunction) {
-    this.#threeJS.setAnimationLoop(loopFunction);
-  }
+	get scene() {
+		return this.#scene;
+	}
 
-  stopAnimationLoop() {
-    this.#threeJS.stopAnimationLoop();
-  }
+	set scene(newScene) {
+		this.clearScene(this.#scene.threeJSScene);
+		this.#scene = newScene;
+	}
 
-  displayGameScene() {
-    const clock = new THREE.Clock();
+	clearScene(scene) {
+		while (scene.children.length > 0) {
+			this.clearScene(scene.children[0]);
+			scene.remove(scene.children[0]);
+		}
+		if (scene.geometry) {
+			scene.geometry.dispose();
+		}
+		if (scene.material) {
+			scene.material.dispose();
+		}
+	}
 
-    this.setAnimationLoop(() => {
-      const currentTime = Date.now();
-      const delta = clock.getDelta();
-      this.scene.updateFrame(currentTime, delta);
+	setAnimationLoop(loopFunction) {
+		this.#threeJS.setAnimationLoop(loopFunction);
+	}
 
-      // Use TWEEN.update() or TWEEN.default.update()
-      if (TWEEN.update) {
-        TWEEN.update();
-      } else if (TWEEN.default && TWEEN.default.update) {
-        TWEEN.default.update();
-      }
+	stopAnimationLoop() {
+		this.#threeJS.stopAnimationLoop();
+	}
 
-      this.threeJS.updateControls();
-      this.renderFrame();
-    });
-  }
+	displayGameScene() {
+		const clock = new THREE.Clock();
 
-  get component() {
-    return this.#component;
-  }
+		this.setAnimationLoop(() => {
+			const currentTime = Date.now();
+			const delta = clock.getDelta();
+			this.scene.updateFrame(currentTime, delta);
 
-  get threeJS() {
-    return this.#threeJS;
-  }
+			// Use TWEEN.update() or TWEEN.default.update()
+			if (TWEEN.update) {
+				TWEEN.update();
+			} else if (TWEEN.default && TWEEN.default.update) {
+				TWEEN.default.update();
+			}
 
-  updateCamera(cameraPosition, cameraLookAt) {
-    this.#threeJS.controls.target.set(
-        cameraLookAt.x,
-        cameraLookAt.y,
-        cameraLookAt.z,
-    );
-    this.#threeJS.setCameraPosition(cameraPosition);
-    this.#threeJS.setCameraLookAt(cameraLookAt);
-  }
+			this.threeJS.updateControls();
+			this.renderFrame();
+		});
+	}
 
-  resizeHandler() {
-    if (this.#scene instanceof Scene) {
-      this.#scene.updateCamera();
-    }
-  }
+	get component() {
+		return this.#component;
+	}
 
-  startListeningForKeyHooks() {
-    this.#keyHookHandler.startListeningForKeyHooks();
-  }
+	get threeJS() {
+		return this.#threeJS;
+	}
+
+	updateCamera(cameraPosition, cameraLookAt) {
+		this.#threeJS.controls.target.set(
+			cameraLookAt.x,
+			cameraLookAt.y,
+			cameraLookAt.z
+		);
+		this.#threeJS.setCameraPosition(cameraPosition);
+		this.#threeJS.setCameraLookAt(cameraLookAt);
+	}
+
+	resizeHandler() {
+		if (this.#scene instanceof Scene) {
+			this.#scene.updateCamera();
+		}
+	}
+
+	startListeningForKeyHooks() {
+		this.#keyHookHandler.startListeningForKeyHooks();
+	}
 }

@@ -4,37 +4,29 @@ export class _KeyHookHandler {
   #downKeyIsPressed = [false, false];
   #upTouchStart = [false, false];
   #downTouchStart = [false, false];
+  #isAIEnabled = false; // New property to enable/disable AI control
 
-  constructor(engine) {
+  constructor(engine, isAIEnabled = false) { // Add isAIEnabled flag
     this.#engine = engine;
+    this.#isAIEnabled = isAIEnabled;
   }
 
   startListeningForKeyHooks() {
     this.#engine.component.addComponentEventListener(
-        window, 'keydown', (event) => {
-          this.#onKeyPress(event);
-        }, this,
+      window, 'keydown', (event) => this.#onKeyPress(event), this
     );
     this.#engine.component.addComponentEventListener(
-        window, 'keyup', (event) => {
-          this.#onKeyRelease(event);
-        }, this,
+      window, 'keyup', (event) => this.#onKeyRelease(event), this
     );
     this.#engine.component.addComponentEventListener(
-        window, 'blur', () => {
-          this.#onFocusLoss();
-        }, this,
+      window, 'blur', () => this.#onFocusLoss(), this
     );
     const canvas = this.#engine.component.querySelector('canvas');
     this.#engine.component.addComponentEventListener(
-        canvas, 'touchstart', (event) => {
-          this.touchStart(event);
-        }, this,
+      canvas, 'touchstart', (event) => this.touchStart(event), this
     );
     this.#engine.component.addComponentEventListener(
-        canvas, 'touchend', (event) => {
-          this.touchEnd(event);
-        }, this,
+      canvas, 'touchend', (event) => this.touchEnd(event), this
     );
   }
 
@@ -43,7 +35,7 @@ export class _KeyHookHandler {
     for (const touch of event.touches) {
       if (touch.clientX < window.innerWidth / 2) {
         this.touchStartLeft(touch);
-      } else {
+      } else if (!this.#isAIEnabled) { // Ignore right side if AI is enabled
         this.touchStartRight(touch);
       }
     }
@@ -73,7 +65,7 @@ export class _KeyHookHandler {
     for (const touch of event.changedTouches) {
       if (touch.clientX < window.innerWidth / 2) {
         this.touchEndLeft();
-      } else {
+      } else if (!this.#isAIEnabled) { // Ignore right side if AI is enabled
         this.touchEndRight();
       }
     }
@@ -106,14 +98,14 @@ export class _KeyHookHandler {
         this.#pressUpKey(0);
         return;
       case 'ArrowUp':
-        this.#pressUpKey(1);
+        if (!this.#isAIEnabled) this.#pressUpKey(1);
         return;
       case 's':
       case 'S':
         this.#pressDownKey(0);
         return;
       case 'ArrowDown':
-        this.#pressDownKey(1);
+        if (!this.#isAIEnabled) this.#pressDownKey(1);
         return;
       default:
         return;
@@ -145,14 +137,14 @@ export class _KeyHookHandler {
         this.#releaseUpKey(0);
         return;
       case 'ArrowUp':
-        this.#releaseUpKey(1);
+        if (!this.#isAIEnabled) this.#releaseUpKey(1);
         return;
       case 's':
       case 'S':
         this.#releaseDownKey(0);
         return;
       case 'ArrowDown':
-        this.#releaseDownKey(1);
+        if (!this.#isAIEnabled) this.#releaseDownKey(1);
         return;
       default:
         return;
