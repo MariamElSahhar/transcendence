@@ -11,10 +11,10 @@ export class Engine {
 	#scene;
 	#component;
 
-	constructor(component) {
+	constructor(component, isAIGame = false) {
 		this.#component = component;
 		this.#threeJS = new _ThreeJS(this);
-		this.#keyHookHandler = new _KeyHookHandler(this);
+		this.#keyHookHandler = new _KeyHookHandler(this, isAIGame);
 		this.#scene = new Scene();
 	}
 

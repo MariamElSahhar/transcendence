@@ -99,7 +99,7 @@ export class LocalGamePage extends Component {
 	}
 
 	startGame() {
-		this.engine = new Engine(this);
+		this.engine = new Engine(this, this.isAIEnabled);
 		this.engine.startGame();
 		this.removeOverlay();
 	}
