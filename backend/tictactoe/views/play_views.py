@@ -20,27 +20,37 @@ def play_view(request):
 
     # Filter for games where the user is one of the players and there is no overall game winner
     game = Game.objects.filter(
-        status='PLAYING'
+        status__in=['MATCHMAKING', 'PLAYING']
     ).filter(
         models.Q(player_1=user) | models.Q(player_2=user)
     ).first()
 
     if game:
+        if game.status == "MATCHMAKING":
+            matchmaking_info = {
+                "id": game.id,
+                "status": game.status,
+                "player_1": game.player_1.username if game.player_1 else None,
+                "player_2": game.player_2.username if game.player_2 else None,
+                "message": "You are currently in matchmaking. Waiting for another player.",
+            }
+            return Response({"game": matchmaking_info}, status=status.HTTP_200_OK)
+        
         # Construct game info, handling possible None values for all players and winners
         game_info = {
             "id": game.id,
             "status": game.status,
-            "player_1": game.player_1.id if game.player_1 else None,
-            "player_2": game.player_2.id if game.player_2 else None,
+            "player_1": game.player_1.username if game.player_1 else None,
+            "player_2": game.player_2.username if game.player_2 else None,
             "map_round_1": game.map_round_1,
             "map_round_2": game.map_round_2,
             "map_round_3": game.map_round_3,
             "current_round": game.current_round,
-            "next_to_play": game.next_to_play.id if game.next_to_play else None,
+            "next_to_play": game.next_to_play.username if game.next_to_play else None,
             "last_play_time": game.last_play_time,
-            "winner_round_1": game.winner_round_1.id if game.winner_round_1 else None,
-            "winner_round_2": game.winner_round_2.id if game.winner_round_2 else None,
-            "winner_round_3": game.winner_round_3.id if game.winner_round_3 else None,
+            "winner_round_1": game.winner_round_1.username if game.winner_round_1 else None,
+            "winner_round_2": game.winner_round_2.username if game.winner_round_2 else None,
+            "winner_round_3": game.winner_round_3.username if game.winner_round_3 else None,
         }
         return Response({"game": game_info}, status=status.HTTP_200_OK)
 
@@ -49,7 +59,7 @@ def play_view(request):
 # Subscribes you to matchmaking
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def play_view(request):
+def join_matchmaking_view(request):
     user = request.user
 
     # Check if the user is already in an active game (MATCHMAKING or PLAYING)
@@ -95,6 +105,30 @@ def play_view(request):
 
 
 # Unsubscribes you to matchmaking or leave a game
+# Unsubscribes the user from matchmaking
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def cancel_matchmaking_view(request):
+    user = request.user
+
+    # Check if the user has an active game in matchmaking
+    matchmaking_game = Game.objects.filter(
+        player_1=user,
+        status='MATCHMAKING',
+        player_2__isnull=True
+    ).first()
+
+    if not matchmaking_game:
+        return Response({
+            "error": "You are not currently in matchmaking."
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    # Delete or update the matchmaking game
+    matchmaking_game.delete()  # Delete the game entry
+    return Response({
+        "message": "You have been unsubscribed from matchmaking."
+    }, status=status.HTTP_200_OK)
+
 # @api_view(["DELETE"])
 # def play_view(request):
 #     return Response({"message": "TEST!!"}, status=status.HTTP_200_OK)
@@ -102,7 +136,7 @@ def play_view(request):
 # Make a move in the game
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def make_move(request):
+def make_move_view(request):
     user = request.user
     game_id = request.data.get("game_id")
     move = request.data.get("move")  # The move should be the position (0-8) in the 3x3 grid
@@ -181,6 +215,7 @@ def make_move(request):
         # Check if the game is over (all rounds played and a winner is decided)
         if game.current_round == 3:
             round_winners = [game.winner_round_1, game.winner_round_2, game.winner_round_3]
+            # TODO handle draw
             if round_winners.count(user) >= 2:  # Best of 3
                 game.game_winner = user
                 game.status = "FINISHED"

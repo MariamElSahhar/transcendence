@@ -22,11 +22,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views.play_views import (
+    make_move_view,
     play_view,
+    join_matchmaking_view,
+    cancel_matchmaking_view,
 )
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("make_move/", make_move_view, name="make_move"),
     path("play/", play_view, name="play"),
+    path("join_matchmaking/", join_matchmaking_view, name="join_matchmaking"),
+    path("cancel_matchmaking/", cancel_matchmaking_view, name="cancel_matchmaking"),
     path("api/", include("users.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

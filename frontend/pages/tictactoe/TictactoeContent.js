@@ -1,64 +1,235 @@
 import { Component } from "../Component.js";
 const BASE_URL = "http://127.0.0.1:8000";
-import { get, post, patch, del } from "../../js/utils/http-requests.js";
+import { get, post } from "../../js/utils/http-requests.js";
+import { getUserSessionData } from "../../../js/utils/session-manager.js";
 
 class TicTacToeContent extends Component {
 	constructor() {
 		super();
-		this.board = Array(9).fill(null); // 3x3 board initialized to null
-		this.currentPlayer = "A"; // Starting player
-		this.winner = null; // Winner status
-		this.scoreA = 0;
-		this.scoreB = 0;
+		this.myself = getUserSessionData().username;
 		this.inGame = false;
 		this.inMatchmaking = false;
+		this.gameInfoGetIntervalFd = null;
+
+		// Bo3 information
+		this.gameId = -1;
+		this.status = '';
+		this.player1 = '';
+		this.player2 = '';
+		this.mapRound1 = Array(9).fill(null);
+		this.mapRound2 = Array(9).fill(null);
+		this.mapRound3 = Array(9).fill(null);
+		this.currentRound = 0;
+		this.nextToPlay = '';
+		this.lastPlayTime = 0;
+		this.winnerRound1 = '';
+		this.winnerRound2 = '';
+		this.winnerRound3 = '';
+
+		this.scoreA = 0;
+		this.scoreB = 0;
+		this.winner = null; // Winner status
 	}
 
-	connectedCallback() {
+	applyGameInfo(gameInfo) {
+		const lastStatus = this.inGame ? "PLAYING": this.inMatchmaking ? "MATCHMAKING": "NONE";
+		const previousLastPlay = this.lastPlayTime;
+
+		if (gameInfo && gameInfo.status === "PLAYING") {
+			this.inGame = true;
+
+			this.gameId = gameInfo.id;
+			this.status = gameInfo.status;
+			this.player1 = gameInfo.player1;
+			this.player2 = gameInfo.player2;
+			this.mapRound1 = gameInfo.mapRound1;
+			this.mapRound2 = gameInfo.mapRound2;
+			this.mapRound3 = gameInfo.mapRound3;
+			this.currentRound = gameInfo.currentRound;
+			this.nextToPlay = gameInfo.nextToPlay;
+			this.lastPlayTime = gameInfo.lastPlayTime;
+			this.winnerRound1 = gameInfo.winnerRound1;
+			this.winnerRound2 = gameInfo.winnerRound2;
+			this.winnerRound3 = gameInfo.winnerRound3;
+
+			this.scoreA = (() => {
+				let score = 0;
+
+				if (this.winnerRound1 === this.player1) score++;
+				if (this.winnerRound2 === this.player1) score++;
+				if (this.winnerRound3 === this.player1) score++;
+
+				return score;
+			})();
+
+			this.scoreB = (() => {
+				let score = 0;
+
+				if (this.winnerRound1 === this.player2) score++;
+				if (this.winnerRound2 === this.player2) score++;
+				if (this.winnerRound3 === this.player2) score++;
+
+				return score;
+			})();
+
+			if (lastStatus !== "PLAYING" || previousLastPlay !== this.lastPlayTime) {
+				this.menuActivation(false);
+				this.refreshScoresHtml();
+				this.refreshBoardWrapperHtml();
+			}
+
+			// TODO: handle winner
+			return;
+		}
+
+		if (gameInfo && gameInfo.status === "MATCHMAKING") {
+			this.inMatchmaking = true;
+			this.gameId = gameInfo.id;
+			this.status = gameInfo.status;
+			this.player1 = gameInfo.player1;
+			this.player2 = gameInfo.player2;
+
+			if (lastStatus !== "MATCHMAKING") {
+				this.menuActivation(true);
+				this.changePlayBtnText("Waiting for Player...");
+				this.refreshScoresHtml();
+				this.refreshBoardWrapperHtml();
+			}
+			return;
+		}
+
+		if (lastStatus !== "NONE") {
+			this.menuActivation(true);
+			this.changePlayBtnText("Play");
+			this.refreshScoresHtml();
+			this.refreshBoardWrapperHtml();
+		}	
+
+		this.inGame = false;
+		this.inMatchmaking = false;
+		this.gameId = -1;
+		this.status = '';
+		this.player1 = '';
+		this.player2 = '';
+		this.mapRound1 = Array(9).fill(null);
+		this.mapRound2 = Array(9).fill(null);
+		this.mapRound3 = Array(9).fill(null);
+		this.currentRound = 0;
+		this.nextToPlay = '';
+		this.lastPlayTime = 0;
+		this.winnerRound1 = '';
+		this.winnerRound2 = '';
+		this.winnerRound3 = '';
+
+		this.scoreA = 0;
+		this.scoreB = 0;
+		this.winner = null;
+	}
+
+	menuActivation(b) {
+		const tictactoe = this.querySelector(".tictactoe");
+
+		if (b)
+			tictactoe.classList.add('menu-activated');
+		else
+			tictactoe.classList.remove('menu-activated');
+	}
+
+	changePlayBtnText(text) {
+		const playBtn = this.querySelector(".play-btn");
+		playBtn.innerHTML = text;
+	}
+
+	async connectedCallback() {
 		super.connectedCallback();
+
+		this.subscribeToGameInfo();
 	}
 
-	render() {
-		// Render the score and current player
-		const status = this.winner
-			? this.winner === "Draw"
-				? "It's a Draw!"
-				: `Winner: Player ${this.winner}`
-			: `Player ${this.currentPlayer} to play`;
+	getBoard() {
+		if (this.currentRound === 1) return this.mapRound1;
+		if (this.currentRound === 2) return this.mapRound2;
+		if (this.currentRound === 3) return this.mapRound3;
 
-		// Render the board
+		return Array(9).fill(null);
+	}
+
+	getBoardWrapperHtml() {
 		let boardHTML = '<div class="board">';
-		this.board.forEach((cell, index) => {
+
+		const board = this.getBoard();
+
+		board.forEach((cell, index) => {
 			boardHTML += `
 				<div class="cell" data-index="${index}">
-					${cell === "X" ? `<img src="./pages/tictactoe/plant.png" alt="X" />` : cell === "O" ? `<img src="./pages/tictactoe/shroom.png" alt="O" />` : ""}
+					${cell === "X" ?
+						 `<img src="./pages/tictactoe/plant.png" alt="X" />` : 
+						 		cell === "O" ? `<img src="./pages/tictactoe/shroom.png" alt="O" />` : ""}
 				</div>
 			`;
 		});
 
 		boardHTML += "</div>";
 
+		return boardHTML;
+	}
+
+	refreshBoardWrapperHtml() {
+		const container = document.querySelector('.board-wrapper');
+		container.innerHTML = this.getBoardWrapperHtml();
+
+		const cells = this.querySelectorAll(".cell");
+
+		cells.forEach((cell) => {
+			this.addComponentEventListener(cell, "click", this.handleCellClick, this);
+		});
+	}
+
+	refreshScoresHtml() {
+		const container = document.querySelector('.scores');
+		container.innerHTML = this.getScoresHtml();
+	}
+
+	getScoresHtml() {
 		return `
-			<div class="tictactoe ${this.inGame ? "": "menu-activated"}">
+			<div class="player1">
+				<img class="star ${this.player1 === this.nextToPlay ? "": "hidden"}" src="./pages/tictactoe/star.png" alt="X" />
+
+				<div class="score-wrapper">
+					<span class="score">${this.scoreA}</span>
+					<img class="shroom" src="./pages/tictactoe/plant.png" alt="X" />
+				</div>
+
+				<div class="player-name">${this.player1}</div>
+			</div>
+
+			<div class="player2">
+				<img class="star ${this.player2 === this.nextToPlay ? "": "hidden"}" src="./pages/tictactoe/star.png" alt="X" />
+ 
+				<div class="score-wrapper">
+					<span class="score">${this.scoreB}</span>
+					<img class="shroom" src="./pages/tictactoe/shroom.png" alt="X" />
+				</div>
+
+				<div class="player-name">${this.player2}</div>
+			</div>
+		 `;
+	}
+
+	render() {
+		return `
+			<div class="tictactoe">
 				<div class="sky"></div>
 				<img class="title-img" src="./pages/tictactoe/title.png" alt="X" />
 
 				<div class="board-wrapper">
-					${boardHTML}
+					${this.getBoardWrapperHtml()}
 
-					<div class="play-btn">PLAY</div>
+					<div class="play-btn">Play</div>
 				</div>
 
 				<div class="scores">
-					<div class="player1">
-						<span class="score">${this.scoreA}</span>
-						<img src="./pages/tictactoe/plant.png" alt="X" />
-					</div>
-
-					<div class="player2">
-						<span class="score">${this.scoreB}</span>
-						<img src="./pages/tictactoe/shroom.png" alt="X" />
-					</div>
+					${this.getScoresHtml()}
 				</div>
 
 				<div class="floor" />
@@ -83,6 +254,11 @@ class TicTacToeContent extends Component {
 
 				.board-wrapper {
 					position: relative;
+					z-index: 3;
+				}
+
+				.hidden {
+					opacity: 0;
 				}
 
 				.menu-activated {
@@ -154,11 +330,11 @@ class TicTacToeContent extends Component {
 
 				.scores {
 					display: flex;
-					justify-content: space-between; /* Positions scores on each side of the board */
+					justify-content: space-between;
 					align-items: center; /* Ensures vertical alignment */
-					width: 60%; /* Makes the score section narrower and closer to the board */
-					margin: 0 auto; /* Centers the score section horizontally */
-					padding: 0; /* Removes unnecessary padding */
+					width: 90%;
+					margin: 0 auto;
+					padding: 0;
 					-webkit-text-stroke: 5px #000000;
 					font-family: 'New Super Mario Font U', sans-serif;
 					font-size: 10em;
@@ -168,25 +344,38 @@ class TicTacToeContent extends Component {
 					z-index: 2;
 				}
 
+				.star {
+				    left: 0.5em;
+					position: relative;
+					width: 0.5em;
+					height: 0.5em;
+				}
+
+				.shroom {
+					width: 0.7em;
+					height: 0.7em;
+				}
+
+				.player-name {
+					height: 1em;
+					font-size: 0.5em;
+					position: relative;
+					bottom: 0.6em;
+					width: 3em;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+
 				.player1 {
 					span {
 						color: #43b133
-					}
-
-					img {
-						width: 0.7em;
-						height: 0.7em;
 					}
 				}
 
 				.player2 {
 					span {
 						color: #e71f07
-					}
-					
-					img {
-						width: 0.7em;
-						height: 0.7em;
 					}
 				}
 				
@@ -258,64 +447,137 @@ class TicTacToeContent extends Component {
 		this.addComponentEventListener(playBtn, "click", this.handlePlayBtnClick, this);
 	}
 
-	async handlePlayBtnClick(event) {
-		if (this.inMatchmaking) {
-			// cancel matchmaking
-		}
-
-		// subscribe to matchmaking
-		console.log('START MATCHMAKING');
-		
-		const ret = await post(`${BASE_URL}/play/`);
-
-		console.log('RETURN', ret);
-
-		console.log('MATCHMAKING STARTED');
-
-		this.inMatchmaking = true;
-	}
-
-	handleCellClick(event) {
-		if (!this.inGame) return;
-
-		const cell = event.target.closest(".cell"); // Ensure we get the correct cell
-		if (!cell) return;
-
-		const index = cell.dataset.index;
-
-		// Ignore click if the cell is already filled or if there's a winner
-		if (this.board[index] || this.winner) {
+	async subscribeToGameInfo() {
+		// Already subscribed
+		if (this.gameInfoGetIntervalFd !== null) {
 			return;
 		}
 
-		// Update the board with the current player's symbol
-		this.board[index] = this.currentPlayer === "A" ? "X" : "O";
+		this.gameInfoGetIntervalFd = setInterval(async () => {
+			const game = await this.getGameInfo();
 
-		// Update the cell's innerHTML with the correct symbol (image for X or O)
-		cell.innerHTML =
-			this.board[index] === "X"
-				? `<img src="https://static.vecteezy.com/system/resources/previews/041/638/510/non_2x/ai-generated-pixelation-of-red-heart-in-image-free-png.png" alt="X" />`
-				: `<img src="https://cdn.pixabay.com/photo/2023/03/11/07/07/emoji-7843852_1280.png" alt="O" />`;
+			this.applyGameInfo(game);
 
-		// Check for winner
-		this.checkWinner();
-
-		// Update scores if there's a winner
-		if (this.winner === "X") {
-			this.scoreA++;
-		} else if (this.winner === "O") {
-			this.scoreB++;
-		}
-
-		// Switch player
-		if (!this.winner) {
-			this.currentPlayer = this.currentPlayer === "A" ? "B" : "A";
-		}
-
-		// Re-render the component
-		this.update();
+			this.render();
+		}, 500);
 	}
 
+	unsubscribeToGameInfo() {
+		if (this.gameInfoGetIntervalFd !== null) {
+			clearInterval(this.gameInfoGetIntervalFd);
+			this.gameInfoGetIntervalFd = null;
+		}
+	}
+
+	async joinMatchmaking() {
+		try {
+			const response = await post(`${BASE_URL}/join_matchmaking/`);
+			if (response.message) {
+				console.log("Subscribe to matchmaking:", response.message);
+				this.inMatchmaking = true;
+			}
+		} catch (error) {
+			console.error("Error subscribing to matchmaking:", error);
+		}
+	}
+
+	async handlePlayBtnClick(event) {
+		if (this.inMatchmaking) {
+			return this.cancelMatchmaking();
+		}
+
+		return this.joinMatchmaking();
+	}
+
+	async cancelMatchmaking() {
+		try {
+			const response = await post(`${BASE_URL}/cancel_matchmaking/`);
+			if (response.message) {
+				console.log("Unsubscribed from matchmaking:", response.message);
+				this.inMatchmaking = false;
+			}
+		} catch (error) {
+			console.error("Error unsubscribing from matchmaking:", error);
+		}
+	}
+
+	async getGameInfo() {
+		try {
+			const response = await get(`${BASE_URL}/play/`);
+
+			if (response.body.game) {
+				const g = response.body.game;
+
+				console.log("Game info received:", g);
+
+				// Create a new object containing game information
+				const gameInfo = {
+					id: g.id,
+					status: g.status,
+					player1: g.player_1,
+					player2: g.player_2,
+					mapRound1: g.map_round_1.split(''),
+					mapRound2: g.map_round_2.split(''),
+					mapRound3: g.map_round_3.split(''),
+					currentRound: g.current_round,
+					nextToPlay: g.next_to_play,
+					lastPlayTime: g.last_play_time,
+					winnerRound1: g.winner_round_1,
+					winnerRound2: g.winner_round_2,
+					winnerRound3: g.winner_round_3,
+				};
+
+				console.log("Constructed game info object:", gameInfo);
+				return gameInfo; // Return the constructed game info object
+			}
+
+			console.log("No active game found:", response.message);
+			// Return null or an empty object if no game is found
+			return null;
+		} catch (error) {
+			console.error("Error fetching game info:", error);
+			// Return null or handle the error as appropriate
+			return null;
+		}
+	}
+
+	handleCellClick(event) {
+		if (!this.inGame || this.nextToPlay !== this.myself) {
+			console.log('CLICK REJECTED, NOT MY TURN');
+			return;
+		}		
+
+		const cell = event.target.closest(".cell"); // Ensure we get the correct cell
+		if (!cell) {
+			console.log('CLICK REJECTED, NOT A CELL');
+			return;
+		}
+
+		const index = cell.dataset.index;
+
+		// Ignore click if the cell is already filled
+		if (this.getBoard()[index] !== '-') {
+			console.log('IGNORE CLICK, ALREADY OCCUPIED');
+			return;
+		}
+
+		return this.makeMove(index);
+	}
+
+	async makeMove(index) {
+		try {
+			const response = await post(`${BASE_URL}/make_move/`, {
+				game_id: this.gameId,
+				move: index,
+			});
+			if (response.message) {
+				console.log("Make move:", response.message);
+			}
+		} catch (error) {
+			console.error("Error making move:", error);
+		}
+	}
+	
 	checkWinner() {
 		const winningCombinations = [
 			[0, 1, 2],
