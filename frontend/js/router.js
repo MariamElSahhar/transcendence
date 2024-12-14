@@ -41,12 +41,6 @@ const routes = {
 		path: "../pages/dashboard/DashboardPage.js",
 		protected: false,
 	},
-	"/play/computer": {
-		layout: "main",
-		component: "ai-game-page",
-		path: "../pages/AI/AIGamePage.js",
-		protected: false,
-	},
 	"/play/local": {
 		layout: "main",
 		component: "local-game-page",
