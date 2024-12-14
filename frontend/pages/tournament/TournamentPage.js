@@ -43,7 +43,12 @@ export class TournamentPage extends Component {
 
 	renderPlayerInputs() {
 		let inputs = "";
-		for (let i = 1; i <= 4; i++) {
+		inputs += `
+			<div class="mb-3">
+				<label for="player1-name" class="form-label">Player 1 Name:</label>
+				<input type="text" id="player1-name" name="player1-name" class="form-control" required disabled placeholder="${this.players[0]}"/>
+			</div>`;
+		for (let i = 2; i <= 4; i++) {
 			inputs += `
                 <div class="mb-3">
                     <label for="player${i}-name" class="form-label">Player ${i} Name:</label>
