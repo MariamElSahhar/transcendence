@@ -20,7 +20,7 @@ export class ProfileHeader extends Component {
 		if (!this.data) return "";
 		return `
             <div class="d-flex justify-content-start p-4">
-                <div class="profile-info d-flex align-items-center">
+                <div class="profile-info d-flex align-items-center gap-1">
                     <div class="profile-img-container">
                         <img src="${this.data.avatar}"
                             onerror="this.onerror=null;this.src='/images/default_profile.svg';"
@@ -28,7 +28,9 @@ export class ProfileHeader extends Component {
                         >
                     </div>
                     <div class="user-info d-flex flex-column gap-1">
-                        <h2 class="username">${this.data.username}</h2>
+                        <h5 class="username">${
+							this.data.username || "Username"
+						}</h5>
                         ${
 							this.data.is_me
 								? ""
@@ -66,20 +68,20 @@ export class ProfileHeader extends Component {
 	style() {
 		return `
             <style>
-                .profile-info {
-                    gap: 10px;
-                }
-
                 .profile-img-container {
-                    width: 90px;
-                    height: 90px;
+                    width: 75px;
+                    height: 75px;
+                    min-width: 75px;
+                    min-height: 75px;
                     border: 4px solid ${this.data.is_online ? "green" : "grey"};
                     border-radius: 50%;
                     overflow: hidden;
                 }
 
-                .profile-img {
-                    object-fit: cover;
+                .username {
+                    max-width: 120px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
                 @media (max-width: 650px) {

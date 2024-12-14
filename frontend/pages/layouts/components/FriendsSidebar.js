@@ -12,7 +12,7 @@ export class FriendsSidebar extends Component {
 
 	render() {
 		return `
-            <div id="friends-sidebar" class="pe-5 ps-4 py-2">
+            <div id="friends-sidebar" class="px-4 py-2">
             	<div id="friends-sidebar" class="p-3 bg-light rounded-2">
                 	<h6 class="mb-4">My Friends</h6>
 					<div id="friends-list" class="d-flex flex-column justify-content-start align-items-start w-100"></div>
