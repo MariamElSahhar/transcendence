@@ -1,16 +1,29 @@
 import { Component } from '../Component.js';
 import { InputValidator } from '../../js/utils/input-validator.js';
 import { BootstrapUtils } from '../../js/utils/bootstrap-utils.js';
-import {usernameExist, emailExist} from "../../js/clients/users-client.js"
+import { logout } from "../../js/clients/token-client.js";
+
 import {
+	usernameExist,
+	avatarUpload,
+	emailExist,
+	deleteAvatar,
+	fetchUserById,
+	updateInfo,
+	deleteUser,
+	update2fa
+} from "../../js/clients/users-client.js"
+import {
+	storeUserSession,
 	clearUserSession,
 	getUserSessionData,
 } from "../../js/utils/session-manager.js";
 // import {ErrorPage} from '../js/utils/ErrorPage.js';
 // import {userManagementClient} from '@utils/api';
-// import {routes} from '../js/router.js';
+import {redirect} from '../../js/router.js';
 // import {Modal} from 'bootstrap';
 import { NavbarUtils } from '../../js/utils/navbar-utils.js';
+const backendURL = "http://127.0.0.1:8000";
 
 export class SettingsContent extends Component {
 	constructor() {
@@ -23,25 +36,22 @@ export class SettingsContent extends Component {
 		this.inputValidEmail = false;
 		this.inputValidPassword = false;
 		this.inputValidConfirmPassword = false;
+		this.defaultHas2FA=true;
 
 		this.hasChangeAvatar = false;
-		this.base64Avatar = null;
+		this.avatarfile = null;
 
 		this.error = false;
 		this.errorMessage = '';
 	}
 
 	async connectedCallback() {
-		// console.log( getUserSessionData().otp == 'true' ? 'checked' : '');
 		await import("../../js/utils/error-page.js");
 		this.render();
-		// let response = await usernameExist({
-		// 	username: "afaheen",
-		// });
-		// console.log(response.body.exists)
 	}
 
 	render() {
+		this.defaultHas2FA = getUserSessionData().otp == "true" ? true:false;
 		this.renderPlaceholder();
 	}
 
@@ -113,7 +123,7 @@ export class SettingsContent extends Component {
                       </div>
                       <div class="form-group mb-4">
                           <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="two-fa-switch" ${ getUserSessionData().otp == 'true' ? 'checked' : '' ? 'checked' : ''}>
+                              <input class="form-check-input" type="checkbox" id="two-fa-switch" ${ getUserSessionData().otp == 'true' ? 'checked' : ''}>
                               <label class="form-check-label" for="two-fa-switch">Two-factor authentication</label>
                           </div>
                       </div>
@@ -145,8 +155,8 @@ export class SettingsContent extends Component {
                                            alert-display="false"></alert-component>
                       </div>
                       <div class="modal-footer">
-                          <button id="cancel-button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
-                          </button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
                           <button id="delete-account-btn" type="button" class="btn btn-danger">Delete</button>
                       </div>
                   </form>
@@ -179,7 +189,7 @@ export class SettingsContent extends Component {
       .hide-placeholder-text {
         color: var(--bs-secondary-bg);
         background-color: var(--bs-secondary-bg)!important;
-      }
+		}
       </style>
     `);
 	}
@@ -295,7 +305,8 @@ export class SettingsContent extends Component {
 		});
 
 		const deleteModal = document.getElementById('confirm-delete-modal');
-		this.deleteModal = new Modal(deleteModal);
+		// this.deleteModal=deleteModal;
+		this.deleteModal = new bootstrap.Modal(deleteModal);
 		super.addComponentEventListener(deleteModal, 'hidden.bs.modal', () => {
 			this.alertDelete.setAttribute('alert-message', '');
 			this.alertForm.setAttribute('alert-type', 'error');
@@ -368,7 +379,7 @@ export class SettingsContent extends Component {
 					this.alertForm.setAttribute('alert-display', 'true');
 					return;
 				}
-				this.base64Avatar = event.target.result;
+				this.avatarfile = event.target.result;
 				this.hasChangeAvatar = true;
 				this.#formHandler();
 				this.avatar.src = event.target.result;
@@ -381,9 +392,53 @@ export class SettingsContent extends Component {
 	async #trashAvatarHandler(event) {
 		event.preventDefault();
 		this.hasChangeAvatar = true;
-		this.base64Avatar = null;
+		this.avatarfile = '/img/default_avatar.png';
 		this.avatar.src = '/img/default_avatar.png';
+		sessionStorage.setItem("avatar", `${backendURL}${avatar}`);
+		this.#deleteAvatar();
 		this.#formHandler();
+	}
+	async #changeAvatar() {
+		if (this.avatarfile === null) {
+			return await this.#deleteAvatar();
+		}
+		return await this.#updateAvatar();
+	}
+
+	async #deleteAvatar() {
+		try {
+			const { success, body } = await deleteAvatar(
+				{username: getUserSessionData().username},
+			);
+			if (success) {
+				this.alertForm.setAttribute('alert-message', body.errors[0]);
+				this.alertForm.setAttribute('alert-type', 'error');
+				this.alertForm.setAttribute('alert-display', 'true');
+				return false;
+			}
+			return true;
+		} catch (error) {
+			window.loadNetworkError();
+			return false;
+		}
+	}
+
+	async #updateAvatar() {
+		try {
+			const { success, body } = await avatarUpload(
+				{avatar: this.avatarfile, username: getUserSessionData().username},
+			);
+			if (!success) {
+				this.alertForm.setAttribute('alert-message', body.errors[0]);
+				this.alertForm.setAttribute('alert-type', 'error');
+				this.alertForm.setAttribute('alert-display', 'true');
+				return false;
+			}
+			return true;
+		} catch (error) {
+			window.loadNetworkError();
+			return false;
+		}
 	}
 
 	async #usernameHandler() {
@@ -406,10 +461,10 @@ export class SettingsContent extends Component {
 	async #usernameExist() {
 		try {
 			let response = await usernameExist({
-				username: "afarheen",
+				username: this.username.value,
 			});
 
-			if (response.body.exists) {
+			if (response.body.exists && this.username.value != getUserSessionData().username) {
 				this.#setUsernameInputValidity(false, 'Username already taken.');
 			} else {
 			    this.#setUsernameInputValidity(true);
@@ -454,9 +509,9 @@ export class SettingsContent extends Component {
 	async #emailExist() {
 		try {
 			let response = await emailExist({
-				email: "a@gmail.com",
+				email: this.email.value,
 			});
-			if (response.body.exists) {
+			if (response.body.exists && this.email.value != getUserSessionData().email) {
 				this.#setEmailInputValidity(false, 'Email already taken.');
 			} else {
 				this.#setEmailInputValidity(true);
@@ -567,75 +622,8 @@ export class SettingsContent extends Component {
 		}
 	}
 
-	async #saveHandler() {
-		this.#startLoadButton();
-		if (this.hasChangeAvatar) {
-			if (!await this.#changeAvatar()) {
-				this.#resetLoadButton();
-				return;
-			}
-		}
-		if (this.inputValidUsername || this.inputValidEmail ||
-			(this.inputValidPassword && this.inputValidConfirmPassword)) {
-			const result = await this.#updateInfo();
-			if (result === false) {
-				this.#resetLoadButton();
-				return;
-			}
-		}
-		if (this.defaultHas2FA !== this.twoFASwitch.checked) {
-			const result = await this.#update2FA();
-			if (result === false) {
-				this.#resetLoadButton();
-				return;
-			}
-		}
-		window.location.reload();
-	}
 
 
-	async #changeAvatar() {
-		if (this.base64Avatar === null) {
-			return await this.#deleteAvatar();
-		}
-		return await this.#updateAvatar();
-	}
-
-	async #deleteAvatar() {
-		try {
-			const { response, body } = await userManagementClient.deleteAvatar(
-				userManagementClient.username,
-			);
-			if (!response.ok) {
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
-				return false;
-			}
-			return true;
-		} catch (error) {
-			window.loadNetworkError();
-			return false;
-		}
-	}
-
-	async #updateAvatar() {
-		try {
-			const { response, body } = await userManagementClient.changeAvatar(
-				this.base64Avatar, userManagementClient.username,
-			);
-			if (!response.ok) {
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
-				return false;
-			}
-			return true;
-		} catch (error) {
-			window.loadNetworkError();
-			return false;
-		}
-	}
 
 	async #updateInfo() {
 		const newUsername = this.inputValidUsername ? this.username.value : null;
@@ -644,12 +632,12 @@ export class SettingsContent extends Component {
 			this.inputValidPassword && this.inputValidConfirmPassword ?
 				this.password.value : null;
 		try {
-			const { response, body } = await userManagementClient.updateInfo(
-				newUsername, newEmail, newPassword);
-			if (response.ok) {
-				if (this.inputValidUsername) {
-					userManagementClient.username = newUsername;
-				}
+			const { success, body } = await updateInfo(
+				getUserSessionData().id, newUsername, newEmail, newPassword);
+			if (success) {
+				// if (this.inputValidUsername) {
+				// 	userManagementClient.username = newUsername;
+				// }
 				return true;
 			} else {
 				this.alertForm.setAttribute('alert-message', body.errors[0]);
@@ -673,8 +661,8 @@ export class SettingsContent extends Component {
 
 	async #enable2FA() {
 		try {
-			const { response } = await userManagementClient.enable2FA();
-			if (response.ok) {
+			const { success } = await update2fa({ id: getUserSessionData().id, update: true }); //enable
+			if (success) {
 				const result = await response.blob();
 				const url = window.URL.createObjectURL(result);
 				const settings2FA = document.createElement('settings-2fa-component');
@@ -693,8 +681,8 @@ export class SettingsContent extends Component {
 
 	async #disable2FA() {
 		try {
-			const { response, body } = await userManagementClient.disable2FA();
-			if (response.ok) {
+			const { success, body } = await update2fa({ id: getUserSessionData().id, update: false }); //disable
+			if (success) {
 				return true;
 			}
 			this.alertForm.setAttribute('alert-message', body.errors[0]);
@@ -725,11 +713,13 @@ export class SettingsContent extends Component {
     `;
 		this.deleteAccountButton.disabled = true;
 		try {
-			const { response, body } = await userManagementClient.deleteAccount();
-			if (response.ok) {
-				userManagementClient.logout();
+			console.log("here!!!")
+			const { success, body } = await deleteUser(getUserSessionData().id);
+			console.log(success);
+			if (success) {
+				clearUserSession();
 				this.deleteModal.hide();
-				// routes.navigate('/signin/');
+				redirect('/sign-in/');
 				return;
 			} else {
 				this.alertDelete.setAttribute('alert-message', body.errors[0]);
@@ -755,6 +745,48 @@ export class SettingsContent extends Component {
 	#resetLoadButton() {
 		this.saveButton.innerHTML = 'Save changes';
 		this.saveButton.disabled = false;
+	}
+	async #saveHandler() {
+
+		this.#startLoadButton();
+		if (this.hasChangeAvatar) {
+			const { success, body }=await this.#changeAvatar()
+			if (success) {
+				this.#resetLoadButton();
+				return;
+			}
+		}
+		if (this.inputValidUsername || this.inputValidEmail ||
+			(this.inputValidPassword && this.inputValidConfirmPassword)) {
+				const { success, body } = await this.#updateInfo();
+			if (success) {
+				this.#resetLoadButton();
+				return;
+			}
+		}
+		if (this.defaultHas2FA !== this.twoFASwitch.checked) {
+			const { success, body } = await this.#update2FA();
+			if (success) {
+				this.#resetLoadButton();
+				return;
+			}
+		}
+
+		const { success, body } = await fetchUserById(
+			getUserSessionData().id
+		);
+		console.log(body.username, body.id, body.email, body.avatar, body.enable_otp)
+		if(success)
+		{
+		storeUserSession({
+			username: body.username,
+			id: body.id,
+			email: body.email,
+			avatar: body.avatar,
+			otp: body.enable_otp,
+		});
+		window.location.reload();
+		}
 	}
 }
 

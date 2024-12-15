@@ -27,6 +27,7 @@ export const login = async ({ username, password }) => {
 			otp: body.data.otp,
 		});
 	}
+	console.log(body.data.avatar)
 	return { success: true };
 };
 

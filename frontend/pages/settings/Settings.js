@@ -12,7 +12,6 @@ export class Settings extends Component {
 
 		// await import("./components/HomeContent.js");
 		const authenticated = await isAuth();
-		console.log(authenticated)
 		if (!authenticated) {
 			window.redirect("/");
 			return false;

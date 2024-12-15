@@ -16,15 +16,15 @@ export const fetchUsers = async () => {
 // Function user by ID
 export const fetchUserById = async (id) => {
 	const url = `${URIs.users}${id}/`;
-	const { status, body, error } = get(url);
+	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, body };
 };
 
 // Create user
 export const createUser = async (userData) => {
 	const url = `${URIs.users}${id}/`;
-	const { status, body, error } = post(url, userData);
+	const { status, body, error } = await post(url, userData);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, data };
 };
@@ -32,7 +32,7 @@ export const createUser = async (userData) => {
 // Update existing user by id
 export const updateUser = async (id, userData) => {
 	const url = `${URIs.users}${id}/`;
-	const { status, body, error } = patch(url, userData);
+	const { status, body, error } = await patch(url, userData);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, data };
 };
@@ -40,9 +40,11 @@ export const updateUser = async (id, userData) => {
 // Delete user
 export const deleteUser = async (id) => {
 	const url = `${URIs.users}${id}/`;
-	const { status, body, error } = del(url, userData);
+	console.log(url)
+	const { status, body, error } =await del(url);
+	console.log(body,error)
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, body };
 };
 
 export const usernameExist = async (username) => {
@@ -61,3 +63,46 @@ export const emailExist = async (email) => {
 	return { success: true, body };
 };
 
+
+export const avatarUpload = async ({avatar, username}) => {
+	const url = `${URIs.users}${username}/avatar/`;
+	const { status, body, error } = await post(url, {avatar, username});
+	if (error) return { success: false, error: error };
+	return { success: true, body };
+};
+
+
+export const deleteAvatar = async ({username}) => {
+	const url = `${URIs.users}${username}/avatar/`;
+	const { status, body, error } = await del(url);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data };
+};
+
+export const updateInfo = async (id, newUsername=null, newEmail=null, newPassword=null) => {
+
+		const vars = {};
+		if (newUsername) {
+		  vars['username'] = newUsername;
+		}
+		if (newEmail) {
+		  vars['email'] = newEmail;
+		}
+		if (newPassword) {
+		  vars['password'] = newPassword;
+		}
+		const url=`${URIs.users}${id}/update-info/`;
+		console.log(url);
+		const { status, body, error } = await post(url, {vars});
+		if (error) return { success: false, error: error };
+		return { success: true, body };
+};
+
+
+export const update2fa = async ({id, update}) => {
+	const url = `${URIs.users}${id}/2fa/`;
+	console.log(url)
+	const { status, body, error } = await post(url,update);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, body };
+};

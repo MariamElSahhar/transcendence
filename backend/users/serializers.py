@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "email_otp",
             "is_email_verified",
+			"enable_otp",
             "avatar",
             "friends",
             "is_online",
@@ -26,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
     friends = FriendSerializer(many=True, read_only=True)
     is_online = serializers.SerializerMethodField()
-    
+
     def validate(self, attrs):
         print("validation")
         username = attrs.get("username")

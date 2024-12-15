@@ -1,9 +1,13 @@
+from uuid import uuid4
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from django.contrib.auth.hashers import make_password
+from django.core.files.base import ContentFile
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+import base64
 
 from ..models import CustomUser
 from ..utils import send_otp
@@ -35,6 +39,7 @@ def user_retrieve_update_destroy_view(request, user_id):
 
     if request.method == "GET":
         serializer = UserSerializer(user)
+        print(serializer.data)
         return Response(serializer.data)
 
     elif request.method == "PATCH":
@@ -46,7 +51,9 @@ def user_retrieve_update_destroy_view(request, user_id):
         return Response({"message": "User modified", "data": serializer.data}, status=status.HTTP_201_CREATED)
 
     elif request.method == "DELETE":
-        user.delete()
+        # user.delete()
+        response = Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
+        print(response)
         return Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(["GET"])
@@ -66,3 +73,63 @@ def check_email_exists(request, email):
         return Response({"exists": True, "message": "email exists."})
     else:
         return Response({"exists": False, "message": "email does not exist."})
+@api_view(["POST", "DELETE"])
+def avatar_view(request, username):
+    user = CustomUser.objects.get(username=username)
+    if request.method == "POST":
+        try:
+            avatar_data = request.data.get("avatar")
+            if not avatar_data:
+                return Response({"error": "Avatar data is missing."}, status=400)
+            file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]
+            ext = file_format.split("/")[-1]
+            avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{username}_avatar{uuid4().hex}.{ext}")
+            if user.avatar.name !=  "default_avatar/default_avatar.jpg":
+                user.avatar.delete()
+            user.avatar.save(f"{username}_avatar{uuid4().hex}.{ext}", avatar_file)
+            user.save()
+            response = Response({"message": "Avatar uploaded successfully!", "data":{"avatar": user.avatar.url}}, status=200)
+            print(response.data)
+            return response
+        except Exception as e:
+            return Response({"error": f"Failed to upload avatar: {str(e)}"}, status=400)
+    elif request.method == "DELETE":
+        try:
+            if not user.avatar:
+                return Response({"error": "No avatar to delete."}, status=404)
+            user.avatar.delete()
+            user.avatar.name =  "default_avatar/default_avatar.jpg"
+            user.save()
+            return Response({"message": "Avatar deleted successfully!", "data":{"avatar": user.avatar.url}}, status=200)
+        except Exception as e:
+            return Response({"error": f"Failed to delete avatar: {str(e)}"}, status=400)
+
+
+@api_view(["POST"])
+def update_view(request, user_id):
+    user = CustomUser.objects.get(id=user_id)
+    try:
+        if 'email' in request.data['vars']:
+            user.email = request.data['vars']['email']
+        if 'username' in request.data['vars']:
+            user.username = request.data['vars']['username']
+        if 'password' in request.data['vars']:
+            user.password = make_password(request.data['vars']['password'])
+        user.save()
+        return Response({"message": "User updated successfully."}, status=200)
+    except Exception as e:
+        return Response({"error": f"Failed to make changes: {str(e)}"}, status=400)
+
+
+@api_view(["POST"])
+def twofa_view(request, user_id):
+    user = CustomUser.objects.get(id=user_id)
+    try:
+        print(user.enable_otp, request.data)
+        user.enable_otp = request.data
+        user.save()
+        return Response({"message": "Two-factor authentication updated successfully."}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": f"Failed to make changes: {str(e)}"}, status=400)
+
+

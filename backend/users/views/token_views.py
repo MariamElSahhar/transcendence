@@ -25,7 +25,7 @@ def token_refresh_view(request):
         # Access token
         user = request.user
         if user.is_anonymous:
-            reponse = Response({"error": "User not authenticated."}, status=401)
+            response = Response({"error": "User not authenticated."}, status=401)
             response.delete_cookie("refresh_token")
             response.delete_cookie("access_token")
             return response

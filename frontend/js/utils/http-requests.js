@@ -11,7 +11,6 @@ const request = async (url, options) => {
 				error: body.error,
 			};
 		}
-		console.log(url, body, response)
 		return { status: response.status, body };
 	} catch (error) {
 		return {
