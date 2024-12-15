@@ -1,9 +1,9 @@
 import { refresh, tokenStatus, logout } from "../clients/token-client.js";
 
-const maxRefreshAttempts = 3;
+const maxRefreshAttempts = 1;
 const backendURL = "http://127.0.0.1:8000";
 
-export const storeUserSession = ({ username, id, email, avatar , otp}) => {
+export const storeUserSession = ({ username, id, email, avatar, otp }) => {
 	sessionStorage.setItem("username", username);
 	sessionStorage.setItem("id", id);
 	sessionStorage.setItem("email", email);
@@ -14,7 +14,7 @@ export const storeUserSession = ({ username, id, email, avatar , otp}) => {
 export const getUserSessionData = () => {
 	return {
 		username: sessionStorage.getItem("username"),
-		id: sessionStorage.getItem("id"),
+		userid: sessionStorage.getItem("id"),
 		email: sessionStorage.getItem("email"),
 		avatar: sessionStorage.getItem("avatar"),
 		otp: sessionStorage.getItem("otp"),
@@ -30,13 +30,11 @@ export const clearUserSession = async () => {
 	return await logout();
 };
 
-
 function isTokenExpired(token) {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const now = Math.floor(Date.now() / 1000);
-    return payload.exp < now;
+	const payload = JSON.parse(atob(token.split(".")[1]));
+	const now = Math.floor(Date.now() / 1000);
+	return payload.exp < now;
 }
-
 
 export const isAuth = async () => {
 	let authenticated = await tokenStatus();

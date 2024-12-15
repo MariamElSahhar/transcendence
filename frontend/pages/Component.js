@@ -79,8 +79,13 @@ export class Component extends HTMLElement {
 		this.#componentEventListeners = [];
 	}
 
+	isRendered() {
+		return this.#rendered;
+	}
+
 	update() {
 		this.innerHTML = this.render() + this.style();
+		this.postRender();
 	}
 
 	render() {}

@@ -86,3 +86,13 @@ class OTPVerificationSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "username",
+            "avatar",
+            "is_online",
+        ]

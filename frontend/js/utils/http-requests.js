@@ -3,12 +3,12 @@ const request = async (url, options) => {
 	options.credentials = "include";
 	try {
 		const response = await fetch(url, options);
-		const body = await response.json();
+		const body = response.status != 204 ? await response.json() : null;
 		if (!response.ok) {
 			return {
 				status: response.status,
 				body: null,
-				error: body.error,
+				error: body ? body.detail || body.error : null,
 			};
 		}
 		return { status: response.status, body };
@@ -16,7 +16,7 @@ const request = async (url, options) => {
 		return {
 			status: null,
 			body: null,
-			error: "Network error.",
+			error: "Unknown error.",
 		};
 	}
 };
@@ -30,7 +30,8 @@ export const get = async (url, headers = {}) => {
 			...headers,
 		},
 	};
-	return await request(url, options);
+	const response = await request(url, options);
+	return response;
 };
 
 // post request

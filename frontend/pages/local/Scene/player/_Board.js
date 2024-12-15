@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 
-import { GLTFLoader } from "../../controls/GLTFLoader.js";
+import { GLTFLoader } from "../../../utils/controls/GLTFLoader.js";
 
 export class _Board {
   #threeJSBoard;

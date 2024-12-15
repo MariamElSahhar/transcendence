@@ -1,19 +1,11 @@
-import { isAuth } from "./utils/session-manager.js";
+import { isAuth, getUserSessionData } from "./utils/session-manager.js";
+import { fetchUserById } from "./clients/users-client.js";
 
 const routes = {
+	// PUBLIC SCREENS
 	"/": {
-		component: "home-page",
-		path: "../pages/home/HomePage.js",
-		protected: false,
-	},
-	"/home": {
-		component: "home-page",
-		path: "../pages/home/HomePage.js",
-		protected: false,
-	},
-	"/profile": {
-		component: "user-profile-page",
-		path: "../pages/profile/UserProfilePage.js",
+		component: "landing-page",
+		path: "../pages/landing/LandingPage.js",
 		protected: false,
 	},
 	"/sign-in": {
@@ -26,28 +18,74 @@ const routes = {
 		path: "../pages/auth/SignUpPage.js",
 		protected: false,
 	},
-	"/games": {
-		component: "game-page",
-		path: "../pages/local/GamePage.js",
-		protected: false,
-	},
-	"/reset-password": {
-		component: "reset-password-page",
-		path: "../pages/reset_password/ResetPasswordPage.js",
+	404: {
+		component: "not-found-page",
+		path: "../pages/error/NotFound.js",
 		protected: false,
 	},
 	"/network-error": {
 		component: "error-content",
 		path: "../pages/utilities/Error.js",
+		protected: false,
+	},
+	// PROTECTED SCREENS
+	"/home": {
+		layout: "sidebar",
+		component: "home-page",
+		path: "../pages/home/HomePage.js",
+		protected: false,
+	},
+	"/dashboard": {
+		layout: "sidebar",
+		component: "dashboard-page",
+		path: "../pages/dashboard/DashboardPage.js",
+		protected: false,
+	},
+	"/play/local": {
+		layout: "main",
+		component: "local-game-page",
+		path: "../pages/local/LocalGamePage.js",
+		protected: false,
+	},
+	"/play/tournament": {
+		layout: "main",
+		component: "tournament-page",
+		path: "../pages/tournament/TournamentPage.js",
+		protected: false,
+	},
+	"/friends": {
+		layout: "main",
+		component: "friends-page",
+		path: "../pages/friends/FriendsPage.js",
+		protected: false,
 	},
 	"/settings": {
+		layout: "main",
 		component: "settings-page",
-		path: "../pages/settings/Settings.js",
-	},
-	404: {
-		component: "not-found-page",
-		path: "../pages/error/NotFound.js",
+		path: "../pages/settings/SettingsPage.js",
 		protected: false,
+	},
+	// test screen
+	"/layout": {
+		component: "main-layout",
+		path: "../pages/layouts/MainLayout.js",
+		protected: false,
+	},
+	"/sidebar": {
+		component: "sidebar-layout",
+		path: "../pages/layouts/SidebarLayout.js",
+		protected: false,
+	},
+};
+
+const layouts = {
+	main: {
+		component: "main-layout",
+		path: "../pages/layouts/MainLayout.js",
+	},
+	sidebar: {
+		component: "sidebar-layout",
+		path: "../pages/layouts/SidebarLayout.js",
 	},
 };
 
@@ -58,21 +96,53 @@ export const redirect = (path) => {
 
 const handleLocation = async () => {
 	const path = window.location.pathname;
-	let route = routes[path] || routes[404];
-	const isProtected = route.protected;
-	const root = document.getElementById("root");
-	root.innerHTML = "";
+	let route;
+	if (path.startsWith("/dashboard/")) {
+		route = (await validDashboardPath(window.location.pathname))
+			? routes["/dashboard"]
+			: routes[404];
+	} else route = routes[path] || routes[404];
 
-	if (isProtected) {
-		const authenticated = await isAuth();
-		if (!authenticated) route = routes[404];
+	const isProtected = route.protected;
+	const authenticated = await isAuth();
+	// if (isProtected && !authenticated && route != routes[404]) {
+	// 	route = routes[404];
+	// } else if (!isProtected && authenticated && route != routes[404]) {
+	// 	route = routes["/home"];
+	// }
+	const layout = layouts[route.layout];
+	loadRoute(route, layout);
+};
+
+const loadRoute = async (route, layout) => {
+	const root = document.getElementById("root");
+	const routeComponent = document.createElement(route.component);
+	await import(route.path);
+	if (layout) {
+		let layoutComponent = document.querySelector(layout.component);
+		// load layout if it isn't already there
+		if (!layoutComponent) {
+			root.innerHTML = "";
+			await import(layout.path);
+			layoutComponent = document.createElement(layout.component);
+			root.appendChild(layoutComponent);
+		}
+		await layoutComponent.renderSlot(routeComponent.outerHTML);
+	} else {
+		root.innerHTML = "";
+		root.appendChild(routeComponent);
 	}
-	try {
-		await import(route.path);
-		const element = document.createElement(route.component);
-		root.appendChild(element);
-	} catch (error) {
-		console.error(`Failed to load component at ${route.path}`, error);
+};
+
+const validDashboardPath = async (path) => {
+	const userid = window.location.pathname
+		.replace("/dashboard/", "")
+		.replace(/\/+$/, "");
+	const response = await fetchUserById(userid);
+	if (response.data) return true;
+	else {
+		console.log(response.error);
+		return false;
 	}
 };
 
