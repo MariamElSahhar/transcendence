@@ -7,8 +7,7 @@ from drf_spectacular.views import (
 from .views.users_views import (
     user_list_create_view,
     user_retrieve_update_destroy_view,
-	check_username_exists,
-	check_email_exists,
+    avatar_view,
 )
 from .views.token_views import (
     token_refresh_view,
@@ -34,12 +33,10 @@ urlpatterns = [
         name="user-retrieve-update-destroy",
     ),
 
-    # Existing username/email
-    path("users/username/<str:username>/exists/", check_username_exists, name="username-exists"),
-	path("users/email/<str:email>/exists/", check_email_exists, name="email-exists"),
-
+    #user data
+    path("users/<str:username>/avatar/", avatar_view, name="avatar"),
     # Authentication
-	path("register/", register_view, name="register"),
+    path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
     path("verify-otp/", verify_otp_view, name="verify-otp"),

@@ -6,7 +6,7 @@ from datetime import timedelta
 
 class CustomUser(AbstractUser):
     email = models.EmailField()
-    avatar = models.ImageField(upload_to='images/', default="images/default.jpg")
+    avatar = models.ImageField(upload_to='images/',  default="default_avatar/default_avatar.jpg", null=True)
     friends = models.ManyToManyField('self', symmetrical=True, blank=True)
     is_online = models.BooleanField(default=False)
     last_seen = models.DateTimeField(default=timezone.now)

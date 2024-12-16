@@ -1,15 +1,21 @@
-import { Component } from "../Component.js";
-import { InputValidator } from "../../js/utils/input-validator.js";
-import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
-import { usernameExist, emailExist } from "../../js/clients/users-client.js";
+import { Component } from '../Component.js';
+import { InputValidator } from '../../js/utils/input-validator.js';
+import { BootstrapUtils } from '../../js/utils/bootstrap-utils.js';
+
 import {
+	avatarUpload,
+	deleteAvatar,
+	fetchUserById,
+	updateInfo,
+	deleteUser,
+} from "../../js/clients/users-client.js"
+import {
+	storeUserSession,
 	clearUserSession,
 	getUserSessionData,
 } from "../../js/utils/session-manager.js";
-// import {ErrorPage} from '../js/utils/ErrorPage.js';
-// import {userManagementClient} from '@utils/api';
-// import {routes} from '../js/router.js';
-// import {Modal} from 'bootstrap';
+import {redirect} from '../../js/router.js';
+const backendURL = "http://127.0.0.1:8000";
 
 export class SettingsPage extends Component {
 	constructor() {
@@ -22,125 +28,112 @@ export class SettingsPage extends Component {
 		this.inputValidEmail = false;
 		this.inputValidPassword = false;
 		this.inputValidConfirmPassword = false;
+		this.defaultHas2FA=true;
 
 		this.hasChangeAvatar = false;
-		this.base64Avatar = null;
+		this.avatarfile = null;
 
 		this.error = false;
 		this.errorMessage = "";
+		this.vars={}
 	}
 
 	async connectedCallback() {
-		// console.log( getUserSessionData().otp == 'true' ? 'checked' : '');
 		await import("../../js/utils/error-page.js");
-		super.connectedCallback();
-		// let response = await usernameExist({
-		// 	username: "afaheen",
-		// });
-		// console.log(response.body.exists)
+		this.render();
 	}
-
-	render() {
-		this.renderPlaceholder();
-	}
-
 	renderWithDefaultSettings() {
 		return `
-      <div id="settings"
-           class="d-flex justify-content-center align-items-center rounded-3">
-          <div class="settings-card card m-3">
-              <div class="card-body m-2">
-                  <h2 class="card-title text-center m-5">Settings</h2>
-                  <form id="settings-form">
-                      <div class="form-group mb-4 d-flex justify-content-center position-relative">
-                          <div class="position-relative">
-                              <img id="avatar" src=${
-									getUserSessionData().avatar
-								} alt="Unavailable"
-                                   class="rounded-circle object-fit-cover" style="width: 125px; height: 125px;">
-                              <button id="trash-icon" type="button"
-                                      class="btn btn-danger btn-sm position-absolute bottom-0 end-0">
-                                  <i class="bi bi-trash-fill"></i>
-                              </button>
-                          </div>
-                      </div>
-                      <div class="form-group mb-4">
-                          <div class="input-group has-validation">
-                                    <span class="input-group-text"
-                                          id="inputGroupPrepend">@</span>
-                              <input type="text" class="form-control" id="username"
-                                     placeholder="New username" value=${
-											getUserSessionData().username
-										}
-                                     autocomplete="username">
-                              <div id="username-feedback" class="invalid-feedback">
-                                  Invalid username.
-                              </div>
-                          </div>
-                      </div>
-                      <div class="form-group mb-4">
-                          <input type="email" class="form-control" id="email"
-                                 placeholder="New email" value=${
-										getUserSessionData().email
-									}
-                                 autocomplete="email">
-                          <div id="email-feedback" class="invalid-feedback">
-                              Please enter a valid email.
-                          </div>
-                      </div>
-                      <div class="form-group mb-4">
-                          <div class="input-group has-validation">
-                              <input type="password" class="form-control"
-                                     id="password"
-                                     placeholder="New password">
-                              <span id="password-eye"
-                                    class="input-group-text dynamic-hover">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </span>
-                              <div id="password-feedback" class="invalid-feedback">
-                                  Invalid password.
-                              </div>
-                          </div>
-                      </div>
-                      <div class="form-group mb-4">
-                          <div class="input-group has-validation">
-                              <input type="password" class="form-control"
-                                     id="confirm-password"
-                                     placeholder="Confirm new password">
-                              <span id="confirm-password-eye"
-                                    class="input-group-text dynamic-hover">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </span>
-                              <div id="confirm-password-feedback" class="invalid-feedback">
-                                  Passwords do not match.
-                              </div>
-                          </div>
-                      </div>
-                      <div class="form-group mb-4">
-                          <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="two-fa-switch" ${
-									getUserSessionData().otp == "true"
-										? "checked"
-										: ""
-										? "checked"
-										: ""
-								}>
-                              <label class="form-check-label" for="two-fa-switch">Two-factor authentication</label>
-                          </div>
-                      </div>
-                      <alert-component id="alert-form" alert-display="false">
-                      </alert-component>
-                      <div class="d-flex flex-row mb-2">
-					  	  <button id="save-button" type="submit" class="btn btn-primary ms-2" disabled>Save changes</button>
-                          <button id="delete-button" type="button" class="btn btn-danger ms-2">Delete account</button>
-                      </div>
-                      <div class="d-flex">
-                      </div>
-                  </form>
-              </div>
-          </div>
-      </div>
-      <div class="modal fade" id="confirm-delete-modal" aria-hidden="true" tabindex="-1">
+<div id="settings" class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-4">
+    <!-- Form Section -->
+    <div class="d-flex flex-column align-items-center w-100">
+        <div class="w-100 text-center mb-4">
+            <!-- Avatar and Title -->
+			<h2 class="card-title mb-3">Settings</h2>
+			<div class="d-flex flex-column align-items-center w-100">
+            	<div class="position-relative mb-4">
+            		<img id="avatar" src=${getUserSessionData().avatar} alt="Unavailable" class="rounded-circle object-fit-cover" style="width: 125px; height: 125px;">
+            		<button id="trash-icon" type="button" class="btn btn-danger btn-sm position-absolute bottom-0 end-0">
+                		<i class="bi bi-trash-fill"></i>
+            		</button>
+        		</div>
+        	</div>
+
+        	<form id="settings-form" class="w-100 d-flex flex-column align-items-center">
+            <!-- Username Section -->
+            	<div class="form-group mb-4 w-50">
+                	<div class="input-group has-validation">
+                    	<span class="input-group-text" id="inputGroupPrepend">@</span>
+                    	<input type="text" class="form-control" id="username"
+                        placeholder="New username" value=${getUserSessionData().username}
+                        autocomplete="username">
+                    	<div id="username-feedback" class="invalid-feedback">
+                        Invalid username.
+                    	</div>
+                	</div>
+            	</div>
+
+            <!-- Email Section -->
+            	<div class="form-group mb-4 w-50">
+                	<input type="email" class="form-control form-control-sm" id="email"
+                       placeholder="New email" value=${getUserSessionData().email}
+                       autocomplete="email">
+                	<div id="email-feedback" class="invalid-feedback">
+                    Please enter a valid email.
+                	</div>
+            	</div>
+
+            <!-- Password Section -->
+            	<div class="form-group mb-4 w-50">
+                	<div class="input-group has-validation">
+                    	<input type="password" class="form-control"
+                           id="password"
+                           placeholder="New password">
+                    	<span id="password-eye"
+                          class="input-group-text dynamic-hover">
+                        	<i class="bi bi-eye-fill"></i>
+                    	</span>
+                    	<div id="password-feedback" class="invalid-feedback">
+                        Invalid password.
+                    	</div>
+                	</div>
+            	</div>
+
+            <!-- Confirm Password Section -->
+            	<div class="form-group mb-4 w-50">
+                	<div class="input-group has-validation">
+                    	<input type="password" class="form-control"
+                           id="confirm-password"
+                           placeholder="Confirm new password">
+                    	<span id="confirm-password-eye"
+                          class="input-group-text dynamic-hover">
+                        	<i class="bi bi-eye-fill"></i>
+                    	</span>
+                    	<div id="confirm-password-feedback" class="invalid-feedback">
+                        Passwords do not match.
+                    	</div>
+                	</div>
+            	</div>
+
+            <!-- Two-Factor Authentication -->
+				<div class="form-group mb-4 w-50">
+    				<div class="form-check form-switch d-flex align-items-center">
+        				<input class="form-check-input" type="checkbox" id="two-fa-switch" ${ getUserSessionData().otp == 'true' ? 'checked' : ''}>
+        				<label class="form-check-label ms-2" for="two-fa-switch">Two-factor authentication</label>
+    				</div>
+				</div>
+
+            <!-- Alert and Buttons -->
+            	<alert-component id="alert-form" alert-display="false"></alert-component>
+            	<div class="d-flex justify-content-center mb-2">
+                	<button id="save-button" type="submit" class="btn btn-primary ms-2" disabled>Save changes</button>
+                	<button id="delete-button" type="button" class="btn btn-danger ms-2">Delete account</button>
+            	</div>
+        	</form>
+    	</div>
+	</div>
+</div>
+<div class="modal fade" id="confirm-delete-modal" aria-hidden="true" tabindex="-1">
           <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                   <div class="modal-header">
@@ -156,14 +149,15 @@ export class SettingsPage extends Component {
                                            alert-display="false"></alert-component>
                       </div>
                       <div class="modal-footer">
-                          <button id="cancel-button" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
-                          </button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
                           <button id="delete-account-btn" type="button" class="btn btn-danger">Delete</button>
                       </div>
                   </form>
               </div>
           </div>
       </div>
+
     `;
 	}
 
@@ -190,55 +184,14 @@ export class SettingsPage extends Component {
       .hide-placeholder-text {
         color: var(--bs-secondary-bg);
         background-color: var(--bs-secondary-bg)!important;
-      }
+		}
       </style>
     `;
 	}
 
-	renderPlaceholder() {
-		const placeholderClass =
-			"placeholder placeholder-lg" +
-			"bg-body-secondary rounded hide-placeholder-text";
-		this.innerHTML = `
-      <div id="settings"
-           class="d-flex justify-content-center align-items-center rounded-3">
-          <div class="settings-card card m-3">
-              <div class="card-body m-2 placeholder-glow">
-                  <h2 class="card-title text-center m-5 dynamic-hover">Settings</h2>
-                  <form id="settings-form">
-                  <div class="form-group mb-4 d-flex justify-content-center position-relative">
-                    <div class="position-relative">
-                      <img id="avatar" src="/img/default_avatar.png" class="${placeholderClass} rounded-circle object-fit-cover" style="width: 125px; height: 125px;">
-                    </div>
-                  </div>
-                      <div class="form-group mb-4">
-                          <span class="${placeholderClass} col-12 form-control">_</span>
-                      </div>
-                      <div class="form-group mb-4">
-                          <span class="${placeholderClass} col-12 form-control">_</span>
-                      </div>
-                      <div class="form-group mb-4">
-                          <span class="${placeholderClass} col-12 form-control">_</span>
-                      </div>
-                      <div class="form-group mb-4">
-                          <span class="${placeholderClass} col-12 form-control">_</span>
-                      </div>
-                  <alert-component id="alert-form" alert-display="false">
-                  </alert-component>
-                  <div class="d-flex flex-row mb-2">
-				  		<button id="save-button" type="submit" class="btn ms-2 ${placeholderClass}">Save changes</button>
-                    	<button class="btn ms-2 ${placeholderClass}">Delete account</button>
-                  </div>
-                  <div class="d-flex">
-                  </div>
-                  </form>
-              </div>
-          </div>
-      </div>
-    `;
-	}
-
-	async postRender() {
+	async render() {
+		this.defaultHas2FA = getUserSessionData().otp == "true" ? true:false;
+		console.log(this.defaultHas2FA)
 		if (!(await this.loadDefaultSettings())) {
 			return;
 		}
@@ -334,12 +287,13 @@ export class SettingsPage extends Component {
 			this.#formHandler();
 		});
 
-		const deleteModal = document.getElementById("confirm-delete-modal");
-		this.deleteModal = new Modal(deleteModal);
-		super.addComponentEventListener(deleteModal, "hidden.bs.modal", () => {
-			this.alertDelete.setAttribute("alert-message", "");
-			this.alertForm.setAttribute("alert-type", "error");
-			this.alertDelete.setAttribute("alert-display", "false");
+		const deleteModal = document.getElementById('confirm-delete-modal');
+		// this.deleteModal=deleteModal;
+		this.deleteModal = new bootstrap.Modal(deleteModal);
+		super.addComponentEventListener(deleteModal, 'hidden.bs.modal', () => {
+			this.alertDelete.setAttribute('alert-message', '');
+			this.alertForm.setAttribute('alert-type', 'error');
+			this.alertDelete.setAttribute('alert-display', 'false');
 		});
 
 		this.deleteButton = this.querySelector("#delete-button");
@@ -366,6 +320,7 @@ export class SettingsPage extends Component {
 
 	async loadDefaultSettings() {
 		try {
+
 			this.innerHTML = this.renderWithDefaultSettings() + this.style();
 			return true;
 		} catch (error) {
@@ -416,7 +371,7 @@ export class SettingsPage extends Component {
 					this.alertForm.setAttribute("alert-display", "true");
 					return;
 				}
-				this.base64Avatar = event.target.result;
+				this.avatarfile = event.target.result;
 				this.hasChangeAvatar = true;
 				this.#formHandler();
 				this.avatar.src = event.target.result;
@@ -429,9 +384,56 @@ export class SettingsPage extends Component {
 	async #trashAvatarHandler(event) {
 		event.preventDefault();
 		this.hasChangeAvatar = true;
-		this.base64Avatar = null;
-		this.avatar.src = "/img/default_avatar.png";
+		console.log(this.avatarfile)
+		console.log(this.avatar.src)
+		this.avatarfile = '../../frontend/assets/image/default_avatar.jpg';
+		this.avatar.src = '../../frontend/assets/image/default_avatar.jpg';
+		this.#deleteAvatar();
 		this.#formHandler();
+	}
+	async #changeAvatar() {
+		if (this.avatarfile === null) {
+			return await this.#deleteAvatar();
+		}
+		return await this.#updateAvatar();
+
+	}
+
+	async #deleteAvatar() {
+		try {
+			const { success, body } = await deleteAvatar(
+				{username: getUserSessionData().username},
+			);
+			console.log(success, body)
+			if (!success) {
+				this.alertForm.setAttribute('alert-message', body.errors[0]);
+				this.alertForm.setAttribute('alert-type', 'error');
+				this.alertForm.setAttribute('alert-display', 'true');
+				return false;
+			}
+			return true;
+		} catch (error) {
+			window.loadNetworkError();
+			return false;
+		}
+	}
+
+	async #updateAvatar() {
+		try {
+			const { success, body } = await avatarUpload(
+				{avatar: this.avatarfile, username: getUserSessionData().username},
+			);
+			if (!success) {
+				this.alertForm.setAttribute('alert-message', body.errors[0]);
+				this.alertForm.setAttribute('alert-type', 'error');
+				this.alertForm.setAttribute('alert-display', 'true');
+				return false;
+			}
+			return true;
+		} catch (error) {
+			window.loadNetworkError();
+			return false;
+		}
 	}
 
 	async #usernameHandler() {
@@ -453,16 +455,7 @@ export class SettingsPage extends Component {
 
 	async #usernameExist() {
 		try {
-			let response = await usernameExist("afarheen");
-
-			if (response.body.exists) {
-				this.#setUsernameInputValidity(
-					false,
-					"Username already taken."
-				);
-			} else {
-				this.#setUsernameInputValidity(true);
-			}
+			this.#setUsernameInputValidity(true);
 		} catch (error) {
 			this.#setUsernameInputValidity(true);
 		}
@@ -503,14 +496,7 @@ export class SettingsPage extends Component {
 
 	async #emailExist() {
 		try {
-			let response = await emailExist({
-				email: "a@gmail.com",
-			});
-			if (response.body.exists) {
-				this.#setEmailInputValidity(false, "Email already taken.");
-			} else {
-				this.#setEmailInputValidity(true);
-			}
+			this.#setEmailInputValidity(true);
 		} catch (error) {
 			this.#setEmailInputValidity(true);
 		}
@@ -623,78 +609,8 @@ export class SettingsPage extends Component {
 		}
 	}
 
-	async #saveHandler() {
-		this.#startLoadButton();
-		if (this.hasChangeAvatar) {
-			if (!(await this.#changeAvatar())) {
-				this.#resetLoadButton();
-				return;
-			}
-		}
-		if (
-			this.inputValidUsername ||
-			this.inputValidEmail ||
-			(this.inputValidPassword && this.inputValidConfirmPassword)
-		) {
-			const result = await this.#updateInfo();
-			if (result === false) {
-				this.#resetLoadButton();
-				return;
-			}
-		}
-		if (this.defaultHas2FA !== this.twoFASwitch.checked) {
-			const result = await this.#update2FA();
-			if (result === false) {
-				this.#resetLoadButton();
-				return;
-			}
-		}
-		window.location.reload();
-	}
 
-	async #changeAvatar() {
-		if (this.base64Avatar === null) {
-			return await this.#deleteAvatar();
-		}
-		return await this.#updateAvatar();
-	}
 
-	async #deleteAvatar() {
-		try {
-			const { response, body } = await userManagementClient.deleteAvatar(
-				userManagementClient.username
-			);
-			if (!response.ok) {
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
-				this.alertForm.setAttribute("alert-type", "error");
-				this.alertForm.setAttribute("alert-display", "true");
-				return false;
-			}
-			return true;
-		} catch (error) {
-			window.loadNetworkError();
-			return false;
-		}
-	}
-
-	async #updateAvatar() {
-		try {
-			const { response, body } = await userManagementClient.changeAvatar(
-				this.base64Avatar,
-				userManagementClient.username
-			);
-			if (!response.ok) {
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
-				this.alertForm.setAttribute("alert-type", "error");
-				this.alertForm.setAttribute("alert-display", "true");
-				return false;
-			}
-			return true;
-		} catch (error) {
-			window.loadNetworkError();
-			return false;
-		}
-	}
 
 	async #updateInfo() {
 		const newUsername = this.inputValidUsername
@@ -705,72 +621,22 @@ export class SettingsPage extends Component {
 			this.inputValidPassword && this.inputValidConfirmPassword
 				? this.password.value
 				: null;
-		try {
-			const { response, body } = await userManagementClient.updateInfo(
-				newUsername,
-				newEmail,
-				newPassword
-			);
-			if (response.ok) {
-				if (this.inputValidUsername) {
-					userManagementClient.username = newUsername;
-				}
-				return true;
-			} else {
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
-				this.alertForm.setAttribute("alert-type", "error");
-				this.alertForm.setAttribute("alert-display", "true");
-				return false;
-			}
-		} catch (error) {
-			window.loadNetworkError();
-			return null;
+		if (newUsername) {
+		this.vars['username'] = newUsername;
+		}
+		if (newEmail) {
+		this.vars['email'] = newEmail;
+		}
+		if (newPassword) {
+		this.vars['password'] = newPassword;
 		}
 	}
 
 	async #update2FA() {
 		if (this.twoFASwitch.checked) {
-			return await this.#enable2FA();
+			this.vars["enable_otp"] = true;
 		} else {
-			return await this.#disable2FA();
-		}
-	}
-
-	async #enable2FA() {
-		try {
-			const { response } = await userManagementClient.enable2FA();
-			if (response.ok) {
-				const result = await response.blob();
-				const url = window.URL.createObjectURL(result);
-				const settings2FA = document.createElement(
-					"settings-2fa-component"
-				);
-				settings2FA.setAttribute("qr-code", url);
-				this.innerHTML = settings2FA.outerHTML;
-				return false;
-			} else {
-				// routes.navigate('/signin/');
-				return false;
-			}
-		} catch (error) {
-			window.loadNetworkError();
-			return false;
-		}
-	}
-
-	async #disable2FA() {
-		try {
-			const { response, body } = await userManagementClient.disable2FA();
-			if (response.ok) {
-				return true;
-			}
-			this.alertForm.setAttribute("alert-message", body.errors[0]);
-			this.alertForm.setAttribute("alert-type", "error");
-			this.alertForm.setAttribute("alert-display", "true");
-			return false;
-		} catch (error) {
-			window.loadNetworkError();
-			return false;
+			this.vars["enable_otp"] = false;
 		}
 	}
 
@@ -792,13 +658,12 @@ export class SettingsPage extends Component {
     `;
 		this.deleteAccountButton.disabled = true;
 		try {
-			const { response, body } =
-				await userManagementClient.deleteAccount();
-			if (response.ok) {
-				userManagementClient.logout();
+			const { success, data } = await deleteUser(getUserSessionData().userid);
+			console.log(success);
+			if (success) {
+				clearUserSession();
 				this.deleteModal.hide();
-				// routes.navigate('/signin/');
-				return;
+				redirect('/');
 			} else {
 				this.alertDelete.setAttribute("alert-message", body.errors[0]);
 				this.alertForm.setAttribute("alert-type", "error");
@@ -822,6 +687,70 @@ export class SettingsPage extends Component {
 	#resetLoadButton() {
 		this.saveButton.innerHTML = "Save changes";
 		this.saveButton.disabled = false;
+	}
+	async #saveHandler() {
+
+		this.#startLoadButton();
+		if (this.hasChangeAvatar) {
+			await this.#changeAvatar();
+		}
+		if (this.inputValidUsername || this.inputValidEmail ||
+			(this.inputValidPassword && this.inputValidConfirmPassword)) {
+				this.#updateInfo();
+
+		}
+		if (this.defaultHas2FA !== this.twoFASwitch.checked) {
+			this.#update2FA();
+		}
+		console.log(this.vars, this.vars.email)
+		if(this.vars.email != undefined || this.vars.username!=undefined || this.vars.enable_otp!=undefined  || this.vars.password!=undefined)
+		{
+			try
+			{
+				const { success, body } = await updateInfo(getUserSessionData().userid,this.vars);
+				console.log(success)
+				if (success) {
+					this.#resetLoadButton();
+				}
+				if(!success)
+				{
+					this.#resetLoadButton();
+					if (body.username) {
+						console.log("here");
+						BootstrapUtils.setInvalidInput(this.username);
+						this.usernameFeedback.innerHTML = body.username[0]; // Set the error message for username
+					}
+					if (body.email) {
+						BootstrapUtils.setInvalidInput(this.email);
+						this.emailFeedback.innerHTML = body.email[0]; // Set the error message for email
+					}
+					console.log(body)
+					this.alertForm.setAttribute("alert-message", body.errors[0]);
+					this.alertForm.setAttribute("alert-type", "error");
+					this.alertForm.setAttribute("alert-display", "true");
+					return false;
+				}
+			} catch (error) {
+				window.loadNetworkError();
+				return false;
+				}
+			}
+		// }
+		const { success, data } = await fetchUserById(
+			getUserSessionData().userid
+		);
+		console.log(data)
+		if(success)
+		{
+		storeUserSession({
+			username: data.username,
+			id: data.id,
+			email: data.email,
+			avatar: data.avatar,
+			otp: data.enable_otp,
+		});
+		window.location.reload();
+	}
 	}
 }
 

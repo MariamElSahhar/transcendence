@@ -19,7 +19,7 @@ def login_view(request):
     if login_serializer.is_valid():
         username = login_serializer.validated_data["username"]
         password = login_serializer.validated_data["password"]
-
+        print("here")
         request.session["password"] = password
 
         user = CustomUser.objects.filter(username=username).first()
@@ -42,11 +42,12 @@ def login_view(request):
                             "user_id": userinfo.id,
                             "user_email": userinfo.email,
                             "otp": user.enable_otp,
-                            "avatar": userinfo.avatar.url if user.avatar else None,
+                            "avatar": user.avatar.url if user.avatar else None,
                         },
                     },
                     status=status.HTTP_200_OK,
                 )
+                print(response.data)
             return set_response_cookie(response, tokens, user, True)
         elif user and user.check_password(password) and user.is_superuser is False:
             send_otp(user)
