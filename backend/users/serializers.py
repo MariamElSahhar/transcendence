@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "email_otp",
             "is_email_verified",
-			"enable_otp",
+            "enable_otp",
             "avatar",
             "friends",
             "is_online",
@@ -29,11 +29,11 @@ class UserSerializer(serializers.ModelSerializer):
     is_online = serializers.SerializerMethodField()
 
     def validate(self, attrs):
-        print("validation")
         username = attrs.get("username")
         email = attrs.get("email")
 
         if CustomUser.objects.filter(username=username).exists():
+            print("validation")
             raise ValidationError({"username": "This username is already in use."})
 
         if CustomUser.objects.filter(email=email).exists():
@@ -95,4 +95,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             "username",
             "avatar",
             "is_online",
+            "enable_otp",
+            "email"
         ]

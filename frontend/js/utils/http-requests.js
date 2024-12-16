@@ -8,7 +8,7 @@ const request = async (url, options) => {
 			return {
 				status: response.status,
 				body: null,
-				error: body ? body.detail || body.error : null,
+				error: body? body.detail || body.error || body : null,
 			};
 		}
 		return { status: response.status, body };

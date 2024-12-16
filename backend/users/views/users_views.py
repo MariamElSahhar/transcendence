@@ -49,34 +49,26 @@ def user_retrieve_update_destroy_view(request, user_id):
         return Response(response_data)
 
     elif request.method == "PATCH":
+        print(user_id)
+        print(request.data)
         serializer = UserSerializer(user, data=request.data, partial=True)
+        print("here??????")
         serializer.is_valid(raise_exception=True)
+        print("here??")
         if "password" in serializer.validated_data:
-            user.password = make_password(serializer.validated_data["password"])
-        serializer.save()
+            print(serializer.validated_data["password"])
+            user = serializer.save(password=make_password(serializer.validated_data["password"]))
+        else:
+            serializer.save()
         return Response({"message": "User modified", "data": serializer.data}, status=status.HTTP_201_CREATED)
 
     elif request.method == "DELETE":
-        # user.delete()
+        user.delete()
         response = Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
         print(response)
         return Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
 
-@api_view(["GET"])
-def check_username_exists(request, username):
-    exists = CustomUser.objects.filter(username__iexact=username).exists()
-    if exists:
-        return Response({"exists": True, "message": "Username exists."})
-    else:
-        return Response({"exists": False, "message": "Username does not exist."})
 
-@api_view(["GET"])
-def check_email_exists(request, email):
-    exists = CustomUser.objects.filter(email__iexact=email).exists()
-    if exists:
-        return Response({"exists": True, "message": "email exists."})
-    else:
-        return Response({"exists": False, "message": "email does not exist."})
 @api_view(["POST", "DELETE"])
 def avatar_view(request, username):
     user = CustomUser.objects.get(username=username)
@@ -101,39 +93,10 @@ def avatar_view(request, username):
         try:
             if not user.avatar:
                 return Response({"error": "No avatar to delete."}, status=404)
-            user.avatar.delete()
+            if user.avatar.name !=  "default_avatar/default_avatar.jpg":
+                user.avatar.delete()
             user.avatar.name =  "default_avatar/default_avatar.jpg"
             user.save()
             return Response({"message": "Avatar deleted successfully!", "data":{"avatar": user.avatar.url}}, status=200)
         except Exception as e:
             return Response({"error": f"Failed to delete avatar: {str(e)}"}, status=400)
-
-
-@api_view(["POST"])
-def update_view(request, user_id):
-    user = CustomUser.objects.get(id=user_id)
-    try:
-        if 'email' in request.data['vars']:
-            user.email = request.data['vars']['email']
-        if 'username' in request.data['vars']:
-            user.username = request.data['vars']['username']
-        if 'password' in request.data['vars']:
-            user.password = make_password(request.data['vars']['password'])
-        user.save()
-        return Response({"message": "User updated successfully."}, status=200)
-    except Exception as e:
-        return Response({"error": f"Failed to make changes: {str(e)}"}, status=400)
-
-
-@api_view(["POST"])
-def twofa_view(request, user_id):
-    user = CustomUser.objects.get(id=user_id)
-    try:
-        print(user.enable_otp, request.data)
-        user.enable_otp = request.data
-        user.save()
-        return Response({"message": "Two-factor authentication updated successfully."}, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({"error": f"Failed to make changes: {str(e)}"}, status=400)
-
-

@@ -18,6 +18,7 @@ export const login = async ({ username, password }) => {
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
 	const authenticated = await isAuth()
+	console.log(body)
 	if (authenticated) {
 		storeUserSession({
 			username: body.data.username,
