@@ -24,14 +24,12 @@ export class HomePage extends Component {
 
 	async connectedCallback() {
 		super.connectedCallback();
-		this.setupEventListeners();
 		this.initTopSphere();
 		this.initBottomShapes();
 	}
 
 	render() {
 		return `
-        <div class="container-fluid vh-100 p-0">
             <div class="d-flex flex-column align-items-center p-3">
                 <div class="w-100">
                     <!-- Pong Game Section -->
@@ -55,44 +53,47 @@ export class HomePage extends Component {
                     </div>
                 </div>
             </div>
-        </div>
     `;
 	}
 
-	setupEventListeners() {
+	postRender() {
 		window.addEventListener("resize", this.onWindowResize.bind(this));
 
 		// Play Local Game Button
-		const btnPlayLocalGame = this.querySelector("#btnPlayLocalGame");
-		if (btnPlayLocalGame) {
-			btnPlayLocalGame.addEventListener("click", () => {
+		super.addComponentEventListener(
+			this.querySelector("#btnPlayLocalGame"),
+			"click",
+			() => {
 				window.redirect("/play/local");
-			});
-		}
+			}
+		);
 
 		// Play Remote Game Button
-		const btnPlayRemotely = this.querySelector("#btnPlayRemotely");
-		if (btnPlayRemotely) {
-			btnPlayRemotely.addEventListener("click", () => {
+		super.addComponentEventListener(
+			this.querySelector("#btnPlayRemotely"),
+			"click",
+			() => {
 				window.redirect("/play/remote");
-			});
-		}
+			}
+		);
 
 		// Join Tournament Button
-		const btnPlayTournament = this.querySelector("#btnPlayTournament");
-		if (btnPlayTournament) {
-			btnPlayTournament.addEventListener("click", () => {
+		super.addComponentEventListener(
+			this.querySelector("#btnPlayTournament"),
+			"click",
+			() => {
 				window.redirect("/play/tournament");
-			});
-		}
+			}
+		);
 
 		// Play Tic Tac Toe Remotely Button
-		const btnRemotePlay = this.querySelector("#btnRemotePlay");
-		if (btnRemotePlay) {
-			btnRemotePlay.addEventListener("click", () => {
+		super.addComponentEventListener(
+			this.querySelector("#btnRemotePlay"),
+			"click",
+			() => {
 				window.redirect("/play/tic-tac-toe");
-			});
-		}
+			}
+		);
 	}
 
 	onWindowResize() {

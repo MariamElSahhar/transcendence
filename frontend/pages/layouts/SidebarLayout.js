@@ -39,14 +39,14 @@ export class SidebarLayout extends Component {
 
 	render() {
 		return `
-			<div class="h-100vh d-flex flex-column">
+			<div class="min-vh-100 d-flex flex-column">
 				<navbar-component></navbar-component>
 				<div class="d-flex h-100">
 					<div class="d-flex flex-column w-25">
 						<profile-header></profile-header>
 						<friends-sidebar></friends-sidebar>
 					</div>
-					<div class="w-75 h-100" id="page-content">${this.slot}</div>
+					<div class="w-75 flex-grow-1" id="page-content">${this.slot}</div>
 				</div>
 				<footer-component class="mt-auto"></footer-component>
 			</div>

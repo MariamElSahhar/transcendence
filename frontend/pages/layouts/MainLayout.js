@@ -18,9 +18,9 @@ export class MainLayout extends Component {
 
 	render() {
 		return `
-			<div id="main-layout" class="h-100vh d-flex flex-column">
+			<div id="main-layout" class="min-vh-100 d-flex flex-column">
 				<navbar-component></navbar-component>
-				<div id="slot" slot="page-content" class="h-100 w-100">${this.slot}</div>
+				<div id="slot" slot="page-content" class="flex-grow-1 w-100">${this.slot}</div>
 				<footer-component class="mt-auto"></footer-component>
 			</div>
         `;
