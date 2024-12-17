@@ -6,7 +6,7 @@
 
 	//<navbar-component></navbar-component>
 	const load = async(message, refresh = false) =>{
-	await import('../../pages/components/utilities/Error.js');
+	await import('../../pages/components/Error.js');
 	return (`
 		<${errorComponentName}
 			message="${message}"
