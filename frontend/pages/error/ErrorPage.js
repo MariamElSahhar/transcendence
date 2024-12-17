@@ -8,7 +8,6 @@ export class ErrorPage extends Component {
 
 	static load(message, refresh = false) {
 		window.app.innerHTML = `
-        <navbar-component></navbar-component>
         <${ErrorPage.errorComponentName}
             message="${message}"
             refresh="${refresh}">
