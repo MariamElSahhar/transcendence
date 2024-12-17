@@ -1,6 +1,6 @@
-import { Component } from '../Component.js';
-import { InputValidator } from '../../js/utils/input-validator.js';
-import { BootstrapUtils } from '../../js/utils/bootstrap-utils.js';
+import { Component } from "../Component.js";
+import { InputValidator } from "../../js/utils/input-validator.js";
+import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
 
 import {
 	avatarUpload,
@@ -8,13 +8,12 @@ import {
 	fetchUserById,
 	updateInfo,
 	deleteUser,
-} from "../../js/clients/users-client.js"
+} from "../../js/clients/users-client.js";
 import {
 	storeUserSession,
 	clearUserSession,
 	getUserSessionData,
 } from "../../js/utils/session-manager.js";
-import {redirect} from '../../js/router.js';
 const backendURL = "http://127.0.0.1:8000";
 
 export class SettingsPage extends Component {
@@ -28,14 +27,14 @@ export class SettingsPage extends Component {
 		this.inputValidEmail = false;
 		this.inputValidPassword = false;
 		this.inputValidConfirmPassword = false;
-		this.defaultHas2FA=true;
+		this.defaultHas2FA = true;
 
 		this.hasChangeAvatar = false;
 		this.avatarfile = null;
 
 		this.error = false;
 		this.errorMessage = "";
-		this.vars={}
+		this.vars = {};
 	}
 
 	async connectedCallback() {
@@ -52,7 +51,9 @@ export class SettingsPage extends Component {
 			<h2 class="card-title mb-3">Settings</h2>
 			<div class="d-flex flex-column align-items-center w-100">
             	<div class="position-relative mb-4">
-            		<img id="avatar" src=${getUserSessionData().avatar} alt="Unavailable" class="rounded-circle object-fit-cover" style="width: 125px; height: 125px;">
+            		<img id="avatar" src=${
+						getUserSessionData().avatar
+					} alt="Unavailable" class="rounded-circle object-fit-cover" style="width: 125px; height: 125px;">
             		<button id="trash-icon" type="button" class="btn btn-danger btn-sm position-absolute bottom-0 end-0">
                 		<i class="bi bi-trash-fill"></i>
             		</button>
@@ -65,7 +66,9 @@ export class SettingsPage extends Component {
                 	<div class="input-group has-validation">
                     	<span class="input-group-text" id="inputGroupPrepend">@</span>
                     	<input type="text" class="form-control" id="username"
-                        placeholder="New username" value=${getUserSessionData().username}
+                        placeholder="New username" value=${
+							getUserSessionData().username
+						}
                         autocomplete="username">
                     	<div id="username-feedback" class="invalid-feedback">
                         Invalid username.
@@ -76,7 +79,9 @@ export class SettingsPage extends Component {
             <!-- Email Section -->
             	<div class="form-group mb-4 w-50">
                 	<input type="email" class="form-control form-control-sm" id="email"
-                       placeholder="New email" value=${getUserSessionData().email}
+                       placeholder="New email" value=${
+							getUserSessionData().email
+						}
                        autocomplete="email">
                 	<div id="email-feedback" class="invalid-feedback">
                     Please enter a valid email.
@@ -118,7 +123,9 @@ export class SettingsPage extends Component {
             <!-- Two-Factor Authentication -->
 				<div class="form-group mb-4 w-50">
     				<div class="form-check form-switch d-flex align-items-center">
-        				<input class="form-check-input" type="checkbox" id="two-fa-switch" ${ getUserSessionData().otp == 'true' ? 'checked' : ''}>
+        				<input class="form-check-input" type="checkbox" id="two-fa-switch" ${
+							getUserSessionData().otp == "true" ? "checked" : ""
+						}>
         				<label class="form-check-label ms-2" for="two-fa-switch">Two-factor authentication</label>
     				</div>
 				</div>
@@ -190,8 +197,8 @@ export class SettingsPage extends Component {
 	}
 
 	async render() {
-		this.defaultHas2FA = getUserSessionData().otp == "true" ? true:false;
-		console.log(this.defaultHas2FA)
+		this.defaultHas2FA = getUserSessionData().otp == "true" ? true : false;
+		console.log(this.defaultHas2FA);
 		if (!(await this.loadDefaultSettings())) {
 			return;
 		}
@@ -287,13 +294,13 @@ export class SettingsPage extends Component {
 			this.#formHandler();
 		});
 
-		const deleteModal = document.getElementById('confirm-delete-modal');
+		const deleteModal = document.getElementById("confirm-delete-modal");
 		// this.deleteModal=deleteModal;
 		this.deleteModal = new bootstrap.Modal(deleteModal);
-		super.addComponentEventListener(deleteModal, 'hidden.bs.modal', () => {
-			this.alertDelete.setAttribute('alert-message', '');
-			this.alertForm.setAttribute('alert-type', 'error');
-			this.alertDelete.setAttribute('alert-display', 'false');
+		super.addComponentEventListener(deleteModal, "hidden.bs.modal", () => {
+			this.alertDelete.setAttribute("alert-message", "");
+			this.alertForm.setAttribute("alert-type", "error");
+			this.alertDelete.setAttribute("alert-display", "false");
 		});
 
 		this.deleteButton = this.querySelector("#delete-button");
@@ -320,7 +327,6 @@ export class SettingsPage extends Component {
 
 	async loadDefaultSettings() {
 		try {
-
 			this.innerHTML = this.renderWithDefaultSettings() + this.style();
 			return true;
 		} catch (error) {
@@ -384,10 +390,10 @@ export class SettingsPage extends Component {
 	async #trashAvatarHandler(event) {
 		event.preventDefault();
 		this.hasChangeAvatar = true;
-		console.log(this.avatarfile)
-		console.log(this.avatar.src)
-		this.avatarfile = '../../frontend/assets/image/default_avatar.jpg';
-		this.avatar.src = '../../frontend/assets/image/default_avatar.jpg';
+		console.log(this.avatarfile);
+		console.log(this.avatar.src);
+		this.avatarfile = "../../frontend/assets/image/default_avatar.jpg";
+		this.avatar.src = "../../frontend/assets/image/default_avatar.jpg";
 		this.#deleteAvatar();
 		this.#formHandler();
 	}
@@ -396,19 +402,18 @@ export class SettingsPage extends Component {
 			return await this.#deleteAvatar();
 		}
 		return await this.#updateAvatar();
-
 	}
 
 	async #deleteAvatar() {
 		try {
-			const { success, body } = await deleteAvatar(
-				{username: getUserSessionData().username},
-			);
-			console.log(success, body)
+			const { success, body } = await deleteAvatar({
+				username: getUserSessionData().username,
+			});
+			console.log(success, body);
 			if (!success) {
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
+				this.alertForm.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-type", "error");
+				this.alertForm.setAttribute("alert-display", "true");
 				return false;
 			}
 			return true;
@@ -420,13 +425,14 @@ export class SettingsPage extends Component {
 
 	async #updateAvatar() {
 		try {
-			const { success, body } = await avatarUpload(
-				{avatar: this.avatarfile, username: getUserSessionData().username},
-			);
+			const { success, body } = await avatarUpload({
+				avatar: this.avatarfile,
+				username: getUserSessionData().username,
+			});
 			if (!success) {
-				this.alertForm.setAttribute('alert-message', body.errors[0]);
-				this.alertForm.setAttribute('alert-type', 'error');
-				this.alertForm.setAttribute('alert-display', 'true');
+				this.alertForm.setAttribute("alert-message", body.errors[0]);
+				this.alertForm.setAttribute("alert-type", "error");
+				this.alertForm.setAttribute("alert-display", "true");
 				return false;
 			}
 			return true;
@@ -609,9 +615,6 @@ export class SettingsPage extends Component {
 		}
 	}
 
-
-
-
 	async #updateInfo() {
 		const newUsername = this.inputValidUsername
 			? this.username.value
@@ -622,13 +625,13 @@ export class SettingsPage extends Component {
 				? this.password.value
 				: null;
 		if (newUsername) {
-		this.vars['username'] = newUsername;
+			this.vars["username"] = newUsername;
 		}
 		if (newEmail) {
-		this.vars['email'] = newEmail;
+			this.vars["email"] = newEmail;
 		}
 		if (newPassword) {
-		this.vars['password'] = newPassword;
+			this.vars["password"] = newPassword;
 		}
 	}
 
@@ -653,17 +656,19 @@ export class SettingsPage extends Component {
 	async #deleteAccountHandler(event) {
 		event.preventDefault();
 		this.deleteAccountButton.innerHTML = `
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span class="sr-only">Delete</span>
-    `;
+			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+			<span class="sr-only">Delete</span>
+		`;
 		this.deleteAccountButton.disabled = true;
 		try {
-			const { success, data } = await deleteUser(getUserSessionData().userid);
+			const { success, data } = await deleteUser(
+				getUserSessionData().userid
+			);
 			console.log(success);
 			if (success) {
 				clearUserSession();
 				this.deleteModal.hide();
-				redirect('/');
+				window.redirect("/");
 			} else {
 				this.alertDelete.setAttribute("alert-message", body.errors[0]);
 				this.alertForm.setAttribute("alert-type", "error");
@@ -678,9 +683,9 @@ export class SettingsPage extends Component {
 
 	#startLoadButton() {
 		this.saveButton.innerHTML = `
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span class="sr-only">Loading...</span>
-    `;
+			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+			<span class="sr-only">Loading...</span>
+    	`;
 		this.saveButton.disabled = true;
 	}
 
@@ -688,32 +693,39 @@ export class SettingsPage extends Component {
 		this.saveButton.innerHTML = "Save changes";
 		this.saveButton.disabled = false;
 	}
+	
 	async #saveHandler() {
-
 		this.#startLoadButton();
 		if (this.hasChangeAvatar) {
 			await this.#changeAvatar();
 		}
-		if (this.inputValidUsername || this.inputValidEmail ||
-			(this.inputValidPassword && this.inputValidConfirmPassword)) {
-				this.#updateInfo();
-
+		if (
+			this.inputValidUsername ||
+			this.inputValidEmail ||
+			(this.inputValidPassword && this.inputValidConfirmPassword)
+		) {
+			this.#updateInfo();
 		}
 		if (this.defaultHas2FA !== this.twoFASwitch.checked) {
 			this.#update2FA();
 		}
-		console.log(this.vars, this.vars.email)
-		if(this.vars.email != undefined || this.vars.username!=undefined || this.vars.enable_otp!=undefined  || this.vars.password!=undefined)
-		{
-			try
-			{
-				const { success, body } = await updateInfo(getUserSessionData().userid,this.vars);
-				console.log(success)
+		console.log(this.vars, this.vars.email);
+		if (
+			this.vars.email != undefined ||
+			this.vars.username != undefined ||
+			this.vars.enable_otp != undefined ||
+			this.vars.password != undefined
+		) {
+			try {
+				const { success, body } = await updateInfo(
+					getUserSessionData().userid,
+					this.vars
+				);
+				console.log(success);
 				if (success) {
 					this.#resetLoadButton();
 				}
-				if(!success)
-				{
+				if (!success) {
 					this.#resetLoadButton();
 					if (body.username) {
 						console.log("here");
@@ -724,8 +736,11 @@ export class SettingsPage extends Component {
 						BootstrapUtils.setInvalidInput(this.email);
 						this.emailFeedback.innerHTML = body.email[0]; // Set the error message for email
 					}
-					console.log(body)
-					this.alertForm.setAttribute("alert-message", body.errors[0]);
+					console.log(body);
+					this.alertForm.setAttribute(
+						"alert-message",
+						body.errors[0]
+					);
 					this.alertForm.setAttribute("alert-type", "error");
 					this.alertForm.setAttribute("alert-display", "true");
 					return false;
@@ -733,24 +748,23 @@ export class SettingsPage extends Component {
 			} catch (error) {
 				window.loadNetworkError();
 				return false;
-				}
 			}
+		}
 		// }
 		const { success, data } = await fetchUserById(
 			getUserSessionData().userid
 		);
-		console.log(data)
-		if(success)
-		{
-		storeUserSession({
-			username: data.username,
-			id: data.id,
-			email: data.email,
-			avatar: data.avatar,
-			otp: data.enable_otp,
-		});
-		window.location.reload();
-	}
+		console.log(data);
+		if (success) {
+			storeUserSession({
+				username: data.username,
+				id: data.id,
+				email: data.email,
+				avatar: data.avatar,
+				otp: data.enable_otp,
+			});
+			window.location.reload();
+		}
 	}
 }
 
