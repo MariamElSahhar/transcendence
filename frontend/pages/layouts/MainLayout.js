@@ -29,6 +29,7 @@ export class MainLayout extends Component {
 	renderSlot(content) {
 		this.slot = "";
 		this.slot = content;
+		this.update();
 	}
 }
 
