@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "users",
     "corsheaders",
     "drf_spectacular",
+    "remote_pong",
+    "channels",
 ]
 
 REST_FRAMEWORK = {
