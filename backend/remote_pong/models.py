@@ -1,7 +1,17 @@
 from django.conf import settings
 from django.db import models
 
-# Create your models here.
+# for pairing up players
+class MatchmakingQueue(models.Model):
+    player = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="matchmaking_queue"
+    )
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.player.username} in matchmaking queue"
+
+# for active game sessions
 class GameSession(models.Model):
     STATUS_CHOICES = [
         ("ongoing", "Ongoing"),
