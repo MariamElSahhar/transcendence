@@ -2,7 +2,10 @@ import { Component } from "../Component.js";
 import { isAuth } from "../../js/utils/session-manager.js";
 import { register } from "../../js/clients/token-client.js";
 import { InputValidator } from "../../js/utils/input-validator.js";
-import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
+import {
+	setValidInput,
+	setInvalidInput,
+} from "../../js/utils/validity-toggle.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -170,10 +173,10 @@ export class SignUpPage extends Component {
 
 	#setUsernameInputValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.username);
+			setValidInput(this.username);
 			this.InputValidUsername = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.username);
+			setInvalidInput(this.username);
 			this.usernameFeedback.innerHTML = message;
 			this.InputValidUsername = false;
 		}
@@ -194,10 +197,10 @@ export class SignUpPage extends Component {
 
 	#setEmailInputValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.email);
+			setValidInput(this.email);
 			this.InputValidEmail = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.email);
+			setInvalidInput(this.email);
 			this.emailFeedback.innerHTML = message;
 			this.InputValidEmail = false;
 		}
@@ -236,10 +239,10 @@ export class SignUpPage extends Component {
 
 	#setInputPasswordValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.password);
+			setValidInput(this.password);
 			this.InputValidPassword = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.password);
+			setInvalidInput(this.password);
 			this.passwordFeeback.innerHTML = message;
 			this.InputValidPassword = false;
 		}
@@ -248,10 +251,10 @@ export class SignUpPage extends Component {
 
 	#setInputConfirmPasswordValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.confirmPassword);
+			setValidInput(this.confirmPassword);
 			this.InputValidConfirmPassword = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.confirmPassword);
+			setInvalidInput(this.confirmPassword);
 			this.confirmPasswordFeedback.innerHTML = message;
 			this.InputValidConfirmPassword = false;
 		}
