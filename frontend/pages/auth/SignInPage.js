@@ -1,6 +1,7 @@
 import { Component } from "../Component.js";
 import { isAuth } from "../../scripts/utils/session-manager.js";
 import { login } from "../../scripts/clients/token-client.js";
+
 export class SignInPage extends Component {
 	constructor() {
 		super();

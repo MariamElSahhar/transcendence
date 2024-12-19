@@ -1,5 +1,5 @@
-import { Component } from "./Component.js";
-import { verifyOTP } from "../scripts/clients/token-client.js";
+import { Component } from "../Component.js";
+import { verifyOTP } from "../../scripts/clients/token-client.js";
 
 export class TwoFactorAuth extends Component {
 	constructor() {
@@ -155,9 +155,9 @@ export class TwoFactorAuth extends Component {
 
 	#startLoadButton() {
 		this.sendCodeBtn.innerHTML = `
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span class="sr-only">Loading...</span>
-    `;
+			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+			<span class="sr-only">Loading...</span>
+		`;
 		this.sendCodeBtn.disabled = true;
 	}
 
@@ -169,33 +169,33 @@ export class TwoFactorAuth extends Component {
 	deleteKeyCode = 8;
 	vKeyCode = 86;
 
-	static isDigitKey(event) {
+	isDigitKey(event) {
 		return /^\d$/.test(this.getKeyValue(event));
 	}
 
-	static isDeleteKey(event) {
+	isDeleteKey(event) {
 		return this.getKeyCode(event) === this.deleteKeyCode;
 	}
 
-	static getKeyCode(event) {
+	getKeyCode(event) {
 		return event.keyCode || event.which;
 	}
 
-	static getKeyValue(event) {
+	getKeyValue(event) {
 		return event.data || event.key;
 	}
 
-	static isPasteShortcut(event) {
+	isPasteShortcut(event) {
 		const isVPressed =
 			this.getKeyValue(event) === "v" || event.keyCode === this.vKeyCode;
 		return isVPressed && this.isCtrlPressed(event);
 	}
 
-	static isCtrlPressed(event) {
+	isCtrlPressed(event) {
 		return event.ctrlKey || event.metaKey;
 	}
 
-	static getDigitValue(event) {
+	getDigitValue(event) {
 		return parseInt(this.getKeyValue(event));
 	}
 }

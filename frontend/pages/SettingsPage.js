@@ -38,7 +38,6 @@ export class SettingsPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../../scripts/utils/error-page.js");
 		this.render();
 	}
 	renderWithDefaultSettings() {
