@@ -5,7 +5,7 @@ const routes = {
 	// PUBLIC SCREENS
 	"/": {
 		component: "landing-page",
-		path: "../pages/landing/LandingPage.js",
+		path: "../pages/LandingPage.js",
 		protected: false,
 	},
 	"/sign-in": {
@@ -20,19 +20,14 @@ const routes = {
 	},
 	404: {
 		component: "not-found-page",
-		path: "../pages/error/NotFound.js",
-		protected: false,
-	},
-	"/network-error": {
-		component: "error-content",
-		path: "../pages/utilities/Error.js",
+		path: "../pages/NotFound.js",
 		protected: false,
 	},
 	// PROTECTED SCREENS
 	"/home": {
 		layout: "sidebar",
 		component: "home-page",
-		path: "../pages/home/HomePage.js",
+		path: "../pages/HomePage.js",
 		protected: false,
 	},
 	"/dashboard": {
@@ -56,24 +51,13 @@ const routes = {
 	"/friends": {
 		layout: "main",
 		component: "friends-page",
-		path: "../pages/friends/FriendsPage.js",
+		path: "../pages/FriendsPage.js",
 		protected: false,
 	},
 	"/settings": {
 		layout: "main",
 		component: "settings-page",
-		path: "../pages/settings/SettingsPage.js",
-		protected: false,
-	},
-	// test screen
-	"/layout": {
-		component: "main-layout",
-		path: "../pages/layouts/MainLayout.js",
-		protected: false,
-	},
-	"/sidebar": {
-		component: "sidebar-layout",
-		path: "../pages/layouts/SidebarLayout.js",
+		path: "../pages/SettingsPage.js",
 		protected: false,
 	},
 };

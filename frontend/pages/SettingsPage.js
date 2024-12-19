@@ -1,6 +1,6 @@
-import { Component } from '../Component.js';
-import { InputValidator } from '../../js/utils/input-validator.js';
-import { BootstrapUtils } from '../../js/utils/bootstrap-utils.js';
+import { Component } from './Component.js';
+import { InputValidator } from '../js/utils/input-validator.js';
+import { BootstrapUtils } from '../js/utils/bootstrap-utils.js';
 
 import {
 	avatarUpload,
@@ -8,13 +8,13 @@ import {
 	fetchUserById,
 	updateInfo,
 	deleteUser,
-} from "../../js/clients/users-client.js"
+} from "../js/clients/users-client.js"
 import {
 	storeUserSession,
 	clearUserSession,
 	getUserSessionData,
-} from "../../js/utils/session-manager.js";
-import {redirect} from '../../js/router.js';
+} from "../js/utils/session-manager.js";
+import {redirect} from '../js/router.js';
 const backendURL = "http://127.0.0.1:8000";
 
 export class SettingsPage extends Component {

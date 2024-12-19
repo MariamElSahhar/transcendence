@@ -1,4 +1,4 @@
-import { Component } from "../Component.js";
+import { Component } from "./Component.js";
 
 export class LandingPage extends Component {
 	constructor() {
