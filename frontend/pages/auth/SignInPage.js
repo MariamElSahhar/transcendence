@@ -66,7 +66,6 @@ export class SignInPage extends Component {
 
 		super.addComponentEventListener(this.forgotPassword, "click", () => {
 			window.redirect("/reset-password");
-			// alert("redirect to /reset-password");
 		});
 		super.addComponentEventListener(this.donthaveAccount, "click", () => {
 			window.redirect("/sign-up");
@@ -122,7 +121,6 @@ export class SignInPage extends Component {
 		if (success) {
 			this.alertForm.classList.add("d-none");
 			const authenticated = await isAuth();
-			console.log(authenticated);
 			if (authenticated) {
 				window.redirect("/home");
 				return false;
@@ -144,29 +142,6 @@ export class SignInPage extends Component {
 		twoFactorComponent.login = this.login.value;
 		container.appendChild(twoFactorComponent);
 	}
-
-	/* #OAuthReturn() {
-		if (!this.#isOAuthError()) {
-			return { render: true };
-		}
-		const refreshToken = Cookies.get("refresh_token");
-		Cookies.remove("refresh_token");
-		if (new JWT(refreshToken).isValid()) {
-			// this.#loadAndCache(refreshToken);
-			return { render: false };
-		}
-		return { render: true };
-	}
-
-	#isOAuthError() {
-		const params = new URLSearchParams(window.location.search);
-		if (params.has("error")) {
-			this.error = true;
-			this.errorMessage = params.get("error");
-			return false;
-		}
-		return true;
-	} */
 
 	#togglePasswordVisibility() {
 		if (this.passwordHiden) {

@@ -1,11 +1,6 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../js/utils/session-manager.js";
 import { register } from "../../js/clients/token-client.js";
 import { InputValidator } from "../../js/utils/input-validator.js";
-import {
-	setValidInput,
-	setInvalidInput,
-} from "../../js/utils/validity-toggle.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -173,10 +168,12 @@ export class SignUpPage extends Component {
 
 	#setUsernameInputValidity(validity, message = "") {
 		if (validity) {
-			setValidInput(this.username);
+			this.username.classList.remove("is-invalid");
+			this.username.classList.add("is-valid");
 			this.InputValidUsername = true;
 		} else {
-			setInvalidInput(this.username);
+			this.username.classList.remove("is-valid");
+			this.username.classList.add("is-invalid");
 			this.usernameFeedback.innerHTML = message;
 			this.InputValidUsername = false;
 		}
@@ -197,10 +194,12 @@ export class SignUpPage extends Component {
 
 	#setEmailInputValidity(validity, message = "") {
 		if (validity) {
-			setValidInput(this.email);
+			this.email.classList.remove("is-invalid");
+			this.email.classList.add("is-valid");
 			this.InputValidEmail = true;
 		} else {
-			setInvalidInput(this.email);
+			this.email.classList.remove("is-valid");
+			this.email.classList.add("is-invalid");
 			this.emailFeedback.innerHTML = message;
 			this.InputValidEmail = false;
 		}
@@ -239,10 +238,12 @@ export class SignUpPage extends Component {
 
 	#setInputPasswordValidity(validity, message = "") {
 		if (validity) {
-			setValidInput(this.password);
+			this.password.classList.remove("is-invalid");
+			this.password.classList.add("is-valid");
 			this.InputValidPassword = true;
 		} else {
-			setInvalidInput(this.password);
+			this.password.classList.remove("is-valid");
+			this.password.classList.add("is-invalid");
 			this.passwordFeeback.innerHTML = message;
 			this.InputValidPassword = false;
 		}
@@ -251,10 +252,12 @@ export class SignUpPage extends Component {
 
 	#setInputConfirmPasswordValidity(validity, message = "") {
 		if (validity) {
-			setValidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-invalid");
+			this.confirmPassword.classList.add("is-valid");
 			this.InputValidConfirmPassword = true;
 		} else {
-			setInvalidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-valid");
+			this.confirmPassword.classList.add("is-invalid");
 			this.confirmPasswordFeedback.innerHTML = message;
 			this.InputValidConfirmPassword = false;
 		}

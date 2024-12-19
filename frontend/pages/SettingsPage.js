@@ -1,10 +1,5 @@
 import { Component } from "./Component.js";
 import { InputValidator } from "../js/utils/input-validator.js";
-import {
-	setDefaultInputValidity,
-	setValidInput,
-	setInvalidInput,
-} from "../../js/utils/validity-toggle.js";
 
 import {
 	avatarUpload,
@@ -474,13 +469,16 @@ export class SettingsPage extends Component {
 
 	#setUsernameInputValidity(validity, message = "") {
 		if (validity === null) {
-			setDefaultInputValidity(this.username);
+			this.username.classList.remove("is-invalid");
+			this.username.classList.remove("is-valid");
 			this.inputValidUsername = false;
 		} else if (validity) {
-			setValidInput(this.username);
+			this.username.classList.remove("is-invalid");
+			this.username.classList.add("is-valid");
 			this.inputValidUsername = true;
 		} else {
-			setInvalidInput(this.username);
+			this.username.classList.remove("is-valid");
+			this.username.classList.add("is-invalid");
 			this.usernameFeedback.innerHTML = message;
 			this.inputValidUsername = false;
 		}
@@ -515,13 +513,16 @@ export class SettingsPage extends Component {
 
 	#setEmailInputValidity(validity, message = "") {
 		if (validity === null) {
-			setDefaultInputValidity(this.email);
+			this.email.classList.remove("is-invalid");
+			this.email.classList.remove("is-valid");
 			this.inputValidEmail = false;
 		} else if (validity) {
-			setValidInput(this.email);
+			this.email.classList.remove("is-invalid");
+			this.email.classList.add("is-valid");
 			this.inputValidEmail = true;
 		} else {
-			setInvalidInput(this.email);
+			this.email.classList.remove("is-valid");
+			this.email.classList.add("is-invalid");
 			this.emailFeedback.innerHTML = message;
 			this.inputValidEmail = false;
 		}
@@ -560,10 +561,12 @@ export class SettingsPage extends Component {
 
 	#setInputPasswordValidity(validity, message = "") {
 		if (validity) {
-			setValidInput(this.password);
+			this.password.classList.remove("is-invalid");
+			this.password.classList.add("is-valid");
 			this.inputValidPassword = true;
 		} else {
-			setInvalidInput(this.password);
+			this.password.classList.remove("is-valid");
+			this.password.classList.add("is-invalid");
 			this.passwordFeeback.innerHTML = message;
 			this.inputValidPassword = false;
 		}
@@ -572,10 +575,12 @@ export class SettingsPage extends Component {
 
 	#setInputConfirmPasswordValidity(validity, message = "") {
 		if (validity) {
-			setValidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-invalid");
+			this.confirmPassword.classList.add("is-valid");
 			this.inputValidConfirmPassword = true;
 		} else {
-			setInvalidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-valid");
+			this.confirmPassword.classList.add("is-invalid");
 			this.confirmPasswordFeedback.innerHTML = message;
 			this.inputValidConfirmPassword = false;
 		}
@@ -733,11 +738,13 @@ export class SettingsPage extends Component {
 					this.#resetLoadButton();
 					if (body.username) {
 						console.log("here");
-						setInvalidInput(this.username);
+						this.username.classList.remove("is-valid");
+						this.username.classList.add("is-invalid");
 						this.usernameFeedback.innerHTML = body.username[0]; // Set the error message for username
 					}
 					if (body.email) {
-						setInvalidInput(this.email);
+						this.email.classList.remove("is-valid");
+						this.email.classList.add("is-invalid");
 						this.emailFeedback.innerHTML = body.email[0]; // Set the error message for email
 					}
 					console.log(body);
