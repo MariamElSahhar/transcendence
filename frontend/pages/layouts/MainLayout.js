@@ -1,5 +1,5 @@
 import { Component } from "../Component.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 
 export class MainLayout extends Component {
 	constructor() {

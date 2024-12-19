@@ -1,5 +1,8 @@
 import { Component } from "./Component.js";
-import { fetchFriends, removeFriend } from "../js/clients/friends-client.js";
+import {
+	fetchFriends,
+	removeFriend,
+} from "../scripts/clients/friends-client.js";
 
 export class FriendsPage extends Component {
 	constructor() {

@@ -1,6 +1,5 @@
-import { Component } from "../Component.js";
-import { Keys } from "../../js/utils/Keys.js";
-import { verifyOTP } from "../../js/clients/token-client.js";
+import { Component } from "./Component.js";
+import { verifyOTP } from "../scripts/clients/token-client.js";
 
 export class TwoFactorAuth extends Component {
 	constructor() {
@@ -78,19 +77,19 @@ export class TwoFactorAuth extends Component {
 	}
 
 	#handleInputChange(event) {
-		if (!Keys.isPasteShortcut(event)) {
+		if (!this.isPasteShortcut(event)) {
 			event.preventDefault();
 		}
-		if (!Keys.isDigitKey(event) && !Keys.isDeleteKey(event)) {
+		if (!this.isDigitKey(event) && !this.isDeleteKey(event)) {
 			event.target.value = "";
 			return;
 		}
-		if (Keys.isDeleteKey(event)) {
+		if (this.isDeleteKey(event)) {
 			event.target.value = "";
 			this.#focusPreviousInput(event.target);
 			return;
 		}
-		event.target.value = Keys.getDigitValue(event);
+		event.target.value = this.getDigitValue(event);
 		this.#formHandler();
 		this.#focusNextInput(event.target);
 	}
@@ -165,6 +164,39 @@ export class TwoFactorAuth extends Component {
 	#resetLoadButton() {
 		this.sendCodeBtn.innerHTML = "Send code";
 		this.sendCodeBtn.disabled = false;
+	}
+
+	deleteKeyCode = 8;
+	vKeyCode = 86;
+
+	static isDigitKey(event) {
+		return /^\d$/.test(this.getKeyValue(event));
+	}
+
+	static isDeleteKey(event) {
+		return this.getKeyCode(event) === this.deleteKeyCode;
+	}
+
+	static getKeyCode(event) {
+		return event.keyCode || event.which;
+	}
+
+	static getKeyValue(event) {
+		return event.data || event.key;
+	}
+
+	static isPasteShortcut(event) {
+		const isVPressed =
+			this.getKeyValue(event) === "v" || event.keyCode === this.vKeyCode;
+		return isVPressed && this.isCtrlPressed(event);
+	}
+
+	static isCtrlPressed(event) {
+		return event.ctrlKey || event.metaKey;
+	}
+
+	static getDigitValue(event) {
+		return parseInt(this.getKeyValue(event));
 	}
 }
 

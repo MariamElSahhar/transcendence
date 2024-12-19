@@ -1,5 +1,5 @@
 import { Component } from "./Component.js";
-import { InputValidator } from "../js/utils/input-validator.js";
+import { InputValidator } from "../scripts/utils/input-validator.js";
 
 import {
 	avatarUpload,
@@ -7,13 +7,13 @@ import {
 	fetchUserById,
 	updateInfo,
 	deleteUser,
-} from "../js/clients/users-client.js";
+} from "../scripts/clients/users-client.js";
 import {
 	storeUserSession,
 	clearUserSession,
 	getUserSessionData,
-} from "../js/utils/session-manager.js";
-import { redirect } from "../js/router.js";
+} from "../scripts/utils/session-manager.js";
+import { redirect } from "../scripts/router.js";
 const backendURL = "http://127.0.0.1:8000";
 
 export class SettingsPage extends Component {
@@ -38,7 +38,7 @@ export class SettingsPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../../js/utils/error-page.js");
+		await import("../../scripts/utils/error-page.js");
 		this.render();
 	}
 	renderWithDefaultSettings() {

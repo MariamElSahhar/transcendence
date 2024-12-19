@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
 import { Engine } from "./Engine.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 
 export class TournamentPage extends Component {
 	constructor() {

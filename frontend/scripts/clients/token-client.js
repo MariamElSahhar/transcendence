@@ -17,8 +17,7 @@ export const login = async ({ username, password }) => {
 	const requestBody = { username, password };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
-	const authenticated = await isAuth()
-	console.log(body)
+	const authenticated = await isAuth();
 	if (authenticated) {
 		storeUserSession({
 			username: body.data.username,
@@ -28,7 +27,6 @@ export const login = async ({ username, password }) => {
 			otp: body.data.otp,
 		});
 	}
-	console.log(body.data.avatar)
 	return { success: true };
 };
 

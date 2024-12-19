@@ -1,4 +1,4 @@
-import { isAuth, getUserSessionData } from "./utils/session-manager.js";
+import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
 
 const routes = {
@@ -20,7 +20,7 @@ const routes = {
 	},
 	404: {
 		component: "not-found-page",
-		path: "../pages/NotFound.js",
+		path: "../pages/NotFoundPage.js",
 		protected: false,
 	},
 	// PROTECTED SCREENS

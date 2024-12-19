@@ -1,5 +1,8 @@
 import { Component } from "../../Component.js";
-import { addFriend, removeFriend } from "../../../js/clients/friends-client.js";
+import {
+	addFriend,
+	removeFriend,
+} from "../../../scripts/clients/friends-client.js";
 
 export class ProfileHeader extends Component {
 	constructor() {

@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
-import { register } from "../../js/clients/token-client.js";
-import { InputValidator } from "../../js/utils/input-validator.js";
+import { register } from "../../scripts/clients/token-client.js";
+import { InputValidator } from "../../scripts/utils/input-validator.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -19,10 +19,6 @@ export class SignUpPage extends Component {
 	}
 
 	render() {
-		// const { render } = this.#OAuthReturn();
-		// if (!render) {
-		// 	return false;
-		// }
 		return `
 			<div class="d-flex flex-column w-100 vh-100">
 				<h3 class="w-100 py-2">
