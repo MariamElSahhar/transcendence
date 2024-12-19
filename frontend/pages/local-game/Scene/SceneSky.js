@@ -1,5 +1,5 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-import { Sky } from "../../utils/controls/Sky.js";
+import { Sky } from "../../game-utils/controls/Sky.js";
 
 export class SceneSky {
 	#sky;

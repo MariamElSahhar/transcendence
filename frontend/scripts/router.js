@@ -39,7 +39,7 @@ const routes = {
 	"/play/local": {
 		layout: "main",
 		component: "local-game-page",
-		path: "../pages/local/LocalGamePage.js",
+		path: "../pages/local-game/LocalGamePage.js",
 		protected: false,
 	},
 	"/play/tournament": {
