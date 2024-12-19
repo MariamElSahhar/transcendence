@@ -11,11 +11,6 @@ export class SignInPage extends Component {
 		this.errorMessage = "";
 	}
 
-	async connectedCallback() {
-		await import("./IntraButton.js");
-		super.connectedCallback();
-	}
-
 	render() {
 		return `
 			<div class="d-flex flex-column w-100 vh-100">
@@ -52,7 +47,6 @@ export class SignInPage extends Component {
 								<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Sign in</button>
 							</form>
 							<hr class="my-4">
-							<intra-button-component class="p-0"></intra-button-component>
 						</div>
 					</div>
 				</div>

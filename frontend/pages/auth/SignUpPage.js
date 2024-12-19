@@ -20,11 +20,6 @@ export class SignUpPage extends Component {
 		this.errorMessage = "";
 	}
 
-	async connectedCallback() {
-		await import("./IntraButton.js");
-		super.connectedCallback();
-	}
-
 	render() {
 		// const { render } = this.#OAuthReturn();
 		// if (!render) {
@@ -91,7 +86,6 @@ export class SignUpPage extends Component {
 								<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
 							</form>
 							<hr class="my-4">
-							<intra-button-component></intra-button-component>
 						</div>
 					</div>
 				</div>

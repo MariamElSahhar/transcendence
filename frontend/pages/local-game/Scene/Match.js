@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Player } from "./player/Player.js";
-import { Ball } from "../../local/Scene/Ball.js";
+import { Ball } from "./Ball.js";
 import { addLocalGame } from "../../../js/clients/gamelog-client.js";
 
 export class Match {
