@@ -30,12 +30,6 @@ export const clearUserSession = async () => {
 	return await logout();
 };
 
-function isTokenExpired(token) {
-	const payload = JSON.parse(atob(token.split(".")[1]));
-	const now = Math.floor(Date.now() / 1000);
-	return payload.exp < now;
-}
-
 export const isAuth = async () => {
 	let authenticated = await tokenStatus();
 	let attempts = 0;

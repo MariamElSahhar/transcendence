@@ -71,7 +71,7 @@ export class DashboardPage extends Component {
 	async getGameLog() {
 		const { success, data } = await fetchUserGameLog(this.userid);
 		if (!success) {
-			console.log("Error fetching gamelog");
+			console.error("Error fetching gamelog");
 			return;
 		}
 		this.gamelog = data;
