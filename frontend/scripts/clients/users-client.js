@@ -41,14 +41,14 @@ export const createUser = async (userData) => {
 export const updateUser = async (id, userData) => {
 	const url = `${URIs.users}/${id}/`;
 	const { status, body, error } = await patch(url, userData);
-	if (error) return { success: false, data: null, error: error };
-	return { success: true, data: body };
+	if (error) return { success: false, body: null, error: error };
+	return { success: true, body };
 };
 
 // Delete user
 export const deleteUser = async (id) => {
 	const url = `${URIs.users}/${id}/`;
-	const { status, body, error } =await del(url);
+	const { status, body, error } = await del(url);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, data: body };
 };
@@ -69,42 +69,26 @@ export const emailExist = async (email) => {
 	return { success: true, body };
 };
 
-
-export const deleteAvatar = async ({username}) => {
+export const deleteAvatar = async ({ username }) => {
 	const url = `${URIs.users}/${username}/avatar/`;
 	const { status, body, error } = await del(url);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, data };
 };
 
-
-export const update2fa = async ({id, update}) => {
+export const update2fa = async ({ id, update }) => {
 	const url = `${URIs.users}/${id}/2fa/`;
-	console.log(url)
-	const { status, body, error } = await post(url,update);
+	console.log(url);
+	const { status, body, error } = await post(url, update);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, body };
 };
 
-
-
-export const avatarUpload = async ({avatar, username}) => {
-	console.log("here")
+export const avatarUpload = async ({ avatar, username }) => {
+	console.log("here");
 	const url = `${URIs.users}/${username}/avatar/`;
-	console.log(url)
-	const { status, body, error } = await post(url, {avatar, username});
+	console.log(url);
+	const { status, body, error } = await post(url, { avatar, username });
 	if (error) return { success: false, error: error };
 	return { success: true, body };
-};
-
-
-export const updateInfo = async (id, vars) => {
-	console.log(vars);
-	const url=`${URIs.users}/${id}/`;
-	console.log(url);
-	const { status, body, error } = await patch(url, vars);
-	console.log(status, body,error)
-	if (error) return { success: false, body:error };
-	// return { success: true, body };
-	return { success: true, body:body };
 };

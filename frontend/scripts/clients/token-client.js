@@ -17,6 +17,7 @@ export const login = async ({ username, password }) => {
 	const requestBody = { username, password };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
+	// remove this for production - user never accesses login page if they're authenticated
 	const authenticated = await isAuth();
 	if (authenticated) {
 		storeUserSession({

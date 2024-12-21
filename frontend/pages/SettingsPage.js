@@ -5,7 +5,7 @@ import {
 	avatarUpload,
 	deleteAvatar,
 	fetchUserById,
-	updateInfo,
+	updateUser,
 	deleteUser,
 } from "../scripts/clients/users-client.js";
 import {
@@ -725,7 +725,7 @@ export class SettingsPage extends Component {
 			this.vars.password != undefined
 		) {
 			try {
-				const { success, body } = await updateInfo(
+				const { success, body } = await updateUser(
 					getUserSessionData().userid,
 					this.vars
 				);
