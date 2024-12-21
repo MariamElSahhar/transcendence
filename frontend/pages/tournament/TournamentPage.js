@@ -31,7 +31,7 @@ export class TournamentPage extends Component {
                 <h3 class="text-center">Setup Tournament</h3>
                 <form id="player-form">
                     ${this.renderPlayerInputs()}
-                    <button type="submit" class="btn btn-primary mt-3 w-100">Start Tournament</button>
+                    <button type="submit" id="submit-player-names" class="btn btn-primary mt-3 w-100" disabled>Start Tournament</button>
                 </form>
             </div>
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
@@ -43,7 +43,12 @@ export class TournamentPage extends Component {
 
 	renderPlayerInputs() {
 		let inputs = "";
-		for (let i = 1; i <= 4; i++) {
+		inputs += `
+			<div class="mb-3">
+				<label for="player1-name" class="form-label">Player 1 Name:</label>
+				<input type="text" id="player1-name" name="player1-name" class="form-control" required disabled placeholder="${this.players[0]}"/>
+			</div>`;
+		for (let i = 2; i <= 4; i++) {
 			inputs += `
                 <div class="mb-3">
                     <label for="player${i}-name" class="form-label">Player ${i} Name:</label>
@@ -55,12 +60,28 @@ export class TournamentPage extends Component {
 
 	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
+		const submitPlayers = this.querySelector("#submit-player-names");
 
-		form.addEventListener("submit", (event) => {
+		for (let i = 2; i <= 4; i++) {
+			super.addComponentEventListener(
+				this.querySelector(`#player${i}-name`),
+				"input",
+				() => {
+					if (
+						this.querySelector("#player2-name").value &&
+						this.querySelector("#player3-name").value &&
+						this.querySelector("#player4-name").value
+					)
+						submitPlayers.removeAttribute("disabled");
+					else submitPlayers.setAttribute("disabled", "");
+				}
+			);
+		}
+		super.addComponentEventListener(form, "submit", (event) => {
 			event.preventDefault();
-			this.players = [];
-			for (let i = 1; i <= 4; i++) {
+			for (let i = 2; i <= 4; i++) {
 				const playerName = form.querySelector(`#player${i}-name`).value;
+				if (!playerName) return;
 				this.players.push(playerName || `Player ${i}`);
 			}
 
