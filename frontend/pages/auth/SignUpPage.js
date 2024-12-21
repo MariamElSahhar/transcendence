@@ -1,8 +1,6 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../js/utils/session-manager.js";
-import { register } from "../../js/clients/token-client.js";
-import { InputValidator } from "../../js/utils/input-validator.js";
-import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
+import { register } from "../../scripts/clients/token-client.js";
+import { InputValidator } from "../../scripts/utils/input-validator.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -20,16 +18,7 @@ export class SignUpPage extends Component {
 		this.errorMessage = "";
 	}
 
-	async connectedCallback() {
-		await import("./IntraButton.js");
-		super.connectedCallback();
-	}
-
 	render() {
-		// const { render } = this.#OAuthReturn();
-		// if (!render) {
-		// 	return false;
-		// }
 		return `
 			<div class="d-flex flex-column w-100 vh-100">
 				<h3 class="w-100 py-2">
@@ -91,7 +80,6 @@ export class SignUpPage extends Component {
 								<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
 							</form>
 							<hr class="my-4">
-							<intra-button-component></intra-button-component>
 						</div>
 					</div>
 				</div>
@@ -176,10 +164,12 @@ export class SignUpPage extends Component {
 
 	#setUsernameInputValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.username);
+			this.username.classList.remove("is-invalid");
+			this.username.classList.add("is-valid");
 			this.InputValidUsername = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.username);
+			this.username.classList.remove("is-valid");
+			this.username.classList.add("is-invalid");
 			this.usernameFeedback.innerHTML = message;
 			this.InputValidUsername = false;
 		}
@@ -200,10 +190,12 @@ export class SignUpPage extends Component {
 
 	#setEmailInputValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.email);
+			this.email.classList.remove("is-invalid");
+			this.email.classList.add("is-valid");
 			this.InputValidEmail = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.email);
+			this.email.classList.remove("is-valid");
+			this.email.classList.add("is-invalid");
 			this.emailFeedback.innerHTML = message;
 			this.InputValidEmail = false;
 		}
@@ -242,10 +234,12 @@ export class SignUpPage extends Component {
 
 	#setInputPasswordValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.password);
+			this.password.classList.remove("is-invalid");
+			this.password.classList.add("is-valid");
 			this.InputValidPassword = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.password);
+			this.password.classList.remove("is-valid");
+			this.password.classList.add("is-invalid");
 			this.passwordFeeback.innerHTML = message;
 			this.InputValidPassword = false;
 		}
@@ -254,10 +248,12 @@ export class SignUpPage extends Component {
 
 	#setInputConfirmPasswordValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-invalid");
+			this.confirmPassword.classList.add("is-valid");
 			this.InputValidConfirmPassword = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-valid");
+			this.confirmPassword.classList.add("is-invalid");
 			this.confirmPasswordFeedback.innerHTML = message;
 			this.InputValidConfirmPassword = false;
 		}

@@ -1,8 +1,8 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import * as TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.umd.js";
 
-import { _ThreeJS } from "../utils/_ThreeJS.js";
-import { _KeyHookHandler } from "../utils/_KeyHookHandler.js";
+import { _ThreeJS } from "../game-utils/_ThreeJS.js";
+import { _KeyHookHandler } from "../game-utils/_KeyHookHandler.js";
 import { Scene } from "./TournamentScene.js";
 
 export class Engine {

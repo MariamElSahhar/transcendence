@@ -1,7 +1,7 @@
 import { Component } from "../Component.js";
-import { fetchFriends } from "../../js/clients/friends-client.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
-import { fetchUserById } from "../../js/clients/users-client.js";
+import { fetchFriends } from "../../scripts/clients/friends-client.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
+import { fetchUserById } from "../../scripts/clients/users-client.js";
 
 export class SidebarLayout extends Component {
 	constructor() {

@@ -49,12 +49,8 @@ def user_retrieve_update_destroy_view(request, user_id):
         return Response(response_data)
 
     elif request.method == "PATCH":
-        print(user_id)
-        print(request.data)
         serializer = UserSerializer(user, data=request.data, partial=True)
-        print("here??????")
         serializer.is_valid(raise_exception=True)
-        print("here??")
         if "password" in serializer.validated_data:
             print(serializer.validated_data["password"])
             user = serializer.save(password=make_password(serializer.validated_data["password"]))

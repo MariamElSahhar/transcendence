@@ -1,5 +1,8 @@
 import { Component } from "../../Component.js";
-import { addFriend, removeFriend } from "../../../js/clients/friends-client.js";
+import {
+	addFriend,
+	removeFriend,
+} from "../../../scripts/clients/friends-client.js";
 
 export class ProfileHeader extends Component {
 	constructor() {
@@ -23,8 +26,7 @@ export class ProfileHeader extends Component {
                 <div class="profile-info d-flex align-items-center gap-1">
                     <div class="profile-img-container">
                         <img src="${this.data.avatar}"
-                            onerror="this.onerror=null;this.src='/images/default_profile.svg';"
-                            class="profile-img w-100 h-100  rounded-circle"
+                            class="profile-img w-100 h-100 rounded-circle"
                         >
                     </div>
                     <div class="user-info d-flex flex-column gap-1">

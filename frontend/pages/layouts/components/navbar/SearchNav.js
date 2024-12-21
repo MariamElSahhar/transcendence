@@ -1,6 +1,5 @@
 import { Component } from "../../../Component.js";
-import { ErrorPage } from "../../../error/ErrorPage.js";
-import { usersSearch } from "../../../../js/clients/users-client.js";
+import { usersSearch } from "../../../../scripts/clients/users-client.js";
 
 export class SearchNav extends Component {
 	constructor() {

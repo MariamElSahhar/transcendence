@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
 import { Engine } from "./Engine.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 
 export class TournamentPage extends Component {
 	constructor() {
@@ -10,7 +10,7 @@ export class TournamentPage extends Component {
 		this.overlay = null;
 		this.players = [];
 		this.currentMatchIndex = 0;
-		this.maxScore = 5;
+		this.maxScore = 1;
 		this.scores = [0, 0];
 		this.matches = [];
 		this.winners = [];

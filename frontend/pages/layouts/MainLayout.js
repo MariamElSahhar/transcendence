@@ -1,5 +1,5 @@
 import { Component } from "../Component.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 
 export class MainLayout extends Component {
 	constructor() {
@@ -29,7 +29,7 @@ export class MainLayout extends Component {
 	renderSlot(content) {
 		this.slot = "";
 		this.slot = content;
-		this.update();
+		if (super.isRendered()) this.update();
 	}
 }
 

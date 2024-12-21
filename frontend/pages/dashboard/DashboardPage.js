@@ -1,7 +1,7 @@
 // UserProfilePage.js
 import { Component } from "../Component.js";
-import { fetchUserGameLog } from "../../js/clients/gamelog-client.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { fetchUserGameLog } from "../../scripts/clients/gamelog-client.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 
 export class DashboardPage extends Component {
 	constructor() {
@@ -71,7 +71,7 @@ export class DashboardPage extends Component {
 	async getGameLog() {
 		const { success, data } = await fetchUserGameLog(this.userid);
 		if (!success) {
-			console.log("Error fetching gamelog");
+			console.error("Error fetching gamelog");
 			return;
 		}
 		this.gamelog = data;
