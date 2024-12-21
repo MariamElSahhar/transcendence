@@ -1,13 +1,13 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from users.models import CustomUser
 from ..models import RemoteGameLog, LocalGameLog
 from ..serializers import (
     RemoteGameSerializer,
     LocalGameSerializer,
-    TrimmedGameSerializer,
 )
 
 
@@ -45,19 +45,12 @@ def gamelog_local(request):
 
 # GET OR CREATE NEW REMOTE GAMESLOGS
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def gamelog(request):
     user = request.user
-    username = request.query_params.get(
-        "username", user.username if user.is_authenticated else None
-    )
+    user_id = request.query_params.get("user_id", user.id)
 
-    if not username:
-        return Response(
-            {"error": "Authentication required to view game logs."},
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
-
-    target_user = CustomUser.objects.filter(username=username).first()
+    target_user = CustomUser.objects.filter(id=user_id).first()
     if not target_user:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
@@ -68,7 +61,11 @@ def gamelog(request):
     print(f"Local games: {local_games}")
 
     response_data = {
-        "remote": RemoteGameSerializer(remote_games, many=True).data,
-        "local": LocalGameSerializer(local_games, many=True).data,
+        "remote": RemoteGameSerializer(
+            remote_games, many=True, context={"request": request}
+        ).data,
+        "local": LocalGameSerializer(
+            local_games, many=True, context={"request": request}
+        ).data,
     }
     return Response(response_data)
