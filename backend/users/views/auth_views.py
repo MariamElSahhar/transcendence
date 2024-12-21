@@ -19,7 +19,6 @@ def login_view(request):
     if login_serializer.is_valid():
         username = login_serializer.validated_data["username"]
         password = login_serializer.validated_data["password"]
-        print("here")
         request.session["password"] = password
 
         user = CustomUser.objects.filter(username=username).first()
@@ -154,21 +153,7 @@ def logout_view(request):
         },
         status=status.HTTP_200_OK,
     )
-    response.set_cookie(
-        key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-        value="",
-        expires="Thu, 01 Jan 1970 00:00:00 GMT",
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
-    response.set_cookie(
-        key="refresh_token",
-        value="",
-        expires="Thu, 01 Jan 1970 00:00:00 GMT",
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
+    response.delete_cookie(settings.SIMPLE_JWT["AUTH_COOKIE"])
+    response.delete_cookie("refresh_token")
     update_user_activity(user, False)
     return response
