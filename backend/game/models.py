@@ -66,9 +66,9 @@ class LocalGameLog(models.Model):
     users = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="local_games"
     )
-    game_type = models.CharField(max_length=100, default="Local")
+    game_type = models.CharField(max_length=15, default="Local")
     date = models.DateTimeField(auto_now_add=True)
-    opponent_username = models.CharField(max_length=100, null=True, blank=True)
+    opponent_username = models.CharField(max_length=100, default="Player2")
     tournamentID = models.CharField(max_length=100, null=True, blank=True)
 
     my_score = models.PositiveIntegerField(default=0)
