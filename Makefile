@@ -34,6 +34,9 @@ migrate:
 showmigrations:
 	ENV=dev $(PYTHON_ENV) backend/manage.py showmigrations
 
+flush:
+	ENV=dev $(PYTHON_ENV) backend/manage.py flush
+
 createsuperuser:
 	ENV=dev $(PYTHON_ENV) backend/manage.py createsuperuser
 

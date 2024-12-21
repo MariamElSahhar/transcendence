@@ -22,15 +22,11 @@ class RemoteGameAdmin(admin.ModelAdmin):
 @admin.register(LocalGameLog)
 class LocalGameAdmin(admin.ModelAdmin):
     list_display = (
-        "get_users",
+        "users",
         "game_type",
         "date",
-        "localOpponent",
+        "opponent_username",
         "tournamentID",
         "my_score",
         "opponent_score",
     )
-
-    def get_users(self, obj):
-        return ", ".join([user.username for user in obj.users.all()])
-    get_users.short_description = "Users"
