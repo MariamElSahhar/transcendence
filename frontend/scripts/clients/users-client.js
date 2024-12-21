@@ -49,8 +49,8 @@ export const updateUser = async (id, userData) => {
 export const deleteUser = async (id) => {
 	const url = `${URIs.users}/${id}/`;
 	const { status, body, error } = await del(url);
-	if (error) return { success: false, data: null, error: error };
-	return { success: true, data: body };
+	if (error) return { success: false, error: error };
+	return { success: true };
 };
 
 /* export const usernameExist = async (username) => {

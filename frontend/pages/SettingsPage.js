@@ -670,9 +670,7 @@ export class SettingsPage extends Component {
     `;
 		this.deleteAccountButton.disabled = true;
 		try {
-			const { success, data } = await deleteUser(
-				getUserSessionData().userid
-			);
+			const { success } = await deleteUser(getUserSessionData().userid);
 			console.log(success);
 			if (success) {
 				clearUserSession();
