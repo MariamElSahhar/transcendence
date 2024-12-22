@@ -2,19 +2,19 @@ const BASE_URL = "http://127.0.0.1:8000/api";
 import { post, get } from "../utils/http-requests.js";
 
 const URIs = {
-	gamelog: `${BASE_URL}/gamelog/`,
+	gamelog: (user_id) => `${BASE_URL}/users/${user_id}/gamelog/`,
 	gamelogRemote: `${BASE_URL}/gamelog/remote/`,
 	gamelogTTT: `${BASE_URL}/gamelog/ttt/`,
 	gamelogLocal: `${BASE_URL}/gamelog/local/`,
 };
 
 // Fetch game log
-export const fetchUserGameLog = async (userid) => {
-	/* const url = `${URIs.gamelog}${userid}/`;
+export const fetchUserGameLog = async (user_id) => {
+	const url = URIs.gamelog(user_id);
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data: body.data }; */
-	// DUMMY DATA
+	return { success: true, data: body };
+	/* // DUMMY DATA
 	const gamelog = {
 		local: [
 			{
@@ -105,7 +105,7 @@ export const fetchUserGameLog = async (userid) => {
 			},
 		],
 		ttt: [],
-	};
+	}; */
 	return { success: true, data: gamelog };
 };
 

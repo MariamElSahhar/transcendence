@@ -161,7 +161,7 @@ class RemoteGameSerializer(serializers.ModelSerializer):
 
         if user and user in obj.users.all():
             opponents = obj.users.exclude(id=user.id)
-            return opponents.first().username if opponents.exists() else None
+            return opponents.first().username if opponents.exists() else "Deleted User"
         return None
 
     def get_opponent_score(self, obj):

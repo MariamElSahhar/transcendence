@@ -43,11 +43,7 @@ def create_gamelog_local(request):
 
 # GET OR CREATE NEW REMOTE GAMESLOGS
 @api_view(["GET"])
-def gamelog(request):
-    user = request.user
-    user_id = request.query_params.get("user_id", user.id)
-    print(user_id)
-
+def gamelog(request, user_id):
     target_user = CustomUser.objects.filter(id=user_id).first()
     if not target_user:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)

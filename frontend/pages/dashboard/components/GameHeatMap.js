@@ -79,7 +79,11 @@ export class GameHeatMap extends Component {
 	}
 
 	countGames(gamelog) {
-		const allGames = [...gamelog.remote, ...gamelog.local, ...gamelog.ttt];
+		const allGames = [
+			...(gamelog.remote || []),
+			...(gamelog.local || []),
+			...(gamelog.ttt || []),
+		];
 
 		const dateCounts = allGames.reduce((counts, game) => {
 			const gameDate = game.date;
