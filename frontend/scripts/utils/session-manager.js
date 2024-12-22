@@ -1,6 +1,5 @@
 import { refresh, tokenStatus, logout } from "../clients/token-client.js";
 
-const maxRefreshAttempts = 1;
 const backendURL = "http://127.0.0.1:8000";
 
 export const storeUserSession = ({ username, id, email, avatar, otp }) => {
@@ -32,12 +31,11 @@ export const clearUserSession = async () => {
 
 export const isAuth = async () => {
 	let authenticated = await tokenStatus();
-	let attempts = 0;
-	while (!authenticated && attempts < maxRefreshAttempts) {
+	if (!authenticated) {
 		await refresh();
 		authenticated = await tokenStatus();
-		attempts++;
 	}
 	if (authenticated) return true;
-	else clearUserSession(); // NOTE: maybe this isn't the best behavior?
+	else return false;
+	// else clearUserSession(); // NOTE: maybe this isn't the best behavior?
 };

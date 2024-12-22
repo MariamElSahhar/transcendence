@@ -55,7 +55,7 @@ export const tokenStatus = async () => {
 	return status == 200 ? true : false;
 };
 
-// clears http-only cookies
+// clears http-only cookies and sets user as offline on the server
 export const logout = async () => {
 	const url = URIS.logout;
 	const { status, body, error } = await post(url);

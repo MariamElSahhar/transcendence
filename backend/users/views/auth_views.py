@@ -139,14 +139,8 @@ def verify_otp_view(request):
 
 # LOGOUT
 @api_view(["POST"])
-@permission_classes([AllowAny])
 def logout_view(request):
     user = request.user
-    if user.is_anonymous:
-        return Response(
-            {"message": "User is not authenticated."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
     response = Response(
         {
             "message": "Logout successful.",
