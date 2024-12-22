@@ -12,6 +12,7 @@ export class ProfileHeader extends Component {
 
 	renderUserData(user) {
 		this.data = user;
+		console.log(this.data);
 		this.update();
 	}
 
