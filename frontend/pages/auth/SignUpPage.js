@@ -138,7 +138,7 @@ export class SignUpPage extends Component {
 			this.#toggleConfirmPasswordVisibility
 		);
 		super.addComponentEventListener(this.haveAccount, "click", () =>
-			window.redirect("/sign-in")
+			window.redirect("/login")
 		);
 		super.addComponentEventListener(this.signupForm, "submit", (event) => {
 			event.preventDefault();

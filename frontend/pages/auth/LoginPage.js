@@ -1,7 +1,7 @@
 import { Component } from "../Component.js";
 import { isAuth } from "../../scripts/utils/session-manager.js";
 import { login } from "../../scripts/clients/token-client.js";
-export class SignInPage extends Component {
+export class LoginPage extends Component {
 	constructor() {
 		super();
 		this.isValidEmailInput = false;
@@ -20,13 +20,13 @@ export class SignInPage extends Component {
 				<div id="container" class="d-flex justify-content-center align-items-start mt-5 rounded-3">
 					<div class="login-card card m-3">
 						<div class="card-body m-2">
-							<h2 class="card-title text-center m-5">Sign In</h2>
+							<h2 class="card-title text-center m-5">Log In</h2>
 							<form id="signin-form">
 								<div class="form-group mb-4">
 									<input type="text" class="form-control" id="login"
 										placeholder="Username">
 									<div id="login-feedback" class="invalid-feedback">
-										Please enter a valid login.
+										Please enter a valid username.
 									</div>
 								</div>
 								<div class="form-group mb-4">
@@ -44,7 +44,7 @@ export class SignInPage extends Component {
 								<div class="d-flex mb-3">
 									<small role="button" id="dont-have-account">Don't have an account? Sign up</small>
 								</div>
-								<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Sign in</button>
+								<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Log In</button>
 							</form>
 							<hr class="my-4">
 						</div>
@@ -168,4 +168,4 @@ export class SignInPage extends Component {
 	}
 }
 
-customElements.define("sign-in-page", SignInPage);
+customElements.define("login-page", LoginPage);

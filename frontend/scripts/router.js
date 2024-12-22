@@ -8,9 +8,9 @@ const routes = {
 		path: "../pages/LandingPage.js",
 		protected: false,
 	},
-	"/sign-in": {
-		component: "sign-in-page",
-		path: "../pages/auth/SignInPage.js",
+	"/login": {
+		component: "login-page",
+		path: "../pages/auth/LoginPage.js",
 		protected: false,
 	},
 	"/sign-up": {
