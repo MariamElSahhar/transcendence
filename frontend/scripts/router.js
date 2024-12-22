@@ -20,7 +20,7 @@ const routes = {
 	},
 	404: {
 		component: "not-found-page",
-		path: "../pages/NotFoundPage.js",
+		path: "../pages/error/NotFoundPage.js",
 		protected: false,
 	},
 	// PROTECTED SCREENS
