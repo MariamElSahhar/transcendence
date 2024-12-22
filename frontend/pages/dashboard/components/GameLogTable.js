@@ -98,7 +98,7 @@ export class GameLogTable extends Component {
 						}"></i></span>${game.is_win ? "Win" : "Loss"}</td>
                         <td>${game.opponent}</td>
                         <td>${game.my_score} - ${game.opponent_score} </td>
-                        <td>${game.date}</td>
+                        <td>${game.date.split("T")[0]}</td>
                     </tr>
                 `
 			)
