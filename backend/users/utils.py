@@ -27,7 +27,8 @@ def send_otp(user):
 
 # ADD ACCESS TOKEN COOKIE TO RESPONSE
 def set_response_cookie(response, tokens, user, set_refresh=True):
-    update_user_activity(user, True)
+    if user:
+        update_user_activity(user, True)
     response.set_cookie(
         key=settings.SIMPLE_JWT["AUTH_COOKIE"],
         value=tokens["access"],
