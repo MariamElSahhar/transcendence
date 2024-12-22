@@ -1,11 +1,9 @@
 from uuid import uuid4
-from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import base64
 
