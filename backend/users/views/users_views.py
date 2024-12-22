@@ -64,8 +64,10 @@ def user_retrieve_update_destroy_view(request, user_id):
 
 
 @api_view(["POST", "DELETE"])
-def avatar_view(request, username):
-    user = CustomUser.objects.get(username=username)
+def avatar_view(request, user_id):
+    if user_id != request.user.id:
+        return Response({"error": "You may only edit your own avatar."}, status=401)
+    user = CustomUser.objects.get(id=user_id)
     if request.method == "POST":
         try:
             avatar_data = request.data.get("avatar")
@@ -73,10 +75,10 @@ def avatar_view(request, username):
                 return Response({"error": "Avatar data is missing."}, status=400)
             file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]
             ext = file_format.split("/")[-1]
-            avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{username}_avatar{uuid4().hex}.{ext}")
+            avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{user_id}_avatar{uuid4().hex}.{ext}")
             if user.avatar.name !=  "default_avatar/default_avatar.jpg":
                 user.avatar.delete()
-            user.avatar.save(f"{username}_avatar{uuid4().hex}.{ext}", avatar_file)
+            user.avatar.save(f"{user_id}_avatar{uuid4().hex}.{ext}", avatar_file)
             user.save()
             response = Response({"message": "Avatar uploaded successfully!", "data":{"avatar": user.avatar.url}}, status=200)
             print(response.data)

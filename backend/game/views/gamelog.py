@@ -46,6 +46,7 @@ def create_gamelog_local(request):
 def gamelog(request):
     user = request.user
     user_id = request.query_params.get("user_id", user.id)
+    print(user_id)
 
     target_user = CustomUser.objects.filter(id=user_id).first()
     if not target_user:

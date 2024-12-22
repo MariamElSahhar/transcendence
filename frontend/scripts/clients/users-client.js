@@ -22,8 +22,8 @@ export const fetchUserById = async (id) => {
 };
 
 // Function user by ID
-export const usersSearch = async (username) => {
-	const url = `${URIs.users}?username=${username}`;
+export const searchUsers = async (username) => {
+	const url = `${URIs.users}/?username=${username}`;
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, body };
@@ -69,26 +69,24 @@ export const deleteUser = async (id) => {
 	return { success: true, body };
 };
  */
-export const deleteAvatar = async ({ username }) => {
-	const url = `${URIs.users}/${username}/avatar/`;
+export const deleteAvatar = async ({ user_id }) => {
+	const url = `${URIs.users}/${user_id}/avatar/`;
 	const { status, body, error } = await del(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data };
+	return { success: true, data: body };
 };
 
-export const update2fa = async ({ id, update }) => {
+/* export const update2fa = async ({ id, update }) => {
 	const url = `${URIs.users}/${id}/2fa/`;
 	console.log(url);
 	const { status, body, error } = await post(url, update);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, body };
-};
+}; */
 
-export const avatarUpload = async ({ avatar, username }) => {
-	console.log("here");
-	const url = `${URIs.users}/${username}/avatar/`;
-	console.log(url);
-	const { status, body, error } = await post(url, { avatar, username });
+export const uploadAvatar = async ({ avatar, user_id }) => {
+	const url = `${URIs.users}/${user_id}/avatar/`;
+	const { status, body, error } = await post(url, { avatar, user_id });
 	if (error) return { success: false, error: error };
-	return { success: true, body };
+	return { success: true, data: body };
 };

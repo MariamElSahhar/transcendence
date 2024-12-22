@@ -2,7 +2,7 @@ import { Component } from "./Component.js";
 import { InputValidator } from "../scripts/utils/input-validator.js";
 
 import {
-	avatarUpload,
+	uploadAvatar,
 	deleteAvatar,
 	fetchUserById,
 	updateUser,
@@ -404,41 +404,30 @@ export class SettingsPage extends Component {
 	}
 
 	async #deleteAvatar() {
-		try {
-			const { success, body } = await deleteAvatar({
-				username: getUserSessionData().username,
-			});
-			console.log(success, body);
-			if (!success) {
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
-				this.alertForm.setAttribute("alert-type", "error");
-				this.alertForm.setAttribute("alert-display", "true");
-				return false;
-			}
-			return true;
-		} catch (error) {
-			window.loadNetworkError();
+		const { success, data, error } = await deleteAvatar({
+			user_id: getUserSessionData().userid,
+		});
+		if (!success) {
+			this.alertForm.setAttribute("alert-message", error);
+			this.alertForm.setAttribute("alert-type", "error");
+			this.alertForm.setAttribute("alert-display", "true");
 			return false;
 		}
+		return true;
 	}
 
 	async #updateAvatar() {
-		try {
-			const { success, body } = await avatarUpload({
-				avatar: this.avatarfile,
-				username: getUserSessionData().username,
-			});
-			if (!success) {
-				this.alertForm.setAttribute("alert-message", body.errors[0]);
-				this.alertForm.setAttribute("alert-type", "error");
-				this.alertForm.setAttribute("alert-display", "true");
-				return false;
-			}
-			return true;
-		} catch (error) {
-			window.loadNetworkError();
+		const { success, data, error } = await uploadAvatar({
+			avatar: this.avatarfile,
+			user_id: getUserSessionData().userid,
+		});
+		if (!success) {
+			this.alertForm.setAttribute("alert-message", error);
+			this.alertForm.setAttribute("alert-type", "error");
+			this.alertForm.setAttribute("alert-display", "true");
 			return false;
 		}
+		return true;
 	}
 
 	async #usernameHandler() {

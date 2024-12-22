@@ -28,7 +28,7 @@ urlpatterns = [
         name="user-retrieve-update-destroy",
     ),
     # user data
-    path("users/<str:username>/avatar/", avatar_view, name="avatar"),
+    path("users/<int:user_id>/avatar/", avatar_view, name="avatar"),
     # Authentication
     path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
