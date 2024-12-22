@@ -98,8 +98,6 @@ export class GameHeatMap extends Component {
 			return counts;
 		}, {});
 
-		console.log(dateCounts);
-
 		const gameCount = Object.entries(dateCounts).map(([date, count]) => ({
 			date,
 			count,

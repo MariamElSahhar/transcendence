@@ -197,7 +197,6 @@ export class SettingsPage extends Component {
 
 	async render() {
 		this.defaultHas2FA = getUserSessionData().otp == "true" ? true : false;
-		console.log(this.defaultHas2FA);
 		if (!(await this.loadDefaultSettings())) {
 			return;
 		}
@@ -389,8 +388,6 @@ export class SettingsPage extends Component {
 	async #trashAvatarHandler(event) {
 		event.preventDefault();
 		this.hasChangeAvatar = true;
-		console.log(this.avatarfile);
-		console.log(this.avatar.src);
 		this.avatarfile = "../../frontend/assets/image/default_avatar.jpg";
 		this.avatar.src = "../../frontend/assets/image/default_avatar.jpg";
 		this.#deleteAvatar();
@@ -660,7 +657,6 @@ export class SettingsPage extends Component {
 		this.deleteAccountButton.disabled = true;
 		try {
 			const { success } = await deleteUser(getUserSessionData().userid);
-			console.log(success);
 			if (success) {
 				clearUserSession();
 				this.deleteModal.hide();
@@ -704,7 +700,6 @@ export class SettingsPage extends Component {
 		if (this.defaultHas2FA !== this.twoFASwitch.checked) {
 			this.#update2FA();
 		}
-		console.log(this.vars, this.vars.email);
 		if (
 			this.vars.email != undefined ||
 			this.vars.username != undefined ||
@@ -716,14 +711,12 @@ export class SettingsPage extends Component {
 					getUserSessionData().userid,
 					this.vars
 				);
-				console.log(success);
 				if (success) {
 					this.#resetLoadButton();
 				}
 				if (!success) {
 					this.#resetLoadButton();
 					if (body.username) {
-						console.log("here");
 						this.username.classList.remove("is-valid");
 						this.username.classList.add("is-invalid");
 						this.usernameFeedback.innerHTML = body.username[0]; // Set the error message for username
@@ -733,7 +726,6 @@ export class SettingsPage extends Component {
 						this.email.classList.add("is-invalid");
 						this.emailFeedback.innerHTML = body.email[0]; // Set the error message for email
 					}
-					console.log(body);
 					this.alertForm.setAttribute(
 						"alert-message",
 						body.errors[0]
@@ -747,11 +739,9 @@ export class SettingsPage extends Component {
 				return false;
 			}
 		}
-		// }
 		const { success, data } = await fetchUserById(
 			getUserSessionData().userid
 		);
-		console.log(data);
 		if (success) {
 			storeUserSession({
 				username: data.username,
@@ -760,7 +750,7 @@ export class SettingsPage extends Component {
 				avatar: data.avatar,
 				otp: data.enable_otp,
 			});
-			window.location.reload();
+			// window.location.reload();
 		}
 	}
 }

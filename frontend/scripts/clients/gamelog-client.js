@@ -112,25 +112,35 @@ export const fetchUserGameLog = async (user_id) => {
 // Add remote game to gamelog
 export const addRemoteGame = async (gameData) => {
 	const url = URIs.gamelogRemote;
-	const requestBody = { data: gameData };
+	const requestBody = { gameData };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };
 };
 
 // Add local game to gamelog
-export const addLocalGame = async (gameData) => {
-	// const url = URIs.gamelogLocal;
-	// const requestBody = { data: gameData };
-	// const { status, body, error } = await post(url, requestBody);
-	// if (error) return { success: false, error };
+export const addLocalGame = async ({
+	opponent_score,
+	my_score,
+	opponent_username,
+	tournament,
+}) => {
+	const url = URIs.gamelogLocal;
+	const requestBody = {
+		opponent_score,
+		my_score,
+		opponent_username,
+		tournament,
+	};
+	const { status, body, error } = await post(url, requestBody);
+	if (error) return { success: false, error };
 	return { success: true };
 };
 
 // Add tic tac toe game to gamelog
 export const addTTTGame = async (gameData) => {
 	const url = URIs.gamelogTTT;
-	const requestBody = { data: gameData };
+	const requestBody = { gameData };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };

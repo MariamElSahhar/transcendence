@@ -125,7 +125,7 @@ const validDashboardPath = async (path) => {
 	const response = await fetchUserById(userid);
 	if (response.data) return true;
 	else {
-		console.log(response.error);
+		console.error(response.error);
 		return false;
 	}
 };

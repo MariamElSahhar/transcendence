@@ -2,7 +2,6 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
-import { addLocalGame } from "../../scripts/clients/gamelog-client.js";
 
 export class LocalGamePage extends Component {
 	constructor() {
@@ -10,16 +9,13 @@ export class LocalGamePage extends Component {
 		this.container = null;
 		this.engine = null;
 		this.overlay = null;
-		this.players = []; // Stores player names
+		this.playerNames = []; // Stores player names
 		this.scores = [0, 0]; // Tracks scores for both players
 		this.isAIEnabled = false;
 	}
 
 	connectedCallback() {
-		const userData = getUserSessionData();
-		const firstPlayerName = userData.username || "Player 1";
-		this.players.push(firstPlayerName);
-
+		this.playerNames.push(getUserSessionData().username || "Player 1");
 		this.innerHTML = `
             <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
               <h3 class="text-center">Setup Players</h3>
@@ -71,12 +67,12 @@ export class LocalGamePage extends Component {
 
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
-			this.players = [this.players[0]];
+			this.playerNames = [this.playerNames[0]];
 
 			const player2Name = AICheckbox.checked
 				? "Computer"
 				: player2NameInput.value;
-			this.players.push(player2Name || "Player 2");
+			this.playerNames.push(player2Name || "Player 2");
 			this.isAIEnabled = AICheckbox.checked;
 
 			this.querySelector("#player-setup").style.display = "none";
@@ -99,7 +95,7 @@ export class LocalGamePage extends Component {
 	}
 
 	startGame() {
-		this.engine = new Engine(this, this.isAIEnabled);
+		this.engine = new Engine(this, this.playerNames, this.isAIEnabled);
 		this.engine.startGame();
 		this.removeOverlay();
 	}
@@ -173,8 +169,8 @@ export class LocalGamePage extends Component {
 	}
 
 	addEndGameCard(playerScore, opponentScore) {
-		const playerName = this.players[0];
-		const opponentName = this.players[1];
+		const playerName = this.playerNames[0];
+		const opponentName = this.playerNames[1];
 
 		this.createOverlay();
 		this.overlay.innerHTML = `

@@ -27,7 +27,7 @@ def create_gamelog_remote(request):
 @api_view(["POST"])
 def create_gamelog_local(request):
     user = request.user
-
+    print(request.data)
     datamod = request.data.copy()
     datamod["user"] = user.id
 

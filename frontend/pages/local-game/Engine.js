@@ -12,12 +12,12 @@ export class Engine {
 	#component;
 	#isAIGame;
 
-	constructor(component, isAIGame = false) {
+	constructor(component, playerNames, isAIGame = false) {
 		this.#component = component;
 		this.#isAIGame = isAIGame;
 		this.#threeJS = new _ThreeJS(this);
 		this.#keyHookHandler = new _KeyHookHandler(this, this.#isAIGame);
-		this.#scene = new Scene();
+		this.#scene = new Scene(playerNames);
 	}
 
 	async startGame() {

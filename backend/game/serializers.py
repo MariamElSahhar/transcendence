@@ -18,7 +18,7 @@ class CreateLocalGameSerializer(serializers.ModelSerializer):
         my_score = data.get("my_score")
         opponent_score = data.get("opponent_score")
 
-        if not my_score or not opponent_score:
+        if my_score is None or opponent_score is None:
             raise serializers.ValidationError(
                 "Both my_score and opponent_score are required."
             )
@@ -26,7 +26,6 @@ class CreateLocalGameSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        print(validated_data)
         user = validated_data.pop("user", None)
         if not user:
             raise serializers.ValidationError("User is required.")
@@ -120,7 +119,7 @@ class CreateRemoteGameSerializer(serializers.ModelSerializer):
 
 
 class RemoteGameSerializer(serializers.ModelSerializer):
-    opponent = serializers.SerializerMethodField()
+    opponent_username = serializers.SerializerMethodField()
     my_score = serializers.SerializerMethodField()
     opponent_score = serializers.SerializerMethodField()
     is_win = serializers.SerializerMethodField()
@@ -132,7 +131,7 @@ class RemoteGameSerializer(serializers.ModelSerializer):
         fields = [
             "users",
             "date",
-            "opponent",
+            "opponent_username",
             "my_score",
             "opponent_score",
             "is_win",
@@ -155,7 +154,7 @@ class RemoteGameSerializer(serializers.ModelSerializer):
             return None
         return obj.get_my_score(user.username)
 
-    def get_opponent(self, obj):
+    def get_opponent_username(self, obj):
         """Determine the opponent dynamically."""
         user = self._get_user()
 
