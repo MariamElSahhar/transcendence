@@ -15,7 +15,6 @@ def token_refresh_view(request):
     if refresh_token is None:
         return Response({"error": "Refresh token not provided."}, status=400)
 
-    request.data["refresh"] = refresh_token
     token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
     if token_serializer.is_valid():
         tokens = token_serializer.validated_data
