@@ -68,8 +68,8 @@ export class FriendsSidebar extends Component {
 		return `
 		<style>
 			.friend-avatar {
-				width: 40px;
-				height: 40px;
+				width: 30px;
+				height: 30px;
 			}
 		</style>
 		`;
