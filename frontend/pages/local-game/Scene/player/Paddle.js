@@ -1,235 +1,222 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-import { Segment2 } from "../Segment2.js";
+import { HandlePaddleEdge } from "../HandlePaddleEdge.js";
+
 export class Paddle {
-	#threeJSGroup = new THREE.Group();
-	#moveSpeed = 15;
-	#movement = new THREE.Vector3(0, 0, 0);
-	#boardEdgeLimit = 10;
-	#lastReactionTime = 0; //Add this line to your private fields to track the last reaction time
-	#isAIControlled = false; // AI control flag
+    #threeJSGroup = new THREE.Group();
+    #moveSpeed = 15;
+    #movement = new THREE.Vector3(0, 0, 0);
+    #boardEdgeLimit = 10;
+    #lastReactionTime = 0;
+    #isAIControlled = false;
+    #isResetting = false;
 
-	#paddleObject;
-	#light;
+    #paddleObject;
+    #light;
 
-	#topCollisionSegment;
-	#frontCollisionSegment;
-	#bottomCollisionSegment;
+    #topCollisionSegment;
+    #frontCollisionSegment;
+    #bottomCollisionSegment;
 
-	#playerPosition;
-	#paddleSize = new THREE.Vector3(1, 5, 1);
-	#paddleIsOnTheRight;
+    #playerPosition;
+    #paddleSize = new THREE.Vector3(1, 5, 2); // Adjusted paddle size with depth.
+    #originalSize = this.#paddleSize.clone();
+    #paddleIsOnTheRight;
 
-	constructor(paddleIsOnTheRight, playerPosition, isAIControlled = false) {
-		this.#paddleIsOnTheRight = paddleIsOnTheRight;
-		this.#isAIControlled = isAIControlled;
+    constructor(paddleIsOnTheRight, playerPosition, isAIControlled = false) {
+        this.#paddleIsOnTheRight = paddleIsOnTheRight;
+        this.#isAIControlled = isAIControlled;
 
-		this.#threeJSGroup.position.set(paddleIsOnTheRight ? 8 : -8, 0, 0.501);
+        this.#threeJSGroup.position.set(paddleIsOnTheRight ? 8 : -8, 0, 1); // Lift paddle above the board.
 
-		const color = this.#getColor();
-		this.#addPaddleToGroup(color);
-		this.#addLightToGroup(color);
+        const color = this.#getColor();
+        this.#addPaddleToGroup(color);
+        this.#addLightToGroup(color);
 
-		this.#playerPosition = playerPosition;
+        this.#playerPosition = playerPosition;
 
-		this.#setCollisionSegments();
-	}
+        this.#setCollisionSegments();
+    }
 
-	updateFrame(timeDelta, paddleBoundingBox, ballPosition = null) {
-		if (this.#isAIControlled && ballPosition) {
-			this.#moveAIPaddle(ballPosition);
-		} else {
-			const movement = new THREE.Vector3()
-				.copy(this.#movement)
-				.multiplyScalar(timeDelta);
-			this.#threeJSGroup.position.add(movement);
-		}
+    updateFrame(timeDelta, pongGameBox, ballPosition = null) {
+        if (this.#isAIControlled && ballPosition) {
+            this.#moveAIPaddle(ballPosition);
+        } else {
+            const movement = new THREE.Vector3()
+                .copy(this.#movement)
+                .multiplyScalar(timeDelta);
+            this.#threeJSGroup.position.add(movement);
+        }
 
-		// Paddle boundary enforcement
-		this.#constrainPaddle(paddleBoundingBox);
-		this.#setCollisionSegments();
-	}
+        // Paddle boundary enforcement
+        this.#constrainPaddle(pongGameBox);
+        this.#setCollisionSegments();
+    }
 
-	#moveAIPaddle(ballPosition, ballVelocity) {
-		const reactionDelay = 50; // Reduced delay for faster reaction
-		const currentTime = Date.now();
+    resetSize() {
+        this.#paddleSize.copy(this.#originalSize);
+        this.#updatePaddleGeometry();
+        console.log("Paddle size reset to:", this.#paddleSize.toArray());
+    }
 
-		// Only update the AI's position if the reaction delay has passed
-		if (currentTime - this.#lastReactionTime < reactionDelay) {
-			return; // Exit if delay has not passed, skipping this frame
-		}
-		this.#lastReactionTime = currentTime; // Update last reaction time
+    #updatePaddleGeometry() {
+        this.#paddleObject.geometry = new THREE.BoxGeometry(
+            this.#paddleSize.x,
+            this.#paddleSize.y,
+            this.#paddleSize.z
+        );
+    }
 
-		// Predict ball's position slightly ahead if ballVelocity is available
-		const anticipationFactor = 0.3; // Adjust to make the AI anticipate further or less
-		const anticipatedPositionY =
-			ballPosition.y + (ballVelocity?.y || 0) * anticipationFactor;
-		const distanceToBall =
-			anticipatedPositionY - this.#threeJSGroup.position.y;
+    resetPaddle() {
+        this.#isResetting = true;
 
-		// Smooth movement: Increase speed based on distance, capped at a max speed
-		const maxAISpeed = 3.5;
-		let aiSpeed = Math.min(maxAISpeed, Math.abs(distanceToBall) * 0.15);
+        setTimeout(() => {
+            this.#isResetting = false; // Re-enable AI movement after reset
+        }, 100); // Allow 100ms delay for reset to take effect
+    }
 
-		// If the ball is close to an edge, reduce the AI’s speed to simulate human difficulty with edge shots
-		if (Math.abs(anticipatedPositionY) > this.#boardEdgeLimit) {
-			aiSpeed *= 0.8; // Slow down by 20% near edges
-		}
+    #moveAIPaddle(ballPosition, ballVelocity = null) {
+        if (this.#isResetting) {
+            console.log("Skipping AI movement during reset");
+            return;
+        }
 
-		// Random miss factor: Occasionally make the AI hesitate, giving the player a chance to score
-		const missChance = 0.05; // 5% chance of skipping a move to simulate error
-		if (Math.random() < missChance) {
-			return; // AI misses this frame, adding a slight random challenge
-		}
+        const reactionDelay = 50;
+        const currentTime = Date.now();
 
-		// Gradually move AI paddle up or down toward the anticipated position
-		const movementThreshold = 0.1; // Minimum distance to move to avoid jitter
-		if (Math.abs(distanceToBall) > movementThreshold) {
-			// Calculate the new y-position for the AI paddle
-			const newYPosition =
-				this.#threeJSGroup.position.y +
-				(distanceToBall > 0 ? aiSpeed : -aiSpeed);
+        if (currentTime - this.#lastReactionTime < reactionDelay) return;
 
-			// Use setY to update only the y-component of the position vector
-			this.#threeJSGroup.position.setY(newYPosition);
-		}
-	}
+        this.#lastReactionTime = currentTime;
 
-	// #moveAIPaddle(ballPosition) {
-	//   const reactionDelay = 40; // Reduced delay to make AI react faster
-	//   const currentTime = Date.now(); // Get the current time in milliseconds
+        const anticipationFactor = 0.3;
+        const anticipatedPositionY =
+            ballPosition.y + (ballVelocity?.y || 0) * anticipationFactor;
+        const distanceToBall =
+            anticipatedPositionY - this.#threeJSGroup.position.y;
 
-	//   // Check if enough time has passed since the last reaction
-	//   if (currentTime - this.#lastReactionTime < reactionDelay) {
-	//       return; // If delay has not passed, exit early and do not move the paddle
-	//   }
-	//   this.#lastReactionTime = currentTime; // Update the last reaction time to the current time
+        const maxAISpeed = 3.5;
+        let aiSpeed = Math.min(maxAISpeed, Math.abs(distanceToBall) * 0.15);
 
-	//   // Calculate the distance between the ball and the AI paddle along the y-axis
-	//   const distanceToBall = ballPosition.y - this.#threeJSGroup.position.y;
+        if (Math.abs(anticipatedPositionY) > this.#boardEdgeLimit) aiSpeed *= 0.8;
 
-	//   // Calculate the AI speed based on the distance to the ball
-	//   // Slightly increase the multiplier to make the AI move faster
-	//   //let aiSpeed = Math.min(3.5, Math.abs(distanceToBall) * 0.12); // Increased speed multiplier
-	//   let aiSpeed = Math.min(4.0, Math.abs(distanceToBall) * 0.15);
+        const missChance = 0.05;
+        if (Math.random() < missChance) return;
 
-	//   // Reduce the slowdown effect near edges to make AI more accurate
-	//   if (Math.abs(ballPosition.y) > this.#boardEdgeLimit) {
-	//       aiSpeed *= 0.9; // Only slow down by 20% near edges for better tracking
-	//   }
+        const movementThreshold = 0.1;
+        if (Math.abs(distanceToBall) > movementThreshold) {
+            const newYPosition =
+                this.#threeJSGroup.position.y +
+                (distanceToBall > 0 ? aiSpeed : -aiSpeed);
 
-	//   // Move the AI paddle up or down depending on the ball’s position relative to the paddle
-	//   if (distanceToBall > 0) {
-	//       this.#threeJSGroup.position.y += aiSpeed; // Move paddle up if ball is above
-	//   } else if (distanceToBall < 0) {
-	//       this.#threeJSGroup.position.y -= aiSpeed; // Move paddle down if ball is below
-	//   }
-	// }
+            this.#threeJSGroup.position.setY(newYPosition);
+        }
+    }
 
-	#constrainPaddle(paddleBoundingBox) {
-		if (this.#threeJSGroup.position.y < paddleBoundingBox.y_min) {
-			this.#threeJSGroup.position.y = paddleBoundingBox.y_min;
-		} else if (this.#threeJSGroup.position.y > paddleBoundingBox.y_max) {
-			this.#threeJSGroup.position.y = paddleBoundingBox.y_max;
-		}
-	}
+    #constrainPaddle(pongGameBox) {
+        if (this.#threeJSGroup.position.y < pongGameBox.y_min) {
+            this.#threeJSGroup.position.y = pongGameBox.y_min;
+        } else if (this.#threeJSGroup.position.y > pongGameBox.y_max) {
+            this.#threeJSGroup.position.y = pongGameBox.y_max;
+        }
+    }
 
-	setDirection(direction) {
-		this.#movement.y =
-			direction === "up"
-				? this.#moveSpeed
-				: direction === "down"
-				? -this.#moveSpeed
-				: 0;
-	}
+    setDirection(direction) {
+        this.#movement.y =
+            direction === "up"
+                ? this.#moveSpeed
+                : direction === "down"
+                ? -this.#moveSpeed
+                : 0;
+    }
 
-	setPosition(positionJson) {
-		this.#threeJSGroup.position.set(
-			positionJson["x"],
-			positionJson["y"],
-			positionJson["z"]
-		);
-		this.#setCollisionSegments();
-	}
+    setPosition(positionJson) {
+        console.log("Setting paddle position to:", positionJson);
+        this.#threeJSGroup.position.set(
+            positionJson["x"],
+            positionJson["y"],
+            positionJson["z"]
+        );
+        this.#setCollisionSegments();
+    }
 
-	getPosition() {
-		return this.#threeJSGroup.position;
-	}
+    getPosition() {
+        return this.#threeJSGroup.position;
+    }
 
-	get threeJSGroup() {
-		return this.#threeJSGroup;
-	}
+    get threeJSGroup() {
+        return this.#threeJSGroup;
+    }
 
-	#getColor() {
-		return new THREE.Color(this.#paddleIsOnTheRight ? 0xff1111 : 0x0000ff);
-	}
+    #getColor() {
+        return new THREE.Color(this.#paddleIsOnTheRight ? 0xff1111 : 0x0000ff);
+    }
 
-	#addPaddleToGroup(color) {
-		this.#paddleObject = new THREE.Mesh(
-			new THREE.BoxGeometry(
-				this.#paddleSize.x,
-				this.#paddleSize.y,
-				this.#paddleSize.z
-			),
-			new THREE.MeshStandardMaterial({ color: color })
-		);
-		this.#paddleObject.position.set(0, 0, 0.25);
-		this.#threeJSGroup.add(this.#paddleObject);
-	}
+    #addPaddleToGroup(color) {
+        this.#paddleObject = new THREE.Mesh(
+            new THREE.BoxGeometry(
+                this.#paddleSize.x,
+                this.#paddleSize.y,
+                this.#paddleSize.z
+            ),
+            new THREE.MeshStandardMaterial({ color: color })
+        );
+        this.#paddleObject.position.set(0, 0, 1); // Set z position to lift paddle above board.
+        this.#threeJSGroup.add(this.#paddleObject);
+    }
 
-	#addLightToGroup(color) {
-		this.#light = new THREE.PointLight(color, 20, 10);
-		this.#light.position.z += this.#paddleSize.z * 2;
-		this.#threeJSGroup.add(this.#light);
-	}
+    #addLightToGroup(color) {
+        this.#light = new THREE.PointLight(color, 30, 15); // Increased intensity for better visibility.
+        this.#light.position.z += this.#paddleSize.z * 2;
+        this.#threeJSGroup.add(this.#light);
+    }
 
-	#setCollisionSegments() {
-		const xLeft =
-			this.#playerPosition.x +
-			this.#threeJSGroup.position.x -
-			this.#paddleSize.x * 0.5;
-		const xRight =
-			this.#playerPosition.x +
-			this.#threeJSGroup.position.x +
-			this.#paddleSize.x * 0.5;
+    #setCollisionSegments() {
+        const xLeft =
+            this.#playerPosition.x +
+            this.#threeJSGroup.position.x -
+            this.#paddleSize.x * 0.5;
+        const xRight =
+            this.#playerPosition.x +
+            this.#threeJSGroup.position.x +
+            this.#paddleSize.x * 0.5;
 
-		const yTop =
-			this.#playerPosition.y +
-			this.#threeJSGroup.position.y +
-			this.#paddleSize.y * 0.5;
-		const yBottom =
-			this.#playerPosition.y +
-			this.#threeJSGroup.position.y -
-			this.#paddleSize.y * 0.5;
+        const yTop =
+            this.#playerPosition.y +
+            this.#threeJSGroup.position.y +
+            this.#paddleSize.y * 0.5;
+        const yBottom =
+            this.#playerPosition.y +
+            this.#threeJSGroup.position.y -
+            this.#paddleSize.y * 0.5;
 
-		const topLeft = new THREE.Vector2(xLeft, yTop);
-		const topRight = new THREE.Vector2(xRight, yTop);
-		const bottomRight = new THREE.Vector2(xRight, yBottom);
-		const bottomLeft = new THREE.Vector2(xLeft, yBottom);
+        const topLeft = new THREE.Vector2(xLeft, yTop);
+        const topRight = new THREE.Vector2(xRight, yTop);
+        const bottomRight = new THREE.Vector2(xRight, yBottom);
+        const bottomLeft = new THREE.Vector2(xLeft, yBottom);
 
-		this.#topCollisionSegment = new Segment2(topLeft, topRight);
-		this.#bottomCollisionSegment = new Segment2(bottomLeft, bottomRight);
-		this.#frontCollisionSegment = this.#paddleIsOnTheRight
-			? new Segment2(bottomLeft, topLeft)
-			: new Segment2(bottomRight, topRight);
-	}
+        this.#topCollisionSegment = new HandlePaddleEdge(topLeft, topRight);
+        this.#bottomCollisionSegment = new HandlePaddleEdge(bottomLeft, bottomRight);
+        this.#frontCollisionSegment = this.#paddleIsOnTheRight
+            ? new HandlePaddleEdge(bottomLeft, topLeft)
+            : new HandlePaddleEdge(bottomRight, topRight);
+    }
 
-	get topCollisionSegment() {
-		return this.#topCollisionSegment;
-	}
+    get topCollisionSegment() {
+        return this.#topCollisionSegment;
+    }
 
-	get frontCollisionSegment() {
-		return this.#frontCollisionSegment;
-	}
+    get frontCollisionSegment() {
+        return this.#frontCollisionSegment;
+    }
 
-	get bottomCollisionSegment() {
-		return this.#bottomCollisionSegment;
-	}
+    get bottomCollisionSegment() {
+        return this.#bottomCollisionSegment;
+    }
 
-	get paddleIsOnTheRight() {
-		return this.#paddleIsOnTheRight;
-	}
+    get paddleIsOnTheRight() {
+        return this.#paddleIsOnTheRight;
+    }
 
-	get size() {
-		return this.#paddleSize;
-	}
+    get size() {
+        return this.#paddleSize;
+    }
 }

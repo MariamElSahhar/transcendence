@@ -9,13 +9,16 @@ export class LocalGamePage extends Component {
 		this.container = null;
 		this.engine = null;
 		this.overlay = null;
-		this.playerNames = []; // Stores player names
+		this.players = []; // Stores player names
 		this.scores = [0, 0]; // Tracks scores for both players
 		this.isAIEnabled = false;
 	}
 
 	connectedCallback() {
-		this.playerNames.push(getUserSessionData().username || "Player 1");
+		const userData = getUserSessionData();
+		const firstPlayerName = userData.username || "Player 1";
+		this.players.push(firstPlayerName);
+
 		this.innerHTML = `
             <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
               <h3 class="text-center">Setup Players</h3>
@@ -39,63 +42,70 @@ export class LocalGamePage extends Component {
 		this.container = this.querySelector("#container");
 		this.setupPlayerForm();
 	}
-
 	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
 		const submit = this.querySelector("#submit-players");
 		const AICheckbox = this.querySelector("#play-against-ai");
 		const player2NameInput = this.querySelector("#player2-name");
-
+	  
 		AICheckbox.addEventListener("change", () => {
-			if (AICheckbox.checked) {
-				player2NameInput.setAttribute("disabled", "");
-				player2NameInput.value = "Computer";
-				submit.removeAttribute("disabled");
-			} else {
-				player2NameInput.removeAttribute("disabled");
-				submit.setAttribute("disabled", "");
-				player2NameInput.value = "";
-			}
+		  if (AICheckbox.checked) {
+			player2NameInput.setAttribute("disabled", "");
+			player2NameInput.value = "Computer";
+			submit.removeAttribute("disabled");
+		  } else {
+			player2NameInput.removeAttribute("disabled");
+			submit.setAttribute("disabled", "");
+			player2NameInput.value = "";
+		  }
 		});
+	  
 		player2NameInput.addEventListener("input", () => {
-			if (player2NameInput.value) {
-				submit.removeAttribute("disabled");
-			} else {
-				submit.setAttribute("disabled", "");
-			}
+		  if (player2NameInput.value) {
+			submit.removeAttribute("disabled");
+		  } else {
+			submit.setAttribute("disabled", "");
+		  }
 		});
-
+	  
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
-			this.playerNames = [this.playerNames[0]];
-
-			const player2Name = AICheckbox.checked
-				? "Computer"
-				: player2NameInput.value;
-			this.playerNames.push(player2Name || "Player 2");
+		  
+			const userData = getUserSessionData();
+			console.log("User data:", userData); 
+		  
+			const firstPlayerName = userData.username || "Player 1";
+			this.players = [firstPlayerName];
+		  
+			const player2Name = AICheckbox.checked ? "Computer" : player2NameInput.value.trim();
+			this.players.push(player2Name || "Player 2");
+		  
+			console.log("Players after form submission:", this.players); 
+		  
 			this.isAIEnabled = AICheckbox.checked;
-
+		  
 			this.querySelector("#player-setup").style.display = "none";
 			this.container.style.display = "block";
-
+		  
 			this.postRender();
-		});
-	}
+		  });
+		  
+		  
+	  }
 
 	postRender() {
-		//this.addComponentEventListener(document, Theme.event, this.themeEvent.bind(this));
-
 		if (WebGL.isWebGLAvailable()) {
 			this.createOverlay();
 			const countdownStart = Date.now() / 1000 + 3;
 			this.startCountdown(countdownStart);
-		} else {
+		} else 
+		{
 			console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
 		}
 	}
 
 	startGame() {
-		this.engine = new Engine(this, this.playerNames, this.isAIEnabled);
+		this.engine = new Engine(this, this.isAIEnabled, this.players);
 		this.engine.startGame();
 		this.removeOverlay();
 	}
@@ -169,8 +179,8 @@ export class LocalGamePage extends Component {
 	}
 
 	addEndGameCard(playerScore, opponentScore) {
-		const playerName = this.playerNames[0];
-		const opponentName = this.playerNames[1];
+		const playerName = this.players[0];
+		const opponentName = this.players[1];
 
 		this.createOverlay();
 		this.overlay.innerHTML = `
@@ -196,12 +206,9 @@ export class LocalGamePage extends Component {
         </div>
       `;
 	}
-
-	// themeEvent() {
-	//     if (Theme.get() === "light") {
-	//         this.engine?.scene?.setLightTheme();
-	//     }
-	// }
 }
 
 customElements.define("local-game-page", LocalGamePage);
+
+
+
