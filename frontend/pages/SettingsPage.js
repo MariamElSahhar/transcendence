@@ -1,5 +1,5 @@
-import { Component } from "../Component.js";
-import {isValidSecurePassword, isValidUsername, isValidEmail} from '../../js/utils/input-validator.js'
+import { Component } from "./Component.js";
+import {isValidSecurePassword, isValidUsername, isValidEmail} from '../scripts/utils/input-validator.js'
 
 import {
 	uploadAvatar,
@@ -7,9 +7,9 @@ import {
 	fetchUserById,
 	updateUser,
 	deleteUser,
-} from "../../js/clients/users-client.js"
+} from "../scripts/clients/users-client.js"
 
-import {getDefaultAvatars} from "../../js/clients/token-client.js"
+import {getDefaultAvatars} from "../scripts/clients/token-client.js"
 import {
 	storeUserSession,
 	clearUserSession,
@@ -36,7 +36,6 @@ export class SettingsPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("../../js/utils/error-page.js");
 		const { success, data } = await getDefaultAvatars();
 		this.avatars=[
 			backendURL +  data.default_avatars[0]+ "/",
