@@ -1,7 +1,7 @@
 import { Component } from "../Component.js";
 import { isAuth } from "../../js/utils/session-manager.js";
 import { register } from "../../js/clients/token-client.js";
-import { InputValidator } from "../../js/utils/input-validator.js";
+import {isValidSecurePassword, isValidUsername, isValidEmail} from '../../js/utils/input-validator.js'
 import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
 
 export class SignUpPage extends Component {
@@ -165,12 +165,12 @@ export class SignUpPage extends Component {
 
 	async #usernameHandler() {
 		clearTimeout(this.usernameTimeout);
-		const { validity, missingRequirements } =
-			InputValidator.isValidUsername(this.username.value);
+		const { validity, message } =
+			isValidUsername(this.username.value);
 		if (validity) {
 			this.#setUsernameInputValidity(true);
 		} else {
-			this.#setUsernameInputValidity(false, missingRequirements[0]);
+			this.#setUsernameInputValidity(false, message);
 		}
 	}
 
@@ -188,13 +188,13 @@ export class SignUpPage extends Component {
 
 	#emailHandler() {
 		clearTimeout(this.emailTimeout);
-		const { validity, missingRequirements } = InputValidator.isValidEmail(
+		const { validity, message } = isValidEmail(
 			this.email.value
 		);
 		if (validity) {
 			this.#setEmailInputValidity(true);
 		} else {
-			this.#setEmailInputValidity(false, missingRequirements[0]);
+			this.#setEmailInputValidity(false, message);
 		}
 	}
 
@@ -211,8 +211,8 @@ export class SignUpPage extends Component {
 	}
 
 	#passwordHandler() {
-		const { validity, missingRequirements } =
-			InputValidator.isValidSecurePassword(this.password.value);
+		const { validity, message } =
+			isValidSecurePassword(this.password.value);
 		if (validity) {
 			this.#setInputPasswordValidity(true);
 			if (this.startConfirmPassword) {
@@ -226,7 +226,7 @@ export class SignUpPage extends Component {
 				}
 			}
 		} else {
-			this.#setInputPasswordValidity(false, missingRequirements[0]);
+			this.#setInputPasswordValidity(false, message);
 			if (this.startConfirmPassword) {
 				this.#setInputConfirmPasswordValidity(false);
 			}

@@ -8,6 +8,7 @@ from .views.users_views import (
     user_list_create_view,
     user_retrieve_update_destroy_view,
     avatar_view,
+    get_default_avatars
 )
 from .views.token_views import (
     token_refresh_view,
@@ -32,6 +33,7 @@ urlpatterns = [
         user_retrieve_update_destroy_view,
         name="user-retrieve-update-destroy",
     ),
+    path('default-avatars/', get_default_avatars, name='default_avatars'),
 
     #user data
     path("users/<str:username>/avatar/", avatar_view, name="avatar"),

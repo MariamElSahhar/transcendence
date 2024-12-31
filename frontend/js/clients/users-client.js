@@ -13,6 +13,7 @@ export const fetchUsers = async () => {
 	return { success: true, data: body };
 };
 
+
 // Function user by ID
 export const fetchUserById = async (id) => {
 	const url = `${URIs.users}/${id}/`;

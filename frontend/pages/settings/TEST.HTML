@@ -1,0 +1,107 @@
+<div id="settings" class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-4">
+    <!-- Title -->
+    <h2 class="mb-4">Settings</h2>
+	<div class="form-wrapper">
+    	<!-- Profile Image and Form -->
+		<div class="position-relative m-5 side-container" style="width: 250px; height: 250px;">
+			<!-- Main Profile Image -->
+			<img id="avatar" src="${getUserSessionData().avatar}" alt="Unavailable"
+				class="rounded-circle object-fit-cover w-100 h-100">
+			<label for="uploadInput" id="camera-icon" class="position-absolute top-50 start-50 translate-middle">
+				<div class="camera-icon-circle">
+					<i class="bi bi-camera"></i>
+				</div>
+			</label>
+			<input type="file" id="uploadInput" style="display: none;" accept="image/*">
+
+			<!-- Avatar Options -->
+			<div id="avatar-options" class="position-absolute top-50 start-50 translate-middle">
+				<img src="${getUserSessionData().avatar}" class=" avatar-option position-absolute" style="top: -30px; left: 100px;">
+				<img src="${getUserSessionData().avatar}" class=" avatar-option position-absolute" style="top: 50px; left: 250px;">
+				<img src="${getUserSessionData().avatar}" class=" avatar-option position-absolute" style="top: 150px; left: 250px;">
+				<img src="${getUserSessionData().avatar}" class=" avatar-option position-absolute" style="top: 230px; left: 100px;">
+				<img src="${getUserSessionData().avatar}" class=" avatar-option position-absolute" style="top: 150px; left: -50px;">
+				<img src="${getUserSessionData().avatar}" class=" avatar-option position-absolute" style="top: 50px; left: -50px;">
+			</div>
+		</div>
+
+		<!-- Form Fields -->
+		<div class="form-container">
+			<form id="settings-form" class="w-50 d-flex flex-column needs-validation" novalidate>
+			<!-- Email Section -->
+				<div class="d-flex justify-content-center mb-2">
+					<button id="trash-icon" type="button" class=" btn btn-danger mb-4">
+						Delete avatar <i class="bi bi-trash-fill"></i>
+					</button>
+				</div>
+				<div class="form-group mb-4 w-100">
+					<div class="input-group has-validation">
+						<span class="input-group-text fw-bold text-secondary">EMAIL</span>
+						<input type="email" class="form-control form-control-sm" id="email"
+							placeholder="New email" value="${getUserSessionData().email}"
+							autocomplete="email">
+						<div id="email-feedback" class="invalid-feedback"></div>
+						<div class="valid-feedback"> Looks good! </div>
+					</div>
+				</div>
+			<!-- Username Section -->
+				<div class="form-group mb-4 w-100">
+					<div class="input-group has-validation">
+						<span class="input-group-text fw-bold text-secondary">USERNAME</span>
+						<input type="text" class="form-control" id="username"
+							placeholder="New username" value="${getUserSessionData().username} "
+							autocomplete="username">
+						<div id="username-feedback" class="invalid-feedback">
+						</div>
+						<div class="valid-feedback">
+							Looks good!
+						</div>
+					</div>
+				</div>
+
+
+				<!-- Password Section -->
+				<div class="form-group mb-4 w-100">
+					<div class="input-group has-validation">
+					<span class="input-group-text fw-bold text-secondary">NEW PASSWORD</span>
+						<input type="password" class="form-control" id="password" placeholder="******">
+
+						<div id="password-feedback" class="invalid-feedback">
+						</div>
+						<div class="valid-feedback">
+							Looks good!
+						</div>
+					</div>
+				</div>
+
+				<!-- Confirm Password Section -->
+				<div class="form-group mb-4 w-100">
+					<div class="input-group has-validation">
+					<span class="input-group-text fw-bold text-secondary">CONFIRM PASSWORD</span>
+						<input type="password" class="form-control" id="confirm-password" placeholder="******">
+						<div id="confirm-password-feedback" class="invalid-feedback">
+							Passwords do not match.
+						</div>
+						<div class="valid-feedback">
+							Looks good!
+						</div>
+					</div>
+				</div>
+
+				<!-- Two-Factor Authentication -->
+				<div class="form-group mb-4 w-100">
+					<div class="form-check form-switch d-flex align-items-center">
+						<input class="form-check-input" type="checkbox" id="two-fa-switch" ${getUserSessionData().otp == 'true' ? 'checked' : ''}>
+						<label class="form-check-label ms-2" for="two-fa-switch">Two-factor authentication</label>
+					</div>
+				</div>
+
+				<!-- Buttons -->
+				<div class="d-flex justify-content-center mb-2">
+					<button id="save-button" type="submit" class="btn btn-primary ms-2" disabled><i class="bi bi-floppy2-fill"></i></button>
+					<button id="delete-button" type="button" class="btn btn-danger ms-2">Delete account</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

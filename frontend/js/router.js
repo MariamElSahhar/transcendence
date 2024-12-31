@@ -47,6 +47,12 @@ const routes = {
 		path: "../pages/local/LocalGamePage.js",
 		protected: false,
 	},
+	"/play/remote": {
+		layout: "main",
+		component: "remote-game-page",
+		path: "../pages/local/RemoteGamePage.js",
+		protected: false,
+	},
 	"/play/tournament": {
 		layout: "main",
 		component: "tournament-page",

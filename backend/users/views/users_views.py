@@ -1,4 +1,5 @@
 from uuid import uuid4
+import os
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
@@ -7,6 +8,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from django.http import JsonResponse
 import base64
 
 from ..models import CustomUser
@@ -52,9 +54,7 @@ def user_retrieve_update_destroy_view(request, user_id):
         print(user_id)
         print(request.data)
         serializer = UserSerializer(user, data=request.data, partial=True)
-        print("here??????")
         serializer.is_valid(raise_exception=True)
-        print("here??")
         if "password" in serializer.validated_data:
             print(serializer.validated_data["password"])
             user = serializer.save(password=make_password(serializer.validated_data["password"]))
@@ -72,17 +72,25 @@ def user_retrieve_update_destroy_view(request, user_id):
 @api_view(["POST", "DELETE"])
 def avatar_view(request, username):
     user = CustomUser.objects.get(username=username)
+    user.avatar.name="default_avatar/default_avatar.jpg"
     if request.method == "POST":
         try:
             avatar_data = request.data.get("avatar")
+            print(avatar_data)
             if not avatar_data:
                 return Response({"error": "Avatar data is missing."}, status=400)
-            file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]
-            ext = file_format.split("/")[-1]
-            avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{username}_avatar{uuid4().hex}.{ext}")
-            if user.avatar.name !=  "default_avatar/default_avatar.jpg":
-                user.avatar.delete()
-            user.avatar.save(f"{username}_avatar{uuid4().hex}.{ext}", avatar_file)
+            if avatar_data.find(";base64,") == -1:
+                print("!!!!!!", user.avatar.name)
+                if not  user.avatar.name.startswith("default_avatar/"):
+                    user.avatar.delete()
+                user.avatar.name =  avatar_data.replace('http://127.0.0.1:8000/media/', '').replace('', '')
+            else:
+                file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]
+                ext = file_format.split("/")[-1]
+                avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{username}_avatar{uuid4().hex}.{ext}")
+                if user.avatar.name !=  "default_avatar/default_avatar.jpg":
+                    user.avatar.delete()
+                user.avatar.save(f"{username}_avatar{uuid4().hex}.{ext}", avatar_file)
             user.save()
             response = Response({"message": "Avatar uploaded successfully!", "data":{"avatar": user.avatar.url}}, status=200)
             print(response.data)
@@ -93,10 +101,20 @@ def avatar_view(request, username):
         try:
             if not user.avatar:
                 return Response({"error": "No avatar to delete."}, status=404)
-            if user.avatar.name !=  "default_avatar/default_avatar.jpg":
+            if not user.avatar.name.startswith("default_avatar/"):
                 user.avatar.delete()
             user.avatar.name =  "default_avatar/default_avatar.jpg"
             user.save()
             return Response({"message": "Avatar deleted successfully!", "data":{"avatar": user.avatar.url}}, status=200)
         except Exception as e:
             return Response({"error": f"Failed to delete avatar: {str(e)}"}, status=400)
+
+@api_view(["GET"])
+def get_default_avatars(request):
+    default_avatar_path = os.path.join(settings.MEDIA_ROOT, 'default_avatar')
+    try:
+        avatars = os.listdir(default_avatar_path)
+        avatar_urls = [os.path.join(settings.MEDIA_URL, 'default_avatar', avatar) for avatar in avatars]
+        return JsonResponse({'default_avatars': avatar_urls})
+    except FileNotFoundError:
+        return JsonResponse({'error': 'Default avatar folder not found'}, status=404)
