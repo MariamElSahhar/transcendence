@@ -31,7 +31,7 @@ urlpatterns = [
     path('default-avatars/', get_default_avatars, name='default_avatars'),
 
     #user data
-    path("users/<str:username>/avatar/", avatar_view, name="avatar"),
+    path("users/<int:user_id>/avatar/", avatar_view, name="avatar"),
     # Authentication
     path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),

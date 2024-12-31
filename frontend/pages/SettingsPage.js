@@ -449,7 +449,7 @@ div.camera-icon-circle:hover i.bi-camera {
 		if (this.avatarfile === null) {
 			try {
 				const { success, body } = await deleteAvatar(
-					{username: getUserSessionData().username},
+					{user_id: getUserSessionData().userid},
 				);
 				if (!success) {
 					this.#showError()
@@ -466,8 +466,9 @@ div.camera-icon-circle:hover i.bi-camera {
 
 	async #updateAvatar() {
 		try {
-			const { success, body } = await avatarUpload(
-				{avatar: this.avatarfile, username: getUserSessionData().username},
+			console.log("here?", this.avatarfile,)
+			const { success, body } = await uploadAvatar(
+				{avatar: this.avatarfile, user_id: getUserSessionData().userid},
 			);
 			if (!success) {
 				this.#showError()
@@ -478,7 +479,6 @@ div.camera-icon-circle:hover i.bi-camera {
 			this.#showError()
 			return false;
 		}
-		return true;
 	}
 
 
@@ -717,7 +717,7 @@ div.camera-icon-circle:hover i.bi-camera {
 		{
 			try
 			{
-				const { success, body } = await updateInfo(getUserSessionData().userid,this.vars);
+				const { success, body } = await updateUser(getUserSessionData().userid,this.vars);
 
 				if(!success)
 				{

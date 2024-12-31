@@ -67,29 +67,29 @@ def user_retrieve_update_destroy_view(request, user_id):
 
 
 @api_view(["POST", "DELETE"])
-def avatar_view(request, username):
-    user = CustomUser.objects.get(username=username)
+def avatar_view(request, user_id):
+    user = CustomUser.objects.get(id=user_id)
+    if user_id != request.user.id:
+        return Response({"error": "You may only edit your own avatar."}, status=401)
+    print(user_id)
     if request.method == "POST":
         try:
             avatar_data = request.data.get("avatar")
-            print(avatar_data)
             if not avatar_data:
                 return Response({"error": "Avatar data is missing."}, status=400)
             if avatar_data.find(";base64,") == -1:
-                print("!!!!!!", user.avatar.name)
                 if not  user.avatar.name.startswith("default_avatar/"):
                     user.avatar.delete()
                 user.avatar.name =  avatar_data.replace('http://127.0.0.1:8000/media/', '').replace('', '')
             else:
                 file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]
                 ext = file_format.split("/")[-1]
-                avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{username}_avatar{uuid4().hex}.{ext}")
+                avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{user_id}_avatar{uuid4().hex}.{ext}")
                 if not user.avatar.name.startswith("default_avatar/"):
                     user.avatar.delete()
-                user.avatar.save(f"{username}_avatar{uuid4().hex}.{ext}", avatar_file)
+                user.avatar.save(f"{user_id}_avatar{uuid4().hex}.{ext}", avatar_file)
             user.save()
             response = Response({"message": "Avatar uploaded successfully!", "data":{"avatar": user.avatar.url}}, status=200)
-            print(response.data)
             return response
         except Exception as e:
             return Response({"error": f"Failed to upload avatar: {str(e)}"}, status=400)
