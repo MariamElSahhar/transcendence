@@ -4,9 +4,8 @@ from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
 import base64
@@ -51,8 +50,6 @@ def user_retrieve_update_destroy_view(request, user_id):
         return Response(response_data)
 
     elif request.method == "PATCH":
-        print(user_id)
-        print(request.data)
         serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         if "password" in serializer.validated_data:
@@ -72,7 +69,6 @@ def user_retrieve_update_destroy_view(request, user_id):
 @api_view(["POST", "DELETE"])
 def avatar_view(request, username):
     user = CustomUser.objects.get(username=username)
-    user.avatar.name="default_avatar/default_avatar.jpg"
     if request.method == "POST":
         try:
             avatar_data = request.data.get("avatar")
@@ -88,7 +84,7 @@ def avatar_view(request, username):
                 file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]
                 ext = file_format.split("/")[-1]
                 avatar_file = ContentFile(base64.b64decode(imgstr), name=f"{username}_avatar{uuid4().hex}.{ext}")
-                if user.avatar.name !=  "default_avatar/default_avatar.jpg":
+                if not user.avatar.name.startswith("default_avatar/"):
                     user.avatar.delete()
                 user.avatar.save(f"{username}_avatar{uuid4().hex}.{ext}", avatar_file)
             user.save()

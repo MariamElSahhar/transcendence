@@ -96,9 +96,9 @@ export class GameLogTable extends Component {
                         <td><span class="badge badge-dot"><i class="${
 							game.is_win ? "bg-success" : "bg-danger"
 						}"></i></span>${game.is_win ? "Win" : "Loss"}</td>
-                        <td>${game.opponent}</td>
+                        <td>${game.opponent_username}</td>
                         <td>${game.my_score} - ${game.opponent_score} </td>
-                        <td>${game.date}</td>
+                        <td>${game.date.split("T")[0]}</td>
                     </tr>
                 `
 			)

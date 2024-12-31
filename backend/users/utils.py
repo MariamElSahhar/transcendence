@@ -13,10 +13,10 @@ def send_otp(user):
     """
 
     otp = generate_otp()
+    print(otp)
     user.email_otp = otp
     user.otp_created_at = timezone.now()
     user.save()
-    print(otp)
     # send_mail(
     #     "Your Email OTP for 42AD Transcendence",
     #     f"Your OTP for email verification for 42AD Transcendence is: {otp}\nThis OTP is valid for 5 minutes.",
@@ -27,7 +27,8 @@ def send_otp(user):
 
 # ADD ACCESS TOKEN COOKIE TO RESPONSE
 def set_response_cookie(response, tokens, user, set_refresh=True):
-    update_user_activity(user, True)
+    if user:
+        update_user_activity(user, True)
     response.set_cookie(
         key=settings.SIMPLE_JWT["AUTH_COOKIE"],
         value=tokens["access"],

@@ -1,6 +1,5 @@
 import { Component } from "../../../Component.js";
-import { ErrorPage } from "../../../error/ErrorPage.js";
-import { usersSearch } from "../../../../js/clients/users-client.js";
+import { searchUsers } from "../../../../scripts/clients/users-client.js";
 
 export class SearchNav extends Component {
 	constructor() {
@@ -66,7 +65,7 @@ export class SearchNav extends Component {
 			this.searchResults.style.display = "none";
 			return;
 		}
-		const { success, body, error } = await usersSearch(event.target.value);
+		const { success, body, error } = await searchUsers(event.target.value);
 		this.searchResults.innerHTML = "";
 		if (success) {
 			this.searchResults.innerHTML = this.#renderSearchResults(body.data);

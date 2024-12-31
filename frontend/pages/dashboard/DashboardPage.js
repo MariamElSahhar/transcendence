@@ -1,7 +1,7 @@
 // UserProfilePage.js
 import { Component } from "../Component.js";
-import { fetchUserGameLog } from "../../js/clients/gamelog-client.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
+import { fetchUserGameLog } from "../../scripts/clients/gamelog-client.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 
 export class DashboardPage extends Component {
 	constructor() {
@@ -71,23 +71,23 @@ export class DashboardPage extends Component {
 	async getGameLog() {
 		const { success, data } = await fetchUserGameLog(this.userid);
 		if (!success) {
-			console.log("Error fetching gamelog");
+			console.error("Error fetching gamelog");
 			return;
 		}
 		this.gamelog = data;
-		const localPlayed = this.gamelog.local.length;
-		const remotePlayed = this.gamelog.remote.length;
-		const tttPlayed = this.gamelog.ttt.length;
+		const localPlayed = this.gamelog.local?.length || 0;
+		const remotePlayed = this.gamelog.remote?.length || 0;
+		const tttPlayed = this.gamelog.ttt?.length || 0;
 
-		const remoteWon = this.gamelog.remote.filter(
-			(item) => item.is_win === true
-		).length;
-		const localWon = this.gamelog.local.filter(
-			(item) => item.is_win === true
-		).length;
-		const tttWon = this.gamelog.ttt.filter(
-			(item) => item.is_win === true
-		).length;
+		const remoteWon =
+			this.gamelog.remote?.filter((item) => item.is_win === true)
+				.length || 0;
+		const localWon =
+			this.gamelog.local?.filter((item) => item.is_win === true).length ||
+			0;
+		const tttWon =
+			this.gamelog.ttt?.filter((item) => item.is_win === true).length ||
+			0;
 		const totalPlayed = localPlayed + remotePlayed + tttPlayed;
 		const totalWon = localWon + tttWon + remoteWon;
 		this.stats = {
