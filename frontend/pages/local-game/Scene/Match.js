@@ -111,8 +111,16 @@ export class Match {
         this.#ball.removeBall();
         this.#engine.component.addEndGameCard(this.#points[0], this.#points[1]);
 
-        const { success, error } = await addLocalGame({});
-        if (error) console.error("Failed to save game to gamelog");
+        const { error } = await addLocalGame({
+            my_score: this.#points[0],
+            opponent_score: this.#points[1],
+            opponent_username: this.#players[1].board.playerName,
+        });
+        
+        if (error) 
+        {
+            console.error("Failed to save game to gamelog");
+        }
 
         this.#players.forEach((player, index) => {
             if (player) {

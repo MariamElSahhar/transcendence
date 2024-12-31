@@ -18,7 +18,7 @@ export class Paddle {
     #bottomCollisionSegment;
 
     #playerPosition;
-    #paddleSize = new THREE.Vector3(1, 5, 2); // Adjusted paddle size with depth.
+    #paddleSize = new THREE.Vector3(1, 5, 1); // Adjusted paddle size with depth.
     #originalSize = this.#paddleSize.clone();
     #paddleIsOnTheRight;
 
@@ -74,7 +74,7 @@ export class Paddle {
         }, 100); // Allow 100ms delay for reset to take effect
     }
 
-    #moveAIPaddle(ballPosition, ballVelocity = null) {
+    #moveAIPaddle(ballPosition, ballVelocity) {
         if (this.#isResetting) {
             console.log("Skipping AI movement during reset");
             return;
@@ -96,10 +96,15 @@ export class Paddle {
         const maxAISpeed = 3.5;
         let aiSpeed = Math.min(maxAISpeed, Math.abs(distanceToBall) * 0.15);
 
-        if (Math.abs(anticipatedPositionY) > this.#boardEdgeLimit) aiSpeed *= 0.8;
+        if (Math.abs(anticipatedPositionY) > this.#boardEdgeLimit) 
+        {
+            aiSpeed *= 0.8;
+        }
 
         const missChance = 0.05;
-        if (Math.random() < missChance) return;
+        if (Math.random() < missChance) {
+            return;
+        }
 
         const movementThreshold = 0.1;
         if (Math.abs(distanceToBall) > movementThreshold) {

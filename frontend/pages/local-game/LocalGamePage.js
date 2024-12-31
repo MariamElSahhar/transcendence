@@ -9,15 +9,16 @@ export class LocalGamePage extends Component {
 		this.container = null;
 		this.engine = null;
 		this.overlay = null;
-		this.players = []; // Stores player names
+		this.playerNames = []; // Stores player names
 		this.scores = [0, 0]; // Tracks scores for both players
 		this.isAIEnabled = false;
 	}
 
 	connectedCallback() {
-		const userData = getUserSessionData();
-		const firstPlayerName = userData.username || "Player 1";
-		this.players.push(firstPlayerName);
+		// const userData = getUserSessionData();
+		// const firstPlayerName = userData.username || "Player 1";
+		// this.playerNames.push(firstPlayerName);
+		this.playerNames.push(getUserSessionData().username || "player 1");
 
 		this.innerHTML = `
             <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
@@ -26,7 +27,7 @@ export class LocalGamePage extends Component {
 				<div id="player-names">
                   <div class="mb-3">
                     <label for="player2-name" class="form-label d-block"></label>
-                    <input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100"  placeholder="Player 2 display name"/>
+                    <input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100" placeholder="Player 2 display name"/>
                   </div>
                 </div>
 				<div class="form-check mb-3">
@@ -42,70 +43,74 @@ export class LocalGamePage extends Component {
 		this.container = this.querySelector("#container");
 		this.setupPlayerForm();
 	}
+
 	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
 		const submit = this.querySelector("#submit-players");
 		const AICheckbox = this.querySelector("#play-against-ai");
 		const player2NameInput = this.querySelector("#player2-name");
-	  
+
 		AICheckbox.addEventListener("change", () => {
-		  if (AICheckbox.checked) {
-			player2NameInput.setAttribute("disabled", "");
-			player2NameInput.value = "Computer";
-			submit.removeAttribute("disabled");
-		  } else {
-			player2NameInput.removeAttribute("disabled");
-			submit.setAttribute("disabled", "");
-			player2NameInput.value = "";
-		  }
+			if (AICheckbox.checked) {
+				player2NameInput.setAttribute("disabled", "");
+				player2NameInput.value = "Computer";
+				submit.removeAttribute("disabled");
+			} else {
+				player2NameInput.removeAttribute("disabled");
+				submit.setAttribute("disabled", "");
+				player2NameInput.value = "";
+			}
 		});
-	  
+
 		player2NameInput.addEventListener("input", () => {
-		  if (player2NameInput.value) {
-			submit.removeAttribute("disabled");
-		  } else {
-			submit.setAttribute("disabled", "");
-		  }
+			if (player2NameInput.value) {
+				submit.removeAttribute("disabled");
+			} else {
+				submit.setAttribute("disabled", "");
+			}
 		});
-	  
+
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
-		  
-			const userData = getUserSessionData();
-			console.log("User data:", userData); 
-		  
-			const firstPlayerName = userData.username || "Player 1";
-			this.players = [firstPlayerName];
-		  
-			const player2Name = AICheckbox.checked ? "Computer" : player2NameInput.value.trim();
-			this.players.push(player2Name || "Player 2");
-		  
-			console.log("Players after form submission:", this.players); 
-		  
+
+			// const userData = getUserSessionData();
+			// console.log("User data:", userData);
+
+			// const firstPlayerName = userData.username || "Player 1";
+			// this.playerNames = [firstPlayerName];
+
+			// const player2Name = AICheckbox.checked ? "Computer" : player2NameInput.value.trim();
+			// this.playerNames.push(player2Name || "Player 2");
+			this.playerNames = [this.playerNames[0]];
+
+			const player2Name = AICheckbox.checked
+				? "Computer"
+				: player2NameInput.value;
+			this.playerNames.push(player2Name || "Player 2");
+
+			console.log("Players after form submission:", this.playerNames);
+
 			this.isAIEnabled = AICheckbox.checked;
-		  
+
 			this.querySelector("#player-setup").style.display = "none";
 			this.container.style.display = "block";
-		  
+
 			this.postRender();
-		  });
-		  
-		  
-	  }
+		});
+	}
 
 	postRender() {
 		if (WebGL.isWebGLAvailable()) {
 			this.createOverlay();
 			const countdownStart = Date.now() / 1000 + 3;
 			this.startCountdown(countdownStart);
-		} else 
-		{
+		} else {
 			console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
 		}
 	}
 
 	startGame() {
-		this.engine = new Engine(this, this.isAIEnabled, this.players);
+		this.engine = new Engine(this, this.isAIEnabled, this.playerNames);
 		this.engine.startGame();
 		this.removeOverlay();
 	}
@@ -179,8 +184,8 @@ export class LocalGamePage extends Component {
 	}
 
 	addEndGameCard(playerScore, opponentScore) {
-		const playerName = this.players[0];
-		const opponentName = this.players[1];
+		const playerName = this.playerNames[0];
+		const opponentName = this.playerNames[1];
 
 		this.createOverlay();
 		this.overlay.innerHTML = `
@@ -209,6 +214,3 @@ export class LocalGamePage extends Component {
 }
 
 customElements.define("local-game-page", LocalGamePage);
-
-
-

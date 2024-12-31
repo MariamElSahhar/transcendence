@@ -3,16 +3,16 @@ import { CollisionHandler } from "./CollisionHandler.js";
 
 export class Ball {
   #threeJSGroup = new THREE.Group();
-  #movement = new THREE.Vector3(0, 0, 0);
+  #movement = new THREE.Vector3(0., 0., 0.);
   #acceleration = 1.1;
-  #radius = 1;
+  #radius = 1.;
   #mesh;
   #light;
 
   constructor() {
     this.#initializeBall();
     this.#initializeLight();
-    this.#threeJSGroup.position.set(0, 0, 1);
+    this.#threeJSGroup.position.set(0., 0., 1.);
   }
 
   #initializeBall() {
@@ -24,21 +24,21 @@ export class Ball {
         color: 0xffffff,
       })
     );
-    this.#mesh.position.set(0, 0, 0);
+    this.#mesh.position.set(0., 0., 0.);
     this.#mesh.castShadow = false;
     this.#mesh.receiveShadow = false;
     this.#threeJSGroup.add(this.#mesh);
   }
 
   #initializeLight() {
-    this.#light = new THREE.PointLight(0xffffff, 10.0, 10);
-    this.#light.position.set(0, 0, 0);
+    this.#light = new THREE.PointLight(0xffffff, 10.0, 10.);
+    this.#light.position.set(0., 0., 0.);
     this.#light.castShadow = true;
     this.#threeJSGroup.add(this.#light);
   }
 
   prepareForMatch() {
-    this.#threeJSGroup.position.set(0, 0, this.#threeJSGroup.position.z);
+    this.#threeJSGroup.position.set(0., 0., this.#threeJSGroup.position.z);
     this.randomizeMovement();
   }
 
@@ -48,7 +48,7 @@ export class Ball {
   }
 
   updateFrame(timeDelta, boardSize, match) {
-    if (this.#movement.x === 0 || timeDelta === 0) {
+    if (this.#movement.x === 0. || timeDelta === 0.) {
       return;
     }
 

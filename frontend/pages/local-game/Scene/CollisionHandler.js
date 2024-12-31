@@ -11,13 +11,7 @@ class PhysicalObject {
   }
 
   handleCollision(_travel, _ball, _collisionHandler, _match) {
-    _match.playerMarkedPoint(1 - this.isRight); // Update the score.
-
-    // Reset both players to their starting positions.
-    _match.resetPlayers();
-  
-    return null;
-    //throw new Error('Not implemented');
+    throw new Error('Not implemented');
   }
 }
 
@@ -142,11 +136,12 @@ class Paddle extends PhysicalObject {
       travel.begin,
       travel.end.clone().add(radiusHelper)
     );
-
-    const { intersection, t } = travelHelper.intersect(segment);
-    if (!intersection) return { intersection: null, t: null };
-
+    let { intersection, t } = travelHelper.intersect(segment);
+    if (intersection === null) {
+      return { intersection: null, t: null };
+    }
     intersection.sub(radiusHelper);
+    t = (intersection.x - travel.begin.x) / travel.vector.x;
     return { intersection, t };
   }
 

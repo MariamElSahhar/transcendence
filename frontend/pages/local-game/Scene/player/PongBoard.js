@@ -113,17 +113,27 @@ export class PongBoard {
     this.#threeJSBoard.add(this.#playerNameSprite);
   }
 
-  createTextSprite(message, color = "#ffffff", fontSize = 100) {
+  createTextSprite(message, color = "#ffffff", fontSize = 128)
+  {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
-    canvas.width = 512;
-    canvas.height = 256;
+    canvas.width = 1024;
+    canvas.height = 512;
+
+    const maxFontSize = fontSize;
+    const minFontSize = 20;
+    const maxLength = 20;
+    const adjustedFontSize = Math.max(
+        minFontSize,
+        maxFontSize - (message.length > maxLength ? (message.length - maxLength) * 2 : 0)
+    );
 
     context.fillStyle = color;
-    context.font = `bold ${fontSize}px Verdana`;
+    context.font = `bold ${adjustedFontSize}px Verdana`;
     context.textAlign = "center";
     context.textBaseline = "middle";
+
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillText(message, canvas.width / 2, canvas.height / 2);
 
@@ -133,7 +143,9 @@ export class PongBoard {
     const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
     const sprite = new THREE.Sprite(spriteMaterial);
 
-    sprite.scale.set(10, 5, 1);
+    const scaleFactor = 10;
+    const scaleWidth = (canvas.width / canvas.height) * scaleFactor;
+    sprite.scale.set(scaleWidth, scaleFactor, 1);
 
     return sprite;
   }
