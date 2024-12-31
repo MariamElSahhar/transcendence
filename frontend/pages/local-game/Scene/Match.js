@@ -17,9 +17,8 @@ export class Match {
 
 	constructor() {}
 
-	async init(engine) {
+	async init(engine, playerNames) {
 		this.#engine = engine;
-		console.log("ai enabled:", engine.isAIGame);
 		// Initialize the ball
 		this.#ball = new Ball();
 		this.prepare_ball_for_match();
@@ -29,8 +28,10 @@ export class Match {
 
 		// Initialize players, setting one as AI if specified
 		for (let i = 0; i < 2; i++) {
-			const isAIControlled = engine.isAIGame && i === 1; // Make the second player AI-controlled
-			this.#players[i] = new Player(isAIControlled);
+			this.#players[i] = new Player(
+				engine.isAIGame && i === 1,
+				playerNames[i]
+			);
 			await this.#players[i].init(i, this.#pointsToWinMatch);
 			this.#threeJSGroup.add(this.#players[i].threeJSGroup);
 		}
@@ -75,7 +76,11 @@ export class Match {
 		this.#matchIsOver = true;
 		this.#ball.removeBall();
 		this.#engine.component.addEndGameCard(this.#points[0], this.#points[1]);
-		const { success, error } = await addLocalGame({});
+		const { error } = await addLocalGame({
+			my_score: this.#points[0],
+			opponent_score: this.#points[1],
+			opponent_username: this.#players[1].name,
+		});
 		if (error) console.error("Failed to save game to gamelog");
 		return;
 	}

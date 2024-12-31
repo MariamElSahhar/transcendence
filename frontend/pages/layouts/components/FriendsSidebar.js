@@ -1,4 +1,5 @@
 import { Component } from "../../Component.js";
+const backendURL = "http://127.0.0.1:8000";
 
 export class FriendsSidebar extends Component {
 	constructor() {
@@ -55,7 +56,17 @@ export class FriendsSidebar extends Component {
 	renderFriendCard({ username, avatar, is_online }) {
 		return `
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
-				<img src=${avatar} class="friend-avatar h-100 rounded-circle"/>
+				<div class="position-relative">
+					<img src="${backendURL + avatar}" class="friend-avatar h-100 rounded-circle" />
+					${
+						is_online
+							? `<span
+							class="position-absolute bottom-0 end-0 p-1 border border-light rounded-circle bg-success"
+							style="width: 5px; height: 5px;"
+						></span>`
+							: ""
+					}
+				</div>
 				<div>
 					<p class="m-0 link-dark">${username}</p>
 				</div>
@@ -67,8 +78,8 @@ export class FriendsSidebar extends Component {
 		return `
 		<style>
 			.friend-avatar {
-				width: 40px;
-				height: 40px;
+				width: 30px;
+				height: 30px;
 			}
 		</style>
 		`;

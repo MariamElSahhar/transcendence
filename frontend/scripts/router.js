@@ -8,9 +8,9 @@ const routes = {
 		path: "../pages/LandingPage.js",
 		protected: false,
 	},
-	"/sign-in": {
-		component: "sign-in-page",
-		path: "../pages/auth/SignInPage.js",
+	"/login": {
+		component: "login-page",
+		path: "../pages/auth/LoginPage.js",
 		protected: false,
 	},
 	"/sign-up": {
@@ -20,7 +20,7 @@ const routes = {
 	},
 	404: {
 		component: "not-found-page",
-		path: "../pages/NotFoundPage.js",
+		path: "../pages/error/NotFoundPage.js",
 		protected: false,
 	},
 	// PROTECTED SCREENS
@@ -40,6 +40,12 @@ const routes = {
 		layout: "main",
 		component: "local-game-page",
 		path: "../pages/local-game/LocalGamePage.js",
+		protected: false,
+	},
+	"/play/remote": {
+		layout: "main",
+		component: "remote-game-page",
+		path: "../pages/local/RemoteGamePage.js",
 		protected: false,
 	},
 	"/play/tournament": {
@@ -125,7 +131,7 @@ const validDashboardPath = async (path) => {
 	const response = await fetchUserById(userid);
 	if (response.data) return true;
 	else {
-		console.log(response.error);
+		console.error(response.error);
 		return false;
 	}
 };

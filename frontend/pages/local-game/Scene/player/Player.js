@@ -7,9 +7,11 @@ export class Player {
 	#board;
 	#paddle;
 	#isAIControlled;
+	#name;
 
-	constructor(isAIControlled = false) {
+	constructor(isAIControlled = false, name) {
 		this.#isAIControlled = isAIControlled;
+		this.#name = name;
 	}
 
 	async init(index, pointsToWinMatch) {
@@ -61,6 +63,10 @@ export class Player {
 
 	get board() {
 		return this.#board;
+	}
+
+	get name() {
+		return this.#name;
 	}
 
 	getPosition() {

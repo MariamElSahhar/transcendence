@@ -60,10 +60,14 @@ export class GameHeatMap extends Component {
 		const startDate = new Date(latestDate.getFullYear(), 0, 1);
 		const currentDate = new Date(startDate);
 
-		while (currentDate <= latestDate) {
+		while (
+			currentDate.toISOString().split("T")[0] <=
+			latestDate.toISOString().split("T")[0]
+		) {
 			const dateString = currentDate.toISOString().split("T")[0];
-
-			const game = this.gamecount.find((c) => c.date === dateString);
+			const game = this.gamecount.find(
+				(entry) => entry.date === dateString
+			);
 			const count = game ? game.count : 0;
 
 			const cell = document.createElement("div");
@@ -79,10 +83,14 @@ export class GameHeatMap extends Component {
 	}
 
 	countGames(gamelog) {
-		const allGames = [...gamelog.remote, ...gamelog.local, ...gamelog.ttt];
+		const allGames = [
+			...(gamelog.remote || []),
+			...(gamelog.local || []),
+			...(gamelog.ttt || []),
+		];
 
 		const dateCounts = allGames.reduce((counts, game) => {
-			const gameDate = game.date;
+			const gameDate = game.date.split("T")[0];
 			if (!counts[gameDate]) {
 				counts[gameDate] = 0;
 			}

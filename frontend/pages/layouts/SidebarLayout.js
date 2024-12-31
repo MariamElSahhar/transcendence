@@ -2,6 +2,7 @@ import { Component } from "../Component.js";
 import { fetchFriends } from "../../scripts/clients/friends-client.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 import { fetchUserById } from "../../scripts/clients/users-client.js";
+const backendURL = "http://127.0.0.1:8000";
 
 export class SidebarLayout extends Component {
 	constructor() {
@@ -80,7 +81,7 @@ export class SidebarLayout extends Component {
 
 			if (success) {
 				this.user.username = data.username;
-				this.user.avatar = data.avatar;
+				this.user.avatar = backendURL + data.avatar;
 				this.user.is_friend = data.is_friend;
 				this.user.is_me = mydata.userid == data.id;
 				this.user.is_online = data.is_online;

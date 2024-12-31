@@ -15,15 +15,18 @@ export class Scene {
 	#sky;
 	#boardSize;
 	#animationHeight = 20;
+	playerNames;
 
-	constructor() {}
+	constructor(playerNames) {
+		this.playerNames = playerNames;
+	}
 
 	async init(engine) {
 		this.#engine = engine;
 
 		try {
 			console.log("Initializing match...");
-			await this.#match.init(engine); // Pass true to enable AI for the second player
+			await this.#match.init(engine, this.playerNames); // Pass true to enable AI for the second player
 			this.#threeJSScene.add(this.#match.threeJSGroup);
 			console.log("Match initialized and added to scene.");
 

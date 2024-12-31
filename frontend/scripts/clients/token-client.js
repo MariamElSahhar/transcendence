@@ -9,6 +9,14 @@ const URIS = {
 	register: `${BASE_URL}/register/`,
 	auth: `${BASE_URL}/token/status`,
 	verifyOTP: `${BASE_URL}/verify-otp/`,
+	avatars: `${BASE_URL}/default-avatars/`,
+};
+
+export const getDefaultAvatars = async () => {
+	const url = URIS.avatars;
+	const { status, body, error } = await get(url);
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data: body };
 };
 
 // login and activate otp verification
@@ -55,7 +63,7 @@ export const tokenStatus = async () => {
 	return status == 200 ? true : false;
 };
 
-// clears http-only cookies
+// clears http-only cookies and sets user as offline on the server
 export const logout = async () => {
 	const url = URIS.logout;
 	const { status, body, error } = await post(url);

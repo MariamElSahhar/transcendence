@@ -4,6 +4,7 @@ import { getUserSessionData } from "../utils/session-manager.js";
 
 const URIs = {
 	friends: `${BASE_URL}/friends/`,
+	friendsID: (id) => `${BASE_URL}/friends/${id}/`,
 };
 
 // Fetch all friends
@@ -25,7 +26,7 @@ export const addFriend = async (id) => {
 
 // Remove friend
 export const removeFriend = async (id) => {
-	const url = `${URIs.friends}${id}/`;
+	const url = URIs.friendsID(id);
 	const { status, body, error } = await del(url);
 	if (error) return { success: false, error };
 	return { success: true };

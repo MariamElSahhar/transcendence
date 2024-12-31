@@ -2,19 +2,19 @@ const BASE_URL = "http://127.0.0.1:8000/api";
 import { post, get } from "../utils/http-requests.js";
 
 const URIs = {
-	gamelog: `${BASE_URL}/gamelog/`,
+	gamelog: (user_id) => `${BASE_URL}/users/${user_id}/gamelog/`,
 	gamelogRemote: `${BASE_URL}/gamelog/remote/`,
 	gamelogTTT: `${BASE_URL}/gamelog/ttt/`,
 	gamelogLocal: `${BASE_URL}/gamelog/local/`,
 };
 
 // Fetch game log
-export const fetchUserGameLog = async (userid) => {
-	/* const url = `${URIs.gamelog}${userid}/`;
+export const fetchUserGameLog = async (user_id) => {
+	const url = URIs.gamelog(user_id);
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data: body.data }; */
-	// DUMMY DATA
+	return { success: true, data: body };
+	/* // DUMMY DATA
 	const gamelog = {
 		local: [
 			{
@@ -105,32 +105,42 @@ export const fetchUserGameLog = async (userid) => {
 			},
 		],
 		ttt: [],
-	};
+	}; */
 	return { success: true, data: gamelog };
 };
 
 // Add remote game to gamelog
 export const addRemoteGame = async (gameData) => {
 	const url = URIs.gamelogRemote;
-	const requestBody = { data: gameData };
+	const requestBody = { gameData };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };
 };
 
 // Add local game to gamelog
-export const addLocalGame = async (gameData) => {
-	// const url = URIs.gamelogLocal;
-	// const requestBody = { data: gameData };
-	// const { status, body, error } = await post(url, requestBody);
-	// if (error) return { success: false, error };
+export const addLocalGame = async ({
+	opponent_score,
+	my_score,
+	opponent_username,
+	tournament,
+}) => {
+	const url = URIs.gamelogLocal;
+	const requestBody = {
+		opponent_score,
+		my_score,
+		opponent_username,
+		tournament,
+	};
+	const { status, body, error } = await post(url, requestBody);
+	if (error) return { success: false, error };
 	return { success: true };
 };
 
 // Add tic tac toe game to gamelog
 export const addTTTGame = async (gameData) => {
 	const url = URIs.gamelogTTT;
-	const requestBody = { data: gameData };
+	const requestBody = { gameData };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };
