@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
-import { register } from "../../js/clients/token-client.js";
-import {isValidSecurePassword, isValidUsername, isValidEmail} from '../../js/utils/input-validator.js'
+import { register } from "../../scripts/clients/token-client.js";
+import {isValidSecurePassword, isValidUsername, isValidEmail} from '../../scripts/utils/input-validator.js'
 
 export class SignUpPage extends Component {
 	constructor() {

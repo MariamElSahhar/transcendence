@@ -717,21 +717,25 @@ div.camera-icon-circle:hover i.bi-camera {
 		{
 			try
 			{
-				const { success, body } = await updateUser(getUserSessionData().userid,this.vars);
+				const { success, body ,error} = await updateUser(getUserSessionData().userid,this.vars);
 
 				if(!success)
 				{
-					if (body.username) {
+					if (error.username) {
 						this.username.classList.remove('is-valid');
 						this.username.classList.add('is-invalid');
 
-						this.usernameFeedback.innerHTML = body.username[0]; // Set the error message for username
+						this.usernameFeedback.innerHTML = error.username[0]; // Set the error message for username
 					}
-					if (body.email) {
+					if (error.email) {
 						this.email.classList.remove('is-valid');
 						this.email.classList.add('is-invalid');
-						this.emailFeedback.innerHTML = body.email[0]; // Set the error message for email
+						this.emailFeedback.innerHTML = error.email[0]; // Set the error message for email
 					}
+					this.saveButton.innerHTML = `
+      <i class="bi bi-floppy2-fill"></i>
+    `;
+		this.saveButton.disabled = true;
 					return false;
 				}
 			} catch (error) {
