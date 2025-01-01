@@ -1,6 +1,6 @@
-import { Segment2 } from './Segment2.js';
+import { HandlePaddleEdge } from './HandlePaddleEdge.js';
 
-class _APhysicalObject {
+class PhysicalObject {
   constructor() {
     this.intersection = null;
     this.t = null;
@@ -11,107 +11,82 @@ class _APhysicalObject {
   }
 
   handleCollision(_travel, _ball, _collisionHandler, _match) {
+    //_match.playerMarkedPoint(1 - this.isRight); // Update the score.
+
+    // // Reset both players to their starting positions.
+    // _match.resetPlayers();
+  
+    // return null;
+    // //throw new Error('Not implemented');
     throw new Error('Not implemented');
   }
 }
 
-
-class _Wall extends _APhysicalObject {
+class Wall extends PhysicalObject {
   constructor(isTop, boardSize) {
     super();
     this.isTop = isTop;
-    if (this.isTop) {
-      this.y = boardSize.y * 0.5;
-    } else {
-      this.y = boardSize.y * -0.5;
-    }
+    this.y = this.isTop ? boardSize.y * 0.5 : boardSize.y * -0.5;
   }
 
   intersect(travel, currentClosestPhysicalObjectHit, ballRadius) {
-    if (this.isTop) {
-      const travelTop = travel.end.y + ballRadius;
-      if (travelTop < this.y) {
-        return currentClosestPhysicalObjectHit;
-      }
-      this.intersection = travel.vector.clone()
-          .divideScalar(travel.vector.y)
-          .multiplyScalar(this.y - travel.begin.y - ballRadius)
-          .add(travel.begin);
-    } else {
-      const travelBottom = travel.end.y - ballRadius;
-      if (travelBottom > this.y) {
-        return currentClosestPhysicalObjectHit;
-      }
-      this.intersection = travel.vector.clone()
-          .divideScalar(travel.vector.y)
-          .multiplyScalar(this.y - travel.begin.y + ballRadius)
-          .add(travel.begin);
+    const travelEdge = this.isTop ? travel.end.y + ballRadius : travel.end.y - ballRadius;
+
+    if ((this.isTop && travelEdge < this.y) || (!this.isTop && travelEdge > this.y)) {
+      return currentClosestPhysicalObjectHit;
     }
+
+    this.intersection = travel.vector.clone()
+      .divideScalar(travel.vector.y)
+      .multiplyScalar(this.y - travel.begin.y + (this.isTop ? -ballRadius : ballRadius))
+      .add(travel.begin);
 
     this.t = (this.intersection.x - travel.begin.x) / travel.vector.x;
 
-    if (currentClosestPhysicalObjectHit === null) {
+    if (currentClosestPhysicalObjectHit === null || this.t < currentClosestPhysicalObjectHit.t) {
       return this;
     }
-    if (this.t < currentClosestPhysicalObjectHit.t) {
-      return this;
-    }
+
     return currentClosestPhysicalObjectHit;
   }
 
-  handleCollision(travel, ball, collisionHandler, _match) {
+  handleCollision(travel, ball, _collisionHandler, _match) {
     ball.setMovementY(ball.movement.y * -1);
-    const newTravelVector = travel.vector.multiplyScalar(1 - this.t);
+    const newTravelVector = travel.vector.clone().multiplyScalar(1 - this.t);
     newTravelVector.y *= -1;
-    return new Segment2(
-        this.intersection,
-        this.intersection.clone().add(newTravelVector),
-        newTravelVector,
+    return new HandlePaddleEdge(
+      this.intersection,
+      this.intersection.clone().add(newTravelVector),
+      newTravelVector
     );
   }
 }
 
-
-class _Goal extends _APhysicalObject {
+class Goal extends PhysicalObject {
   constructor(isRight, boardSize) {
     super();
     this.isRight = isRight;
-    if (this.isRight) {
-      this.x = boardSize.x;
-    } else {
-      this.x = -boardSize.x;
-    }
+    this.x = this.isRight ? boardSize.x : -boardSize.x;
   }
 
   intersect(travel, currentClosestPhysicalObjectHit, ballRadius) {
-    if (this.isRight) {
-      const travelRight = travel.end.x + ballRadius;
-      if (travelRight < this.x) {
-        return currentClosestPhysicalObjectHit;
-      }
-      this.intersection = travel.vector.clone()
-          .divideScalar(travel.vector.x)
-          .multiplyScalar(this.x - travel.begin.x - ballRadius)
-          .add(travel.begin);
-    } else {
-      const travelLeft = travel.end.x - ballRadius;
-      if (travelLeft > this.x) {
-        return currentClosestPhysicalObjectHit;
-      }
-      this.intersection = travel.vector.clone()
-          .divideScalar(travel.vector.x)
-          .multiplyScalar(this.x - travel.begin.x + ballRadius)
-          .add(travel.begin);
+    const travelEdge = this.isRight ? travel.end.x + ballRadius : travel.end.x - ballRadius;
+
+    if ((this.isRight && travelEdge < this.x) || (!this.isRight && travelEdge > this.x)) {
+      return currentClosestPhysicalObjectHit;
     }
+
+    this.intersection = travel.vector.clone()
+      .divideScalar(travel.vector.x)
+      .multiplyScalar(this.x - travel.begin.x + (this.isRight ? -ballRadius : ballRadius))
+      .add(travel.begin);
 
     this.t = (this.intersection.x - travel.begin.x) / travel.vector.x;
 
-    if (currentClosestPhysicalObjectHit === null) {
+    if (currentClosestPhysicalObjectHit === null || this.t < currentClosestPhysicalObjectHit.t) {
       return this;
     }
-    if (this.t < currentClosestPhysicalObjectHit.t) {
-      return this;
-    }
+
     return currentClosestPhysicalObjectHit;
   }
 
@@ -121,191 +96,122 @@ class _Goal extends _APhysicalObject {
   }
 }
 
-
-class _PhysicalPaddle extends _APhysicalObject {
-  #paddleWasAlreadyHit;
-  #closestSideHit;
-  #top;
-  #front;
-  #bottom;
-  #paddleIsOnTheRight;
-
+class Paddle extends PhysicalObject {
   constructor(paddle) {
     super();
-    this.#top = paddle.topCollisionSegment;
-    this.#front = paddle.frontCollisionSegment;
-    this.#bottom = paddle.bottomCollisionSegment;
-    this.#paddleIsOnTheRight = paddle.paddleIsOnTheRight;
-
-    // Used to prevent the ball from getting stuck in the paddle
-    this.#paddleWasAlreadyHit = false;
-
-    this.#closestSideHit = null;
+    this.top = paddle.topCollisionSegment;
+    this.front = paddle.frontCollisionSegment;
+    this.bottom = paddle.bottomCollisionSegment;
+    this.paddleIsOnTheRight = paddle.paddleIsOnTheRight;
+    this.paddleWasAlreadyHit = false;
+    this.closestSideHit = null;
   }
 
   intersect(travel, currentClosestPhysicalObjectHit, ballRadius) {
-    if (this.#paddleWasAlreadyHit) {
-      return currentClosestPhysicalObjectHit;
-    }
-    this.#calculateClosestSideHit(travel, ballRadius);
-    if (this.#closestSideHit === null) {
-      return currentClosestPhysicalObjectHit;
-    }
-    if (currentClosestPhysicalObjectHit === null) {
+    if (this.paddleWasAlreadyHit) return currentClosestPhysicalObjectHit;
+    this.calculateClosestSideHit(travel, ballRadius);
+    if (this.closestSideHit === null) return currentClosestPhysicalObjectHit;
+
+    if (currentClosestPhysicalObjectHit === null || this.t < currentClosestPhysicalObjectHit.t) {
       return this;
     }
-    if (this.t < currentClosestPhysicalObjectHit.t) {
-      return this;
-    }
+
     return currentClosestPhysicalObjectHit;
   }
 
-  #calculateClosestSideHit(travel, ballRadius) {
-    this.#closestSideHit = null;
-    this.#intersectTop(travel, ballRadius);
-    this.#intersectFront(travel, ballRadius);
-    this.#intersectBottom(travel, ballRadius);
+  calculateClosestSideHit(travel, ballRadius) {
+    this.closestSideHit = null;
+    this.intersectSide(travel, ballRadius, this.top, 'top', travel.vector.y <= 0);
+    this.intersectSide(travel, ballRadius, this.front, 'front', true);
+    this.intersectSide(travel, ballRadius, this.bottom, 'bottom', travel.vector.y >= 0);
   }
 
-  #intersectTop(travel, ballRadius) {
-    if (travel.vector.y > 0) {
-      return;
-    }
-    const {intersection, t} = _PhysicalPaddle.#circleSegmentIntersection(
-        travel, this.#top, ballRadius,
-    );
-    if (intersection === null) {
-      return;
-    }
-    if (this.t === null || this.t > t) {
-      this.#closestSideHit = 'top';
+  intersectSide(travel, ballRadius, side, sideName, condition) {
+    if (!condition || !side.begin || !side.end) return;
+
+    const { intersection, t } = Paddle.circleSegmentIntersection(travel, side, ballRadius);
+    if (intersection && (!this.t || t < this.t)) {
+      this.closestSideHit = sideName;
       this.t = t;
       this.intersection = intersection;
     }
   }
 
-  #intersectFront(travel, ballRadius) {
-    const {intersection, t} = _PhysicalPaddle.#circleSegmentIntersection(
-        travel, this.#front, ballRadius,
+  static circleSegmentIntersection(travel, segment, ballRadius) {
+    const radiusHelper = travel.vector.clone().normalize().multiplyScalar(ballRadius);
+    const travelHelper = new HandlePaddleEdge(
+      travel.begin,
+      travel.end.clone().add(radiusHelper)
     );
+    let { intersection, t } = travelHelper.intersect(segment);
     if (intersection === null) {
-      return;
-    }
-    if (this.t === null || this.t > t) {
-      this.#closestSideHit = 'front';
-      this.t = t;
-      this.intersection = intersection;
-    }
-  }
-
-  #intersectBottom(travel, ballRadius) {
-    if (travel.vector.y < 0) {
-      return;
-    }
-    const {intersection, t} = _PhysicalPaddle.#circleSegmentIntersection(
-        travel, this.#bottom, ballRadius,
-    );
-    if (intersection === null) {
-      return;
-    }
-    if (this.t === null || this.t > t) {
-      this.#closestSideHit = 'bottom';
-      this.t = t;
-      this.intersection = intersection;
-    }
-  }
-
-  static #circleSegmentIntersection(travel, segment, ballRadius) {
-    // This is not a perfect solution to calculate the intersection between a
-    // moving circle and a segment, but it is good enough for our use case
-    const radiusHelper = travel.vector.clone()
-        .normalize()
-        .multiplyScalar(ballRadius);
-    const travelHelper = new Segment2(travel.begin,
-        travel.end.clone().add(radiusHelper));
-    let {intersection, t} = travelHelper.intersect(segment);
-    if (intersection === null) {
-      return {intersection: null, t: null};
+      return { intersection: null, t: null };
     }
     intersection.sub(radiusHelper);
     t = (intersection.x - travel.begin.x) / travel.vector.x;
-    return {intersection: intersection, t: t};
+    return { intersection, t };
   }
 
-  handleCollision(travel, ball, collisionHandler, _match) {
-    this.#paddleWasAlreadyHit = true;
-    let newTravelVector = travel.vector.multiplyScalar(1. - this.t);
-    if (this.#closestSideHit !== 'front') {
-      ball.setMovementY(ball.movement.y * -1);
-      newTravelVector.y *= -1;
-    } else {
-      const paddleHalfHeight = this.#front.vector.y / 2.;
-      const movementReference = this.#front.begin.clone();
+  handleCollision(travel, ball, _collisionHandler, _match) {
+    this.paddleWasAlreadyHit = true;
+    let newTravelVector = travel.vector.clone().multiplyScalar(1 - this.t);
+
+    if (this.closestSideHit === 'front') {
+      const paddleHalfHeight = this.front.vector.y / 2;
+      const movementReference = this.front.begin.clone();
       movementReference.y += paddleHalfHeight;
-      if (this.#paddleIsOnTheRight) {
-        movementReference.x += paddleHalfHeight;
-      } else {
-        movementReference.x -= paddleHalfHeight;
-      }
+      movementReference.x += this.paddleIsOnTheRight ? paddleHalfHeight : -paddleHalfHeight;
 
       const normalizedMovement = this.intersection.clone()
-          .sub(movementReference)
-          .normalize();
-      ball.movement = normalizedMovement.clone()
-          .multiplyScalar(ball.movement.length() * ball.acceleration);
-      newTravelVector = normalizedMovement
-          .multiplyScalar(newTravelVector.length());
+        .sub(movementReference)
+        .normalize();
+      ball.movement = normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration);
+      newTravelVector = normalizedMovement.multiplyScalar(newTravelVector.length());
+    } else {
+      ball.setMovementY(ball.movement.y * -1);
+      newTravelVector.y *= -1;
     }
-    return new Segment2(this.intersection,
-        this.intersection.clone().add(newTravelVector),
-        newTravelVector);
+
+    return new HandlePaddleEdge(
+      this.intersection,
+      this.intersection.clone().add(newTravelVector),
+      newTravelVector
+    );
   }
 }
 
-
 export class CollisionHandler {
   constructor(paddle, boardSize) {
-    this.TOP_WALL = new _Wall(true, boardSize);
-    this.BOTTOM_WALL = new _Wall(false, boardSize);
-
-    this.RIGHT_GOAL = new _Goal(true, boardSize);
-    this.LEFT_GOAL = new _Goal(false, boardSize);
-
-    this.physicalPaddle = new _PhysicalPaddle(paddle);
+    this.TOP_WALL = new Wall(true, boardSize);
+    this.BOTTOM_WALL = new Wall(false, boardSize);
+    this.RIGHT_GOAL = new Goal(true, boardSize);
+    this.LEFT_GOAL = new Goal(false, boardSize);
+    this.physicalPaddle = new Paddle(paddle);
   }
 
   updateBallPositionAndMovement(timeDelta, match) {
     const ball = match.ball;
-    let travel = new Segment2(
-        ball.getPosition(),
-        ball.getPosition().clone()
-            .add(ball.movement.clone().multiplyScalar(timeDelta)),
+    let travel = new HandlePaddleEdge(
+      ball.getPosition(),
+      ball.getPosition().clone().add(ball.movement.clone().multiplyScalar(timeDelta))
     );
+
     while (travel !== null) {
-      const closestObjectHit = this._getClosestObjectHit(
-          travel, this.physicalPaddle, ball.radius,
-      );
-      if (closestObjectHit === null) {
+      const closestObjectHit = this.getClosestObjectHit(travel, ball.radius);
+      if (!closestObjectHit) {
         ball.setPosition(travel.end);
         return;
       }
-      travel = closestObjectHit.handleCollision(
-          travel, ball, this, match,
-      );
+      travel = closestObjectHit.handleCollision(travel, ball, this, match);
     }
   }
 
-  _getClosestObjectHit(travel, physicalPaddle, ballRadius) {
+  getClosestObjectHit(travel, ballRadius) {
     let closestObjectHit = this.TOP_WALL.intersect(travel, null, ballRadius);
-    closestObjectHit = this.BOTTOM_WALL.intersect(
-        travel, closestObjectHit, ballRadius,
-    );
-    closestObjectHit = this.LEFT_GOAL.intersect(
-        travel, closestObjectHit, ballRadius,
-    );
-    closestObjectHit = this.RIGHT_GOAL.intersect(
-        travel, closestObjectHit, ballRadius,
-    );
-    return physicalPaddle.intersect(travel, closestObjectHit, ballRadius);
+    closestObjectHit = this.BOTTOM_WALL.intersect(travel, closestObjectHit, ballRadius);
+    closestObjectHit = this.LEFT_GOAL.intersect(travel, closestObjectHit, ballRadius);
+    closestObjectHit = this.RIGHT_GOAL.intersect(travel, closestObjectHit, ballRadius);
+    return this.physicalPaddle.intersect(travel, closestObjectHit, ballRadius);
   }
 }
+

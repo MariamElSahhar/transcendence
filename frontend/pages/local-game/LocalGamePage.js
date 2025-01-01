@@ -15,7 +15,11 @@ export class LocalGamePage extends Component {
 	}
 
 	connectedCallback() {
-		this.playerNames.push(getUserSessionData().username || "Player 1");
+		// const userData = getUserSessionData();
+		// const firstPlayerName = userData.username || "Player 1";
+		// this.playerNames.push(firstPlayerName);
+		this.playerNames.push(getUserSessionData().username || "player 1");
+
 		this.innerHTML = `
             <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
               <h3 class="text-center">Setup Players</h3>
@@ -23,7 +27,7 @@ export class LocalGamePage extends Component {
 				<div id="player-names">
                   <div class="mb-3">
                     <label for="player2-name" class="form-label d-block"></label>
-                    <input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100"  placeholder="Player 2 display name"/>
+                    <input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100" placeholder="Player 2 display name"/>
                   </div>
                 </div>
 				<div class="form-check mb-3">
@@ -57,6 +61,7 @@ export class LocalGamePage extends Component {
 				player2NameInput.value = "";
 			}
 		});
+
 		player2NameInput.addEventListener("input", () => {
 			if (player2NameInput.value) {
 				submit.removeAttribute("disabled");
@@ -67,12 +72,24 @@ export class LocalGamePage extends Component {
 
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
+
+			// const userData = getUserSessionData();
+			// console.log("User data:", userData);
+
+			// const firstPlayerName = userData.username || "Player 1";
+			// this.playerNames = [firstPlayerName];
+
+			// const player2Name = AICheckbox.checked ? "Computer" : player2NameInput.value.trim();
+			// this.playerNames.push(player2Name || "Player 2");
 			this.playerNames = [this.playerNames[0]];
 
 			const player2Name = AICheckbox.checked
 				? "Computer"
 				: player2NameInput.value;
 			this.playerNames.push(player2Name || "Player 2");
+
+			console.log("Players after form submission:", this.playerNames);
+
 			this.isAIEnabled = AICheckbox.checked;
 
 			this.querySelector("#player-setup").style.display = "none";
@@ -83,8 +100,6 @@ export class LocalGamePage extends Component {
 	}
 
 	postRender() {
-		//this.addComponentEventListener(document, Theme.event, this.themeEvent.bind(this));
-
 		if (WebGL.isWebGLAvailable()) {
 			this.createOverlay();
 			const countdownStart = Date.now() / 1000 + 3;
@@ -95,7 +110,7 @@ export class LocalGamePage extends Component {
 	}
 
 	startGame() {
-		this.engine = new Engine(this, this.playerNames, this.isAIEnabled);
+		this.engine = new Engine(this, this.isAIEnabled, this.playerNames);
 		this.engine.startGame();
 		this.removeOverlay();
 	}
@@ -196,12 +211,6 @@ export class LocalGamePage extends Component {
         </div>
       `;
 	}
-
-	// themeEvent() {
-	//     if (Theme.get() === "light") {
-	//         this.engine?.scene?.setLightTheme();
-	//     }
-	// }
 }
 
 customElements.define("local-game-page", LocalGamePage);
