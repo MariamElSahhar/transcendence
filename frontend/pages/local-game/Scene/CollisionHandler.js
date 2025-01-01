@@ -11,6 +11,13 @@ class PhysicalObject {
   }
 
   handleCollision(_travel, _ball, _collisionHandler, _match) {
+    //_match.playerMarkedPoint(1 - this.isRight); // Update the score.
+
+    // // Reset both players to their starting positions.
+    // _match.resetPlayers();
+  
+    // return null;
+    // //throw new Error('Not implemented');
     throw new Error('Not implemented');
   }
 }
