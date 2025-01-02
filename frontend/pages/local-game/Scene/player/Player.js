@@ -8,6 +8,7 @@ export class Player {
     #paddle;
     #isAIControlled;
     #isResetting = false;
+    #gameStarted = false; // New flag to track game state
 
     constructor(isAIControlled = false) {
         this.#isAIControlled = isAIControlled;
@@ -17,9 +18,9 @@ export class Player {
         console.log(`Player.init called with index: ${index}, playerName: ${playerName}`);
 
         if (index === 0) {
-            this.#threeJSGroup.position.set(-10, 0, 0);
+            this.#threeJSGroup.position.set(-10, 0, 0); // Left player
         } else {
-            this.#threeJSGroup.position.set(10, 0, 0);
+            this.#threeJSGroup.position.set(10, 0, 0); // Right player
         }
 
         this.#paddle = new Paddle(index === 1, this.#threeJSGroup.position, this.#isAIControlled);
@@ -31,40 +32,40 @@ export class Player {
     }
 
     updateFrame(timeDelta, pongGameBox, ballPosition = null) {
+        if (!this.#gameStarted) return; // Prevent movement if the game hasn't started
+
         this.#paddle.updateFrame(timeDelta, pongGameBox, ballPosition);
         this.#board.updateFrame();
     }
 
-	resetPaddle() {
-		if (this.#paddle && this.#board) {
-			const boardSize = this.#board.size;
-	
-			const startingX = this.#threeJSGroup.position.x > 0
-				? boardSize.x / 2 - 2 // Right player
-				: -boardSize.x / 2 + 2; // Left player
-			const startingY = 0;
-			const startingZ = 0;
-	
-			this.#paddle.setPosition({ x: startingX, y: startingY, z: startingZ });
-			this.#paddle.resetSize();
-	
-			console.log("Paddle reset to position and size:", {
-				position: this.#paddle.getPosition(),
-				size: this.#paddle.size,
-			});
-	
-			// Force render after resetting paddle
-			if (this.#threeJSGroup.parent && this.#threeJSGroup.parent instanceof THREE.Scene) {
-				const scene = this.#threeJSGroup.parent;
-				const renderer = scene.renderer; // Ensure the renderer is accessible
-				if (renderer) {
-					renderer.render(scene, scene.camera);
-				}
-			}
-		}
-	}
-	
-	
+    startGame() {
+        this.#gameStarted = true; // Allow paddle movement when the game starts
+    }
+
+    stopGame() {
+        this.#gameStarted = false; // Stop paddle movement when the game ends
+    }
+
+    resetPaddle() {
+        if (this.#paddle && this.#board) {
+            const boardSize = this.#board.size;
+            
+            const startingX = this.#threeJSGroup.position.x > 0
+                ? boardSize.x / 2 - 2 // Right player
+                : -boardSize.x / 2 + 2; // Left player
+            const startingY = 0;
+            const startingZ = 0;
+
+            this.#paddle.setPosition({ x: startingX, y: startingY, z: startingZ });
+            this.#paddle.resetSize();
+
+            console.log("Paddle reset to position and size:", {
+                position: this.#paddle.getPosition(),
+                size: this.#paddle.size,
+            });
+        }
+    }
+
     addPoint() {
         this.#board.addPoint();
         this.resetPaddle();

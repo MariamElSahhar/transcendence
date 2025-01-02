@@ -53,40 +53,47 @@ export class Match {
         this.prepareBallForMatch();
     }
 
+    prepareBallForMatch() {
+        this.#ballIsWaiting = true;
+        this.#ballStartTime = Date.now() + 3000; // 3-second delay
+        this.#ball.prepareForMatch();
+    
+        this.#players.forEach((player, index) => {
+            if (player) {
+                player.resetPaddle();
+                player.stopGame(); // Ensure paddles cannot move while waiting
+            }
+        });
+    
+        console.log("Players have been reset for the next round.");
+    }
+    
+    startGame() {
+        this.#players.forEach((player) => {
+            if (player) {
+                player.startGame(); // Enable paddle movement when the game starts
+            }
+        });
+    }
+    
     updateFrame(timeDelta, currentTime, pongGameBox, boardSize) {
         const ballPosition = this.#ball.getPosition();
-
+    
         this.#players.forEach((player, index) => {
             if (player) {
                 player.updateFrame(timeDelta, pongGameBox, index === 1 ? ballPosition : null);
             }
         });
-
+    
         if (!this.#matchIsOver) {
             if (this.#ballIsWaiting && currentTime >= this.#ballStartTime) {
                 this.#ballIsWaiting = false;
+                this.startGame(); // Start the game when the ball is ready
             }
             if (!this.#ballIsWaiting) {
                 this.#ball.updateFrame(timeDelta, boardSize, this);
             }
         }
-    }
-
-    prepareBallForMatch() {
-        this.#ballIsWaiting = true;
-        this.#ballStartTime = Date.now() + 3000; // 3-second delay
-        this.#ball.prepareForMatch();
-
-        this.#players.forEach((player, index) => {
-            if (player) {
-                console.log(`Resetting paddle for Player ${index}`);
-                player.resetPaddle();
-            } else {
-                console.error(`Player ${index} is null during reset.`);
-            }
-        });
-
-        console.log("Players have been reset for the next round.");
     }
 
     playerMarkedPoint(playerIndex) {

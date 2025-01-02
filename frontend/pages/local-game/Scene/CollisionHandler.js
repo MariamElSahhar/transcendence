@@ -140,17 +140,21 @@ class Paddle extends PhysicalObject {
   static circleSegmentIntersection(travel, segment, ballRadius) {
     const radiusHelper = travel.vector.clone().normalize().multiplyScalar(ballRadius);
     const travelHelper = new HandlePaddleEdge(
-      travel.begin,
-      travel.end.clone().add(radiusHelper)
+        travel.begin.clone().sub(radiusHelper),
+        travel.end.clone().add(radiusHelper)
     );
-    let { intersection, t } = travelHelper.intersect(segment);
-    if (intersection === null) {
-      return { intersection: null, t: null };
+
+    const { intersection, t } = travelHelper.intersect(segment);
+
+    if (!intersection || t < 0 || t > 1) {
+        return { intersection: null, t: null };
     }
-    intersection.sub(radiusHelper);
-    t = (intersection.x - travel.begin.x) / travel.vector.x;
-    return { intersection, t };
-  }
+
+    // Adjust the ball's position slightly outside the paddle to prevent visual overlap
+    const adjustedIntersection = intersection.clone().sub(radiusHelper);
+
+    return { intersection: adjustedIntersection, t };
+}
 
   handleCollision(travel, ball, _collisionHandler, _match) {
     this.paddleWasAlreadyHit = true;

@@ -98,7 +98,7 @@ export class Scene {
     const matchPosition = this.#match.threeJSGroup.position;
     const xHeight =
       (this.#matchHalfWidth + this.#cameraPadding * 0.5) /
-      Math.tan(this.#engine.threeJS.getCameraHorizontalFOVRadian() * 0.5);
+      Math.tan(this.#engine.threeJS.getCameraHorizontalFOVRadian() * 0.5);// Calculate height based on field of view
     const yHeight =
       (this.#matchHalfHeight + this.#cameraPadding * 0.5) /
       Math.tan(this.#engine.threeJS.getCameraVerticalFOVRadian() * 0.5);
