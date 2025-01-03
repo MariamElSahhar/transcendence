@@ -3,12 +3,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from users.models import CustomUser
-from ..models import RemoteGameLog, LocalGameLog
+from ..models import RemoteGameLog, LocalGameLog, TicTacToeLog
 from ..serializers import (
     CreateLocalGameSerializer,
     RemoteGameSerializer,
     CreateRemoteGameSerializer,
     LocalGameSerializer,
+    CreateTTTGameSerializer,
+    TicTacToeSerializer,
 )
 
 
@@ -18,7 +20,10 @@ def create_gamelog_remote(request):
     if serializer.is_valid():
         serializer.save()
         return Response(
-            {"message": "Remote game log created successfully.", "data": serializer.data},
+            {
+                "message": "Remote game log created successfully.",
+                "data": serializer.data,
+            },
             status=status.HTTP_201_CREATED,
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -27,7 +32,6 @@ def create_gamelog_remote(request):
 @api_view(["POST"])
 def create_gamelog_local(request):
     user = request.user
-    print(request.data)
     datamod = request.data.copy()
     datamod["user"] = user.id
 
@@ -35,7 +39,26 @@ def create_gamelog_local(request):
     if serializer.is_valid():
         game_log = serializer.save(user=user)
         return Response(
-            {"message": "Local game log created successfully.", "data": serializer.data},
+            {
+                "message": "Local game log created successfully.",
+                "data": serializer.data,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def create_gamelog_ttt(request):
+    user = request.user
+    datamod = request.data.copy()
+    datamod["user"] = user.id
+
+    serializer = CreateTTTGameSerializer(data=datamod)
+    if serializer.is_valid():
+        game_log = serializer.save(user=user)
+        return Response(
+            {"message": "TTT game log created successfully.", "data": serializer.data},
             status=status.HTTP_201_CREATED,
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -50,6 +73,7 @@ def gamelog(request, user_id):
 
     remote_games = RemoteGameLog.objects.filter(users=target_user, game_type="Remote")
     local_games = LocalGameLog.objects.filter(users=target_user, game_type="Local")
+    ttt_games = TicTacToeLog.objects.filter(users=target_user, game_type="TTT")
 
     response_data = {
         "remote": RemoteGameSerializer(
@@ -57,6 +81,9 @@ def gamelog(request, user_id):
         ).data,
         "local": LocalGameSerializer(
             local_games, many=True, context={"request": request}
+        ).data,
+        "ttt": TicTacToeSerializer(
+            ttt_games, many=True, context={"request": request}
         ).data,
     }
     return Response(response_data)

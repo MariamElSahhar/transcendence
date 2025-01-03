@@ -3,233 +3,344 @@ import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 
 export class TournamentPage extends Component {
-	constructor() {
-		super();
-		this.container = null;
-		this.engine = null;
-		this.overlay = null;
-		this.players = [];
-		this.currentMatchIndex = 0;
-		this.maxScore = 1;
-		this.scores = [0, 0];
-		this.matches = [];
-		this.winners = [];
-		this.playerWins = {}; // Tracks the number of wins for each player
-	}
+    constructor() {
+        super();
+        this.container = null;
+        this.engine = null;
+        this.overlay = null;
+        this.players = [];
+        this.currentMatchIndex = 0;
+        this.maxScore = 5;
+        this.scores = [0, 0];
+        this.matches = [];
+        this.winners = [];
+        this.playerWins = {}; // Tracks the number of wins for each player
+    }
 
-	connectedCallback() {
-		this.setupTournament();
-	}
+    connectedCallback() {
+        this.setupTournament();
+    }
 
-	setupTournament() {
-		const userData = getUserSessionData();
-		const firstPlayerName = userData.username || "Player 1";
-		this.players.push(firstPlayerName);
+    setupTournament() {
+        const userData = getUserSessionData();
+        const firstPlayerName = userData.username || "Player 1";
+        this.players.push(firstPlayerName);
 
-		this.innerHTML = `
+        this.innerHTML = `
             <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
                 <h3 class="text-center">Setup Tournament</h3>
                 <form id="player-form">
+                    <div class="mb-3">
+                        <label for="player1-name" class="form-label">Registered Player:</label>
+                        <input type="text" id="player1-name" name="player1-name" class="form-control" value="${firstPlayerName}" disabled />
+                    </div>
                     ${this.renderPlayerInputs()}
-                    <button type="submit" id="submit-player-names" class="btn btn-primary mt-3 w-100" disabled>Start Tournament</button>
+                    <div id="error-message" class="text-danger mt-2"></div>
+                    <button type="submit" class="btn btn-primary mt-3 w-100" disabled>Start Tournament</button>
                 </form>
             </div>
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
 
-		this.container = this.querySelector("#container");
-		this.setupPlayerForm();
-	}
+        this.container = this.querySelector("#container");
+        this.setupPlayerForm();
+    }
 
-	renderPlayerInputs() {
-		let inputs = "";
-		inputs += `
-			<div class="mb-3">
-				<label for="player1-name" class="form-label">Player 1 Name:</label>
-				<input type="text" id="player1-name" name="player1-name" class="form-control" required disabled placeholder="${this.players[0]}"/>
-			</div>`;
-		for (let i = 2; i <= 4; i++) {
-			inputs += `
+    renderPlayerInputs() {
+        let inputs = "";
+        for (let i = 2; i <= 4; i++) {
+            inputs += `
                 <div class="mb-3">
                     <label for="player${i}-name" class="form-label">Player ${i} Name:</label>
                     <input type="text" id="player${i}-name" name="player${i}-name" class="form-control" required />
                 </div>`;
-		}
-		return inputs;
-	}
+        }
+        return inputs;
+    }
 
-	setupPlayerForm() {
-		const form = this.querySelector("#player-form");
-		const submitPlayers = this.querySelector("#submit-player-names");
+    setupPlayerForm() {
+        const form = this.querySelector("#player-form");
+        const submitButton = form.querySelector('button[type="submit"]');
+        const errorMessage = this.querySelector("#error-message");
 
-		for (let i = 2; i <= 4; i++) {
-			super.addComponentEventListener(
-				this.querySelector(`#player${i}-name`),
-				"input",
-				() => {
-					if (
-						this.querySelector("#player2-name").value &&
-						this.querySelector("#player3-name").value &&
-						this.querySelector("#player4-name").value
-					)
-						submitPlayers.removeAttribute("disabled");
-					else submitPlayers.setAttribute("disabled", "");
-				}
-			);
-		}
-		super.addComponentEventListener(form, "submit", (event) => {
-			event.preventDefault();
-			for (let i = 2; i <= 4; i++) {
-				const playerName = form.querySelector(`#player${i}-name`).value;
-				if (!playerName) return;
-				this.players.push(playerName || `Player ${i}`);
-			}
+        // Enable/disable the submit button dynamically
+        form.addEventListener("input", () => {
+            const allFilled = [...form.querySelectorAll("input:not([disabled])")].every(
+                (input) => input.value.trim() !== ""
+            );
 
-			// Initialize the win counts for each player
-			this.players.forEach((player) => {
-				this.playerWins[player] = 0;
-			});
+            if (allFilled) {
+                submitButton.removeAttribute("disabled");
+                errorMessage.textContent = "";
+                errorMessage.style.display = "none";
+            } else {
+                submitButton.setAttribute("disabled", "");
+                errorMessage.textContent = "All player names must be filled.";
+                errorMessage.style.display = "block";
+            }
+        });
 
-			this.initTournament();
-		});
-	}
+        // Handle form submission
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            errorMessage.textContent = ""; // Clear previous errors
+            errorMessage.style.display = "none";
 
-	initTournament() {
-		this.winners = [];
-		this.scores = [0, 0];
-		this.currentMatchIndex = 0;
+            // Clear previous players to avoid duplicates
+            this.players = [];
 
-		// Shuffle players to create random matchups
-		this.shufflePlayers();
-		this.matches = [
-			[this.players[0], this.players[1]], // Match 1
-			[this.players[2], this.players[3]], // Match 2
-			[null, null], // Placeholder for the Final Match
-		];
+            // Collect player names
+            const playerIds = ["player1-name", "player2-name", "player3-name", "player4-name"];
+            this.players = playerIds.map((id) => form.querySelector(`#${id}`).value.trim());
 
-		this.querySelector("#player-setup").style.display = "none";
-		this.container.style.display = "block";
-		this.startNextMatch();
-	}
+            // Validate player names
+            if (!this.areValidNames(this.players)) {
+                errorMessage.style.display = "block";
+                return; // Stop if validation fails
+            }
 
-	shufflePlayers() {
-		for (let i = this.players.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[this.players[i], this.players[j]] = [
-				this.players[j],
-				this.players[i],
-			];
-		}
-		console.log("Shuffled players:", this.players);
-	}
+            // Initialize player win counts
+            this.players.forEach((player) => {
+                this.playerWins[player] = 0;
+            });
 
-	startNextMatch() {
-		if (this.currentMatchIndex < 2) {
-			const [player1, player2] = this.matches[this.currentMatchIndex];
-			this.scores = [0, 0];
-			this.startCountdown(player1, player2);
-		} else if (this.currentMatchIndex === 2 && this.winners.length === 2) {
-			// Final match between the winners of Match 1 and Match 2
-			this.matches[2] = [this.winners[0], this.winners[1]];
-			const [finalist1, finalist2] = this.matches[2];
-			this.scores = [0, 0];
-			this.startCountdown(finalist1, finalist2);
-		} else {
-			this.declareWinner();
-		}
-	}
+            // Proceed to initialize the tournament
+            this.initTournament();
+        });
+    }
 
-	startCountdown(player1, player2) {
-		this.createCountdownCard(`Next Match: ${player1} vs ${player2}`);
+    areValidNames(players) {
+        const errorMessage = this.querySelector("#error-message");
 
-		let countdown = 3;
-		this.updateCountdownDisplay(countdown);
+        // Check for empty names
+        if (players.some((player) => !player)) {
+            errorMessage.textContent = "All player names must be filled.";
+            errorMessage.style.display = "block";
+            return false;
+        }
 
-		const countdownInterval = setInterval(() => {
-			countdown -= 1;
-			this.updateCountdownDisplay(countdown);
+        // Check for duplicate names
+        const uniquePlayers = new Set(players);
+        if (uniquePlayers.size !== players.length) {
+            errorMessage.textContent = "Player names must be unique.";
+            errorMessage.style.display = "block";
+            return false;
+        }
 
-			if (countdown <= 0) {
-				clearInterval(countdownInterval);
-				this.removeCountdownCard();
-				this.startGame(player1, player2);
-			}
-		}, 1000);
-	}
+        return true;
+    }
 
-	createCountdownCard(message) {
-		this.overlay = document.createElement("div");
-		this.overlay.id = "countdown-card";
-		this.overlay.classList.add(
-			"position-fixed",
-			"top-0",
-			"start-0",
-			"w-100",
-			"h-100",
-			"d-flex",
-			"justify-content-center",
-			"align-items-center",
-			"bg-dark",
-			"bg-opacity-75",
-			"text-white"
-		);
-		this.overlay.style.zIndex = "9999";
-		this.overlay.innerHTML = `
-            <div class="card text-center text-dark bg-light" style="width: 18rem;">
+    initTournament() {
+        this.winners = [];
+        this.scores = [0, 0];
+        this.currentMatchIndex = 0;
+
+        // Shuffle players to create random matchups
+        this.shufflePlayers();
+        this.matches = [
+            [this.players[0], this.players[1]], // Match 1
+            [this.players[2], this.players[3]], // Match 2
+            [null, null], // Placeholder for the Final Match
+        ];
+
+        this.querySelector("#player-setup").style.display = "none";
+        this.container.style.display = "block";
+        this.startNextMatch();
+    }
+
+    shufflePlayers() {
+        for (let i = this.players.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.players[i], this.players[j]] = [
+                this.players[j],
+                this.players[i],
+            ];
+        }
+        console.log("Shuffled players:", this.players);
+    }
+
+    startNextMatch() {
+        if (this.currentMatchIndex < 2) {
+            const [player1, player2] = this.matches[this.currentMatchIndex];
+            this.scores = [0, 0];
+            this.createStartGameCard(player1, player2);
+        } else if (this.currentMatchIndex === 2 && this.winners.length === 2) {
+            this.matches[2] = [this.winners[0], this.winners[1]];
+            const [finalist1, finalist2] = this.matches[2];
+            this.scores = [0, 0];
+            this.createStartGameCard(finalist1, finalist2);
+        } else {
+            this.showTournamentWinner();
+        }
+    }
+
+    createStartGameCard(player1, player2) {
+        this.createOverlay(`
+            <div class="card text-center text-dark bg-light" style="width: 24rem;">
                 <div class="card-body">
-                    <h3 class="card-text mb-3">${message}</h3>
-                    <h1 id="countdown-display" class="display-1 fw-bold">3</h1>
+                    <h3 class="card-text mb-3">Next Match</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h5 class="text-primary">Left Player:</h5>
+                            <p>${player1}</p>
+                        </div>
+                        <div>
+                            <h5 class="text-danger">Right Player:</h5>
+                            <p>${player2}</p>
+                        </div>
+                    </div>
+                    <button id="start-match-button" class="btn btn-primary">Start Match</button>
                 </div>
             </div>
-        `;
-		this.container.appendChild(this.overlay);
-	}
+        `, () => {
+            this.startCountdown(player1, player2);
+        });
+    }
 
-	updateCountdownDisplay(secondsLeft) {
-		const countdownElement =
-			this.overlay.querySelector("#countdown-display");
-		if (countdownElement) {
-			countdownElement.textContent = secondsLeft;
-		}
-	}
+    startCountdown(player1, player2) {
+        this.createOverlay(`
+            <div class="card text-center text-dark bg-light" style="width: 18rem;">
+                <div class="card-body">
+                    
+                    <h1 id="countdown-display" class="display-1 fw-bold">3</h1>
+					<p class="card-text">Get ready! The game will start soon.</p>
+                </div>
+            </div>
+        `);
 
-	displayRanks() {
-		// Sort players by their win count in descending order
-		const sortedPlayers = Object.entries(this.playerWins).sort(
-			(a, b) => b[1] - a[1]
-		);
+        let countdown = 3;
+        this.updateCountdownDisplay(countdown);
 
-		// Generate the HTML for the ranks table
-		let rankHtml = sortedPlayers
-			.map(
-				([player, wins], index) => `
+        const countdownInterval = setInterval(() => {
+            countdown -= 1;
+            this.updateCountdownDisplay(countdown);
+
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                this.removeOverlay();
+                this.startGame(player1, player2);
+            }
+        }, 1000);
+    }
+
+    updateCountdownDisplay(secondsLeft) {
+        const countdownElement = this.overlay.querySelector("#countdown-display");
+        if (countdownElement) {
+            countdownElement.textContent = secondsLeft;
+        }
+    }
+
+    startGame(player1, player2) {
+        if (!player1 || !player2) {
+            console.error("Invalid player names for the match.");
+            return;
+        }
+
+        console.log(`Starting match between ${player1} and ${player2}`);
+
+        if (this.engine) {
+            this.engine.cleanUp();
+            this.engine = null;
+        }
+
+        this.container.innerHTML = "";
+        this.container.style.display = "block";
+
+        this.engine = new Engine(this, (winner) =>
+            this.endMatch(winner, player1, player2)
+        );
+        this.engine.startGame([player1, player2]);
+    }
+
+    endMatch(winner, player1, player2) {
+        console.log(`${winner} won the match`);
+
+        this.playerWins[winner] += 1;
+        this.winners.push(winner);
+
+        const loser = winner === player1 ? player2 : player1;
+
+        if (this.currentMatchIndex < 2) {
+            this.createOverlay(`
+                <div class="card text-center bg-light text-dark" style="width: 24rem;">
+                    <div class="card-body">
+                        <h1 class="display-4 fw-bold"> ${winner} wins! 🏆  </h1>
+						<h1 class="display-4 fw-bold"> ${loser} is eliminated! ❌ </h1>
+                        <button class="btn btn-primary mt-3">Next Match</button>
+                    </div>
+                </div>
+            `, () => {
+                this.currentMatchIndex++;
+                this.startNextMatch();
+            });
+        } else {
+            this.showTournamentWinner();
+        }
+    }
+
+    showTournamentWinner() {
+        const champion = this.winners[this.winners.length - 1];
+        this.createOverlay(`
+            <div class="card text-center bg-light text-dark" style="width: 24rem;">
+                <div class="card-body">
+                    <h1 class="display-4 fw-bold">${champion} </h1>
+                    <h1 class="display-4 fw-bold"> is the Tournament Champion! </h1>
+                    <h1 class="display-4 fw-bold"> 🏆 </h1>
+                    <button class="btn btn-primary mt-3">Finish</button>
+                </div>
+            </div>
+        `, () => {
+            this.declareWinner();
+        });
+    }
+
+    createOverlay(contentHTML, callback = null) {
+        this.overlay = document.createElement("div");
+        this.overlay.classList.add(
+            "position-fixed",
+            "top-0",
+            "start-0",
+            "w-100",
+            "h-100",
+            "d-flex",
+            "justify-content-center",
+            "align-items-center",
+            "bg-dark",
+            "bg-opacity-75",
+            "text-white"
+        );
+        this.overlay.style.zIndex = "9999";
+        this.overlay.innerHTML = contentHTML;
+        this.container.appendChild(this.overlay);
+
+        if (callback) {
+            const button = this.overlay.querySelector("button");
+            if (button) {
+                button.addEventListener("click", () => {
+                    this.removeOverlay();
+                    callback();
+                });
+            } else {
+                console.warn("No button found in overlay content, proceeding without button.");
+                callback();
+            }
+        }
+    }
+
+    displayRanks() {
+        const sortedPlayers = Object.entries(this.playerWins).sort(
+            (a, b) => b[1] - a[1]
+        );
+        const rankHtml = sortedPlayers.map(
+            ([player, wins], index) => `
             <tr>
                 <td>${index + 1}</td>
                 <td>${player}</td>
                 <td>${wins}</td>
-            </tr>
-        `
-			)
-			.join("");
+            </tr>`
+        ).join("");
 
-		// Create the overlay to display the ranks
-		this.overlay = document.createElement("div");
-		this.overlay.id = "ranks-overlay";
-		this.overlay.classList.add(
-			"position-fixed",
-			"top-0",
-			"start-0",
-			"w-100",
-			"h-100",
-			"d-flex",
-			"justify-content-center",
-			"align-items-center",
-			"bg-dark",
-			"bg-opacity-75",
-			"text-white"
-		);
-		this.overlay.style.zIndex = "9999";
-		this.overlay.innerHTML = `
+        this.createOverlay(`
             <div class="card text-center text-dark bg-light" style="width: 24rem;">
                 <div class="card-header">
                     <h2 class="card-title">Tournament Ranks</h2>
@@ -248,111 +359,24 @@ export class TournamentPage extends Component {
                         </tbody>
                     </table>
                     <button class="btn btn-primary mt-3" onclick="window.location.reload()">Restart Tournament</button>
+					<button class="btn btn-secondary mt-3" onclick="window.location.href='/home'">Go Home</button>
                 </div>
             </div>
-        `;
-		this.container.appendChild(this.overlay);
-	}
+        `);
+    }
 
-	removeCountdownCard() {
-		if (this.overlay) {
-			this.overlay.remove();
-			this.overlay = null;
-		}
-	}
-	endMatch(winner, player1, player2) {
-		console.log(`${winner} won the match`);
+    declareWinner() {
+        this.displayRanks();
+    }
 
-		this.playerWins[winner] += 1;
-		this.winners.push(winner);
-
-		const loser = winner === player1 ? player2 : player1;
-
-		this.showOverlay(
-			`🏆 ${winner} wins! ❌ ${loser} is eliminated!`,
-			() => {
-				this.currentMatchIndex++;
-				this.startNextMatch();
-			}
-		);
-	}
-
-	startGame(player1, player2) {
-		if (!player1 || !player2) {
-			console.error("Invalid player names for the match.");
-			return;
-		}
-
-		console.log(`Starting match between ${player1} and ${player2}`);
-
-		if (this.engine) {
-			console.log("Cleaning up the previous engine instance...");
-			this.engine.cleanUp();
-			this.engine = null;
-		}
-
-		this.container.innerHTML = "";
-		this.container.style.display = "block";
-
-		this.engine = new Engine(this, (winner) =>
-			this.endMatch(winner, player1, player2)
-		);
-		this.engine.startGame([player1, player2]);
-	}
-
-	endMatch(winner, player1, player2) {
-		console.log(`${winner} won the match`);
-
-		this.playerWins[winner] += 1;
-		this.winners.push(winner);
-
-		const loser = winner === player1 ? player2 : player1;
-
-		this.showOverlay(
-			`🏆 ${winner} wins! ❌ ${loser} is eliminated!`,
-			() => {
-				this.currentMatchIndex++;
-				this.startNextMatch();
-			}
-		);
-	}
-
-	showOverlay(message, callback) {
-		this.overlay = document.createElement("div");
-		this.overlay.id = "overlay";
-		this.overlay.classList.add(
-			"position-fixed",
-			"top-0",
-			"start-0",
-			"w-100",
-			"h-100",
-			"d-flex",
-			"justify-content-center",
-			"align-items-center",
-			"bg-dark",
-			"bg-opacity-75",
-			"text-white"
-		);
-		this.overlay.style.zIndex = "9999";
-		this.overlay.innerHTML = `
-            <div class="card text-center bg-light text-dark" style="width: 24rem;">
-                <div class="card-body">
-                    <h1 class="display-4 fw-bold">${message}</h1>
-                </div>
-            </div>
-        `;
-		this.container.appendChild(this.overlay);
-
-		// Remove the overlay after 3 seconds and call the callback
-		setTimeout(() => {
-			this.overlay.remove();
-			callback();
-		}, 3000);
-	}
-
-	declareWinner() {
-		this.displayRanks();
-	}
+    removeOverlay() {
+        if (this.overlay) {
+            this.overlay.remove();
+            this.overlay = null;
+        }
+    }
 }
 
 customElements.define("tournament-page", TournamentPage);
+
+

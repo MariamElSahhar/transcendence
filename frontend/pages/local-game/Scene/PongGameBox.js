@@ -1,4 +1,4 @@
-export class PaddleBoundingBox {
+export class PongGameBox {
   #y_min;
   #y_max;
 
