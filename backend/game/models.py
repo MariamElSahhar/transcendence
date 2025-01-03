@@ -80,3 +80,22 @@ class LocalGameLog(models.Model):
 
     def __str__(self):
         return f"{self.game_type} - {self.date}"
+
+
+class TicTacToeLog(models.Model):
+    users = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="ttt_games"
+    )
+    game_type = models.CharField(max_length=15, default="TicTacToe")
+    date = models.DateTimeField(auto_now_add=True)
+    opponent_username = models.CharField(max_length=100, default="Player2")
+
+    my_score = models.PositiveIntegerField(default=0)
+    opponent_score = models.PositiveIntegerField(default=0)
+
+    def is_win_for_user(self):
+        """Check if the user with the provided username is the winner."""
+        return self.my_score > self.opponent_score
+
+    def __str__(self):
+        return f"{self.game_type} - {self.date}"
