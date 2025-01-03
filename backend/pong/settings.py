@@ -47,11 +47,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_spectacular",
     "remote_pong",
-    "channels",
+    "channels", 
 ]
 
-# ASGI_APPLICATION = 
-
+ASGI_APPLICATION = "pong.asgi.application"
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": ("users.authentication.CustomJWTAuthentication",),
