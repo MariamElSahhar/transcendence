@@ -1,8 +1,8 @@
 import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
-import { Engine } from "./Engine.js";
-import { getUserSessionData } from "../../js/utils/session-manager.js";
-import { addLocalGame } from "../../js/clients/gamelog-client.js";
+import { Engine } from "../local-game/Engine.js";
+import { getUserSessionData } from "../../scripts/utils/session-manager.js";
+// import { addLocalGame } from "../../js/clients/gamelog-client.js";
 
 export class RemoteGamePage extends Component {
 	constructor() {
@@ -16,63 +16,73 @@ export class RemoteGamePage extends Component {
 	}
 
 	connectedCallback() {
+		console.log("?????")
+		const socket = new WebSocket('ws://127.0.0.1:8000/ws/game/');
+
+		socket.onopen = () => {
+			console.log('WebSocket connected');
+			socket.send(JSON.stringify({ action: "test" }));
+			// socket.close()
+		};
+
+		socket.onmessage = (event) => {
+			console.log('Message from server:', event.data);
+		};
+
+		socket.onclose = () => {
+			console.log('WebSocket closed');
+		};
+
+		socket.onerror = (error) => {
+			console.error('WebSocket error:', error);
+		};
 		const userData = getUserSessionData();
 		const firstPlayerName = userData.username || "Player 1";
 		this.players.push(firstPlayerName);
 
 		this.innerHTML = `
 		<style>
-
-.circle-container {
-    position: relative;
-    width: 150px;
-    height: 150px;
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  animation: pulse 1s linear infinite;
+}
+.loader:after {
+  content: '';
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: scaleUp 1s linear infinite;
 }
 
-.circle {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 10px solid #e6e6e6; /* Background color of the bar */
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+@keyframes scaleUp {
+  0% { transform: translate(-50%, -50%) scale(0) }
+  60% , 100% { transform: translate(-50%, -50%)  scale(1)}
 }
-
-.circle::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 10px solid transparent;
-    border-top: 10px solid #3498db; /* Active color of the bar */
-    animation: spin 60s linear infinite;
-}
-
-.icon {
-    font-size: 2rem;
-    position: absolute;
-    color: #555;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+@keyframes pulse {
+  0% , 60% , 100%{ transform:  scale(1) }
+  80% { transform:  scale(1.2)}
 }
 		</style>
             <div class="p-3 border rounded bg-light">
               <h4 class="text-center">Searching for your opponent! </h4>
-			  <div class="circle-container">
-        <div class="circle">
-            <h1><i class="bi bi-person"></i> </h1>
-        </div>
+			  <span class="loader">
+			  <div class="circle">
+				  <h1><i class="bi bi-person"></i> </h1>
+			  </div>
+			  </span>
     </div>
             </div>
         `;
