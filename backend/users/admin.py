@@ -1,9 +1,6 @@
 """
 Django admin customization.
 """
-# admin user
-# admin - admin@42.ae - weakpass123
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
