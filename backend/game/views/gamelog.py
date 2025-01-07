@@ -71,9 +71,9 @@ def gamelog(request, user_id):
     if not target_user:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    remote_games = RemoteGameLog.objects.filter(users=target_user, game_type="Remote")
-    local_games = LocalGameLog.objects.filter(users=target_user, game_type="Local")
-    ttt_games = TicTacToeLog.objects.filter(users=target_user, game_type="TTT")
+    remote_games = RemoteGameLog.objects.filter(users=target_user, game_type="Remote").order_by("-date")
+    local_games = LocalGameLog.objects.filter(users=target_user, game_type="Local").order_by("-date")
+    ttt_games = TicTacToeLog.objects.filter(users=target_user, game_type="TicTacToe").order_by("-date")
 
     response_data = {
         "remote": RemoteGameSerializer(
