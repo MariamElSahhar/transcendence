@@ -1,3 +1,5 @@
+# Channel's version of views
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 

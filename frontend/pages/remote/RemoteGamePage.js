@@ -16,25 +16,25 @@ export class RemoteGamePage extends Component {
 	}
 
 	connectedCallback() {
-		console.log("?????")
+		console.log(window.location.host)
 
-		const socket = new WebSocket('ws://127.0.0.1:8000/ws/game/');
+		this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
 
-		socket.onopen = () => {
+		this.socket.onopen = () => {
 			console.log('WebSocket connected');
 			socket.send(JSON.stringify({ action: "test" }));
 			// socket.close()
 		};
 
-		socket.onmessage = (event) => {
+		this.socket.onmessage = (event) => {
 			console.log('Message from server:', event.data);
 		};
 
-		socket.onclose = () => {
+		this.socket.onclose = () => {
 			console.log('WebSocket closed');
 		};
 
-		socket.onerror = (error) => {
+		this.socket.onerror = (error) => {
 			console.error('WebSocket error:', error);
 		};
 
