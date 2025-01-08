@@ -1,8 +1,6 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../js/utils/session-manager.js";
-import { register } from "../../js/clients/token-client.js";
-import { InputValidator } from "../../js/utils/input-validator.js";
-import { BootstrapUtils } from "../../js/utils/bootstrap-utils.js";
+import { register } from "../../scripts/clients/token-client.js";
+import {isValidSecurePassword, isValidUsername, isValidEmail} from '../../scripts/utils/input-validator.js'
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -20,83 +18,69 @@ export class SignUpPage extends Component {
 		this.errorMessage = "";
 	}
 
-	async connectedCallback() {
-		await import("../navbar/Navbar.js");
-		await import("./IntraButton.js");
-		const authenticated = await isAuth();
-		if (authenticated) {
-			window.redirect("/");
-			return false;
-		}
-		super.connectedCallback();
-	}
-
 	render() {
-		// const { render } = this.#OAuthReturn();
-		// if (!render) {
-		// 	return false;
-		// }
 		return `
-			<navbar-component></navbar-component>
-			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
-				<div class="register-card card m-3">
-					<div class="card-body m-2">
-						<h2 class="card-title text-center m-5 dynamic-hover">Sign Up</h2>
-						<form id="signup-form">
-							<div class="form-group mb-4">
-								<div class="input-group has-validation">
-									<span class="input-group-text" id="inputGroupPrepend">@</span>
-									<input type="text" class="form-control" id="username"
-											placeholder="Username" autocomplete="username">
-									<div id="username-feedback" class="invalid-feedback">
-										Invalid username.
+			<div class="d-flex flex-column w-100 vh-100">
+				<h3 class="w-100 py-2">
+					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
+				</h3>
+				<div id="container" class="d-flex justify-content-center align-items-center rounded-3 flex-grow-1">
+					<div class="register-card card m-3">
+						<div class="card-body m-2">
+							<h2 class="card-title text-center m-5 dynamic-hover">Sign Up</h2>
+							<form id="signup-form">
+								<div class="form-group mb-4">
+									<div class="input-group has-validation">
+										<span class="input-group-text" id="inputGroupPrepend">@</span>
+										<input type="text" class="form-control" id="username"
+												placeholder="Username" autocomplete="username">
+										<div id="username-feedback" class="invalid-feedback">
+											Invalid username.
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="form-group mb-4">
-								<input type="email" class="form-control" id="email"
-										placeholder="Email" autocomplete="email">
-								<div id="email-feedback" class="invalid-feedback">
-									Please enter a valid email.
-								</div>
-							</div>
-							<div class="form-group mb-4">
-								<div class="input-group has-validation">
-									<input type="password" class="form-control"
-											id="password"
-											placeholder="Password">
-									<span id="password-eye" class="input-group-text dynamic-hover">
-										<i class="bi bi-eye-fill"></i>
-									</span>
-									<div id="password-feedback" class="invalid-feedback">
-										Invalid password.
+								<div class="form-group mb-4">
+									<input type="email" class="form-control" id="email"
+											placeholder="Email" autocomplete="email">
+									<div id="email-feedback" class="invalid-feedback">
+										Please enter a valid email.
 									</div>
 								</div>
-							</div>
-							<div class="form-group mb-4">
-								<div class="input-group has-validation">
-									<input type="password" class="form-control"
-											id="confirm-password"
-											placeholder="Confirm Password">
-									<span id="confirm-password-eye"
-										class="input-group-text dynamic-hover">
-										<i class="bi bi-eye-fill"></i>
-									</span>
-									<div id="confirm-password-feedback" class="invalid-feedback">
-										Passwords do not match.
+								<div class="form-group mb-4">
+									<div class="input-group has-validation">
+										<input type="password" class="form-control"
+												id="password"
+												placeholder="Password">
+										<span id="password-eye" class="input-group-text dynamic-hover">
+											<i class="bi bi-eye-fill"></i>
+										</span>
+										<div id="password-feedback" class="invalid-feedback">
+											Invalid password.
+										</div>
 									</div>
 								</div>
-							</div>
-							<!-- <alert-component id="alert-form" alert-display="false">
-							</alert-component> -->
-							<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
-							<div class="mb-3">
-								<small role="button" id="have-account">Already have an account?</small>
-							</div>
-							<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
-						</form>
-						<hr class="my-4">
-						<intra-button-component></intra-button-component>
+								<div class="form-group mb-4">
+									<div class="input-group has-validation">
+										<input type="password" class="form-control"
+												id="confirm-password"
+												placeholder="Confirm Password">
+										<span id="confirm-password-eye"
+											class="input-group-text dynamic-hover">
+											<i class="bi bi-eye-fill"></i>
+										</span>
+										<div id="confirm-password-feedback" class="invalid-feedback">
+											Passwords do not match.
+										</div>
+									</div>
+								</div>
+								<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
+								<div class="mb-3">
+									<small role="button" id="have-account">Already have an account? Log In</small>
+								</div>
+								<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
+							</form>
+							<hr class="my-4">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -154,7 +138,7 @@ export class SignUpPage extends Component {
 			this.#toggleConfirmPasswordVisibility
 		);
 		super.addComponentEventListener(this.haveAccount, "click", () =>
-			window.redirect("/sign-in")
+			window.redirect("/login")
 		);
 		super.addComponentEventListener(this.signupForm, "submit", (event) => {
 			event.preventDefault();
@@ -169,21 +153,23 @@ export class SignUpPage extends Component {
 
 	async #usernameHandler() {
 		clearTimeout(this.usernameTimeout);
-		const { validity, missingRequirements } =
-			InputValidator.isValidUsername(this.username.value);
+		const { validity, message } =
+			isValidUsername(this.username.value);
 		if (validity) {
 			this.#setUsernameInputValidity(true);
 		} else {
-			this.#setUsernameInputValidity(false, missingRequirements[0]);
+			this.#setUsernameInputValidity(false, message);
 		}
 	}
 
 	#setUsernameInputValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.username);
+			this.username.classList.remove("is-invalid");
+			this.username.classList.add("is-valid");
 			this.InputValidUsername = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.username);
+			this.username.classList.remove("is-valid");
+			this.username.classList.add("is-invalid");
 			this.usernameFeedback.innerHTML = message;
 			this.InputValidUsername = false;
 		}
@@ -192,22 +178,24 @@ export class SignUpPage extends Component {
 
 	#emailHandler() {
 		clearTimeout(this.emailTimeout);
-		const { validity, missingRequirements } = InputValidator.isValidEmail(
+		const { validity, message } = isValidEmail(
 			this.email.value
 		);
 		if (validity) {
 			this.#setEmailInputValidity(true);
 		} else {
-			this.#setEmailInputValidity(false, missingRequirements[0]);
+			this.#setEmailInputValidity(false, message);
 		}
 	}
 
 	#setEmailInputValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.email);
+			this.email.classList.remove("is-invalid");
+			this.email.classList.add("is-valid");
 			this.InputValidEmail = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.email);
+			this.email.classList.remove("is-valid");
+			this.email.classList.add("is-invalid");
 			this.emailFeedback.innerHTML = message;
 			this.InputValidEmail = false;
 		}
@@ -215,8 +203,8 @@ export class SignUpPage extends Component {
 	}
 
 	#passwordHandler() {
-		const { validity, missingRequirements } =
-			InputValidator.isValidSecurePassword(this.password.value);
+		const { validity, message } =
+			isValidSecurePassword(this.password.value);
 		if (validity) {
 			this.#setInputPasswordValidity(true);
 			if (this.startConfirmPassword) {
@@ -230,7 +218,7 @@ export class SignUpPage extends Component {
 				}
 			}
 		} else {
-			this.#setInputPasswordValidity(false, missingRequirements[0]);
+			this.#setInputPasswordValidity(false, message);
 			if (this.startConfirmPassword) {
 				this.#setInputConfirmPasswordValidity(false);
 			}
@@ -246,10 +234,12 @@ export class SignUpPage extends Component {
 
 	#setInputPasswordValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.password);
+			this.password.classList.remove("is-invalid");
+			this.password.classList.add("is-valid");
 			this.InputValidPassword = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.password);
+			this.password.classList.remove("is-valid");
+			this.password.classList.add("is-invalid");
 			this.passwordFeeback.innerHTML = message;
 			this.InputValidPassword = false;
 		}
@@ -258,10 +248,12 @@ export class SignUpPage extends Component {
 
 	#setInputConfirmPasswordValidity(validity, message = "") {
 		if (validity) {
-			BootstrapUtils.setValidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-invalid");
+			this.confirmPassword.classList.add("is-valid");
 			this.InputValidConfirmPassword = true;
 		} else {
-			BootstrapUtils.setInvalidInput(this.confirmPassword);
+			this.confirmPassword.classList.remove("is-valid");
+			this.confirmPassword.classList.add("is-invalid");
 			this.confirmPasswordFeedback.innerHTML = message;
 			this.InputValidConfirmPassword = false;
 		}
@@ -343,40 +335,6 @@ export class SignUpPage extends Component {
 			return false;
 		}
 		return true;
-	}
-
-	async #loadAndCache(refreshToken) {
-		this.innerHTML = this.#renderLoader();
-		userManagementClient.refreshToken = refreshToken;
-		if (!(await userManagementClient.restoreCache())) {
-			userManagementClient.logout();
-			this.error = true;
-			this.errorMessage = "Error, failed to store cache";
-			super.update();
-			this.postRender();
-		} else {
-			window.redirect("/");
-		}
-	}
-	#loadEmailVerification() {
-		const cardBody = this.querySelector(".card-body");
-		cardBody.innerHTML =  `
-			<h2 class="card-title text-center m-5 dynamic-hover">Activate your account</h2>
-			<p class="text-center">Please verify your email address to continue</p>
-			<div class="d-flex justify-content-center mb-4">
-				<i class="bi bi-envelope-arrow-up" style="font-size: 7rem;"></i>
-			</div>
-    	`;
-	}
-
-	#renderLoader() {
-		return `
-			<div class="d-flex justify-content-center align-items-center" style="height: 700px)">
-				<div class="spinner-border" role="status">
-					<span class="d-none">Loading...</span>
-				</div>
-			</div>
-		`;
 	}
 	*/
 

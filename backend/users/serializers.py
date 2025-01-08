@@ -3,10 +3,12 @@ from .models import CustomUser
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
+
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ["id", "username", "avatar", "is_online", "last_seen"]
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,21 +20,23 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "email_otp",
             "is_email_verified",
+            "enable_otp",
             "avatar",
             "friends",
             "is_online",
             "last_seen",
         ]
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
+
     friends = FriendSerializer(many=True, read_only=True)
     is_online = serializers.SerializerMethodField()
-    
+
     def validate(self, attrs):
-        print("validation")
         username = attrs.get("username")
         email = attrs.get("email")
 
         if CustomUser.objects.filter(username=username).exists():
+            print("validation")
             raise ValidationError({"username": "This username is already in use."})
 
         if CustomUser.objects.filter(email=email).exists():
@@ -43,6 +47,8 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_online(self, obj):
         obj.check_online_status()
         return obj.is_online
+
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
@@ -61,6 +67,7 @@ class LoginSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs
+
 
 class OTPVerificationSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
@@ -85,3 +92,9 @@ class OTPVerificationSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["id", "username", "avatar", "is_online", "enable_otp", "email"]

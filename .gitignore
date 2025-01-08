@@ -1,4 +1,5 @@
 data/
 __pycache__/
 venv/
-backend/media/
+.DS_Store
+backend/media/images/

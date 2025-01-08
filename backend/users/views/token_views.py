@@ -15,29 +15,18 @@ def token_refresh_view(request):
     if refresh_token is None:
         return Response({"error": "Refresh token not provided."}, status=400)
 
-    request.data["refresh"] = refresh_token
     token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
     if token_serializer.is_valid():
         tokens = token_serializer.validated_data
         response = Response(
             {"message": "Refresh successful."}, status=status.HTTP_200_OK
         )
-        # Access token
-        user = request.user
-        if user.is_anonymous:
-            reponse = Response({"error": "User not authenticated."}, status=401)
-            response.delete_cookie("refresh_token")
-            response.delete_cookie("access_token")
-            return response
-
-        response = set_response_cookie(response, tokens, user, False)
+        response = set_response_cookie(response, tokens, None, False)
         return response
     else:
         error_messages = []
         for _, errors in token_serializer.errors.items():
             error_messages.extend(errors)
-        # response.delete_cookie("refresh")
-        # response.delete_cookie("access_token")
         return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
 

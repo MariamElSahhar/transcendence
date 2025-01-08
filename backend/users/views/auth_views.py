@@ -19,40 +19,35 @@ def login_view(request):
     if login_serializer.is_valid():
         username = login_serializer.validated_data["username"]
         password = login_serializer.validated_data["password"]
-
         request.session["password"] = password
 
         user = CustomUser.objects.filter(username=username).first()
-        userinfo = login_serializer.validated_data["user"]
-        if (
-            user
-            and user.check_password(password)
-            and ((user.is_superuser is True) or (user.enable_otp is False))
-        ):
-            token_serializer = TokenObtainPairSerializer(
-                data={"username": userinfo.username, "password": password}
-            )
-            if token_serializer.is_valid():
-                tokens = token_serializer.validated_data
-                response = Response(
-                    {
-                        "message": "Login Successful.",
-                        "data": {
-                            "username": userinfo.username,
-                            "user_id": userinfo.id,
-                            "user_email": userinfo.email,
-                            "otp": user.enable_otp,
-                            "avatar": userinfo.avatar.url if user.avatar else None,
-                        },
-                    },
-                    status=status.HTTP_200_OK,
+        if user and user.check_password(password):
+            if user.is_superuser or not user.enable_otp:
+                token_serializer = TokenObtainPairSerializer(
+                    data={"username": user.username, "password": password}
                 )
-            return set_response_cookie(response, tokens, user, True)
-        elif user and user.check_password(password) and user.is_superuser is False:
-            send_otp(user)
-            return Response(
-                {"message": "OTP sent to your email."}, status=status.HTTP_200_OK
-            )
+                if token_serializer.is_valid():
+                    tokens = token_serializer.validated_data
+                    response = Response(
+                        {
+                            "message": "Login Successful.",
+                            "data": {
+                                "username": user.username,
+                                "user_id": user.id,
+                                "user_email": user.email,
+                                "otp": user.enable_otp,
+                                "avatar": user.avatar.url if user.avatar else None,
+                            },
+                        },
+                        status=status.HTTP_200_OK,
+                    )
+                return set_response_cookie(response, tokens, user, True)
+            elif user.enable_otp:
+                send_otp(user)
+                return Response(
+                    {"message": "OTP sent to your email."}, status=status.HTTP_200_OK
+                )
         else:
             return Response(
                 {"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED
@@ -139,35 +134,14 @@ def verify_otp_view(request):
 
 # LOGOUT
 @api_view(["POST"])
-@permission_classes([AllowAny])
 def logout_view(request):
-    user = request.user
-    if user.is_anonymous:
-        return Response(
-            {"message": "User is not authenticated."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
     response = Response(
-        {
-            "message": "Logout successful.",
-        },
+        {"message": "Logout successful.",},
         status=status.HTTP_200_OK,
     )
-    response.set_cookie(
-        key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-        value="",
-        expires="Thu, 01 Jan 1970 00:00:00 GMT",
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
-    response.set_cookie(
-        key="refresh_token",
-        value="",
-        expires="Thu, 01 Jan 1970 00:00:00 GMT",
-        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
-    )
-    update_user_activity(user, False)
+    # remove both access and refresh tokens
+    response.delete_cookie(settings.SIMPLE_JWT["AUTH_COOKIE"])
+    response.delete_cookie("refresh_token")
+    # update status to offline, save last seen to now
+    update_user_activity(request.user, False)
     return response

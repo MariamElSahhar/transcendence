@@ -10,7 +10,7 @@ docker-down:
 
 # LOCAL
 run-frontend:
-	cd frontend && ENV=dev http-server -P http://localhost:80? -c-1 -p 80
+	cd frontend && ENV=dev http-server . -P http://127.0.0.1:80? -c-1 -p 80 --proxy http:///127.0.0.1:80
 
 run-backend:
 	ENV=dev $(PYTHON_ENV) backend/manage.py migrate
@@ -33,6 +33,9 @@ migrate:
 
 showmigrations:
 	ENV=dev $(PYTHON_ENV) backend/manage.py showmigrations
+
+flush:
+	ENV=dev $(PYTHON_ENV) backend/manage.py flush
 
 createsuperuser:
 	ENV=dev $(PYTHON_ENV) backend/manage.py createsuperuser

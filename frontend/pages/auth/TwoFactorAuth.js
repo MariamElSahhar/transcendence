@@ -1,6 +1,5 @@
 import { Component } from "../Component.js";
-import { Keys } from "../../js/utils/Keys.js";
-import { verifyOTP } from "../../js/clients/token-client.js";
+import { verifyOTP } from "../../scripts/clients/token-client.js";
 
 export class TwoFactorAuth extends Component {
 	constructor() {
@@ -37,7 +36,6 @@ export class TwoFactorAuth extends Component {
                                 pattern="[\\d]*" tabindex="6"
                                 autocomplete="off">
                     </div>
-                    <!-- <alert-component id="alert-form" alert-display="false"></alert-component> -->
                     <div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
                     <button id="submit-btn" type="submit" class="btn btn-primary w-100" disabled>
                       Send code
@@ -79,19 +77,19 @@ export class TwoFactorAuth extends Component {
 	}
 
 	#handleInputChange(event) {
-		if (!Keys.isPasteShortcut(event)) {
+		if (!this.isPasteShortcut(event)) {
 			event.preventDefault();
 		}
-		if (!Keys.isDigitKey(event) && !Keys.isDeleteKey(event)) {
+		if (!this.isDigitKey(event) && !this.isDeleteKey(event)) {
 			event.target.value = "";
 			return;
 		}
-		if (Keys.isDeleteKey(event)) {
+		if (this.isDeleteKey(event)) {
 			event.target.value = "";
 			this.#focusPreviousInput(event.target);
 			return;
 		}
-		event.target.value = Keys.getDigitValue(event);
+		event.target.value = this.getDigitValue(event);
 		this.#formHandler();
 		this.#focusNextInput(event.target);
 	}
@@ -129,29 +127,13 @@ export class TwoFactorAuth extends Component {
 			otp: this.code,
 		});
 		if (success) {
-			// this.#loadAndCache(body["refresh_token"]);
-			window.redirect("/");
+			window.redirect("/home");
 		} else {
 			this.#resetLoadButton();
 			this.alertForm.innerHTML = error;
 			this.alertForm.classList.remove("d-none");
 		}
 	}
-
-	/* 	async #loadAndCache(refreshToken) {
-		this.innerHTML = this.#renderLoader();
-		userManagementClient.refreshToken = refreshToken;
-		if (!(await userManagementClient.restoreCache())) {
-			userManagementClient.logout();
-			const signinComponent = new SignIn();
-			signinComponent.error = true;
-			signinComponent.errorMessage = "Failed to restore cache";
-			this.innerHTML = "";
-			this.appendChild(signinComponent);
-		} else {
-			getRouter().navigate("/");
-		}
-	} */
 
 	#focusPreviousInput(input) {
 		const previousInput = input.previousElementSibling;
@@ -173,15 +155,48 @@ export class TwoFactorAuth extends Component {
 
 	#startLoadButton() {
 		this.sendCodeBtn.innerHTML = `
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span class="sr-only">Loading...</span>
-    `;
+			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+			<span class="sr-only">Loading...</span>
+		`;
 		this.sendCodeBtn.disabled = true;
 	}
 
 	#resetLoadButton() {
 		this.sendCodeBtn.innerHTML = "Send code";
 		this.sendCodeBtn.disabled = false;
+	}
+
+	deleteKeyCode = 8;
+	vKeyCode = 86;
+
+	isDigitKey(event) {
+		return /^\d$/.test(this.getKeyValue(event));
+	}
+
+	isDeleteKey(event) {
+		return this.getKeyCode(event) === this.deleteKeyCode;
+	}
+
+	getKeyCode(event) {
+		return event.keyCode || event.which;
+	}
+
+	getKeyValue(event) {
+		return event.data || event.key;
+	}
+
+	isPasteShortcut(event) {
+		const isVPressed =
+			this.getKeyValue(event) === "v" || event.keyCode === this.vKeyCode;
+		return isVPressed && this.isCtrlPressed(event);
+	}
+
+	isCtrlPressed(event) {
+		return event.ctrlKey || event.metaKey;
+	}
+
+	getDigitValue(event) {
+		return parseInt(this.getKeyValue(event));
 	}
 }
 
