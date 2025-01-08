@@ -91,7 +91,7 @@ export class HomePage extends Component {
 			this.querySelector("#btnRemotePlay"),
 			"click",
 			() => {
-				window.redirect("/play/tic-tac-toe");
+				window.redirect("/play/tictactoe");
 			}
 		);
 	}
