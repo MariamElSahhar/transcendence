@@ -103,7 +103,12 @@ class TicTacToeContent extends Component {
 			this.changePlayBtnText("Play");
 			this.refreshScoresHtml();
 			this.refreshBoardWrapperHtml();
-		}	
+		}
+		
+		if (lastStatus !== "FINISHED") {
+			this.menuActivation(true);
+			this.changePlayBtnText("Play Again?");
+		}
 
 		this.inGame = false;
 		this.inMatchmaking = false;

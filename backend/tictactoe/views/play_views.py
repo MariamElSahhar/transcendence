@@ -215,10 +215,18 @@ def make_move_view(request):
         # Check if the game is over (all rounds played and a winner is decided)
         if game.current_round == 3:
             round_winners = [game.winner_round_1, game.winner_round_2, game.winner_round_3]
-            # TODO handle draw
-            if round_winners.count(user) >= 2:  # Best of 3
-                game.game_winner = user
+            player_1_wins = round_winners.count(game.player_1)
+            player_2_wins = round_winners.count(game.player_2)
+            if player_1_wins >= 2:  # Player 1 wins best of 3
+                game.game_winner = game.player_1
                 game.status = "FINISHED"
+            elif player_2_wins >= 2:  # Player 2 wins best of 3
+                game.game_winner = game.player_2
+                game.status = "FINISHED"
+            else:
+                if player_1_wins == player_2_wins:
+                    game.status = "FINISHED"
+                    game.game_winner = None  # No overall winner
         else:
             game.current_round += 1
 
@@ -233,5 +241,40 @@ def make_move_view(request):
         "game_id": game.id,
         "updated_map": updated_map,
         "current_round": game.current_round,
-        "next_to_play": game.next_to_play.id if game.next_to_play else None
+        "next_to_play": game.next_to_play.id if game.next_to_play else None,
+        "game_status": game.status,
+        "game_winner": game.game_winner.username if game.game_winner else None,
     }, status=status.HTTP_200_OK)
+
+# when the game is done and setting the game is finished
+# when player finished the entire roound of the game
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def finished_game_view(request):
+    user = request.user
+
+    # Query for finished games where the user is either player_1 or player_2
+    finished_games = Game.objects.filter(
+        status='FINISHED',
+    ).filter(
+        player_1=user
+    ) | Game.objects.filter(
+        status='FINISHED',
+        player_2=user
+    )
+
+    if not finished_games.exists():
+        return Response({"detail": "No finished games found for the user."}, status=404)
+
+    # Serialize or return game details
+    games_data = [
+        {
+            "game_id": game.id,
+            "player_1": game.player_1.username,
+            "player_2": game.player_2.username,
+            "status": game.status,
+        }
+        for game in finished_games
+    ]
+
+    return Response({"finished_games": games_data}, status=200)

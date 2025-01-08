@@ -26,6 +26,7 @@ from .views.play_views import (
     play_view,
     join_matchmaking_view,
     cancel_matchmaking_view,
+    finished_game_view,
 )
 
 urlpatterns = [
@@ -35,4 +36,5 @@ urlpatterns = [
     path("join_matchmaking/", join_matchmaking_view, name="join_matchmaking"),
     path("cancel_matchmaking/", cancel_matchmaking_view, name="cancel_matchmaking"),
     path("api/", include("users.urls")),
+    path("finished_game/", finished_game_view, name="finished_game"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
