@@ -201,18 +201,9 @@ DEFAULT_FROM_EMAIL = '42AD Transcendence <transcendence.42ad@gmail.com>'   # Opt
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_postgres.core.DatabaseChannelLayer",
-#         "CONFIG": {
-#             "database": {
-#                 "ENGINE": "django.db.backends.postgresql",
-#                 "NAME": "your_db_name",  # Replace with your database name
-#                 "USER": "your_db_user",  # Replace with your database user
-#                 "PASSWORD": "your_password",  # Replace with your database password
-#                 "HOST": "localhost",  # Or your PostgreSQL host
-#                 "PORT": "5432",  # Default PostgreSQL port
-#             },
-#         },
-#     },
-# }
+#peer to peer/ group communication
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}

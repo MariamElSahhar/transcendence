@@ -6,6 +6,15 @@ const URIs = {
 	gamelogRemote: `${BASE_URL}/gamelog/remote/`,
 	gamelogTTT: `${BASE_URL}/gamelog/ttt/`,
 	gamelogLocal: `${BASE_URL}/gamelog/local/`,
+	matchmaker: `${BASE_URL}/remote-pong/matchmaking/`,
+};
+
+
+export const matchMaker = async () => {
+	const url = URIs.matchmaker;
+	const { status, body, error } = await post(url);
+	if (error) return {status:status, success: false, data: error };
+	return { status:status, success: true, data: body };
 };
 
 // Fetch game log

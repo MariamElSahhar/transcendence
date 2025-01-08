@@ -2,7 +2,8 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "../local-game/Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
-// import { addLocalGame } from "../../js/clients/gamelog-client.js";
+// import { matchMaker } from "../../scripts/clients/user-clients.js";
+import { matchMaker } from "../../scripts/clients/gamelog-client.js";
 
 export class RemoteGamePage extends Component {
 	constructor() {
@@ -22,7 +23,7 @@ export class RemoteGamePage extends Component {
 
 		this.socket.onopen = () => {
 			console.log('WebSocket connected');
-			socket.send(JSON.stringify({ action: "test" }));
+			this.socket.send(JSON.stringify({ action: "test" }));
 			// socket.close()
 		};
 
@@ -98,7 +99,7 @@ width: 80px; /* Increase loader size */
 <div class="d-flex justify-content-center align-items-center" id="searchdiv" style="height: 75vh;">
 	<div id="searchBox" class="p-4 border rounded bg-light text-center shadow position-relative d-flex flex-column justify-content-center" style="width: 500px; height: 250px;">
 		<!-- Close button -->
-		<p class="position-absolute top-0 end-0 p-2 text-decoration-none text-dark m-3" id="closebtn" style="font-size: 1.5rem;">
+		<p class="position-absolute top-0 end-0 p-2 text-decoration-none text-dark m-3" id="closebtn" style="font-size: 1.5rem;cursor: pointer;">
 			&times;
 		</p>
 
@@ -212,7 +213,7 @@ width: 80px; /* Increase loader size */
 
 			}
 
-			waitForOpponent() {
+			async waitForOpponent() {
 				console.log("hwre")
 				const flag = 0;
 				setTimeout(() => {
@@ -220,14 +221,23 @@ width: 80px; /* Increase loader size */
 					const searchBox = document.getElementById("searchBox");
 					searchBox.querySelector(".heading").innerHTML = "We're sorry! :(";
 					status.innerHTML = "No opponent found. Please try again later!";
-					console.log(searchBox.querySelector(".loader").style.display)
 					searchBox.querySelector(".circle").style.display = "none";
-					console.log(searchBox.querySelector(".circle").style.display)
 					// return;
 				}, 120000); // 2 minutes in milliseconds
 				// if(flag == 0)
 				// {
-
+				const {status, success, data } = await matchMaker();
+				console.log(status, success, data)
+				if(status == 400)
+				{
+					const status = document.getElementById("statusmsg");
+					const searchBox = document.getElementById("searchBox");
+					searchBox.querySelector(".heading").innerHTML = "You're already in the queue!";
+					status.innerHTML = "";
+					searchBox.querySelector(".circle").style.display = "none";
+					return;
+				}
+				// if(status == )
 				// }
 				// document.getElementById("searchdiv").classList.remove("d-flex");
 				// document.getElementById("searchdiv").classList.add("d-none");

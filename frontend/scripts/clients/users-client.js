@@ -65,6 +65,8 @@ export const uploadAvatar = async ({ avatar, user_id }) => {
 	return { success: true, data: body };
 };
 
+
+
 /* export const usernameExist = async (username) => {
 	// console.log(username.username)
 	const url = `${URIs.users}/username/${username}/exists/`;

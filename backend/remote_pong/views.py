@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.db import transaction
 from .models import MatchmakingQueue, GameSession
+from users.models import CustomUser
 
 # TEST VIEW
 @api_view(["GET"])
@@ -15,9 +16,12 @@ def test_view(request):
 
 
 @transaction.atomic
+@api_view(["POST"])
 def join_queue(request):
     player = request.user
-
+    user =  CustomUser.objects.filter(username=player)
+    print(user)
+    print( MatchmakingQueue.objects.filter(player=player))
     if MatchmakingQueue.objects.filter(player=player).exists():
         return Response({"message": "You are already in the queue"}, status=400)
 
@@ -28,9 +32,7 @@ def join_queue(request):
         game_session = GameSession.objects.create(
             player1=other_player.player, player2=player, status='active'
         )
-
-        MatchmakingQueue.objects.filter(player__in=[player, other_player.player]).delete()
-
+        user = CustomUser.objects.get(username = other_player)
         return Response({"message": "Match found!", "game_session_id": game_session.id})
 
     return Response({"message": "Waiting for a match..."})

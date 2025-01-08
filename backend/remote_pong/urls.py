@@ -4,10 +4,10 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-from .views import (test_view)
+from .views import (test_view, join_queue)
 
 urlpatterns = [
     # User Management
     path("", test_view, name="test-view"),
-
+	path("matchmaking/", join_queue, name="matchmaking")
 ]
