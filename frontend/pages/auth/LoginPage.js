@@ -1,170 +1,244 @@
 import { Component } from "../Component.js";
 import { isAuth } from "../../scripts/utils/session-manager.js";
 import { login } from "../../scripts/clients/token-client.js";
-export class LoginPage extends Component {
-	constructor() {
+
+export class LoginPage extends Component 
+{
+	constructor()
+	{
 		super();
-		this.isValidEmailInput = false;
-		this.isValidPasswordInput = false;
-		this.passwordHiden = true;
-		this.error = false;
-		this.errorMessage = "";
-	}
+        this.state = {
+            usernameValid: false,
+            passwordValid: false,
+            showPassword: false,
+            errorMessage: "",
+        };
+		this.displayError = this.displayError.bind(this);
+		this.hideError = this.hideError.bind(this);
+    }
 
 	render() {
 		return `
-			<div class="d-flex flex-column w-100 vh-100">
+		<style>
+			/* Mario font */
+			body, h1, h2, h3, .form-label, .btn, .input-group-text {
+				font-family: 'New Super Mario Font U', sans-serif !important;
+			}
+	
+			/* Sky animation */
+			.sky {
+				display: flex;
+				background: url("http://127.0.0.1:8000/media/images/sky.png");
+				background-size: contain;
+				background-repeat: repeat-x;
+				position: absolute;
+				top: 0;
+				left: -400%;
+				width: 500%;
+				height: 20em;
+				animation: move-sky 500s linear infinite;
+				z-index: 1;
+				opacity: 0.2;
+			}
+	
+			@keyframes move-sky {
+				from {
+					left: -400%;
+				}
+				to {
+					left: 100%;
+				}
+			}
+		</style>
+			<div 
+				id="container" 
+				class="d-flex flex-column w-100 vh-100" 
+				style="background-color: rgb(135, 206, 235); position: relative; overflow: hidden;">
+				<div class="sky" style="z-index:0"></div>
 				<h3 class="w-100 py-2">
 					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
 				</h3>
-				<div id="container" class="d-flex justify-content-center align-items-start mt-5 rounded-3">
-					<div class="login-card card m-3">
-						<div class="card-body m-2">
-							<h2 class="card-title text-center m-5">Log In</h2>
-							<form id="signin-form">
-								<div class="form-group mb-4">
-									<input type="text" class="form-control" id="login"
-										placeholder="Username">
-									<div id="login-feedback" class="invalid-feedback">
-										Please enter a valid username.
-									</div>
-								</div>
-								<div class="form-group mb-4">
-									<div class="input-group">
-										<input type="password" class="form-control"
-											id="password"
-											placeholder="Password">
-										<span id="password-eye"
-											class="input-group-text dynamic-hover">
-											<i class="bi bi-eye-fill"></i>
-										</span>
-									</div>
-								</div>
-								<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
-								<div class="d-flex mb-3">
-									<small role="button" id="dont-have-account">Don't have an account? Sign up</small>
-								</div>
-								<button id="signin-btn" class="btn btn-primary w-100" type="submit" disabled>Log In</button>
-							</form>
-							<hr class="my-4">
+				<main class="d-flex justify-content-center align-items-center flex-grow-1">
+					<div class="login-card card shadow p-5 mx-auto border-warning" style="max-width: 400px;">
+						<div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-white">
+							<h2 class="fw-bold  m-0">Log In</h2>
 						</div>
+						<form id="login-form" class="needs-validation bg-light p-4 rounded">
+							<div class="form-group mb-4">
+								<div class="input-group">
+									<span class="input-group-text bg-light border-secondary">
+										<i class="bi bi-person-fill"></i>
+									</span>
+									<input type="text" class="form-control border-secondary" id="login" placeholder="Enter your username">
+									<div id="login-feedback" class="invalid-feedback">Please enter a valid username.</div>
+								</div>
+							</div>
+							<div class="form-group mb-4">
+								<div class="input-group">
+									<span class="input-group-text bg-light border-secondary">
+										<i class="bi bi-lock-fill"></i>
+									</span>
+									<input type="password" class="form-control border-secondary" id="password" placeholder="Enter your password">
+									<span id="toggle-password" class="input-group-text bg-light border-secondary">
+										<i class="bi bi-eye"></i>
+									</span>
+								</div>
+							</div>
+							<div id="error-alert" class="alert alert-danger d-none" role="alert">${this.state.errorMessage}</div>
+							<div class="text-center mb-4">
+								<small role="button" id="register-link" class="text-warning fw-bold" style="cursor: pointer;">Don't have an account? Sign up</small>
+							</div>
+							<div>
+								<button id="login-btn" class="btn btn-warning w-100 fw-bold border border-primary text-dark" type="submit" disabled>Log In</button>
+							</div>
+						</form>
 					</div>
-				</div>
+				</main>
 			</div>
 		`;
 	}
-
+	
 	postRender() {
-		this.forgotPassword = this.querySelector("#forgot-password");
-		this.donthaveAccount = this.querySelector("#dont-have-account");
-		this.signinBtn = this.querySelector("#signin-btn");
-		this.signinForm = this.querySelector("#signin-form");
-		this.login = this.querySelector("#login");
-		this.password = this.querySelector("#password");
-		this.passwordEyeIcon = this.querySelector("#password-eye");
-		this.alertForm = this.querySelector("#alert-form");
-
-		super.addComponentEventListener(this.forgotPassword, "click", () => {
-			window.redirect("/reset-password");
-		});
-		super.addComponentEventListener(this.donthaveAccount, "click", () => {
-			window.redirect("/sign-up");
-		});
-		super.addComponentEventListener(this.signinForm, "submit", (event) => {
-			event.preventDefault();
-			this.#signin();
-		});
-		super.addComponentEventListener(
-			this.login,
-			"input",
-			this.#loginHandler
-		);
-		super.addComponentEventListener(
-			this.password,
-			"input",
-			this.#passwordHandler
-		);
-		super.addComponentEventListener(
-			this.passwordEyeIcon,
-			"click",
-			this.#togglePasswordVisibility
-		);
-		if (this.error) {
-			this.alertForm.innerHTML = this.errorMessage;
-			this.alertForm.classList.remove("d-none");
-			this.error = false;
-		}
-	}
-
-	#loginHandler() {
-		this.isValidEmailInput = this.login.value.length > 0;
-		this.#formHandler();
-	}
-
-	#passwordHandler() {
-		this.isValidPasswordInput = this.password.value.length > 0;
-		this.#formHandler();
-	}
-
-	#formHandler() {
-		this.signinBtn.disabled = !(
-			this.isValidEmailInput && this.isValidPasswordInput
-		);
-	}
-
-	async #signin() {
-		this.#startLoadButton();
-		const { success, error } = await login({
-			username: this.login.value,
-			password: this.password.value,
-		});
-		if (success) {
-			this.alertForm.classList.add("d-none");
-			const authenticated = await isAuth();
-			if (authenticated) {
-				window.redirect("/home");
-				return false;
-			} else {
-				this.#loadTwoFactorComponent();
+		const usernameInput = this.querySelector("#login");
+		const passwordInput = this.querySelector("#password");
+		const togglePasswordButton = this.querySelector("#toggle-password");
+		const loginForm = this.querySelector("#login-form");
+		const loginButton = this.querySelector("#login-btn");
+		const errorAlert = this.querySelector("#error-alert");
+		const registerLink = this.querySelector("#register-link");
+	
+		usernameInput.addEventListener("input", () => {
+			this.handleUsernameInput(usernameInput, loginButton);
+			if (!errorAlert.classList.contains("d-none")) {
+				this.resetForm(usernameInput, passwordInput, errorAlert, loginButton);
 			}
+		});
+	
+		passwordInput.addEventListener("input", () => {
+			this.handlePasswordInput(passwordInput, loginButton);
+			if (!errorAlert.classList.contains("d-none")) {
+				this.resetForm(usernameInput, passwordInput, errorAlert, loginButton);
+			}
+		});
+	
+		togglePasswordButton.addEventListener("click", () => this.switchPasswordVisibility(passwordInput, togglePasswordButton));
+	
+		loginForm.addEventListener("submit", (event) => {
+			event.preventDefault();
+			this.submitLogin(usernameInput.value, passwordInput.value, errorAlert, loginButton);
+		});
+	
+		registerLink.addEventListener("click", () => {
+			window.location.href = "/sign-up";
+		});
+	}
+	
+    handleUsernameInput(input, loginButton) {
+        this.state.usernameValid = input.value.trim().length > 0;
+        this.updateSubmitButtonState(loginButton);
+    }
+
+    handlePasswordInput(input, loginButton) {
+        this.state.passwordValid = input.value.trim().length > 0;
+        this.updateSubmitButtonState(loginButton);
+    }
+
+    switchPasswordVisibility(input, toggleButton)
+	{
+		this.state.showPassword = !this.state.showPassword; 
+		input.type = this.state.showPassword ? "text" : "password";
+	
+		const icon = toggleButton.querySelector("i");
+		if (this.state.showPassword) {
+			icon.classList.remove("bi-eye");
+			icon.classList.add("bi-x"); 
 		} else {
-			this.#resetLoadButton();
-			this.alertForm.innerHTML = error;
-			this.alertForm.classList.remove("d-none");
+			icon.classList.remove("bi-x");
+			icon.classList.add("bi-eye");
+		}
+	}
+	
+
+    updateSubmitButtonState(button) {
+        button.disabled = !(this.state.usernameValid && this.state.passwordValid);
+    }
+
+	async submitLogin(username, password, errorAlert, loginButton) {
+		loginButton.disabled = true;
+		loginButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...`;
+	
+		try {
+			const { success, error } = await login({ username, password });
+			console.log("Login Response:", { success, error });
+	
+			if (success) {
+				errorAlert.classList.add("d-none");
+				const authenticated = await isAuth();
+				if (authenticated) {
+					window.redirect("/home");
+				} else {
+					this.initializeTwoFactorAuth(username);
+				}
+			} else
+			{
+				errorAlert.classList.remove("d-none");
+				if (error === "Username not found" || error === "Invalid password") {
+					errorAlert.textContent = error;
+				} else {
+					errorAlert.textContent = "Invalid username or password. Please try again.";
+				}
+			}
+		} catch (networkError) {
+			console.error("Network Error:", networkError);
+			errorAlert.classList.remove("d-none");
+			errorAlert.textContent = "A network error occurred. Please check your connection.";
+		} finally {
+			loginButton.innerHTML = "Log In";
+			loginButton.disabled = false;
 		}
 	}
 
-	async #loadTwoFactorComponent() {
+	async initializeTwoFactorAuth(username) 
+	{
 		await import("./TwoFactorAuth.js");
 		const container = this.querySelector("#container");
-		container.innerHTML = "";
+		container.innerHTML = "<div class=\"sky\" style=\"z-index:0\"></div>";
+		container.style.justifyContent = "center";
+		container.style.alignItems = "center";
 		const twoFactorComponent = document.createElement("tfa-component");
-		twoFactorComponent.login = this.login.value;
+		twoFactorComponent.login = username;
 		container.appendChild(twoFactorComponent);
 	}
+	
 
-	#togglePasswordVisibility() {
-		if (this.passwordHiden) {
-			this.password.setAttribute("type", "text");
-		} else {
-			this.password.setAttribute("type", "password");
+	resetForm(usernameInput, passwordInput, errorAlert, loginButton)
+	{
+		usernameInput.value = "";
+		passwordInput.value = "";
+		this.state.usernameValid = false;
+		this.state.passwordValid = false;
+		loginButton.disabled = true;
+		this.hideError(errorAlert); 
+	}
+
+	displayError(message, errorAlert) {
+		if (!errorAlert) {
+			console.error("Error alert element not found.");
+			return;
 		}
-		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-fill");
-		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-slash-fill");
-		this.passwordHiden = !this.passwordHiden;
+	
+		errorAlert.textContent = message || "An unknown error occurred.";
+		errorAlert.classList.remove("d-none"); 
 	}
-
-	#startLoadButton() {
-		this.signinBtn.innerHTML = `
-			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-			<span class="sr-only">Loading...</span>
-    	`;
-		this.signinBtn.disabled = true;
-	}
-
-	#resetLoadButton() {
-		this.signinBtn.innerHTML = "Sign in";
-		this.signinBtn.disabled = false;
+	
+	hideError(errorAlert) {
+		if (!errorAlert) {
+			console.error("Error alert element not found.");
+			return;
+		}
+	
+		errorAlert.classList.add("d-none");
+		errorAlert.textContent = ""; 
 	}
 }
 
