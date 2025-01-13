@@ -1,364 +1,315 @@
 import { Component } from "../Component.js";
 import { register } from "../../scripts/clients/token-client.js";
-import {isValidSecurePassword, isValidUsername, isValidEmail} from '../../scripts/utils/input-validator.js'
+import { isValidSecurePassword, isValidUsername, isValidEmail } from '../../scripts/utils/input-validator.js';
 
 export class SignUpPage extends Component {
-	constructor() {
-		super();
-		this.passwordHidden = true;
-		this.confirmPasswordHidden = true;
-		this.startConfirmPassword = false;
+    constructor() {
+        super();
+        this.isPasswordVisible = false;
+        this.isConfirmPasswordVisible = false;
 
-		this.InputValidUsername = false;
-		this.InputValidEmail = false;
-		this.InputValidPassword = false;
-		this.InputValidConfirmPassword = false;
+        this.validations = {
+            username: false,
+            email: false,
+            password: false,
+            confirmPassword: false,
+        };
 
-		this.error = false;
-		this.errorMessage = "";
-	}
+        this.errorState = {
+            active: false,
+            message: "",
+        };
+    }
 
-	render() {
-		return `
-			<div class="d-flex flex-column w-100 vh-100">
+    render() {
+        return `
+            <style>
+			/* Mario font */
+			body, h1, h2, h3, .form-label, .btn, .input-group-text {
+				font-family: 'New Super Mario Font U', sans-serif !important;
+			}
+	
+			/* Sky animation */
+			.sky {
+				display: flex;
+				background: url("http://127.0.0.1:8000/media/images/sky.png");
+				background-size: contain;
+				background-repeat: repeat-x;
+				position: absolute;
+				top: 0;
+				left: -400%;
+				width: 500%;
+				height: 20em;
+				animation: move-sky 500s linear infinite;
+				z-index: 1;
+				opacity: 0.2;
+			}
+	
+			@keyframes move-sky {
+				from {
+					left: -400%;
+				}
+				to {
+					left: 100%;
+				}
+			}
+		</style>
+            <div 
+           id="container" 
+				class="d-flex flex-column w-100 vh-100" 
+				style="background-color: rgb(135, 206, 235); position: relative; overflow: hidden;">
+				<div class="sky" style="z-index:0"></div>
 				<h3 class="w-100 py-2">
 					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
 				</h3>
-				<div id="container" class="d-flex justify-content-center align-items-center rounded-3 flex-grow-1">
-					<div class="register-card card m-3">
-						<div class="card-body m-2">
-							<h2 class="card-title text-center m-5 dynamic-hover">Sign Up</h2>
-							<form id="signup-form">
-								<div class="form-group mb-4">
-									<div class="input-group has-validation">
-										<span class="input-group-text" id="inputGroupPrepend">@</span>
-										<input type="text" class="form-control" id="username"
-												placeholder="Username" autocomplete="username">
-										<div id="username-feedback" class="invalid-feedback">
-											Invalid username.
-										</div>
-									</div>
-								</div>
-								<div class="form-group mb-4">
-									<input type="email" class="form-control" id="email"
-											placeholder="Email" autocomplete="email">
-									<div id="email-feedback" class="invalid-feedback">
-										Please enter a valid email.
-									</div>
-								</div>
-								<div class="form-group mb-4">
-									<div class="input-group has-validation">
-										<input type="password" class="form-control"
-												id="password"
-												placeholder="Password">
-										<span id="password-eye" class="input-group-text dynamic-hover">
-											<i class="bi bi-eye-fill"></i>
-										</span>
-										<div id="password-feedback" class="invalid-feedback">
-											Invalid password.
-										</div>
-									</div>
-								</div>
-								<div class="form-group mb-4">
-									<div class="input-group has-validation">
-										<input type="password" class="form-control"
-												id="confirm-password"
-												placeholder="Confirm Password">
-										<span id="confirm-password-eye"
-											class="input-group-text dynamic-hover">
-											<i class="bi bi-eye-fill"></i>
-										</span>
-										<div id="confirm-password-feedback" class="invalid-feedback">
-											Passwords do not match.
-										</div>
-									</div>
-								</div>
-								<div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
-								<div class="mb-3">
-									<small role="button" id="have-account">Already have an account? Log In</small>
-								</div>
-								<button id="signupBtn" type="submit" class="btn btn-primary w-100" disabled>Sign up</button>
-							</form>
-							<hr class="my-4">
-						</div>
-					</div>
-				</div>
-			</div>
-		`;
-	}
-
-	postRender() {
-		this.username = this.querySelector("#username");
-		this.usernameFeedback = this.querySelector("#username-feedback");
-		this.email = this.querySelector("#email");
-		this.emailFeedback = this.querySelector("#email-feedback");
-		this.password = this.querySelector("#password");
-		this.passwordEyeIcon = this.querySelector("#password-eye");
-		this.passwordFeeback = this.querySelector("#password-feedback");
-		this.confirmPassword = this.querySelector("#confirm-password");
-		this.confirmPasswordEyeIcon = this.querySelector(
-			"#confirm-password-eye"
+                <main class="d-flex justify-content-center align-items-center flex-grow-1">
+                    <div class="register-card card shadow p-5 mx-auto border-info border-warning" style="max-width: 400px;">
+                        <div class="text-center p-3 rounded mb-4 bg-danger text-warning border border-white">
+                            <h2 class="fw-bold m-0">Sign Up</h2>
+                        </div>
+                        <form id="registration-form" class="needs-validation bg-light p-4 rounded" novalidate>
+                            <div class="form-group mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-secondary">
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-secondary" id="username" placeholder="Enter your username" required>
+                                    <div id="username-error" class="invalid-feedback">Invalid username.</div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-secondary">
+                                        <i class="bi bi-envelope-fill"></i>
+                                    </span>
+                                    <input type="email" class="form-control border-secondary" id="email" placeholder="Enter your email" required>
+                                    <div id="email-error" class="invalid-feedback">Invalid email address.</div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-secondary">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" class="form-control border-secondary" id="password" placeholder="Enter your password" required>
+                                    <span id="toggle-password-visibility" class="input-group-text bg-light border-secondary">
+                                        <i class="bi bi-eye"></i>
+                                    </span>
+                                    <div id="password-error" class="invalid-feedback">Invalid password.</div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-secondary">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" class="form-control border-secondary" id="confirm-password" placeholder="Confirm your password" required>
+                                    <span id="toggle-confirm-password-visibility" class="input-group-text bg-light border-secondary">
+                                        <i class="bi bi-eye"></i>
+                                    </span>
+                                    <div id="confirm-password-error" class="invalid-feedback">Passwords do not match.</div>
+                                </div>
+                            </div>
+                            <div id="error-banner" class="alert alert-danger d-none" role="alert"></div>
+                            <div>
+                                <button id="register-btn" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark" disabled>Sign Up</button>
+                            </div>
+                        </form>
+                        <div class="mt-3 text-center">
+                            <small role="button" id="login-link" class="text-warning fw-bold" style="cursor: pointer;">
+                                Already have an account? Log In
+                            </small>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        `;
+    }
+    postRender() {
+        this.elements = {
+            username: this.querySelector("#username"),
+            email: this.querySelector("#email"),
+            password: this.querySelector("#password"),
+            confirmPassword: this.querySelector("#confirm-password"),
+            togglePassword: this.querySelector("#toggle-password-visibility"),
+            toggleConfirmPassword: this.querySelector("#toggle-confirm-password-visibility"),
+            registerButton: this.querySelector("#register-btn"),
+            errorBanner: this.querySelector("#error-banner"),
+            form: this.querySelector("#registration-form"),
+            loginLink: this.querySelector("#login-link"),
+            usernameError: this.querySelector("#username-error"),
+            emailError: this.querySelector("#email-error"),
+            passwordError: this.querySelector("#password-error"),
+            confirmPasswordError: this.querySelector("#confirm-password-error"),
+        };
+    
+        this.state = {
+            showPassword: false,
+        };
+    
+        this.#setupEventListeners();
+        this.#checkErrorState();
+    }
+    
+	
+	#setupEventListeners() {
+		this.elements.username.addEventListener("input", this.#handleUsernameInput.bind(this));
+		this.elements.email.addEventListener("input", this.#handleEmailInput.bind(this));
+		this.elements.password.addEventListener("input", this.#handlePasswordInput.bind(this));
+		this.elements.confirmPassword.addEventListener("input", this.#handleConfirmPasswordInput.bind(this));
+	
+		this.elements.togglePassword.addEventListener("click", () =>
+			this.switchPasswordVisibility(this.elements.password, this.elements.togglePassword)
 		);
-		this.confirmPasswordFeedback = this.querySelector(
-			"#confirm-password-feedback"
+		this.elements.toggleConfirmPassword.addEventListener("click", () =>
+			this.switchPasswordVisibility(this.elements.confirmPassword, this.elements.toggleConfirmPassword)
 		);
-		this.haveAccount = this.querySelector("#have-account");
-		this.alertForm = this.querySelector("#alert-form");
-		this.signupBtn = this.querySelector("#signupBtn");
-		this.signupForm = this.querySelector("#signup-form");
-
-		super.addComponentEventListener(
-			this.username,
-			"input",
-			this.#usernameHandler
-		);
-		super.addComponentEventListener(
-			this.email,
-			"input",
-			this.#emailHandler
-		);
-		super.addComponentEventListener(
-			this.password,
-			"input",
-			this.#passwordHandler
-		);
-		super.addComponentEventListener(
-			this.passwordEyeIcon,
-			"click",
-			this.#togglePasswordVisibility
-		);
-		super.addComponentEventListener(
-			this.confirmPassword,
-			"input",
-			this.#confirmPasswordHandler
-		);
-		super.addComponentEventListener(
-			this.confirmPasswordEyeIcon,
-			"click",
-			this.#toggleConfirmPasswordVisibility
-		);
-		super.addComponentEventListener(this.haveAccount, "click", () =>
-			window.redirect("/login")
-		);
-		super.addComponentEventListener(this.signupForm, "submit", (event) => {
-			event.preventDefault();
-			this.#signupHandler();
+	
+		this.elements.form.addEventListener("submit", this.#submitForm.bind(this));
+		this.elements.loginLink.addEventListener("click", () => {
+			window.location.href = "/login";
 		});
-		if (this.error) {
-			this.alertForm.innerHTML = this.errorMessage;
-			this.alertForm.classList.remove("d-none");
-			this.error = false;
-		}
 	}
-
-	async #usernameHandler() {
-		clearTimeout(this.usernameTimeout);
-		const { validity, message } =
-			isValidUsername(this.username.value);
-		if (validity) {
-			this.#setUsernameInputValidity(true);
+	
+	switchPasswordVisibility(input, toggleButton) 
+    {
+		this.state.showPassword = !this.state.showPassword; 
+		input.type = this.state.showPassword ? "text" : "password";
+	
+		const icon = toggleButton.querySelector("i");
+		if (this.state.showPassword) {
+			icon.classList.remove("bi-eye");
+			icon.classList.add("bi-x");
 		} else {
-			this.#setUsernameInputValidity(false, message);
+			icon.classList.remove("bi-x");
+			icon.classList.add("bi-eye");
 		}
 	}
+	
 
-	#setUsernameInputValidity(validity, message = "") {
-		if (validity) {
-			this.username.classList.remove("is-invalid");
-			this.username.classList.add("is-valid");
-			this.InputValidUsername = true;
-		} else {
-			this.username.classList.remove("is-valid");
-			this.username.classList.add("is-invalid");
-			this.usernameFeedback.innerHTML = message;
-			this.InputValidUsername = false;
-		}
-		this.#formHandler();
-	}
+    #handleUsernameInput() {
+        const { validity, message } = isValidUsername(this.elements.username.value);
+        this.#updateFieldValidity("username", validity, message);
+    }
 
-	#emailHandler() {
-		clearTimeout(this.emailTimeout);
-		const { validity, message } = isValidEmail(
-			this.email.value
-		);
-		if (validity) {
-			this.#setEmailInputValidity(true);
-		} else {
-			this.#setEmailInputValidity(false, message);
-		}
-	}
+    #handleEmailInput() {
+        const { validity, message } = isValidEmail(this.elements.email.value);
+        this.#updateFieldValidity("email", validity, message);
+    }
 
-	#setEmailInputValidity(validity, message = "") {
-		if (validity) {
-			this.email.classList.remove("is-invalid");
-			this.email.classList.add("is-valid");
-			this.InputValidEmail = true;
-		} else {
-			this.email.classList.remove("is-valid");
-			this.email.classList.add("is-invalid");
-			this.emailFeedback.innerHTML = message;
-			this.InputValidEmail = false;
-		}
-		this.#formHandler();
-	}
+    #handlePasswordInput() {
+        const { validity, message } = isValidSecurePassword(this.elements.password.value);
+        this.#updateFieldValidity("password", validity, message);
+        this.#comparePasswords();
+    }
 
-	#passwordHandler() {
-		const { validity, message } =
-			isValidSecurePassword(this.password.value);
-		if (validity) {
-			this.#setInputPasswordValidity(true);
-			if (this.startConfirmPassword) {
-				if (this.confirmPassword.value === this.password.value) {
-					this.#setInputConfirmPasswordValidity(true);
-				} else {
-					this.#setInputConfirmPasswordValidity(
-						false,
-						"Passwords do not match."
-					);
-				}
-			}
-		} else {
-			this.#setInputPasswordValidity(false, message);
-			if (this.startConfirmPassword) {
-				this.#setInputConfirmPasswordValidity(false);
-			}
-		}
-	}
+    #handleConfirmPasswordInput() {
+        this.#comparePasswords();
+    }
+    #comparePasswords() {
+        const password = this.elements.password.value;
+        const confirmPassword = this.elements.confirmPassword.value;
+        const isMatching = password && confirmPassword && password === confirmPassword;
+        const message = isMatching ? "" : password && confirmPassword ? "Passwords do not match." : "";
+    
+        this.#updateFieldValidity("confirmPassword", isMatching, message);
+    }
+    
+    #updateFieldValidity(field, isValid, message = "") {
+        const inputElement = this.elements[field];
+        const errorMessageElement = this.elements[`${field}Error`]; 
+        this.validations[field] = isValid;
+        if (errorMessageElement) {
+            if (isValid) {
+                inputElement.classList.remove("is-invalid");
+                inputElement.classList.add("is-valid");
+                errorMessageElement.textContent = "";
+            } else {
+                inputElement.classList.remove("is-valid");
+                inputElement.classList.add("is-invalid");
+                errorMessageElement.textContent = message;
+            }
+        } else {
+            console.error(`Error message element for ${field} not found.`);
+        }
+    
+        this.#updateFormState();
+    }
+    
+    
 
-	#confirmPasswordHandler() {
-		if (!this.startConfirmPassword) {
-			this.startConfirmPassword = true;
-		}
-		this.#passwordHandler();
-	}
+    #updateFormState() {
+        const isFormValid = Object.values(this.validations).every((value) => value);
+        this.elements.registerButton.disabled = !isFormValid;
+    }
+    startLoadButton() {
+        this.elements.registerButton.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="sr-only">Loading...</span>
+        `;
+        this.elements.registerButton.disabled = true;
+    }
 
-	#setInputPasswordValidity(validity, message = "") {
-		if (validity) {
-			this.password.classList.remove("is-invalid");
-			this.password.classList.add("is-valid");
-			this.InputValidPassword = true;
-		} else {
-			this.password.classList.remove("is-valid");
-			this.password.classList.add("is-invalid");
-			this.passwordFeeback.innerHTML = message;
-			this.InputValidPassword = false;
-		}
-		this.#formHandler();
-	}
+    async #submitForm(event) {
+        event.preventDefault();
+        this.startLoadButton();
 
-	#setInputConfirmPasswordValidity(validity, message = "") {
-		if (validity) {
-			this.confirmPassword.classList.remove("is-invalid");
-			this.confirmPassword.classList.add("is-valid");
-			this.InputValidConfirmPassword = true;
-		} else {
-			this.confirmPassword.classList.remove("is-valid");
-			this.confirmPassword.classList.add("is-invalid");
-			this.confirmPasswordFeedback.innerHTML = message;
-			this.InputValidConfirmPassword = false;
-		}
-		this.#formHandler();
-	}
+        try {
+            const { success, error } = await register({
+                username: this.elements.username.value,
+                email: this.elements.email.value,
+                password: this.elements.password.value,
+            });
 
-	#togglePasswordVisibility() {
-		if (this.passwordHidden) {
-			this.password.setAttribute("type", "text");
-		} else {
-			this.password.setAttribute("type", "password");
-		}
-		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-fill");
-		this.passwordEyeIcon.children[0].classList.toggle("bi-eye-slash-fill");
-		this.passwordHidden = !this.passwordHidden;
-	}
+            if (success) {
+                this.#initializeTwoFactorAuth();
+            } else {
+                this.elements.registerButton.innerHTML = "Sign Up";
+                this.elements.registerButton.disabled = false;
+                this.#showErrorBanner(error);
+            }
+        } catch (err) {
+            console.error("Error during registration:", err);
+            this.elements.registerButton.innerHTML = "Sign Up";
+            this.elements.registerButton.disabled = false;
+            this.#showErrorBanner("An unexpected error occurred.");
+        }
+    }
 
-	#toggleConfirmPasswordVisibility() {
-		if (this.confirmPasswordHidden) {
-			this.confirmPassword.setAttribute("type", "text");
-		} else {
-			this.confirmPassword.setAttribute("type", "password");
-		}
-		this.confirmPasswordEyeIcon.children[0].classList.toggle("bi-eye-fill");
-		this.confirmPasswordEyeIcon.children[0].classList.toggle(
-			"bi-eye-slash-fill"
-		);
-		this.confirmPasswordHidden = !this.confirmPasswordHidden;
-	}
+    async #initializeTwoFactorAuth() {
+        try {
+            await import("./TwoFactorAuth.js");
+            const container = this.querySelector("#container");
+            if (!container) {
+                console.error("Container not found. Unable to load 2FA component.");
+                return;
+            }
+            container.innerHTML = "";
+            container.style.justifyContent = "center";
+            container.style.alignItems = "center";
+            const twoFactorComponent = document.createElement("tfa-component");
+            twoFactorComponent.login = this.elements.username.value;
+            container.appendChild(twoFactorComponent);
+        } catch (err) {
+            console.error("Error loading TwoFactorAuth component:", err);
+            this.#showErrorBanner("Failed to initialize Two-Factor Authentication.");
+        }
+    }
 
-	#formHandler() {
-		if (
-			this.InputValidUsername &&
-			this.InputValidEmail &&
-			this.InputValidPassword &&
-			this.InputValidConfirmPassword
-		) {
-			this.signupBtn.disabled = false;
-		} else {
-			this.signupBtn.disabled = true;
-		}
-	}
+    #showErrorBanner(message) {
+        this.errorState.active = true;
+        this.errorState.message = message;
+        this.elements.errorBanner.textContent = message;
+        this.elements.errorBanner.classList.remove("d-none");
+    }
 
-	async #signupHandler() {
-		this.#startLoadButton();
-		const { success, error } = await register({
-			username: this.username.value,
-			email: this.email.value,
-			password: this.password.value,
-		});
-		if (success) {
-			this.alertForm.classList.add("d-none");
-			this.#loadTwoFactorComponent();
-		} else {
-			this.#resetLoadButton();
-			this.alertForm.innerHTML = error;
-			this.alertForm.classList.remove("d-none");
-		}
-	}
-
-	/* #OAuthReturn() {
-		if (!this.#isOAuthError()) {
-			return { render: true };
-		}
-		const refreshToken = Cookies.get("refresh_token");
-		Cookies.remove("refresh_token");
-		if (new JWT(refreshToken).isValid()) {
-			this.#loadAndCache(refreshToken);
-			return { render: false };
-		}
-		return { render: true };
-	}
-
-	#isOAuthError() {
-		const params = new URLSearchParams(window.location.search);
-		if (params.has("error")) {
-			this.error = true;
-			this.errorMessage = params.get("error");
-			return false;
-		}
-		return true;
-	}
-	*/
-
-	#startLoadButton() {
-		this.signupBtn.innerHTML = `
-			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-			<span class="sr-only">Loading...</span>
-    	`;
-		this.signupBtn.disabled = true;
-	}
-
-	#resetLoadButton() {
-		this.signupBtn.innerHTML = "Sign up";
-		this.signupBtn.disabled = false;
-	}
-
-	async #loadTwoFactorComponent() {
-		await import("./TwoFactorAuth.js");
-		const container = this.querySelector("#container");
-		container.innerHTML = "";
-		const twoFactorComponent = document.createElement("tfa-component");
-		twoFactorComponent.login = this.username.value;
-		container.appendChild(twoFactorComponent);
-	}
+    #checkErrorState() {
+        if (this.errorState.active) {
+            this.#showErrorBanner(this.errorState.message);
+            this.errorState.active = false;
+        }
+    }
 }
 
 customElements.define("sign-up-page", SignUpPage);
+

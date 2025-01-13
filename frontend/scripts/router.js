@@ -54,6 +54,12 @@ const routes = {
 		path: "../pages/tournament/TournamentPage.js",
 		protected: false,
 	},
+	"/play/tictactoe": {
+		layout: "main",
+		component: "tictactoe-page",
+		path: "../pages/tictactoe/TictactoePage.js",
+		protected: false,
+	},
 	"/friends": {
 		layout: "main",
 		component: "friends-page",
@@ -105,6 +111,8 @@ const handleLocation = async () => {
 };
 
 const loadRoute = async (route, layout) => {
+	try {
+
 	const root = document.getElementById("root");
 	const routeComponent = document.createElement(route.component);
 	await import(route.path);
@@ -122,6 +130,9 @@ const loadRoute = async (route, layout) => {
 		root.innerHTML = "";
 		root.appendChild(routeComponent);
 	}
+} catch (e) {
+	console.log('ERROR', e)
+}	
 };
 
 const validDashboardPath = async (path) => {

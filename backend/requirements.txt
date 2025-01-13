@@ -24,7 +24,6 @@ pathspec==0.12.1
 pillow==11.0.0
 platformdirs==4.3.6
 psycopg2==2.9.10
-psycopg2-binary==2.9.9
 PyJWT==2.9.0
 pyotp==2.9.0
 PyYAML==6.0.2

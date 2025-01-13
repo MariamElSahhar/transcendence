@@ -2,202 +2,219 @@ import { Component } from "../Component.js";
 import { verifyOTP } from "../../scripts/clients/token-client.js";
 
 export class TwoFactorAuth extends Component {
-	constructor() {
-		super();
-	}
+  constructor() {
+    super();
+    this.otpInputs = [];
+    this.submitButton = null;
+    this.errorNotification = null;
+  }
 
-	render() {
-		return `
-        <div class="two-factor-card card m-3" id="two-factor-auth">
-            <div class="card-body m-2">
-                <h2 class="card-title text-center m-3">Two-Factor Authentication</h2>
-                <p class="text-center">Enter the 6-digit code sent to your email</p>
-                <div class="d-flex justify-content-center mb-4">
-                    <i class="bi bi-shield-lock-fill display-1"></i>
-                </div>
-                <form>
-                    <div class="d-flex form-group mb-4 w-100">
-                        <input class="code-input form-control text-center col" type="tel" name="pincode-1" maxlength="1"
-                                pattern="[\\d]*" tabindex="1"
-                                autocomplete="off">
-                        <input class="code-input form-control text-center col" type="tel" name="pincode-2" maxlength="1"
-                                pattern="[\\d]*" tabindex="2"
-                                autocomplete="off">
-                        <input class="code-input form-control text-center col" type="tel" name="pincode-3" maxlength="1"
-                                pattern="[\\d]*" tabindex="3"
-                                autocomplete="off">
-                        <input class="code-input form-control text-center col" type="tel" name="pincode-4" maxlength="1"
-                                pattern="[\\d]*" tabindex="4"
-                                autocomplete="off">
-                        <input class="code-input form-control text-center col" type="tel" name="pincode-5" maxlength="1"
-                                pattern="[\\d]*" tabindex="5"
-                                autocomplete="off">
-                        <input class="code-input form-control text-center col" type="tel" name="pincode-6" maxlength="1"
-                                pattern="[\\d]*" tabindex="6"
-                                autocomplete="off">
+  render() {
+    return `
+    	<style>
+			/* Mario font */
+			body, h1, h2, h3, .form-label, .btn, .input-group-text {
+				font-family: 'New Super Mario Font U', sans-serif !important;
+			}
+		</style>
+        <div 
+          	<div 
+            id="container" 
+             class="d-flex flex-column w-100 vh-100" bg-light">
+               <main class="d-flex justify-content-center align-items-center flex-grow-1">
+                <div 
+                    class="card shadow-lg mx-auto border-3 border-warning bg-primary bg-light rounded text-light" 
+                    style="max-width: 400px;">
+                    <div class="text-center p-5">
+                        <div class="text-center p-3 rounded mb-4  bg-danger text-warning border border-white">
+                            <h2 class="fw-bold m-0">Verify Your OTP</h2>
+                        </div>
+                        <p class="text-center text-dark mb-4">Ready to play? Enter the 6-digit code from your email and let’s-a go!</p>
+                        <div class="icon-container d-flex justify-content-center mb-4">
+                            <div class="d-flex align-items-center">
+
+                                <i class="bi bi-lock-fill text-black" style="font-size: 7rem; margin-left: 1rem;"></i>
+                            </div>
+                        </div>
+                        <!-- Form -->
+                        <form>
+                          <!-- OTP Input Fields -->
+                          <div class="input-fields form-group mb-4 w-100 d-flex justify-content-between">
+                              ${this.#renderOtpInputs()}
+                          </div>
+                          <!-- Error Alert -->
+                          <div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
+                        
+                          <!-- Submit Button -->
+                          <button id="submit-button" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark" disabled>
+                            Verify Code
+                          </button>
+                        </form>
                     </div>
-                    <div id="alert-form" class="d-none alert alert-danger" role="alert"></div>
-                    <button id="submit-btn" type="submit" class="btn btn-primary w-100" disabled>
-                      Send code
-                    </button>
-                </form>
-            </div>
+                </div>
+            </main>
         </div>
     `;
-	}
+}
+  
 
-	postRender() {
-		this.inputs = this.querySelectorAll("input");
-		this.sendCodeBtn = this.querySelector("#submit-btn");
-		this.alertForm = this.querySelector("#alert-form");
+  postRender() {
+    this.otpInputs = this.querySelectorAll("input");
+    this.submitButton = this.querySelector("#submit-button");
+    this.errorNotification = this.querySelector("#error-alert");
 
-		for (const input of this.inputs) {
-			super.addComponentEventListener(
-				input,
-				"keydown",
-				this.#handleInputChange
-			);
-			super.addComponentEventListener(input, "paste", this.#handlePaste);
-		}
-		super.addComponentEventListener(
-			this.sendCodeBtn,
-			"click",
-			this.#sendCode
-		);
-	}
+    this.#bindEvents();
+  }
 
-	#renderLoader() {
-		return `
-      <div class="d-flex justify-content-center align-items-center" style="height: 100vh">
-          <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-          </div>
-      </div>
+  #renderOtpInputs() {
+    return Array.from({ length: 6 }, (_, i) => `
+      <input class="otp-input form-control text-center col" type="tel" name="otp-${i+1}" maxlength="1"
+             pattern="[\\d]*" tabindex="${i+1}" autocomplete="off">
+    `).join('');
+  }
+
+  #bindEvents() {
+    this.otpInputs.forEach(input => {
+      super.addComponentEventListener(input, "keydown", this.#onOtpChange);
+      super.addComponentEventListener(input, "paste", this.#onOtpPaste);
+    });
+    super.addComponentEventListener(this.submitButton, "click", this.#onSubmitOtp);
+  }
+
+  #onOtpChange = (event) => {
+    if (!this.#isPasteShortcut(event)) {
+      event.preventDefault();
+    }
+
+    const isValidInput = this.#isNumericKey(event) || this.#isBackspaceKey(event);
+    if (isValidInput) {
+      if (this.#isBackspaceKey(event)) {
+        event.target.value = "";
+        this.#focusPreviousField(event.target);
+      } else {
+        event.target.value = this.#extractDigit(event);
+        this.#validateForm();
+        this.#focusNextField(event.target);
+      }
+    } else {
+      event.target.value = "";
+    }
+  }
+
+  #onOtpPaste = (event) => {
+    event.preventDefault();
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const pastedCode = clipboardData.getData("text").replace(/\D/g, "");
+    let currentInput = event.target;
+
+    [...pastedCode].forEach(digit => {
+      if (currentInput) {
+        currentInput.value = digit;
+        this.#validateForm();
+        currentInput = this.#focusNextField(currentInput);
+      }
+    });
+  }
+
+  #validateForm() {
+    const allInputsFilled = Array.from(this.otpInputs).every(input => input.value);
+    this.submitButton.disabled = !allInputsFilled;
+  }
+
+  async #onSubmitOtp(event) {
+    event.preventDefault();
+    this.#startLoading();
+
+    const otp = Array.from(this.otpInputs).map(input => input.value).join("");
+
+    if (!otp || otp.length !== 6) { 
+        this.#stopLoading();
+        this.errorNotification.innerHTML = "Invalid OTP."; 
+        this.errorNotification.classList.remove("d-none");
+        return;
+    }
+
+    try
+    {
+        const { success, error } = await verifyOTP({ username: this.login, otp });
+
+        if (success) {
+            window.location.href = "/home";
+        } else {
+            this.#stopLoading();
+            this.errorNotification.innerHTML = error || "Invalid OTP.";
+            this.errorNotification.classList.remove("d-none");
+        }
+    } catch (err) {
+        console.error("Error verifying OTP:", err);
+        this.#stopLoading();
+        this.errorNotification.innerHTML = "An unexpected error occurred.";
+        this.errorNotification.classList.remove("d-none");
+    }
+}
+
+  #focusPreviousField(currentInput) {
+    const previousField = currentInput.previousElementSibling;
+    if (previousField) {
+      previousField.focus();
+      return previousField;
+    }
+    return null;
+  }
+
+  #focusNextField(currentInput) {
+    const nextField = currentInput.nextElementSibling;
+    if (nextField) {
+      nextField.focus();
+      return nextField;
+    }
+    return null;
+  }
+
+  #startLoading() {
+    this.submitButton.innerHTML = `
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span class="sr-only">Loading...</span>
     `;
-	}
+    this.submitButton.disabled = true;
+  }
 
-	#handleInputChange(event) {
-		if (!this.isPasteShortcut(event)) {
-			event.preventDefault();
-		}
-		if (!this.isDigitKey(event) && !this.isDeleteKey(event)) {
-			event.target.value = "";
-			return;
-		}
-		if (this.isDeleteKey(event)) {
-			event.target.value = "";
-			this.#focusPreviousInput(event.target);
-			return;
-		}
-		event.target.value = this.getDigitValue(event);
-		this.#formHandler();
-		this.#focusNextInput(event.target);
-	}
+  #stopLoading() {
+    this.submitButton.innerHTML = "Verify Code";
+    this.submitButton.disabled = false;
+  }
 
-	#handlePaste(event) {
-		event.preventDefault();
-		const clipboardData = event.clipboardData || window.clipboardData;
-		const pastedText = clipboardData.getData("text").replace(/\D/g, "");
-		let currentInput = event.target;
-		for (let i = 0; i < pastedText.length && currentInput !== null; i++) {
-			currentInput.value = pastedText[i];
-			this.#formHandler();
-			currentInput = this.#focusNextInput(currentInput);
-		}
-	}
+  backspaceKeyCode = 8;
+  pasteKeyCode = 86;
 
-	#formHandler() {
-		for (const input of this.inputs) {
-			if (!input.value) {
-				this.sendCodeBtn.disabled = true;
-				return;
-			}
-		}
-		this.sendCodeBtn.disabled = false;
-		this.#sendCode();
-	}
+  #isNumericKey(event) {
+    return /^\d$/.test(this.#getEventKeyValue(event));
+  }
 
-	async #sendCode() {
-		this.#startLoadButton();
-		this.code = Array.from(this.inputs)
-			.map((input) => input.value)
-			.join("");
-		const { success, error } = await verifyOTP({
-			username: this.login,
-			otp: this.code,
-		});
-		if (success) {
-			window.redirect("/home");
-		} else {
-			this.#resetLoadButton();
-			this.alertForm.innerHTML = error;
-			this.alertForm.classList.remove("d-none");
-		}
-	}
+  #isBackspaceKey(event) {
+    return this.#getEventKeyCode(event) === this.backspaceKeyCode;
+  }
 
-	#focusPreviousInput(input) {
-		const previousInput = input.previousElementSibling;
-		if (previousInput) {
-			previousInput.focus();
-			return previousInput;
-		}
-		return null;
-	}
+  #getEventKeyCode(event) {
+    return event.keyCode || event.which;
+  }
 
-	#focusNextInput(input) {
-		const nextInput = input.nextElementSibling;
-		if (nextInput) {
-			nextInput.focus();
-			return nextInput;
-		}
-		return null;
-	}
+  #getEventKeyValue(event) {
+    return event.data || event.key;
+  }
 
-	#startLoadButton() {
-		this.sendCodeBtn.innerHTML = `
-			<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-			<span class="sr-only">Loading...</span>
-		`;
-		this.sendCodeBtn.disabled = true;
-	}
+  #isPasteShortcut(event) {
+    const isVPressed = this.#getEventKeyValue(event) === "v" || event.keyCode === this.pasteKeyCode;
+    return isVPressed && this.#isControlPressed(event);
+  }
 
-	#resetLoadButton() {
-		this.sendCodeBtn.innerHTML = "Send code";
-		this.sendCodeBtn.disabled = false;
-	}
+  #isControlPressed(event) {
+    return event.ctrlKey || event.metaKey;
+  }
 
-	deleteKeyCode = 8;
-	vKeyCode = 86;
-
-	isDigitKey(event) {
-		return /^\d$/.test(this.getKeyValue(event));
-	}
-
-	isDeleteKey(event) {
-		return this.getKeyCode(event) === this.deleteKeyCode;
-	}
-
-	getKeyCode(event) {
-		return event.keyCode || event.which;
-	}
-
-	getKeyValue(event) {
-		return event.data || event.key;
-	}
-
-	isPasteShortcut(event) {
-		const isVPressed =
-			this.getKeyValue(event) === "v" || event.keyCode === this.vKeyCode;
-		return isVPressed && this.isCtrlPressed(event);
-	}
-
-	isCtrlPressed(event) {
-		return event.ctrlKey || event.metaKey;
-	}
-
-	getDigitValue(event) {
-		return parseInt(this.getKeyValue(event));
-	}
+  #extractDigit(event) {
+    return parseInt(this.#getEventKeyValue(event));
+  }
 }
 
 customElements.define("tfa-component", TwoFactorAuth);
