@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from django.db import transaction
 from .models import MatchmakingQueue, GameSession
 from users.models import CustomUser
+from pong.consumers import notify_match
 
 # TEST VIEW
 @api_view(["GET"])
@@ -19,9 +20,7 @@ def test_view(request):
 @api_view(["POST"])
 def join_queue(request):
     player = request.user
-    user =  CustomUser.objects.filter(username=player)
-    print(user)
-    print( MatchmakingQueue.objects.filter(player=player))
+    user1 =  CustomUser.objects.get(username=player)
     if MatchmakingQueue.objects.filter(player=player).exists():
         return Response({"message": "You are already in the queue"}, status=400)
 
@@ -32,7 +31,14 @@ def join_queue(request):
         game_session = GameSession.objects.create(
             player1=other_player.player, player2=player, status='active'
         )
-        user = CustomUser.objects.get(username = other_player)
-        return Response({"message": "Match found!", "game_session_id": game_session.id})
+        user2 = CustomUser.objects.get(username = other_player.player)
+        MatchmakingQueue.objects.filter(player__in=[player, other_player.player]).delete()
+        notify_match(user1, user2,game_session.id)
+        return Response(
+            {
+                "message": "Match found!",
+                "game_session_id": game_session.id
+            }
+        )
 
     return Response({"message": "Waiting for a match..."})

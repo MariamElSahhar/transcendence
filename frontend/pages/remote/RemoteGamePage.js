@@ -19,6 +19,7 @@ export class RemoteGamePage extends Component {
 	connectedCallback() {
 		console.log(window.location.host)
 
+		
 		this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
 
 		this.socket.onopen = () => {
@@ -28,6 +29,7 @@ export class RemoteGamePage extends Component {
 		};
 
 		this.socket.onmessage = (event) => {
+			console.log("here");
 			console.log('Message from server:', event.data);
 		};
 
