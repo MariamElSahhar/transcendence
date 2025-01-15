@@ -3,8 +3,8 @@ import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capab
 import { Engine } from "../local-game/Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 // import { matchMaker } from "../../scripts/clients/user-clients.js";
-import { matchMaker } from "../../scripts/clients/gamelog-client.js";
-
+import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";
+const backendURL = "http://127.0.0.1:8000";
 export class RemoteGamePage extends Component {
 	constructor() {
 		super();
@@ -14,12 +14,65 @@ export class RemoteGamePage extends Component {
 		this.playerNames = []; // Stores player names
 		this.scores = [0, 0]; // Tracks scores for both players
 		this.isAIEnabled = false;
+		this.playerSet = false;
+	}
+
+	updateLoaders(data) {
+		clearTimeout(window.timeoutID);
+		const status = document.getElementById("statusmsg");
+		const searchBox = document.getElementById("searchBox");
+
+		// Set the new message
+		searchBox.querySelector(".heading").innerHTML = "We have found your match!";
+		status.innerHTML = "";
+
+		// Hide the loading circle
+		searchBox.style.background = "linear-gradient(65deg, 	#409edb, 	#409edb 46%, white 48%, white 47%, #e55d82 , #e55d82 30%)";
+		searchBox.querySelector(".circle").style.display = "none";
+		searchBox.querySelector(".bi-person").style.display = "none";
+		// Update the display for ME vs USER
+		const vsElement = document.createElement("div");
+		vsElement.classList.add("vs-container", "d-flex", "align-items-center", "justify-content-center", "gap-3");
+
+		// Player 1 (Your avatar and username)
+		const player1Element = document.createElement("div");
+		player1Element.classList.add("player-container", "d-flex");
+		player1Element.innerHTML = `
+			<img src="${sessionStorage.getItem("avatar")}/" alt="Player 1 Avatar" class="avatar" />
+			<span class="username">You</span>
+		`;
+
+		// Player 2 (Opponent's avatar and username)
+		const player2Element = document.createElement("div");
+		player2Element.classList.add("player-container");
+		player2Element.innerHTML = `
+		<img src="${backendURL}${data["avatar"]}/" alt="Player 2 Avatar" class="avatar" />
+		<span class="username">${data["player"]}</span>
+		`;
+
+		// Append the player elements to the VS container
+		vsElement.appendChild(player1Element);
+		vsElement.innerHTML += `<span class="vs fs-3 fw-bold" style="z-index:2">VS</span>`; // Add "VS" text in between
+		vsElement.appendChild(player2Element);
+
+
+
+		// Append the VS container to the searchBox
+		searchBox.appendChild(vsElement);
+		document.querySelector(".loader").classList.remove("loader")
+		if(data["position"] == "left")
+		{
+			this.playerNames.push(data["player"] || "Player 2");
+			this.playerNames.push(getUserSessionData().username || "player 1");
+		}
+		else
+		{
+			this.playerNames.push(getUserSessionData().username || "player 1");
+			this.playerNames.push(data["player"] || "Player 2");
+		}
 	}
 
 	connectedCallback() {
-		console.log(window.location.host)
-
-		
 		this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
 
 		this.socket.onopen = () => {
@@ -29,8 +82,24 @@ export class RemoteGamePage extends Component {
 		};
 
 		this.socket.onmessage = (event) => {
-			console.log("here");
 			console.log('Message from server:', event.data);
+			const data = JSON.parse(event.data);
+			if (!this.playerSet && data["message"] === "Match found!") {
+				this.playerSet = true;
+				// Call the function to update the UI
+				this.updateLoaders(data);
+				if (WebGL.isWebGLAvailable()) {
+					this.createOverlay();
+					const countdownStart = Date.now() / 1000 + 3;
+					document.getElementById("searchdiv").classList.remove("d-flex");
+					document.getElementById("searchdiv").classList.add("d-none");
+					this.container.style.display = "block";
+					this.startCountdown(countdownStart);
+				} else {
+					console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
+				}
+			}
+
 		};
 
 		this.socket.onclose = () => {
@@ -41,63 +110,98 @@ export class RemoteGamePage extends Component {
 			console.error('WebSocket error:', error);
 		};
 
-		this.playerNames.push(getUserSessionData().username || "player 1");
+		// this.playerNames.push(getUserSessionData().username || "player 1");
 
 		this.innerHTML = `
 		<style>
-.loader {
-  width: 80px; /* Increase loader size */
-  height: 80px;
-}
+			.loader {
+			width: 80px; /* Increase loader size */
+			height: 80px;
+			}
+			.match-container {
+				display: flex;
+				align-items: center; /* Vertically aligns the items */
+				justify-content: center; /* Centers the content horizontally */
+			}
 
-.circle {
-width: 80px; /* Increase loader size */
-  height: 80px;
-  border: 5px solid gray;
-  border-radius: 50%;
-  box-sizing: border-box;
-  animation: pulse 1s linear infinite;
-}
+			.avatar-container {
+				display: flex;
+				flex-direction: column; /* Arranges the avatar and username vertically */
+				align-items: center; /* Centers the avatar and username */
+				margin: 10px; /* Adds space between avatars */
+			}
 
-.circle:after {
-width: 80px; /* Increase loader size */
-  height: 80px;
-  border: 5px solid gray;
-  border-radius: 50%;
-  box-sizing: border-box;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  animation: scaleUp 1s linear infinite;
-}
+			.avatar {
+				width: 50px; /* Set the size of the avatar */
+				height: 50px; /* Ensure it's circular */
+				border-radius: 50%; /* Makes the avatar a circle */
+				object-fit: cover; /* Ensures the image covers the circle */
+			}
 
-.emoji i {
-	font-size: 36px;/* Set the size of the emoji */
-	color: #000; /* Color of the emoji */
-}
 
-@keyframes scaleUp {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-  }
-  60%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
+			.player-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100%; /* Ensure equal height */
+			}
 
-@keyframes pulse {
-  0%,
-  60%,
-  100% {
-    transform: scale(1);
-  }
-  80% {
-    transform: scale(1.2);
-  }
-}
+			.username {
+				margin-top: 5px; /* Adds space between avatar and username */
+				font-size: 14px;
+				text-align: center;
+				min-width: 100px; /* Set a minimum width for the username */
+			}
 
-</style>
+			.circle {
+			width: 80px; /* Increase loader size */
+			height: 80px;
+			border: 5px solid gray;
+			border-radius: 50%;
+			box-sizing: border-box;
+			animation: pulse 1s linear infinite;
+			}
+
+			.circle:after {
+			width: 80px; /* Increase loader size */
+			height: 80px;
+			border: 5px solid gray;
+			border-radius: 50%;
+			box-sizing: border-box;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			animation: scaleUp 1s linear infinite;
+			}
+
+			.emoji i {
+				font-size: 36px;/* Set the size of the emoji */
+				color: #000; /* Color of the emoji */
+			}
+
+			@keyframes scaleUp {
+			0% {
+				transform: translate(-50%, -50%) scale(0);
+			}
+			60%,
+			100% {
+				transform: translate(-50%, -50%) scale(1);
+			}
+			}
+
+			@keyframes pulse {
+			0%,
+			60%,
+			100% {
+				transform: scale(1);
+			}
+			80% {
+				transform: scale(1.2);
+			}
+			}
+		</style>
+
 <div class="d-flex justify-content-center align-items-center" id="searchdiv" style="height: 75vh;">
 	<div id="searchBox" class="p-4 border rounded bg-light text-center shadow position-relative d-flex flex-column justify-content-center" style="width: 500px; height: 250px;">
 		<!-- Close button -->
@@ -105,7 +209,7 @@ width: 80px; /* Increase loader size */
 			&times;
 		</p>
 
-		<h4 class="mb-3 heading">Searching for your opponent!</h4>
+		<h4 class="mb-3 heading" style="z-index:3">Searching for your opponent!</h4>
 		<div class="loader position-relative d-inline-block mx-auto mb-3">
 			<div class="circle position-absolute top-0 left-0 rounded-circle"></div>
 			<div class="emoji position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
@@ -116,91 +220,10 @@ width: 80px; /* Increase loader size */
 	</div>
 </div>
 
-<div id="player-setup" class="p-3 border rounded bg-light d-none" style="max-width: 400px; margin: 40px auto 0;">
-	<h3 class="text-center">Setup Players</h3>
-	<form id="player-form">
-	<div id="player-names">
-		<div class="mb-3">
-		<label for="player2-name" class="form-label d-block"></label>
-		<input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100" placeholder="Player 2 display name"/>
-		</div>
-	</div>
-	<div class="form-check mb-3">
-		<input type="checkbox" class="form-check-input" id="play-against-ai">
-		<label class="form-check-label" for="play-against-ai">Play against computer</label>
-	</div>
-	<button id="submit-players" type="submit" class="btn btn-primary mt-3 w-100" disabled>Start Game</button>
-	</form>
-</div>
 <div id="container" class="m-2 position-relative" style="display:none;"></div>
-
-
-
-        `;
-
-		this.container = this.querySelector("#container");
-		this.postRender();
-	}
-
-	setupPlayerForm() {
-		const form = this.querySelector("#player-form");
-		const submit = this.querySelector("#submit-players");
-		const AICheckbox = this.querySelector("#play-against-ai");
-		const player2NameInput = this.querySelector("#player2-name");
-
-		AICheckbox.addEventListener("change", () => {
-			if (AICheckbox.checked) {
-				player2NameInput.setAttribute("disabled", "");
-				player2NameInput.value = "Computer";
-				submit.removeAttribute("disabled");
-			} else {
-				player2NameInput.removeAttribute("disabled");
-				submit.setAttribute("disabled", "");
-				player2NameInput.value = "";
-			}
-		});
-
-		player2NameInput.addEventListener("input", () => {
-			if (player2NameInput.value) {
-				submit.removeAttribute("disabled");
-			} else {
-				submit.setAttribute("disabled", "");
-			}
-		});
-
-		form.addEventListener("submit", (event) => {
-			event.preventDefault();
-
-			// const userData = getUserSessionData();
-			// console.log("User data:", userData);
-
-			// const firstPlayerName = userData.username || "Player 1";
-			// this.playerNames = [firstPlayerName];
-
-			// const player2Name = AICheckbox.checked ? "Computer" : player2NameInput.value.trim();
-			// this.playerNames.push(player2Name || "Player 2");
-			this.playerNames = [this.playerNames[0]];
-
-			const player2Name = AICheckbox.checked
-				? "Computer"
-				: player2NameInput.value;
-			this.playerNames.push(player2Name || "Player 2");
-
-			console.log("Players after form submission:", this.playerNames);
-
-			this.isAIEnabled = AICheckbox.checked;
-
-			this.querySelector("#player-setup").style.display = "none";
-			this.container.style.display = "block";
-
-			if (WebGL.isWebGLAvailable()) {
-				this.createOverlay();
-				const countdownStart = Date.now() / 1000 + 3;
-				this.startCountdown(countdownStart);
-			} else {
-				console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
-			}
-		});
+`;
+this.container = this.querySelector("#container");
+this.postRender();
 	}
 
 	postRender() {
@@ -214,37 +237,34 @@ width: 80px; /* Increase loader size */
 		this.waitForOpponent();
 
 			}
+		async removeFromMatchmaking()
+		{
+			const {status, success, data } = await removeMatchMaking();
+			console.log(status,success,data);
+		}
 
 			async waitForOpponent() {
-				console.log("hwre")
 				const flag = 0;
-				setTimeout(() => {
-					const status = document.getElementById("statusmsg");
+				window.timeoutID=setTimeout(() => {
+					const stat = document.getElementById("statusmsg");
 					const searchBox = document.getElementById("searchBox");
 					searchBox.querySelector(".heading").innerHTML = "We're sorry! :(";
-					status.innerHTML = "No opponent found. Please try again later!";
+					stat.innerHTML = "No opponent found. Please try again later!";
 					searchBox.querySelector(".circle").style.display = "none";
+					this.removeFromMatchmaking();
 					// return;
-				}, 120000); // 2 minutes in milliseconds
+				}, 12000); // 2 minutes in milliseconds
 				// if(flag == 0)
 				// {
 				const {status, success, data } = await matchMaker();
-				console.log(status, success, data)
 				if(status == 400)
 				{
 					const status = document.getElementById("statusmsg");
 					const searchBox = document.getElementById("searchBox");
 					searchBox.querySelector(".heading").innerHTML = "You're already in the queue!";
 					status.innerHTML = "";
-					searchBox.querySelector(".circle").style.display = "none";
 					return;
 				}
-				// if(status == )
-				// }
-				// document.getElementById("searchdiv").classList.remove("d-flex");
-				// document.getElementById("searchdiv").classList.add("d-none");
-				// document.getElementById("player-setup").classList.remove("d-none");
-				// this.setupPlayerForm();
 			}
 
 			startGame() {
@@ -299,13 +319,13 @@ width: 80px; /* Increase loader size */
 				this.overlay.innerHTML = `
 				  <div class="card text-center text-dark bg-light" style="width: 18rem;">
 					<div class="card-body">
-					  <h1 id="countdown" class="display-1 fw-bold">5</h1>
-					  <p class="card-text">Get ready! The game will start soon.</p>
+					<h1 id="countdown" class="display-1 fw-bold">5</h1>
+					<p class="card-text">Get ready! The game will start soon.</p>
 					</div>
-				  </div>
-				`;
-				this.container.appendChild(this.overlay);
-			}
+					</div>
+					`;
+					this.container.appendChild(this.overlay);
+				}
 
 			updateOverlayCountdown(secondsLeft) {
 				const countdownElement = this.overlay.querySelector("#countdown");
@@ -337,18 +357,17 @@ width: 80px; /* Increase loader size */
 					  <div class="text-center me-3">
 						<h6 class="fw-bold text-truncate" style="max-width: 100px;">${playerName}</h6>
 						<p class="display-6 fw-bold">${playerScore}</p>
-					  </div>
-					  <div class="px-3 display-6 fw-bold align-self-center">:</div>
+						</div>
+						<div class="px-3 display-6 fw-bold align-self-center">:</div>
 					  <div class="text-center ms-3">
-						<h6 class="fw-bold text-truncate" style="max-width: 100px;">${opponentName}</h6>
-						<p class="display-6 fw-bold">${opponentScore}</p>
+					  <h6 class="fw-bold text-truncate" style="max-width: 100px;">${opponentName}</h6>
+					  <p class="display-6 fw-bold">${opponentScore}</p>
 					  </div>
-					</div>
+					  </div>
 					<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
-				  </div>
-				</div>
-			  `;
-			}
+					</div>
+					</div>
+					`;
+				}
 		}
-
 customElements.define("remote-game-page", RemoteGamePage);

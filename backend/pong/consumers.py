@@ -33,8 +33,9 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "message": "Match found!",
             "game_session_id": event["game_session_id"],
-            "player1":  event["player1"],
-            "player2": event["player2"],
+			"position":event["position"],
+            "player":  event["player"],
+            "avatar": event["avatar"]
         }))
 
 
@@ -46,15 +47,17 @@ def notify_match(player1, player2, game_session):
         {
             "type": "match_found",
             "game_session_id": game_session,
-            "player1": player1.username,
-            "player2": player2.username,
+			"position":"left",
+            "player": player2.username,
+            "avatar": player2.avatar.url,
         })
     async_to_sync(get_channel_layer().group_send)(
         f"user_{player2.username}",
         {
             "type": "match_found",
             "game_session_id": game_session,
-            "player1": player1.username,
-            "player2": player2.username,
+			"position":"right",
+            "player": player1.username,
+            "avatar": player1.avatar.url,
         }
     )

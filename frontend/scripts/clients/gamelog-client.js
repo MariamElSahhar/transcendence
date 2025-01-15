@@ -1,5 +1,5 @@
 const BASE_URL = "http://127.0.0.1:8000/api";
-import { post, get } from "../utils/http-requests.js";
+import { post, get,del } from "../utils/http-requests.js";
 
 const URIs = {
 	gamelog: (user_id) => `${BASE_URL}/users/${user_id}/gamelog/`,
@@ -13,6 +13,13 @@ const URIs = {
 export const matchMaker = async () => {
 	const url = URIs.matchmaker;
 	const { status, body, error } = await post(url);
+	if (error) return {status:status, success: false, data: error };
+	return { status:status, success: true, data: body };
+};
+
+export const removeMatchMaking = async () => {
+	const url = URIs.matchmaker;
+	const { status, body, error } = await del(url);
 	if (error) return {status:status, success: false, data: error };
 	return { status:status, success: true, data: body };
 };

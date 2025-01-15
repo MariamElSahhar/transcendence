@@ -1,6 +1,6 @@
 import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
-
+import { removeMatchMaking } from "./clients/gamelog-client.js";
 const routes = {
 	// PUBLIC SCREENS
 	"/": {
@@ -74,6 +74,8 @@ const routes = {
 	},
 };
 
+let previouspath;
+
 const layouts = {
 	main: {
 		component: "main-layout",
@@ -106,6 +108,24 @@ const handleLocation = async () => {
 	// } else if (!isProtected && authenticated && route != routes[404]) {
 	// 	route = routes["/home"];
 	// }
+	if (previouspath && previouspath.startsWith("/play/remote")) {
+		try {
+			const { status, success, data } = await removeMatchMaking();
+			if (success) {
+				console.log("Successfully removed from matchmaking queue:", data);
+			} else {
+				console.warn("Failed to remove from matchmaking queue. Status:", status);
+			}
+			if (window.timeoutID) {
+				console.log("CLEARED TIMEOUT")
+				clearTimeout(window.timeoutID);
+				window.timeoutID = null; // Reset the global variable
+			}
+		} catch (error) {
+			console.error("Error while removing from matchmaking queue:", error);
+		}
+	}
+	previouspath=path;
 	const layout = layouts[route.layout];
 	loadRoute(route, layout);
 };
@@ -132,7 +152,7 @@ const loadRoute = async (route, layout) => {
 	}
 } catch (e) {
 	console.log('ERROR', e)
-}	
+}
 };
 
 const validDashboardPath = async (path) => {
