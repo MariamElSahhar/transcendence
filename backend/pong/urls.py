@@ -28,10 +28,15 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # Users app
     path("api/", include("users.urls")),
 
-    # GameLog API
+    # GameLog app
     path("api/", include("game.urls")),
+
+    # TicTacToe app
+    path("api/", include("tictactoe.urls")),
 
     # API Schema and AutoDocs
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
