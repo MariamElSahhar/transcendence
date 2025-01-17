@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
     email_otp = models.CharField(max_length=6, null=True, blank=True)
     enable_otp = models.BooleanField(default=True)
     otp_created_at = models.DateTimeField(null=True, blank=True)
-
+    # is_web_connected = models.BooleanField(default=False)
     def __str__(self):
         return self.username
 

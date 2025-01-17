@@ -204,6 +204,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #peer to peer/ group communication
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",  # Correct import path
+        "CONFIG": {
+            "hosts": [('127.0.0.1', 6379)],  # Make sure Redis is running locally
+        },
     },
 }

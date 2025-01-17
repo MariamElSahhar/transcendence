@@ -7,14 +7,13 @@ from django.db import transaction
 from .models import MatchmakingQueue, GameSession
 from users.models import CustomUser
 from pong.consumers import notify_match
+import time
 
 # TEST VIEW
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def test_view(request):
     return Response({"message": "Hello from remote-pong api!"}, status=status.HTTP_200_OK)
-
-
 
 @transaction.atomic
 @api_view(["POST","DELETE"])
@@ -26,7 +25,6 @@ def match_maker(request):
 			return Response({"message": "You are already in the queue"}, status=400)
 
 		MatchmakingQueue.objects.create(player=player)
-
 		other_player = MatchmakingQueue.objects.exclude(player=player).first()
 		if other_player:
 			game_session = GameSession.objects.create(
@@ -34,6 +32,8 @@ def match_maker(request):
 			)
 			user2 = CustomUser.objects.get(username = other_player.player)
 			MatchmakingQueue.objects.filter(player__in=[player, other_player.player]).delete()
+			# wait_for_connection(user1)  #
+			time.sleep(0.1)
 			notify_match(user1, user2,game_session.id)
 			return Response(
 				{

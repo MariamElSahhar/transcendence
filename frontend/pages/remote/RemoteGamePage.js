@@ -17,7 +17,14 @@ export class RemoteGamePage extends Component {
 		this.playerSet = false;
 	}
 
+	blockWait(ms) {
+		const start = Date.now();
+		while (Date.now() - start < ms) {
+		  // Do nothing, just block the thread
+		}
+	  }
 	updateLoaders(data) {
+
 		clearTimeout(window.timeoutID);
 		const status = document.getElementById("statusmsg");
 		const searchBox = document.getElementById("searchBox");
@@ -25,8 +32,6 @@ export class RemoteGamePage extends Component {
 		// Set the new message
 		searchBox.querySelector(".heading").innerHTML = "We have found your match!";
 		status.innerHTML = "";
-
-		// Hide the loading circle
 		searchBox.style.background = "linear-gradient(65deg, 	#409edb, 	#409edb 46%, white 48%, white 47%, #e55d82 , #e55d82 30%)";
 		searchBox.querySelector(".circle").style.display = "none";
 		searchBox.querySelector(".bi-person").style.display = "none";
@@ -34,7 +39,6 @@ export class RemoteGamePage extends Component {
 		const vsElement = document.createElement("div");
 		vsElement.classList.add("vs-container", "d-flex", "align-items-center", "justify-content-center", "gap-3");
 
-		// Player 1 (Your avatar and username)
 		const player1Element = document.createElement("div");
 		player1Element.classList.add("player-container", "d-flex");
 		player1Element.innerHTML = `
@@ -61,15 +65,17 @@ export class RemoteGamePage extends Component {
 		searchBox.appendChild(vsElement);
 		document.querySelector(".loader").classList.remove("loader")
 		if(data["position"] == "left")
-		{
-			this.playerNames.push(data["player"] || "Player 2");
-			this.playerNames.push(getUserSessionData().username || "player 1");
-		}
-		else
-		{
-			this.playerNames.push(getUserSessionData().username || "player 1");
-			this.playerNames.push(data["player"] || "Player 2");
-		}
+			{
+				this.playerNames.push(data["player"] || "Player 2");
+				this.playerNames.push(getUserSessionData().username || "player 1");
+			}
+			else
+			{
+				this.playerNames.push(getUserSessionData().username || "player 1");
+				this.playerNames.push(data["player"] || "Player 2");
+			}
+			console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+		// this.blockWait(20000);
 	}
 
 	connectedCallback() {
@@ -85,19 +91,20 @@ export class RemoteGamePage extends Component {
 			console.log('Message from server:', event.data);
 			const data = JSON.parse(event.data);
 			if (!this.playerSet && data["message"] === "Match found!") {
+
 				this.playerSet = true;
 				// Call the function to update the UI
 				this.updateLoaders(data);
-				if (WebGL.isWebGLAvailable()) {
-					this.createOverlay();
-					const countdownStart = Date.now() / 1000 + 3;
-					document.getElementById("searchdiv").classList.remove("d-flex");
-					document.getElementById("searchdiv").classList.add("d-none");
-					this.container.style.display = "block";
-					this.startCountdown(countdownStart);
-				} else {
-					console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
-				}
+				// if (WebGL.isWebGLAvailable()) {
+				// 	this.createOverlay();
+				// 	const countdownStart = Date.now() / 1000 + 3;
+				// 	document.getElementById("searchdiv").classList.remove("d-flex");
+				// 	document.getElementById("searchdiv").classList.add("d-none");
+				// 	this.container.style.display = "block";
+				// 	this.startCountdown(countdownStart);
+				// } else {
+				// 	console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
+				// }
 			}
 
 		};
@@ -244,7 +251,6 @@ this.postRender();
 		}
 
 			async waitForOpponent() {
-				const flag = 0;
 				window.timeoutID=setTimeout(() => {
 					const stat = document.getElementById("statusmsg");
 					const searchBox = document.getElementById("searchBox");

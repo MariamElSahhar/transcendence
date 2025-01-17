@@ -11,7 +11,6 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         access_token=AccessToken(self.scope['cookies']['access_token'])
         username = await sync_to_async(CustomUser.objects.get)(id=access_token['user_id'])
-
         self.room_group_name = f"user_{username}"
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -19,8 +18,8 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.accept()
 
-    # async def disconnect(self, close_code):
-    #     print(f"Disconnected: {close_code}")
+    async def disconnect(self, close_code):
+        print(f"Disconnected: {close_code}")
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -29,11 +28,11 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         }))
 
     async def match_found(self, event):
-        # print(f"Message received: {event}")  # Log received message
+        print(f"Message received: {event}")
         await self.send(text_data=json.dumps({
             "message": "Match found!",
             "game_session_id": event["game_session_id"],
-			"position":event["position"],
+            "position":event["position"],
             "player":  event["player"],
             "avatar": event["avatar"]
         }))
@@ -42,21 +41,25 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
 
 def notify_match(player1, player2, game_session):
     group_name = f"game_session_{game_session}"
-    async_to_sync(get_channel_layer().group_send)(
+    channel_layer = get_channel_layer()
+    print("CHANELS", channel_layer)
+    print("MATCH FOUND: ", group_name, player1.username, player2.username)
+    async_to_sync(channel_layer.group_send)(
         f"user_{player1.username}",
         {
             "type": "match_found",
             "game_session_id": game_session,
-			"position":"left",
+            "position":"left",
             "player": player2.username,
             "avatar": player2.avatar.url,
-        })
-    async_to_sync(get_channel_layer().group_send)(
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
         f"user_{player2.username}",
         {
             "type": "match_found",
             "game_session_id": game_session,
-			"position":"right",
+    		"position":"right",
             "player": player1.username,
             "avatar": player1.avatar.url,
         }
