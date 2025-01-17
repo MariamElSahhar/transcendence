@@ -286,50 +286,33 @@ export class SignUpPage extends Component {
 		event.preventDefault();
 		this.startLoadButton();
 
-		try {
-			const { success, error } = await register({
-				username: this.elements.username.value,
-				email: this.elements.email.value,
-				password: this.elements.password.value,
-			});
-
-			if (success) {
-				this.#initializeTwoFactorAuth();
-			} else {
-				this.elements.registerButton.innerHTML = "Sign Up";
-				this.elements.registerButton.disabled = false;
-				this.#showErrorBanner(error);
-			}
-		} catch (err) {
-			console.error("Error during registration:", err);
+		const { success, error } = await register({
+			username: this.elements.username.value,
+			email: this.elements.email.value,
+			password: this.elements.password.value,
+		});
+		if (success) {
+			this.#initializeTwoFactorAuth();
+		} else {
 			this.elements.registerButton.innerHTML = "Sign Up";
 			this.elements.registerButton.disabled = false;
-			this.#showErrorBanner("An unexpected error occurred.");
+			this.#showErrorBanner(error);
 		}
 	}
 
 	async #initializeTwoFactorAuth() {
-		try {
-			await import("./TwoFactorAuth.js");
-			const container = this.querySelector("#container");
-			if (!container) {
-				console.error(
-					"Container not found. Unable to load 2FA component."
-				);
-				return;
-			}
-			container.innerHTML = "";
-			container.style.justifyContent = "center";
-			container.style.alignItems = "center";
-			const twoFactorComponent = document.createElement("tfa-component");
-			twoFactorComponent.login = this.elements.username.value;
-			container.appendChild(twoFactorComponent);
-		} catch (err) {
-			console.error("Error loading TwoFactorAuth component:", err);
-			this.#showErrorBanner(
-				"Failed to initialize Two-Factor Authentication."
-			);
+		await import("./TwoFactorAuth.js");
+		const container = this.querySelector("#container");
+		if (!container) {
+			console.error("Container not found. Unable to load 2FA component.");
+			return;
 		}
+		container.innerHTML = "";
+		container.style.justifyContent = "center";
+		container.style.alignItems = "center";
+		const twoFactorComponent = document.createElement("tfa-component");
+		twoFactorComponent.login = this.elements.username.value;
+		container.appendChild(twoFactorComponent);
 	}
 
 	#showErrorBanner(message) {
