@@ -2,7 +2,7 @@ import { Component } from "../Component.js";
 import { get, post } from "../../scripts/utils/http-requests.js";
 import { getUserSessionData } from "../../../scripts/utils/session-manager.js";
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "http://127.0.0.1:8000/api/tictactoe";
 
 class TicTacToePage extends Component {
 	constructor() {
@@ -14,18 +14,18 @@ class TicTacToePage extends Component {
 
 		// Bo3 information
 		this.gameId = -1;
-		this.status = '';
-		this.player1 = '';
-		this.player2 = '';
+		this.status = "";
+		this.player1 = "";
+		this.player2 = "";
 		this.mapRound1 = Array(9).fill(null);
 		this.mapRound2 = Array(9).fill(null);
 		this.mapRound3 = Array(9).fill(null);
 		this.currentRound = 0;
-		this.nextToPlay = '';
+		this.nextToPlay = "";
 		this.lastPlayTime = 0;
-		this.winnerRound1 = '';
-		this.winnerRound2 = '';
-		this.winnerRound3 = '';
+		this.winnerRound1 = "";
+		this.winnerRound2 = "";
+		this.winnerRound3 = "";
 
 		this.scoreA = 0;
 		this.scoreB = 0;
@@ -33,7 +33,11 @@ class TicTacToePage extends Component {
 	}
 
 	applyGameInfo(gameInfo) {
-		const lastStatus = this.inGame ? "PLAYING": this.inMatchmaking ? "MATCHMAKING": "NONE";
+		const lastStatus = this.inGame
+			? "PLAYING"
+			: this.inMatchmaking
+			? "MATCHMAKING"
+			: "NONE";
 		const previousLastPlay = this.lastPlayTime;
 
 		if (gameInfo && gameInfo.status === "PLAYING") {
@@ -73,7 +77,10 @@ class TicTacToePage extends Component {
 				return score;
 			})();
 
-			if (lastStatus !== "PLAYING" || previousLastPlay !== this.lastPlayTime) {
+			if (
+				lastStatus !== "PLAYING" ||
+				previousLastPlay !== this.lastPlayTime
+			) {
 				this.menuActivation(false);
 				this.refreshScoresHtml();
 				this.refreshBoardWrapperHtml();
@@ -105,7 +112,7 @@ class TicTacToePage extends Component {
 			this.refreshScoresHtml();
 			this.refreshBoardWrapperHtml();
 		}
-		
+
 		// if (lastStatus !== "FINISHED") {
 		// 	this.menuActivation(true);
 		// 	this.changePlayBtnText("Play Again?");
@@ -114,18 +121,18 @@ class TicTacToePage extends Component {
 		this.inGame = false;
 		this.inMatchmaking = false;
 		this.gameId = -1;
-		this.status = '';
-		this.player1 = '';
-		this.player2 = '';
+		this.status = "";
+		this.player1 = "";
+		this.player2 = "";
 		this.mapRound1 = Array(9).fill(null);
 		this.mapRound2 = Array(9).fill(null);
 		this.mapRound3 = Array(9).fill(null);
 		this.currentRound = 0;
-		this.nextToPlay = '';
+		this.nextToPlay = "";
 		this.lastPlayTime = 0;
-		this.winnerRound1 = '';
-		this.winnerRound2 = '';
-		this.winnerRound3 = '';
+		this.winnerRound1 = "";
+		this.winnerRound2 = "";
+		this.winnerRound3 = "";
 
 		this.scoreA = 0;
 		this.scoreB = 0;
@@ -135,10 +142,8 @@ class TicTacToePage extends Component {
 	menuActivation(b) {
 		const tictactoe = this.querySelector(".tictactoe");
 
-		if (b)
-			tictactoe.classList.add('menu-activated');
-		else
-			tictactoe.classList.remove('menu-activated');
+		if (b) tictactoe.classList.add("menu-activated");
+		else tictactoe.classList.remove("menu-activated");
 	}
 
 	changePlayBtnText(text) {
@@ -168,9 +173,13 @@ class TicTacToePage extends Component {
 		board.forEach((cell, index) => {
 			boardHTML += `
 				<div class="cell" data-index="${index}">
-					${cell === "X" ?
-						 `<img src="/pages/tictactoe/plant.png" alt="X" />` : 
-						 		cell === "O" ? `<img src="/pages/tictactoe/shroom.png" alt="O" />` : ""}
+					${
+						cell === "X"
+							? `<img src="/pages/tictactoe/plant.png" alt="X" />`
+							: cell === "O"
+							? `<img src="/pages/tictactoe/shroom.png" alt="O" />`
+							: ""
+					}
 				</div>
 			`;
 		});
@@ -181,25 +190,32 @@ class TicTacToePage extends Component {
 	}
 
 	refreshBoardWrapperHtml() {
-		const container = document.querySelector('.board-wrapper');
+		const container = document.querySelector(".board-wrapper");
 		container.innerHTML = this.getBoardWrapperHtml();
 
 		const cells = this.querySelectorAll(".cell");
 
 		cells.forEach((cell) => {
-			this.addComponentEventListener(cell, "click", this.handleCellClick, this);
+			this.addComponentEventListener(
+				cell,
+				"click",
+				this.handleCellClick,
+				this
+			);
 		});
 	}
 
 	refreshScoresHtml() {
-		const container = document.querySelector('.scores');
+		const container = document.querySelector(".scores");
 		container.innerHTML = this.getScoresHtml();
 	}
 
 	getScoresHtml() {
 		return `
 			<div class="player1">
-				<img class="star ${this.player1 === this.nextToPlay ? "": "hidden"}" src="/pages/tictactoe/star.png" alt="X" />
+				<img class="star ${
+					this.player1 === this.nextToPlay ? "" : "hidden"
+				}" src="/pages/tictactoe/star.png" alt="X" />
 
 				<div class="score-wrapper">
 					<span class="score">${this.scoreA}</span>
@@ -210,8 +226,10 @@ class TicTacToePage extends Component {
 			</div>
 
 			<div class="player2">
-				<img class="star ${this.player2 === this.nextToPlay ? "": "hidden"}" src="/pages/tictactoe/star.png" alt="X" />
- 
+				<img class="star ${
+					this.player2 === this.nextToPlay ? "" : "hidden"
+				}" src="/pages/tictactoe/star.png" alt="X" />
+
 				<div class="score-wrapper">
 					<span class="score">${this.scoreB}</span>
 					<img class="shroom" src="/pages/tictactoe/shroom.png" alt="X" />
@@ -279,12 +297,12 @@ class TicTacToePage extends Component {
 					.scores {
 						filter: blur(10px);
 					}
-					
+
 					.play-btn {
 						display: flex;
 						justify-content: center;
 						align-items: center;
-						cursor: pointer;			
+						cursor: pointer;
 					}
 				}
 
@@ -292,7 +310,7 @@ class TicTacToePage extends Component {
 					display: none;
 					width: 10em;
 					height: 3em;
-					background-color: red;	
+					background-color: red;
 					position: absolute;
 					z-index: 6;
 					top: calc(50% - 1.5em);
@@ -384,7 +402,7 @@ class TicTacToePage extends Component {
 						color: #e71f07
 					}
 				}
-				
+
 				.floor {
 				    width: 100%;
 					height: 10em;
@@ -436,7 +454,7 @@ class TicTacToePage extends Component {
 					height: 90%;
 					image-rendering: pixelated;
 				}
-				
+
 			</style>
 		`;
 	}
@@ -445,12 +463,22 @@ class TicTacToePage extends Component {
 		const cells = this.querySelectorAll(".cell");
 
 		cells.forEach((cell) => {
-			this.addComponentEventListener(cell, "click", this.handleCellClick, this);
+			this.addComponentEventListener(
+				cell,
+				"click",
+				this.handleCellClick,
+				this
+			);
 		});
 
 		const playBtn = this.querySelector(".play-btn");
 
-		this.addComponentEventListener(playBtn, "click", this.handlePlayBtnClick, this);
+		this.addComponentEventListener(
+			playBtn,
+			"click",
+			this.handlePlayBtnClick,
+			this
+		);
 	}
 
 	async subscribeToGameInfo() {
@@ -522,9 +550,9 @@ class TicTacToePage extends Component {
 					status: g.status,
 					player1: g.player_1,
 					player2: g.player_2,
-					mapRound1: g.map_round_1.split(''),
-					mapRound2: g.map_round_2.split(''),
-					mapRound3: g.map_round_3.split(''),
+					mapRound1: g.map_round_1.split(""),
+					mapRound2: g.map_round_2.split(""),
+					mapRound3: g.map_round_3.split(""),
 					currentRound: g.current_round,
 					nextToPlay: g.next_to_play,
 					lastPlayTime: g.last_play_time,
@@ -549,21 +577,21 @@ class TicTacToePage extends Component {
 
 	handleCellClick(event) {
 		if (!this.inGame || this.nextToPlay !== this.myself) {
-			console.log('CLICK REJECTED, NOT MY TURN');
+			console.log("CLICK REJECTED, NOT MY TURN");
 			return;
-		}		
+		}
 
 		const cell = event.target.closest(".cell"); // Ensure we get the correct cell
 		if (!cell) {
-			console.log('CLICK REJECTED, NOT A CELL');
+			console.log("CLICK REJECTED, NOT A CELL");
 			return;
 		}
 
 		const index = cell.dataset.index;
 
 		// Ignore click if the cell is already filled
-		if (this.getBoard()[index] !== '-') {
-			console.log('IGNORE CLICK, ALREADY OCCUPIED');
+		if (this.getBoard()[index] !== "-") {
+			console.log("IGNORE CLICK, ALREADY OCCUPIED");
 			return;
 		}
 
@@ -583,7 +611,7 @@ class TicTacToePage extends Component {
 			console.error("Error making move:", error);
 		}
 	}
-	
+
 	checkWinner() {
 		const winningCombinations = [
 			[0, 1, 2],
@@ -598,7 +626,11 @@ class TicTacToePage extends Component {
 
 		for (const combo of winningCombinations) {
 			const [a, b, c] = combo;
-			if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+			if (
+				this.board[a] &&
+				this.board[a] === this.board[b] &&
+				this.board[a] === this.board[c]
+			) {
 				this.winner = this.board[a] === "X" ? "A" : "B";
 				return;
 			}
@@ -607,7 +639,6 @@ class TicTacToePage extends Component {
 		// Check for draw
 		if (!this.board.includes(null)) {
 			this.winner = "Draw";
-
 		}
 	}
 }
