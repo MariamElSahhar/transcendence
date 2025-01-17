@@ -134,10 +134,11 @@ export class TwoFactorAuth extends Component {
 			(input) => input.value
 		);
 		this.submitButton.disabled = !allInputsFilled;
+		if (allInputsFilled) this.#onSubmitOtp();
 	}
 
 	async #onSubmitOtp(event) {
-		event.preventDefault();
+		if (event) event.preventDefault();
 		this.#startLoading();
 
 		const otp = Array.from(this.otpInputs)
