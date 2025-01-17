@@ -10,6 +10,7 @@ class TicTacToePage extends Component {
 		this.myself = getUserSessionData().username;
 		this.inGame = false;
 		this.inMatchmaking = false;
+		this.isFinished = false;
 		this.gameInfoGetIntervalFd = null;
 
 		// Bo3 information
@@ -36,13 +37,13 @@ class TicTacToePage extends Component {
 		const lastStatus = this.inGame
 			? "PLAYING"
 			: this.inMatchmaking
-			? "MATCHMAKING"
+			? "MATCHMAKING" 
+			: this.isFinished 
+			? "FINISHED" 
 			: "NONE";
 		const previousLastPlay = this.lastPlayTime;
 
-		if (gameInfo && gameInfo.status === "PLAYING") {
-			this.inGame = true;
-
+		if (gameInfo && gameInfo.status === "PLAYING" || gameInfo.status === "FINISHED") {
 			this.gameId = gameInfo.id;
 			this.status = gameInfo.status;
 			this.player1 = gameInfo.player1;
@@ -77,13 +78,29 @@ class TicTacToePage extends Component {
 				return score;
 			})();
 
-			if (
-				lastStatus !== "PLAYING" ||
-				previousLastPlay !== this.lastPlayTime
-			) {
-				this.menuActivation(false);
-				this.refreshScoresHtml();
-				this.refreshBoardWrapperHtml();
+			if (gameInfo.status === "PLAYING") {
+				if (lastStatus !== "PLAYING") {
+					this.inGame = true;
+				}
+
+				if (
+					(lastStatus !== "PLAYING" ||
+					previousLastPlay !== this.lastPlayTime)
+				) {
+					this.menuActivation(false);
+					this.refreshScoresHtml();
+					this.refreshBoardWrapperHtml();
+				}
+			} else {
+				if (lastStatus !== 'FINISHED') {
+					this.isFinished = true;
+					this.inMatchmaking = false;
+					this.inGame = false;
+					this.menuActivation(true);
+					this.refreshScoresHtml();
+					this.refreshBoardWrapperHtml();
+					this.changePlayBtnText("Play again?");
+				}
 			}
 
 			// TODO: handle winner
@@ -95,7 +112,18 @@ class TicTacToePage extends Component {
 			this.gameId = gameInfo.id;
 			this.status = gameInfo.status;
 			this.player1 = gameInfo.player1;
-			this.player2 = gameInfo.player2;
+			this.player2 = gameInfo.player2 ?? "mario";
+			this.mapRound1 = [];
+			this.mapRound2 = [];
+			this.mapRound3 = [];
+			this.currentRound = 0;
+			this.nextToPlay = "";
+			this.lastPlayTime = 0;
+			this.winnerRound1 = "";
+			this.winnerRound2 = "";
+			this.winnerRound3 = "";
+			this.scoreA = 0;
+			this.scoreB = 0;
 
 			if (lastStatus !== "MATCHMAKING") {
 				this.menuActivation(true);
@@ -106,17 +134,13 @@ class TicTacToePage extends Component {
 			return;
 		}
 
-		if (lastStatus !== "NONE") {
-			this.menuActivation(true);
-			this.changePlayBtnText("Play");
-			this.refreshScoresHtml();
-			this.refreshBoardWrapperHtml();
-		}
-
-		// if (gameInfo.status === "FINISHED") {
+		// if (lastStatus !== "NONE") {
 		// 	this.menuActivation(true);
-		// 	this.changePlayBtnText("Play Again?");
+		// 	this.changePlayBtnText("Play");
+		// 	this.refreshScoresHtml();
+		// 	this.refreshBoardWrapperHtml();
 		// }
+
 		console.log(gameInfo);
 
 		this.inGame = false;
@@ -243,7 +267,7 @@ class TicTacToePage extends Component {
 
 	render() {
 		return `
-			<div class="tictactoe menu-activated">
+			<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative overflow-hidden menu-activated" style="background-color: rgb(135, 206, 235);">
 				<div class="sky"></div>
 				<img class="title-img" src="/pages/tictactoe/title.png" alt="X" />
 
@@ -267,18 +291,6 @@ class TicTacToePage extends Component {
 	style() {
 		return `
 			<style>
-				.tictactoe {
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					justify-content: center;
-					background-color: rgb(135, 206, 235);
-					height: 100%;
-					width: 100%;
-					position: relative;
-					overflow: hidden;
-				}
-
 				.board-wrapper {
 					position: relative;
 					z-index: 3;

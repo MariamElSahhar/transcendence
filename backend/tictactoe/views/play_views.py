@@ -18,11 +18,23 @@ def play_view(request):
     user = request.user
 
     # Filter for games where the user is one of the players and there is no overall game winner
-    game = Game.objects.filter(
-        status__in=['MATCHMAKING', 'PLAYING']
-    ).filter(
-        models.Q(player_1=user) | models.Q(player_2=user)
-    ).first()
+    game = (
+        Game.objects.filter(
+            models.Q(player_1=user) | models.Q(player_2=user)
+        )
+        .filter(status__in=['MATCHMAKING', 'PLAYING', 'FINISHED'])
+        .order_by(
+            models.Case(
+                models.When(status='PLAYING', then=0),
+                models.When(status='MATCHMAKING', then=1),
+                models.When(status='FINISHED', then=2),
+                default=3,
+                output_field=models.IntegerField(),
+            ),
+            '-last_play_time',  # Use last_play_time to pick the most recent game
+        )
+        .first()
+    )
 
     if game:
         if game.status == "MATCHMAKING":
@@ -208,6 +220,18 @@ def make_move_view(request):
             round_is_over = True
         elif game.current_round == 3:
             game.winner_round_3 = user
+            round_is_over = True
+
+    # Handle the draw scenario
+    if not round_is_over and all(cell != '-' for cell in updated_map):
+        if game.current_round == 1:
+            game.winner_round_1 = None
+            round_is_over = True
+        elif game.current_round == 2:
+            game.winner_round_2 = None
+            round_is_over = True
+        elif game.current_round == 3:
+            game.winner_round_3 = None
             round_is_over = True
 
     if round_is_over:
