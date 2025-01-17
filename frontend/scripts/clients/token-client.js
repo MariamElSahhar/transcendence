@@ -36,7 +36,7 @@ export const login = async ({ username, password }) => {
 			otp: body.data.otp,
 		});
 	}
-	return { success: true };
+	return { success: true, error: error };
 };
 
 // get new access token

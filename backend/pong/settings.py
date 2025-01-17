@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "users",
     "game",
+    "tictactoe",
     "corsheaders",
     "drf_spectacular",
 ]
