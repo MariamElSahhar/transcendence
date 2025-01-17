@@ -7,21 +7,25 @@ const routes = {
 		component: "landing-page",
 		path: "../pages/LandingPage.js",
 		protected: false,
+		title: "Pong | Landing Page",
 	},
 	"/login": {
 		component: "login-page",
 		path: "../pages/auth/LoginPage.js",
 		protected: false,
+		title: "Pong | Log In",
 	},
 	"/sign-up": {
 		component: "sign-up-page",
 		path: "../pages/auth/SignUpPage.js",
 		protected: false,
+		title: "Pong | Sign Up",
 	},
 	404: {
 		component: "not-found-page",
 		path: "../pages/error/NotFoundPage.js",
 		protected: false,
+		title: "Pong | Not Found",
 	},
 	// PROTECTED SCREENS
 	"/home": {
@@ -29,48 +33,56 @@ const routes = {
 		component: "home-page",
 		path: "../pages/HomePage.js",
 		protected: false,
+		title: "Pong | Homepage",
 	},
 	"/dashboard": {
 		layout: "sidebar",
 		component: "dashboard-page",
 		path: "../pages/dashboard/DashboardPage.js",
 		protected: false,
+		title: "Pong | My Dashboard",
 	},
 	"/play/local": {
 		layout: "main",
 		component: "local-game-page",
 		path: "../pages/local-game/LocalGamePage.js",
 		protected: false,
+		title: "Pong | Local Game",
 	},
 	"/play/remote": {
 		layout: "main",
 		component: "remote-game-page",
 		path: "../pages/local/RemoteGamePage.js",
 		protected: false,
+		title: "Pong | Remote Game",
 	},
 	"/play/tournament": {
 		layout: "main",
 		component: "tournament-page",
 		path: "../pages/tournament/TournamentPage.js",
 		protected: false,
+		title: "Pong | Tournament",
 	},
 	"/play/tictactoe": {
 		layout: "main",
 		component: "tictactoe-page",
 		path: "../pages/tictactoe/TictactoePage.js",
 		protected: false,
+		title: "Pong | Play Tictactoe",
 	},
 	"/friends": {
 		layout: "main",
 		component: "friends-page",
 		path: "../pages/FriendsPage.js",
 		protected: false,
+		title: "Pong | My Friends",
 	},
 	"/settings": {
 		layout: "main",
 		component: "settings-page",
 		path: "../pages/SettingsPage.js",
 		protected: false,
+		title: "Pong | Profile Settings",
 	},
 };
 
@@ -99,13 +111,13 @@ const handleLocation = async () => {
 			: routes[404];
 	} else route = routes[path] || routes[404];
 
-	const isProtected = route.protected;
+	/* const isProtected = route.protected;
 	const authenticated = await isAuth();
-	// if (isProtected && !authenticated && route != routes[404]) {
-	// 	route = routes[404];
-	// } else if (!isProtected && authenticated && route != routes[404]) {
-	// 	route = routes["/home"];
-	// }
+	if (isProtected && !authenticated && route != routes[404]) {
+		route = routes[404];
+	} else if (!isProtected && authenticated && route != routes[404]) {
+		route = routes["/home"];
+	} */
 	const layout = layouts[route.layout];
 	loadRoute(route, layout);
 };
@@ -129,6 +141,7 @@ const loadRoute = async (route, layout) => {
 			root.innerHTML = "";
 			root.appendChild(routeComponent);
 		}
+		document.title = route.title || "Pong";
 	} catch (e) {
 		console.log("ERROR", e);
 	}
