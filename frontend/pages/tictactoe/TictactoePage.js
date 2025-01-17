@@ -503,6 +503,11 @@ class TicTacToePage extends Component {
 		}
 	}
 
+	disconnectedCallback() {
+		this.unsubscribeToGameInfo();
+		super.disconnectedCallback();
+	}
+
 	async joinMatchmaking() {
 		try {
 			const response = await post(`${BASE_URL}/join_matchmaking/`);

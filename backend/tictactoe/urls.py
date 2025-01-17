@@ -15,12 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
-from django.urls import path, include
-
-from django.conf import settings
-from django.conf.urls.static import static
-
+from django.urls import path
 from .views.play_views import (
     make_move_view,
     play_view,
@@ -35,4 +30,4 @@ urlpatterns = [
     path("join_matchmaking/", join_matchmaking_view, name="join_matchmaking"),
     path("cancel_matchmaking/", cancel_matchmaking_view, name="cancel_matchmaking"),
     path("finished_game/", finished_game_view, name="finished_game"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

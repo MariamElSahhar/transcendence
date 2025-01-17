@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from django.utils.timezone import now
 from rest_framework.exceptions import ValidationError
 
@@ -35,7 +34,7 @@ def play_view(request):
                 "message": "You are currently in matchmaking. Waiting for another player.",
             }
             return Response({"game": matchmaking_info}, status=status.HTTP_200_OK)
-        
+
         # Construct game info, handling possible None values for all players and winners
         game_info = {
             "id": game.id,

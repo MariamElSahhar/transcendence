@@ -166,8 +166,6 @@ export class LoginPage extends Component {
 		loginButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...`;
 
 		const { success, error } = await login({ username, password });
-		console.log("Login Response:", { success, error });
-
 		if (success) {
 			errorAlert.classList.add("d-none");
 			const authenticated = await isAuth();
