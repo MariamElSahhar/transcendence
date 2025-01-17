@@ -113,10 +113,11 @@ class TicTacToePage extends Component {
 			this.refreshBoardWrapperHtml();
 		}
 
-		// if (lastStatus !== "FINISHED") {
+		// if (gameInfo.status === "FINISHED") {
 		// 	this.menuActivation(true);
 		// 	this.changePlayBtnText("Play Again?");
 		// }
+		console.log(gameInfo);
 
 		this.inGame = false;
 		this.inMatchmaking = false;
@@ -242,13 +243,15 @@ class TicTacToePage extends Component {
 
 	render() {
 		return `
-			<div class="tictactoe">
+			<div class="tictactoe menu-activated">
 				<div class="sky"></div>
 				<img class="title-img" src="/pages/tictactoe/title.png" alt="X" />
 
-				<div class="board-wrapper">
-					${this.getBoardWrapperHtml()}
-
+				<div class="relative h-full w-full z-[3]">
+					<div class="board-wrapper">
+						${this.getBoardWrapperHtml()}
+					</div>
+				
 					<div class="play-btn">Play</div>
 				</div>
 
@@ -555,9 +558,9 @@ class TicTacToePage extends Component {
 					status: g.status,
 					player1: g.player_1,
 					player2: g.player_2,
-					mapRound1: g.map_round_1.split(""),
-					mapRound2: g.map_round_2.split(""),
-					mapRound3: g.map_round_3.split(""),
+					mapRound1: (g.map_round_1 ?? "").split(""),
+					mapRound2: (g.map_round_2 ?? "").split(""),
+					mapRound3: (g.map_round_3 ?? "").split(""),
 					currentRound: g.current_round,
 					nextToPlay: g.next_to_play,
 					lastPlayTime: g.last_play_time,

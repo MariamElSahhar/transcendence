@@ -223,9 +223,8 @@ def make_move_view(request):
                 game.game_winner = game.player_2
                 game.status = "FINISHED"
             else:
-                if player_1_wins == player_2_wins:
-                    game.status = "FINISHED"
-                    game.game_winner = None  # No overall winner
+                game.status = "FINISHED"
+                game.game_winner = None  # No overall winner
         else:
             game.current_round += 1
 
