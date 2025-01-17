@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.timezone import now
 from rest_framework.exceptions import ValidationError
 
+from game.models import TicTacToeLog
+
 from ..models import Game
 from django.db import models
 
@@ -18,11 +20,23 @@ def play_view(request):
     user = request.user
 
     # Filter for games where the user is one of the players and there is no overall game winner
-    game = Game.objects.filter(
-        status__in=['MATCHMAKING', 'PLAYING']
-    ).filter(
-        models.Q(player_1=user) | models.Q(player_2=user)
-    ).first()
+    game = (
+        Game.objects.filter(
+            models.Q(player_1=user) | models.Q(player_2=user)
+        )
+        .filter(status__in=['MATCHMAKING', 'PLAYING', 'FINISHED'])
+        .order_by(
+            models.Case(
+                models.When(status='PLAYING', then=0),
+                models.When(status='MATCHMAKING', then=1),
+                models.When(status='FINISHED', then=2),
+                default=3,
+                output_field=models.IntegerField(),
+            ),
+            '-last_play_time',  # Use last_play_time to pick the most recent game
+        )
+        .first()
+    )
 
     if game:
         if game.status == "MATCHMAKING":
@@ -210,6 +224,18 @@ def make_move_view(request):
             game.winner_round_3 = user
             round_is_over = True
 
+    # Handle the draw scenario
+    if not round_is_over and all(cell != '-' for cell in updated_map):
+        if game.current_round == 1:
+            game.winner_round_1 = None
+            round_is_over = True
+        elif game.current_round == 2:
+            game.winner_round_2 = None
+            round_is_over = True
+        elif game.current_round == 3:
+            game.winner_round_3 = None
+            round_is_over = True
+
     if round_is_over:
         # Check if the game is over (all rounds played and a winner is decided)
         if game.current_round == 3:
@@ -223,9 +249,25 @@ def make_move_view(request):
                 game.game_winner = game.player_2
                 game.status = "FINISHED"
             else:
-                if player_1_wins == player_2_wins:
-                    game.status = "FINISHED"
-                    game.game_winner = None  # No overall winner
+                game.status = "FINISHED"
+                game.game_winner = None  # No overall winner
+
+            # The game is finished
+            # Log the game results
+            # Determine the opponent
+            opponent = game.player_2 if game.player_1 == user else game.player_1
+
+            # Determine the scores for both the user and the opponent
+            my_score = player_1_wins if game.player_1 == user else player_2_wins
+            opponent_score = player_2_wins if game.player_1 == user else player_1_wins
+
+            # Create the TicTacToeLog entry for the user
+            TicTacToeLog.objects.create(
+                users=user,
+                opponent_username=opponent.username if opponent else "Unknown",
+                my_score=my_score,
+                opponent_score=opponent_score,
+            )
         else:
             game.current_round += 1
 
