@@ -23,6 +23,7 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+        print("THIS FOR KEY PRESS: ", text_data)
         await self.send(text_data=json.dumps({
             'message': 'Message received!'
         }))
@@ -59,7 +60,7 @@ def notify_match(player1, player2, game_session):
         {
             "type": "match_found",
             "game_session_id": game_session,
-    		"position":"right",
+            "position":"right",
             "player": player1.username,
             "avatar": player1.avatar.url,
         }

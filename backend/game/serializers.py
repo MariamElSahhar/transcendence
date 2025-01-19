@@ -48,6 +48,7 @@ class LocalGameSerializer(serializers.ModelSerializer):
             "my_score",
             "opponent_score",
             "is_win",
+			"tournamentID"
         ]
 
     def get_is_win(self, obj):

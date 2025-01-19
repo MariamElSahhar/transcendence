@@ -29,6 +29,7 @@ export const fetchUserGameLog = async (user_id) => {
 	const url = URIs.gamelog(user_id);
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
+	console.log(body)
 	return { success: true, data: body };
 	/* // DUMMY DATA
 	const gamelog = {
@@ -149,6 +150,7 @@ export const addLocalGame = async ({
 		tournament,
 	};
 	const { status, body, error } = await post(url, requestBody);
+	console.log(body)
 	if (error) return { success: false, error };
 	return { success: true };
 };

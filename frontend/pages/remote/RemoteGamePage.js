@@ -1,9 +1,10 @@
 import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
-import { Engine } from "../local-game/Engine.js";
+import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 // import { matchMaker } from "../../scripts/clients/user-clients.js";
 import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";
+import { initializeWebSocket, sendWebSocketMessage, closeWebSocket } from '../../scripts/utils/websocket-manager.js';
 const backendURL = "http://127.0.0.1:8000";
 export class RemoteGamePage extends Component {
 	constructor() {
@@ -78,46 +79,61 @@ export class RemoteGamePage extends Component {
 		// this.blockWait(20000);
 	}
 
+	onWebSocketOpen(socket) {
+	   console.log('WebSocket connected');
+	   sendWebSocketMessage({ action: "test" });
+   }
+
+	onWebSocketMessage(data) {
+	   console.log('Received data:', data);
+	   if (!this.playerSet && data["message"] === "Match found!") {
+		   this.playerSet = true;
+		   this.updateLoaders(data);
+
+		   if (WebGL.isWebGLAvailable()) {
+			   this.createOverlay();
+			   const countdownStart = Date.now() / 1000 + 3;
+			   document.getElementById("searchdiv").classList.remove("d-flex");
+			   document.getElementById("searchdiv").classList.add("d-none");
+			   this.container.style.display = "block";
+			   this.startCountdown(countdownStart);
+		   } else {
+			   console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
+		   }
+	   }
+   }
+
+	onWebSocketClose() {
+	   console.log('WebSocket closed');
+   }
+
+	onWebSocketError(error) {
+	   console.error('WebSocket error:', error);
+   }
 	connectedCallback() {
-		this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
+		// this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
 
-		this.socket.onopen = () => {
-			console.log('WebSocket connected');
-			this.socket.send(JSON.stringify({ action: "test" }));
-			// socket.close()
-		};
 
-		this.socket.onmessage = (event) => {
-			console.log('Message from server:', event.data);
-			const data = JSON.parse(event.data);
-			if (!this.playerSet && data["message"] === "Match found!") {
 
-				this.playerSet = true;
-				// Call the function to update the UI
-				this.updateLoaders(data);
-				// if (WebGL.isWebGLAvailable()) {
-				// 	this.createOverlay();
-				// 	const countdownStart = Date.now() / 1000 + 3;
-				// 	document.getElementById("searchdiv").classList.remove("d-flex");
-				// 	document.getElementById("searchdiv").classList.add("d-none");
-				// 	this.container.style.display = "block";
-				// 	this.startCountdown(countdownStart);
-				// } else {
-				// 	console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
-				// }
-			}
-
-		};
-
-		this.socket.onclose = () => {
-			console.log('WebSocket closed');
-		};
-
-		this.socket.onerror = (error) => {
-			console.error('WebSocket error:', error);
-		};
+		initializeWebSocket(
+			`ws://${window.location.host}:8000/ws/game/`,
+			this.onWebSocketOpen.bind(this),
+			this.onWebSocketMessage.bind(this),
+			this.onWebSocketClose.bind(this),
+			this.onWebSocketError.bind(this)
+		);
 
 		// this.playerNames.push(getUserSessionData().username || "player 1");
+		// document.addEventListener("keydown", (event) => {
+		// 	if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+		// 		// const position = calculateNewPosition(event.key); // Implement this logic
+
+		// 		this.socket.send(JSON.stringify({
+		// 			action: "update_slab",
+		// 			position: position
+		// 		}));
+		// 	}
+		// });
 
 		this.innerHTML = `
 		<style>
