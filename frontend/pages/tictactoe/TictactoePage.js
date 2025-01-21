@@ -269,7 +269,7 @@ class TicTacToePage extends Component {
 		return `
 			<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative overflow-hidden menu-activated" style="background-color: rgb(135, 206, 235);">
 				<div class="sky"></div>
-				<img class="title-img" src="/pages/tictactoe/title.png" alt="X" />
+				<img class="title-img" src="/pages/tictactoe/title.png" alt="X"/>
 
 				<div class="relative h-full w-full z-[3]">
 					<div class="board-wrapper">
