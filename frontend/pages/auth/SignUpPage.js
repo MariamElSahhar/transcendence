@@ -1,34 +1,38 @@
 import { Component } from "../Component.js";
 import { register } from "../../scripts/clients/token-client.js";
-import { isValidSecurePassword, isValidUsername, isValidEmail } from '../../scripts/utils/input-validator.js';
+import {
+	isValidSecurePassword,
+	isValidUsername,
+	isValidEmail,
+} from "../../scripts/utils/input-validator.js";
 
 export class SignUpPage extends Component {
-    constructor() {
-        super();
-        this.isPasswordVisible = false;
-        this.isConfirmPasswordVisible = false;
+	constructor() {
+		super();
+		this.isPasswordVisible = false;
+		this.isConfirmPasswordVisible = false;
 
-        this.validations = {
-            username: false,
-            email: false,
-            password: false,
-            confirmPassword: false,
-        };
+		this.validations = {
+			username: false,
+			email: false,
+			password: false,
+			confirmPassword: false,
+		};
 
-        this.errorState = {
-            active: false,
-            message: "",
-        };
-    }
+		this.errorState = {
+			active: false,
+			message: "",
+		};
+	}
 
-    render() {
-        return `
+	render() {
+		return `
             <style>
 			/* Mario font */
 			body, h1, h2, h3, .form-label, .btn, .input-group-text {
 				font-family: 'New Super Mario Font U', sans-serif !important;
 			}
-	
+
 			/* Sky animation */
 			.sky {
 				display: flex;
@@ -41,10 +45,9 @@ export class SignUpPage extends Component {
 				width: 500%;
 				height: 20em;
 				animation: move-sky 500s linear infinite;
-				z-index: 1;
 				opacity: 0.2;
 			}
-	
+
 			@keyframes move-sky {
 				from {
 					left: -400%;
@@ -54,11 +57,11 @@ export class SignUpPage extends Component {
 				}
 			}
 		</style>
-            <div 
-           id="container" 
-				class="d-flex flex-column w-100 vh-100" 
+            <div
+           id="container"
+				class="d-flex flex-column w-100 vh-100"
 				style="background-color: rgb(135, 206, 235); position: relative; overflow: hidden;">
-				<div class="sky" style="z-index:0"></div>
+				<div class="sky" style="z-index:-1"></div>
 				<h3 class="w-100 py-2">
 					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
 				</h3>
@@ -124,58 +127,79 @@ export class SignUpPage extends Component {
                 </main>
             </div>
         `;
-    }
-    postRender() {
-        this.elements = {
-            username: this.querySelector("#username"),
-            email: this.querySelector("#email"),
-            password: this.querySelector("#password"),
-            confirmPassword: this.querySelector("#confirm-password"),
-            togglePassword: this.querySelector("#toggle-password-visibility"),
-            toggleConfirmPassword: this.querySelector("#toggle-confirm-password-visibility"),
-            registerButton: this.querySelector("#register-btn"),
-            errorBanner: this.querySelector("#error-banner"),
-            form: this.querySelector("#registration-form"),
-            loginLink: this.querySelector("#login-link"),
-            usernameError: this.querySelector("#username-error"),
-            emailError: this.querySelector("#email-error"),
-            passwordError: this.querySelector("#password-error"),
-            confirmPasswordError: this.querySelector("#confirm-password-error"),
-        };
-    
-        this.state = {
-            showPassword: false,
-        };
-    
-        this.#setupEventListeners();
-        this.#checkErrorState();
-    }
-    
-	
+	}
+	postRender() {
+		this.elements = {
+			username: this.querySelector("#username"),
+			email: this.querySelector("#email"),
+			password: this.querySelector("#password"),
+			confirmPassword: this.querySelector("#confirm-password"),
+			togglePassword: this.querySelector("#toggle-password-visibility"),
+			toggleConfirmPassword: this.querySelector(
+				"#toggle-confirm-password-visibility"
+			),
+			registerButton: this.querySelector("#register-btn"),
+			errorBanner: this.querySelector("#error-banner"),
+			form: this.querySelector("#registration-form"),
+			loginLink: this.querySelector("#login-link"),
+			usernameError: this.querySelector("#username-error"),
+			emailError: this.querySelector("#email-error"),
+			passwordError: this.querySelector("#password-error"),
+			confirmPasswordError: this.querySelector("#confirm-password-error"),
+		};
+
+		this.state = {
+			showPassword: false,
+		};
+
+		this.#setupEventListeners();
+		this.#checkErrorState();
+	}
+
 	#setupEventListeners() {
-		this.elements.username.addEventListener("input", this.#handleUsernameInput.bind(this));
-		this.elements.email.addEventListener("input", this.#handleEmailInput.bind(this));
-		this.elements.password.addEventListener("input", this.#handlePasswordInput.bind(this));
-		this.elements.confirmPassword.addEventListener("input", this.#handleConfirmPasswordInput.bind(this));
-	
+		this.elements.username.addEventListener(
+			"input",
+			this.#handleUsernameInput.bind(this)
+		);
+		this.elements.email.addEventListener(
+			"input",
+			this.#handleEmailInput.bind(this)
+		);
+		this.elements.password.addEventListener(
+			"input",
+			this.#handlePasswordInput.bind(this)
+		);
+		this.elements.confirmPassword.addEventListener(
+			"input",
+			this.#handleConfirmPasswordInput.bind(this)
+		);
+
 		this.elements.togglePassword.addEventListener("click", () =>
-			this.switchPasswordVisibility(this.elements.password, this.elements.togglePassword)
+			this.switchPasswordVisibility(
+				this.elements.password,
+				this.elements.togglePassword
+			)
 		);
 		this.elements.toggleConfirmPassword.addEventListener("click", () =>
-			this.switchPasswordVisibility(this.elements.confirmPassword, this.elements.toggleConfirmPassword)
+			this.switchPasswordVisibility(
+				this.elements.confirmPassword,
+				this.elements.toggleConfirmPassword
+			)
 		);
-	
-		this.elements.form.addEventListener("submit", this.#submitForm.bind(this));
+
+		this.elements.form.addEventListener(
+			"submit",
+			this.#submitForm.bind(this)
+		);
 		this.elements.loginLink.addEventListener("click", () => {
 			window.location.href = "/login";
 		});
 	}
-	
-	switchPasswordVisibility(input, toggleButton) 
-    {
-		this.state.showPassword = !this.state.showPassword; 
+
+	switchPasswordVisibility(input, toggleButton) {
+		this.state.showPassword = !this.state.showPassword;
 		input.type = this.state.showPassword ? "text" : "password";
-	
+
 		const icon = toggleButton.querySelector("i");
 		if (this.state.showPassword) {
 			icon.classList.remove("bi-eye");
@@ -185,131 +209,125 @@ export class SignUpPage extends Component {
 			icon.classList.add("bi-eye");
 		}
 	}
-	
 
-    #handleUsernameInput() {
-        const { validity, message } = isValidUsername(this.elements.username.value);
-        this.#updateFieldValidity("username", validity, message);
-    }
+	#handleUsernameInput() {
+		const { validity, message } = isValidUsername(
+			this.elements.username.value
+		);
+		this.#updateFieldValidity("username", validity, message);
+	}
 
-    #handleEmailInput() {
-        const { validity, message } = isValidEmail(this.elements.email.value);
-        this.#updateFieldValidity("email", validity, message);
-    }
+	#handleEmailInput() {
+		const { validity, message } = isValidEmail(this.elements.email.value);
+		this.#updateFieldValidity("email", validity, message);
+	}
 
-    #handlePasswordInput() {
-        const { validity, message } = isValidSecurePassword(this.elements.password.value);
-        this.#updateFieldValidity("password", validity, message);
-        this.#comparePasswords();
-    }
+	#handlePasswordInput() {
+		const { validity, message } = isValidSecurePassword(
+			this.elements.password.value
+		);
+		this.#updateFieldValidity("password", validity, message);
+		this.#comparePasswords();
+	}
 
-    #handleConfirmPasswordInput() {
-        this.#comparePasswords();
-    }
-    #comparePasswords() {
-        const password = this.elements.password.value;
-        const confirmPassword = this.elements.confirmPassword.value;
-        const isMatching = password && confirmPassword && password === confirmPassword;
-        const message = isMatching ? "" : password && confirmPassword ? "Passwords do not match." : "";
-    
-        this.#updateFieldValidity("confirmPassword", isMatching, message);
-    }
-    
-    #updateFieldValidity(field, isValid, message = "") {
-        const inputElement = this.elements[field];
-        const errorMessageElement = this.elements[`${field}Error`]; 
-        this.validations[field] = isValid;
-        if (errorMessageElement) {
-            if (isValid) {
-                inputElement.classList.remove("is-invalid");
-                inputElement.classList.add("is-valid");
-                errorMessageElement.textContent = "";
-            } else {
-                inputElement.classList.remove("is-valid");
-                inputElement.classList.add("is-invalid");
-                errorMessageElement.textContent = message;
-            }
-        } else {
-            console.error(`Error message element for ${field} not found.`);
-        }
-    
-        this.#updateFormState();
-    }
-    
-    
+	#handleConfirmPasswordInput() {
+		this.#comparePasswords();
+	}
+	#comparePasswords() {
+		const password = this.elements.password.value;
+		const confirmPassword = this.elements.confirmPassword.value;
+		const isMatching =
+			password && confirmPassword && password === confirmPassword;
+		const message = isMatching
+			? ""
+			: password && confirmPassword
+			? "Passwords do not match."
+			: "";
 
-    #updateFormState() {
-        const isFormValid = Object.values(this.validations).every((value) => value);
-        this.elements.registerButton.disabled = !isFormValid;
-    }
-    startLoadButton() {
-        this.elements.registerButton.innerHTML = `
+		this.#updateFieldValidity("confirmPassword", isMatching, message);
+	}
+
+	#updateFieldValidity(field, isValid, message = "") {
+		const inputElement = this.elements[field];
+		const errorMessageElement = this.elements[`${field}Error`];
+		this.validations[field] = isValid;
+		if (errorMessageElement) {
+			if (isValid) {
+				inputElement.classList.remove("is-invalid");
+				inputElement.classList.add("is-valid");
+				errorMessageElement.textContent = "";
+			} else {
+				inputElement.classList.remove("is-valid");
+				inputElement.classList.add("is-invalid");
+				errorMessageElement.textContent = message;
+			}
+		} else {
+			console.error(`Error message element for ${field} not found.`);
+		}
+
+		this.#updateFormState();
+	}
+
+	#updateFormState() {
+		const isFormValid = Object.values(this.validations).every(
+			(value) => value
+		);
+		this.elements.registerButton.disabled = !isFormValid;
+	}
+	startLoadButton() {
+		this.elements.registerButton.innerHTML = `
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             <span class="sr-only">Loading...</span>
         `;
-        this.elements.registerButton.disabled = true;
-    }
+		this.elements.registerButton.disabled = true;
+	}
 
-    async #submitForm(event) {
-        event.preventDefault();
-        this.startLoadButton();
+	async #submitForm(event) {
+		event.preventDefault();
+		this.startLoadButton();
 
-        try {
-            const { success, error } = await register({
-                username: this.elements.username.value,
-                email: this.elements.email.value,
-                password: this.elements.password.value,
-            });
+		const { success, error } = await register({
+			username: this.elements.username.value,
+			email: this.elements.email.value,
+			password: this.elements.password.value,
+		});
+		if (success) {
+			this.#initializeTwoFactorAuth();
+		} else {
+			this.elements.registerButton.innerHTML = "Sign Up";
+			this.elements.registerButton.disabled = false;
+			this.#showErrorBanner(error);
+		}
+	}
 
-            if (success) {
-                this.#initializeTwoFactorAuth();
-            } else {
-                this.elements.registerButton.innerHTML = "Sign Up";
-                this.elements.registerButton.disabled = false;
-                this.#showErrorBanner(error);
-            }
-        } catch (err) {
-            console.error("Error during registration:", err);
-            this.elements.registerButton.innerHTML = "Sign Up";
-            this.elements.registerButton.disabled = false;
-            this.#showErrorBanner("An unexpected error occurred.");
-        }
-    }
+	async #initializeTwoFactorAuth() {
+		await import("./TwoFactorAuth.js");
+		const container = this.querySelector("#container");
+		if (!container) {
+			console.error("Container not found. Unable to load 2FA component.");
+			return;
+		}
+		container.innerHTML = "";
+		container.style.justifyContent = "center";
+		container.style.alignItems = "center";
+		const twoFactorComponent = document.createElement("tfa-component");
+		twoFactorComponent.login = this.elements.username.value;
+		container.appendChild(twoFactorComponent);
+	}
 
-    async #initializeTwoFactorAuth() {
-        try {
-            await import("./TwoFactorAuth.js");
-            const container = this.querySelector("#container");
-            if (!container) {
-                console.error("Container not found. Unable to load 2FA component.");
-                return;
-            }
-            container.innerHTML = "";
-            container.style.justifyContent = "center";
-            container.style.alignItems = "center";
-            const twoFactorComponent = document.createElement("tfa-component");
-            twoFactorComponent.login = this.elements.username.value;
-            container.appendChild(twoFactorComponent);
-        } catch (err) {
-            console.error("Error loading TwoFactorAuth component:", err);
-            this.#showErrorBanner("Failed to initialize Two-Factor Authentication.");
-        }
-    }
+	#showErrorBanner(message) {
+		this.errorState.active = true;
+		this.errorState.message = message;
+		this.elements.errorBanner.textContent = message;
+		this.elements.errorBanner.classList.remove("d-none");
+	}
 
-    #showErrorBanner(message) {
-        this.errorState.active = true;
-        this.errorState.message = message;
-        this.elements.errorBanner.textContent = message;
-        this.elements.errorBanner.classList.remove("d-none");
-    }
-
-    #checkErrorState() {
-        if (this.errorState.active) {
-            this.#showErrorBanner(this.errorState.message);
-            this.errorState.active = false;
-        }
-    }
+	#checkErrorState() {
+		if (this.errorState.active) {
+			this.#showErrorBanner(this.errorState.message);
+			this.errorState.active = false;
+		}
+	}
 }
 
 customElements.define("sign-up-page", SignUpPage);
-

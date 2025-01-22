@@ -36,7 +36,7 @@ export const login = async ({ username, password }) => {
 			otp: body.data.otp,
 		});
 	}
-	return { success: true };
+	return { success: true, error: null };
 };
 
 // get new access token
@@ -53,7 +53,7 @@ export const register = async ({ username, email, password }) => {
 	const requestBody = { username, email, password };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
-	return { success: true };
+	return { success: true, error: null };
 };
 
 // checks if user is authenticated (if access token is valid)

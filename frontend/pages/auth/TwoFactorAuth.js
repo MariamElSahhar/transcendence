@@ -2,28 +2,28 @@ import { Component } from "../Component.js";
 import { verifyOTP } from "../../scripts/clients/token-client.js";
 
 export class TwoFactorAuth extends Component {
-  constructor() {
-    super();
-    this.otpInputs = [];
-    this.submitButton = null;
-    this.errorNotification = null;
-  }
+	constructor() {
+		super();
+		this.otpInputs = [];
+		this.submitButton = null;
+		this.errorNotification = null;
+	}
 
-  render() {
-    return `
+	render() {
+		return `
     	<style>
 			/* Mario font */
 			body, h1, h2, h3, .form-label, .btn, .input-group-text {
 				font-family: 'New Super Mario Font U', sans-serif !important;
 			}
 		</style>
-        <div 
-          	<div 
-            id="container" 
+        <div
+          	<div
+            id="container"
              class="d-flex flex-column w-100 vh-100" bg-light">
                <main class="d-flex justify-content-center align-items-center flex-grow-1">
-                <div 
-                    class="card shadow-lg mx-auto border-3 border-warning bg-primary bg-light rounded text-light" 
+                <div
+                    class="card shadow-lg mx-auto border-3 border-warning bg-primary bg-light rounded text-light"
                     style="max-width: 400px;">
                     <div class="text-center p-5">
                         <div class="text-center p-3 rounded mb-4  bg-danger text-warning border border-white">
@@ -44,7 +44,7 @@ export class TwoFactorAuth extends Component {
                           </div>
                           <!-- Error Alert -->
                           <div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
-                        
+
                           <!-- Submit Button -->
                           <button id="submit-button" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark" disabled>
                             Verify Code
@@ -55,166 +55,181 @@ export class TwoFactorAuth extends Component {
             </main>
         </div>
     `;
-}
-  
+	}
 
-  postRender() {
-    this.otpInputs = this.querySelectorAll("input");
-    this.submitButton = this.querySelector("#submit-button");
-    this.errorNotification = this.querySelector("#error-alert");
+	postRender() {
+		this.otpInputs = this.querySelectorAll("input");
+		this.submitButton = this.querySelector("#submit-button");
+		this.errorNotification = this.querySelector("#error-alert");
 
-    this.#bindEvents();
-  }
+		this.#bindEvents();
+	}
 
-  #renderOtpInputs() {
-    return Array.from({ length: 6 }, (_, i) => `
-      <input class="otp-input form-control text-center col" type="tel" name="otp-${i+1}" maxlength="1"
-             pattern="[\\d]*" tabindex="${i+1}" autocomplete="off">
-    `).join('');
-  }
+	#renderOtpInputs() {
+		return Array.from(
+			{ length: 6 },
+			(_, i) => `
+      <input class="otp-input form-control text-center col" type="tel" name="otp-${
+			i + 1
+		}" maxlength="1"
+             pattern="[\\d]*" tabindex="${i + 1}" autocomplete="off">
+    `
+		).join("");
+	}
 
-  #bindEvents() {
-    this.otpInputs.forEach(input => {
-      super.addComponentEventListener(input, "keydown", this.#onOtpChange);
-      super.addComponentEventListener(input, "paste", this.#onOtpPaste);
-    });
-    super.addComponentEventListener(this.submitButton, "click", this.#onSubmitOtp);
-  }
+	#bindEvents() {
+		this.otpInputs.forEach((input) => {
+			super.addComponentEventListener(
+				input,
+				"keydown",
+				this.#onOtpChange
+			);
+			super.addComponentEventListener(input, "paste", this.#onOtpPaste);
+		});
+		super.addComponentEventListener(
+			this.submitButton,
+			"click",
+			this.#onSubmitOtp
+		);
+	}
 
-  #onOtpChange = (event) => {
-    if (!this.#isPasteShortcut(event)) {
-      event.preventDefault();
-    }
+	#onOtpChange = (event) => {
+		if (!this.#isPasteShortcut(event)) {
+			event.preventDefault();
+		}
 
-    const isValidInput = this.#isNumericKey(event) || this.#isBackspaceKey(event);
-    if (isValidInput) {
-      if (this.#isBackspaceKey(event)) {
-        event.target.value = "";
-        this.#focusPreviousField(event.target);
-      } else {
-        event.target.value = this.#extractDigit(event);
-        this.#validateForm();
-        this.#focusNextField(event.target);
-      }
-    } else {
-      event.target.value = "";
-    }
-  }
+		const isValidInput =
+			this.#isNumericKey(event) || this.#isBackspaceKey(event);
+		if (isValidInput) {
+			if (this.#isBackspaceKey(event)) {
+				event.target.value = "";
+				this.#focusPreviousField(event.target);
+			} else {
+				event.target.value = this.#extractDigit(event);
+				this.#validateForm();
+				this.#focusNextField(event.target);
+			}
+		} else {
+			event.target.value = "";
+		}
+	};
 
-  #onOtpPaste = (event) => {
-    event.preventDefault();
-    const clipboardData = event.clipboardData || window.clipboardData;
-    const pastedCode = clipboardData.getData("text").replace(/\D/g, "");
-    let currentInput = event.target;
+	#onOtpPaste = (event) => {
+		event.preventDefault();
+		const clipboardData = event.clipboardData || window.clipboardData;
+		const pastedCode = clipboardData.getData("text").replace(/\D/g, "");
+		let currentInput = event.target;
 
-    [...pastedCode].forEach(digit => {
-      if (currentInput) {
-        currentInput.value = digit;
-        this.#validateForm();
-        currentInput = this.#focusNextField(currentInput);
-      }
-    });
-  }
+		[...pastedCode].forEach((digit) => {
+			if (currentInput) {
+				currentInput.value = digit;
+				this.#validateForm();
+				currentInput = this.#focusNextField(currentInput);
+			}
+		});
+	};
 
-  #validateForm() {
-    const allInputsFilled = Array.from(this.otpInputs).every(input => input.value);
-    this.submitButton.disabled = !allInputsFilled;
-  }
+	#validateForm() {
+		const allInputsFilled = Array.from(this.otpInputs).every(
+			(input) => input.value
+		);
+		this.submitButton.disabled = !allInputsFilled;
+		if (allInputsFilled) this.#onSubmitOtp();
+	}
 
-  async #onSubmitOtp(event) {
-    event.preventDefault();
-    this.#startLoading();
+	async #onSubmitOtp(event) {
+		if (event) event.preventDefault();
+		this.#startLoading();
 
-    const otp = Array.from(this.otpInputs).map(input => input.value).join("");
+		const otp = Array.from(this.otpInputs)
+			.map((input) => input.value)
+			.join("");
 
-    if (!otp || otp.length !== 6) { 
-        this.#stopLoading();
-        this.errorNotification.innerHTML = "Invalid OTP."; 
-        this.errorNotification.classList.remove("d-none");
-        return;
-    }
+		if (!otp || otp.length !== 6) {
+			this.#stopLoading();
+			this.errorNotification.innerHTML = "Invalid OTP.";
+			this.errorNotification.classList.remove("d-none");
+			return;
+		}
 
-    try
-    {
-        const { success, error } = await verifyOTP({ username: this.login, otp });
+		const { success, error } = await verifyOTP({
+			username: this.login,
+			otp,
+		});
 
-        if (success) {
-            window.location.href = "/home";
-        } else {
-            this.#stopLoading();
-            this.errorNotification.innerHTML = error || "Invalid OTP.";
-            this.errorNotification.classList.remove("d-none");
-        }
-    } catch (err) {
-        console.error("Error verifying OTP:", err);
-        this.#stopLoading();
-        this.errorNotification.innerHTML = "An unexpected error occurred.";
-        this.errorNotification.classList.remove("d-none");
-    }
-}
+		if (success) {
+			window.location.href = "/home";
+		} else {
+			this.#stopLoading();
+			this.errorNotification.innerHTML = error || "Invalid OTP.";
+			this.errorNotification.classList.remove("d-none");
+		}
+	}
 
-  #focusPreviousField(currentInput) {
-    const previousField = currentInput.previousElementSibling;
-    if (previousField) {
-      previousField.focus();
-      return previousField;
-    }
-    return null;
-  }
+	#focusPreviousField(currentInput) {
+		const previousField = currentInput.previousElementSibling;
+		if (previousField) {
+			previousField.focus();
+			return previousField;
+		}
+		return null;
+	}
 
-  #focusNextField(currentInput) {
-    const nextField = currentInput.nextElementSibling;
-    if (nextField) {
-      nextField.focus();
-      return nextField;
-    }
-    return null;
-  }
+	#focusNextField(currentInput) {
+		const nextField = currentInput.nextElementSibling;
+		if (nextField) {
+			nextField.focus();
+			return nextField;
+		}
+		return null;
+	}
 
-  #startLoading() {
-    this.submitButton.innerHTML = `
+	#startLoading() {
+		this.submitButton.innerHTML = `
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
       <span class="sr-only">Loading...</span>
     `;
-    this.submitButton.disabled = true;
-  }
+		this.submitButton.disabled = true;
+	}
 
-  #stopLoading() {
-    this.submitButton.innerHTML = "Verify Code";
-    this.submitButton.disabled = false;
-  }
+	#stopLoading() {
+		this.submitButton.innerHTML = "Verify Code";
+		this.submitButton.disabled = false;
+	}
 
-  backspaceKeyCode = 8;
-  pasteKeyCode = 86;
+	backspaceKeyCode = 8;
+	pasteKeyCode = 86;
 
-  #isNumericKey(event) {
-    return /^\d$/.test(this.#getEventKeyValue(event));
-  }
+	#isNumericKey(event) {
+		return /^\d$/.test(this.#getEventKeyValue(event));
+	}
 
-  #isBackspaceKey(event) {
-    return this.#getEventKeyCode(event) === this.backspaceKeyCode;
-  }
+	#isBackspaceKey(event) {
+		return this.#getEventKeyCode(event) === this.backspaceKeyCode;
+	}
 
-  #getEventKeyCode(event) {
-    return event.keyCode || event.which;
-  }
+	#getEventKeyCode(event) {
+		return event.keyCode || event.which;
+	}
 
-  #getEventKeyValue(event) {
-    return event.data || event.key;
-  }
+	#getEventKeyValue(event) {
+		return event.data || event.key;
+	}
 
-  #isPasteShortcut(event) {
-    const isVPressed = this.#getEventKeyValue(event) === "v" || event.keyCode === this.pasteKeyCode;
-    return isVPressed && this.#isControlPressed(event);
-  }
+	#isPasteShortcut(event) {
+		const isVPressed =
+			this.#getEventKeyValue(event) === "v" ||
+			event.keyCode === this.pasteKeyCode;
+		return isVPressed && this.#isControlPressed(event);
+	}
 
-  #isControlPressed(event) {
-    return event.ctrlKey || event.metaKey;
-  }
+	#isControlPressed(event) {
+		return event.ctrlKey || event.metaKey;
+	}
 
-  #extractDigit(event) {
-    return parseInt(this.#getEventKeyValue(event));
-  }
+	#extractDigit(event) {
+		return parseInt(this.#getEventKeyValue(event));
+	}
 }
 
 customElements.define("tfa-component", TwoFactorAuth);

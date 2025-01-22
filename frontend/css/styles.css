@@ -1,3 +1,14 @@
+/* color palette for the theme */
+:root {
+    --mario-blue-color: #6185f8;
+    --mario-green-color: #43b047;
+    --mario-yellow-color: #fbd000;
+	--mario-red-color: #E52521;
+	--mario-brown-color: #742607;
+	--mario-pink-color: #f096BE;
+	--mario-orange-color: #EE830A;
+}
+
 /* General resets */
 html,
 body {
