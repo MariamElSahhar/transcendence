@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Match } from "./Match.js";
-import { PongGameBox } from "./PongGameBox.js"; 
+import { PongGameBox } from "./PongGameBox.js";
 
 
 export class Scene {
@@ -19,16 +19,16 @@ export class Scene {
     this.#engine = engine;
 
     try {
-      console.log("Initializing match...");
+    //   console.log("Initializing match...");
       await this.#match.init(engine);
       this.#threeJSScene.add(this.#match.threeJSGroup);
-      console.log("Match initialized and added to scene.");
+    //   console.log("Match initialized and added to scene.");
 
       // Load background image
-      console.log("Loading background image...");
+    //   console.log("Loading background image...");
       const textureLoader = new THREE.TextureLoader();
       const backgroundTexture = textureLoader.load(
-        '/assets/textures/newmario.jpg', 
+        '/assets/textures/newmario.jpg',
         () => console.log("Background image loaded successfully."),
         undefined,
         (error) => console.error("Error loading background image:", error)
@@ -36,47 +36,47 @@ export class Scene {
 
       // Set the background of the scene
       this.#threeJSScene.background = backgroundTexture;
-      console.log("Background image set.");
+    //   console.log("Background image set.");
 
       // Set the camera position
       const camera = engine.threeJS.getCamera();
       camera.position.set(0, 50, 100);
       camera.lookAt(0, 0, 0);
-      console.log("Camera positioned.");
+    //   console.log("Camera positioned.");
 
-      console.log("Setting up lights...");
+    //   console.log("Setting up lights...");
       const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
       this.#threeJSScene.add(ambientLight);
-      console.log("Ambient light added.");
+    //   console.log("Ambient light added.");
 
       const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
       directionalLight.position.set(50, 100, 50);
       this.#threeJSScene.add(directionalLight);
-      console.log("Directional light added.");
+    //   console.log("Directional light added.");
 
       const player = this.#match.players[0];
       if (!player) throw new Error("Player not initialized in match.");
       this.#boardSize = player.board.size;
-      console.log("Player and board size initialized:", this.#boardSize);
+    //   console.log("Player and board size initialized:", this.#boardSize);
 
       if (typeof PongGameBox === "function") {
         this.#pongGameBox = new PongGameBox(
           this.#boardSize.y,
           player.paddle.size.y
         );
-        console.log("PongGameBox initialized.");
+        // console.log("PongGameBox initialized.");
       } else {
         throw new Error("PongGameBox is not defined.");
       }
 
       if (this.#engine.threeJS.controls) {
         this.#engine.threeJS.controls.target.set(30, 25, 0);
-        console.log("Camera controls set.");
+        // console.log("Camera controls set.");
       } else {
         throw new Error("threeJS controls are not defined on engine.");
       }
     } catch (error) {
-      console.error("Error during Scene initialization:", error);
+    //   console.error("Error during Scene initialization:", error);
       throw error;
     }
   }

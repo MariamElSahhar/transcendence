@@ -1,10 +1,11 @@
 import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
-import { Engine } from "./Engine.js";
+import { Engine } from "../local-game/Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 // import { matchMaker } from "../../scripts/clients/user-clients.js";
 import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";
 import { initializeWebSocket, sendWebSocketMessage, closeWebSocket } from '../../scripts/utils/websocket-manager.js';
+import { KeyHandler } from "../game-utils/KeyHandler.js";
 const backendURL = "http://127.0.0.1:8000";
 export class RemoteGamePage extends Component {
 	constructor() {
@@ -67,15 +68,17 @@ export class RemoteGamePage extends Component {
 		document.querySelector(".loader").classList.remove("loader")
 		if(data["position"] == "left")
 			{
+				this.playerSide = "right"
 				this.playerNames.push(data["player"] || "Player 2");
 				this.playerNames.push(getUserSessionData().username || "player 1");
 			}
 			else
 			{
+				this.playerSide = "left"
 				this.playerNames.push(getUserSessionData().username || "player 1");
 				this.playerNames.push(data["player"] || "Player 2");
 			}
-			console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+			// console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 		// this.blockWait(20000);
 	}
 
@@ -85,11 +88,12 @@ export class RemoteGamePage extends Component {
    }
 
 	onWebSocketMessage(data) {
-	   console.log('Received data:', data);
-	   if (!this.playerSet && data["message"] === "Match found!") {
+	//    console.log('Received data:', data);
+	   if (data["message"] === "Match found!" && !this.playerSet) {
+			this.playerSide = data["position"]
 		   this.playerSet = true;
 		   this.updateLoaders(data);
-
+			// console.log(this.playerSide)
 		   if (WebGL.isWebGLAvailable()) {
 			   this.createOverlay();
 			   const countdownStart = Date.now() / 1000 + 3;
@@ -100,6 +104,24 @@ export class RemoteGamePage extends Component {
 		   } else {
 			   console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
 		   }
+	   }
+	   else if(data["message"] == "Move slab")
+	   {
+		// const flag = 0;
+		// console.log(this.playerSide)
+		const event = {"key":data["key"]}
+			// if(this.playerSide == "left" &&( data["key"] == "w" ||  data["key"] =="s"))
+			// {
+			// 	// console.log("left has clicked!!!!")
+			// 	this.engine.keyHookHandler.handleKeyPress(event)
+			// 	flag = 1;
+			// }
+			// else if(this.playerSide == "right" && (data["key"] == "ArrowUp" ||  data["key"] =="ArrowDown"))
+			// {
+				this.engine.keyHookHandler.handleKeyPress(event)
+				// flag = 1;
+				// console.log("right has clicked!!!!")
+			// }
 	   }
    }
 
@@ -112,7 +134,7 @@ export class RemoteGamePage extends Component {
    }
 	connectedCallback() {
 		// this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
-
+		// this.keyHandler = new KeyHandler(this);
 
 
 		initializeWebSocket(
@@ -290,7 +312,7 @@ this.postRender();
 			}
 
 			startGame() {
-				this.engine = new Engine(this, this.isAIEnabled, this.playerNames);
+				this.engine = new Engine(this, this.isAIEnabled, this.playerNames, this.playerSide);
 				this.engine.startGame();
 				this.removeOverlay();
 			}

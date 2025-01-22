@@ -6,17 +6,18 @@ import { Scene } from "./Scene/Scene.js";
 
 export class Engine {
   #threeJS;
-  #keyHookHandler;
+  keyHookHandler;
   #scene;
   #component;
   #isAIGame;
 
-  constructor(component, isAIGame = false, players) {
+  constructor(component, isAIGame = false, players,playerSide="NA") {
     this.#component = component;
     this.#isAIGame = isAIGame;
+	this.playerSide = playerSide
     this.players = players;
     this.#threeJS = new ThreeJSUtils(this);
-    this.#keyHookHandler = new KeyHandler (this, this.#isAIGame);
+    this.keyHookHandler = new KeyHandler (this, this.#isAIGame);
     this.#scene = new Scene();
   }
 
@@ -130,6 +131,8 @@ export class Engine {
   }
 
   startListeningForKeyHooks() {
-    this.#keyHookHandler.startListeningForKeys();
+    // this.#keyHookHandler.startListeningForKeys();
+	console.log(this.playerSide, this.players)
+	this.keyHookHandler.startListeningForKeys("remote",this.playerSide, this.players);
   }
 }

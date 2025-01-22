@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]# "xxxxxxxx"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -75,6 +75,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://127.0.0.1",
     "http://localhost",
     "https://localhost",
+	# "http://xxxxxxxxxxxx",
+	# "https://xxxxxxxxxx",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -156,7 +158,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
+# CORS_ALLOW_PRIVATE_NETWORK = True
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),

@@ -18,6 +18,8 @@ def test_view(request):
 @transaction.atomic
 @api_view(["POST","DELETE"])
 def match_maker(request):
+	if request.META["REMOTE_ADDR"] == '127.0.0.1':
+		same_system = True
 	if request.method == "POST":
 		player = request.user
 		user1 =  CustomUser.objects.get(username=player)

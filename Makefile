@@ -14,7 +14,7 @@ run-frontend:
 
 run-backend:
 	ENV=dev $(PYTHON_ENV) backend/manage.py migrate
-	ENV=dev $(PYTHON_ENV) backend/manage.py runserver
+	ENV=dev $(PYTHON_ENV) backend/manage.py runserver 0.0.0.0:8000
 
 run-db:
 	docker compose up db
