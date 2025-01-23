@@ -178,7 +178,7 @@ export class TournamentPage extends Component {
 
     createStartGameCard(player1, player2) {
         this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 24rem;">
+            <div class="card text-center text-dark bg-light" style="width: 30rem;">
                 <div class="card-body">
                     <h2 class="card-text mb-3">Match Start Between</h2>
                     <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
@@ -202,7 +202,7 @@ export class TournamentPage extends Component {
 
     startCountdown(player1, player2) {
         this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 18rem;">
+            <div class="card text-center text-dark bg-light" style="width: 30rem;">
                 <div class="card-body">
                     
                     <h1 id="countdown-display" class="display-1 fw-bold">3</h1>
@@ -286,7 +286,7 @@ export class TournamentPage extends Component {
     showTournamentWinner() {
         const champion = this.winners[this.winners.length - 1];
         this.createOverlay(`
-            <div class="card text-center bg-light text-dark" style="width: 24rem;">
+            <div class="card text-center bg-light text-dark" style="width: 30rem;">
                 <div class="card-body">
                     <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
                     <h1 class="display-4 fw-bold">${champion} </h1>
@@ -347,12 +347,11 @@ export class TournamentPage extends Component {
         ).join("");
 
         this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 24rem;">
-                <div class="card-header">
-                    <h2 class="card-title">Tournament Ranks</h2>
-                </div>
+            <div class="card text-center text-dark bg-light" style="width: 30rem;">
+
                 <div class="card-body">
-                    <table class="table table-striped">
+                <h2 class="card-title">Tournament Ranks</h2>
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Rank</th>
