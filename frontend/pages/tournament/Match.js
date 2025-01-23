@@ -52,7 +52,12 @@ export class Match {
     updateFrame(timeDelta, currentTime, pongGameBox, boardSize) {
         this.#players.forEach((player, index) => {
             if (player) {
-                player.updateFrame(timeDelta, pongGameBox, index === 1 ? this.#ball.getPosition() : null);
+                player.updateFrame(
+                    timeDelta,
+                    pongGameBox,
+                    index === 1 ? this.#ball.getPosition() : null,
+                    !this.#ballIsWaiting && !this.#matchIsOver // gameStarted logic
+                );
             }
         });
 
@@ -121,6 +126,14 @@ export class Match {
                 this.#onMatchEndCallback(winnerName);
             }
             this.stopGame(); // Stop paddles when the match ends
+            
+            // Reset paddles to their starting positions
+             this.#players.forEach((player) => {
+                if (player) {
+                    player.resetPaddle();
+                }
+            });
+    
             return;
         }
 

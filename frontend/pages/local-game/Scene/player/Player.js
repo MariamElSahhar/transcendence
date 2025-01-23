@@ -7,7 +7,6 @@ export class Player {
     #board;
     #paddle;
     #isAIControlled;
-    #isResetting = false;
     #gameStarted = false; // New flag to track game state
 
     constructor(isAIControlled = false) {
@@ -31,10 +30,10 @@ export class Player {
         this.#threeJSGroup.add(this.#board.threeJSBoard);
     }
 
-    updateFrame(timeDelta, pongGameBox, ballPosition = null) {
+    updateFrame(timeDelta, pongGameBox, ballPosition = null, gameStarted = false) {
         if (!this.#gameStarted) return; // Prevent movement if the game hasn't started
 
-        this.#paddle.updateFrame(timeDelta, pongGameBox, ballPosition);
+        this.#paddle.updateFrame(timeDelta, pongGameBox, ballPosition, gameStarted);
         this.#board.updateFrame();
     }
 
@@ -58,6 +57,10 @@ export class Player {
 
             this.#paddle.setPosition({ x: startingX, y: startingY, z: startingZ });
             this.#paddle.resetSize();
+
+            if (this.#isAIControlled) {
+                this.#paddle.disableAIMovementTemporarily();
+            }
 
             console.log("Paddle reset to position and size:", {
                 position: this.#paddle.getPosition(),
