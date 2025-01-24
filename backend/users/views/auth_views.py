@@ -46,7 +46,11 @@ def login_view(request):
             elif user.enable_otp:
                 send_otp(user)
                 return Response(
-                    {"message": "OTP sent to your email."}, status=status.HTTP_200_OK
+                    {
+                        "message": "OTP sent to your email.",
+                        "data": {"otp": True}
+                    },
+                    status=status.HTTP_200_OK
                 )
         else:
             return Response(

@@ -39,7 +39,7 @@ export class LoginPage extends Component {
 				z-index: 0;
 				pointer-events: none; /* Allow interactions with elements above */
 			}
-			
+
 			@keyframes move-sky {
 				from {
 					transform: translateX(0%);
@@ -168,16 +168,11 @@ export class LoginPage extends Component {
 		loginButton.disabled = true;
 		loginButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...`;
 
-		const { success, error } = await login({ username, password });
+		const { success, error, otp } = await login({ username, password });
 		if (success) {
 			errorAlert.classList.add("d-none");
-			// TODO: not require isAuth check to know if OTP is required
-			const authenticated = await isAuth();
-			if (authenticated) {
-				window.redirect("/home");
-			} else {
-				this.initializeTwoFactorAuth(username);
-			}
+			if (otp) this.initializeTwoFactorAuth(username);
+			else window.redirect("/home");
 		} else {
 			errorAlert.classList.remove("d-none");
 			errorAlert.textContent = error;

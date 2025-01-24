@@ -25,9 +25,7 @@ export const login = async ({ username, password }) => {
 	const requestBody = { username, password };
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error: error };
-	// remove this for production - user never accesses login page if they're authenticated
-	const authenticated = await isAuth();
-	if (authenticated) {
+	if (!body.data.otp) {
 		storeUserSession({
 			username: body.data.username,
 			id: body.data.user_id,
@@ -36,7 +34,7 @@ export const login = async ({ username, password }) => {
 			otp: body.data.otp,
 		});
 	}
-	return { success: true, error: null };
+	return { success: true, otp: body.data.otp };
 };
 
 // get new access token
