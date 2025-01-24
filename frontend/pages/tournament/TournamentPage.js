@@ -27,16 +27,18 @@ export class TournamentPage extends Component {
         this.players.push(firstPlayerName);
 
         this.innerHTML = `
-            <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
-                <h3 class="text-center">Setup Tournament</h3>
+            <div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light " style="max-width: 400px; margin: 100px auto 0;">
+                <div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-white">
+					<h3 class="fw-bold  m-0">Setup Tournament</h3>
+				</div>
                 <form id="player-form">
                     <div class="mb-3">
                         <label for="player1-name" class="form-label">Registered Player:</label>
-                        <input type="text" id="player1-name" name="player1-name" class="form-control" value="${firstPlayerName}" disabled />
+                        <input type="text" id="player1-name" name="player1-name" class="form-control border border-secondary text-dark" value="${firstPlayerName}" disabled />
                     </div>
                     ${this.renderPlayerInputs()}
                     <div id="error-message" class="text-danger mt-2"></div>
-                    <button type="submit" class="btn btn-primary mt-3 w-100" disabled>Start Tournament</button>
+                    <button type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark" disabled>Start Tournament</button>
                 </form>
             </div>
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
@@ -52,7 +54,7 @@ export class TournamentPage extends Component {
             inputs += `
                 <div class="mb-3">
                     <label for="player${i}-name" class="form-label">Player ${i} Name:</label>
-                    <input type="text" id="player${i}-name" name="player${i}-name" class="form-control" required />
+                    <input type="text" id="player${i}-name" name="player${i}-name" class="form-control border border-secondary text-dark" required />
                 </div>`;
         }
         return inputs;
@@ -176,16 +178,17 @@ export class TournamentPage extends Component {
 
     createStartGameCard(player1, player2) {
         this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 24rem;">
+            <div class="card text-center text-dark bg-light" style="width: 30rem;">
                 <div class="card-body">
-                    <h3 class="card-text mb-3">Next Match</h3>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="card-text mb-3">Match Start Between</h2>
+                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
+                    <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
                         <div>
-                            <h5 class="text-primary">Left Player:</h5>
+                            <h5 class="text-primary" style="font-weight:bold">Left Player</h5>
                             <p>${player1}</p>
                         </div>
                         <div>
-                            <h5 class="text-danger">Right Player:</h5>
+                            <h5 class="text-danger" style="font-weight:bold">Right Player</h5>
                             <p>${player2}</p>
                         </div>
                     </div>
@@ -199,10 +202,11 @@ export class TournamentPage extends Component {
 
     startCountdown(player1, player2) {
         this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 18rem;">
+            <div class="card text-center text-dark bg-light" style="width: 30rem;">
                 <div class="card-body">
                     
                     <h1 id="countdown-display" class="display-1 fw-bold">3</h1>
+                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
 					<p class="card-text">Get ready! The game will start soon.</p>
                 </div>
             </div>
@@ -262,10 +266,11 @@ export class TournamentPage extends Component {
 
         if (this.currentMatchIndex < 2) {
             this.createOverlay(`
-                <div class="card text-center bg-light text-dark" style="width: 24rem;">
+                <div class="card text-center bg-light text-dark" style="width: 30rem;">
                     <div class="card-body">
-                        <h1 class="display-4 fw-bold"> ${winner} wins! 🏆  </h1>
-						<h1 class="display-4 fw-bold"> ${loser} is eliminated! ❌ </h1>
+                        <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
+                        <h3 class="fw-bold text-light"> ${winner} wins! 🏆  </h3>
+						<h3 class="fw-bold text-light"> ${loser} is eliminated! ❌ </h3>
                         <button class="btn btn-primary mt-3">Next Match</button>
                     </div>
                 </div>
@@ -281,8 +286,9 @@ export class TournamentPage extends Component {
     showTournamentWinner() {
         const champion = this.winners[this.winners.length - 1];
         this.createOverlay(`
-            <div class="card text-center bg-light text-dark" style="width: 24rem;">
+            <div class="card text-center bg-light text-dark" style="width: 30rem;">
                 <div class="card-body">
+                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
                     <h1 class="display-4 fw-bold">${champion} </h1>
                     <h1 class="display-4 fw-bold"> is the Tournament Champion! </h1>
                     <h1 class="display-4 fw-bold"> 🏆 </h1>
@@ -341,12 +347,11 @@ export class TournamentPage extends Component {
         ).join("");
 
         this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 24rem;">
-                <div class="card-header">
-                    <h2 class="card-title">Tournament Ranks</h2>
-                </div>
+            <div class="card text-center text-dark bg-light" style="width: 30rem;">
+
                 <div class="card-body">
-                    <table class="table table-striped">
+                <h2 class="card-title">Tournament Ranks</h2>
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Rank</th>

@@ -78,13 +78,18 @@ export class Match {
     
     updateFrame(timeDelta, currentTime, pongGameBox, boardSize) {
         const ballPosition = this.#ball.getPosition();
-    
+
         this.#players.forEach((player, index) => {
             if (player) {
-                player.updateFrame(timeDelta, pongGameBox, index === 1 ? ballPosition : null);
+                player.updateFrame(
+                    timeDelta,
+                    pongGameBox,
+                    index === 1 ? ballPosition : null,
+                    !this.#ballIsWaiting && !this.#matchIsOver // Only update if game is active
+                );
             }
         });
-    
+
         if (!this.#matchIsOver) {
             if (this.#ballIsWaiting && currentTime >= this.#ballStartTime) {
                 this.#ballIsWaiting = false;
@@ -131,6 +136,7 @@ export class Match {
 
         this.#players.forEach((player, index) => {
             if (player) {
+                player.stopGame(); 
                 player.resetPaddle(); // Reset paddles at the end of the game
             } else {
                 console.error(`Player ${index} is null during reset at game end.`);

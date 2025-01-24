@@ -26,7 +26,7 @@ export class LoginPage extends Component {
 			/* Sky animation */
 			.sky {
 				display: flex;
-				background: url("http://127.0.0.1:8000/media/images/sky.png");
+				background: url(/pages/tictactoe/sky.png);
 				background-size: contain;
 				background-repeat: repeat-x;
 				position: absolute;
@@ -36,22 +36,25 @@ export class LoginPage extends Component {
 				height: 20em;
 				animation: move-sky 500s linear infinite;
 				opacity: 0.2;
+				z-index: 0;
+				pointer-events: none; /* Allow interactions with elements above */
 			}
-
+			
 			@keyframes move-sky {
 				from {
-					left: -400%;
+					transform: translateX(0%);
 				}
 				to {
-					left: 100%;
+					transform: translateX(60%);
 				}
 			}
+
 		</style>
 			<div
 				id="container"
 				class="d-flex flex-column w-100 vh-100"
 				style="background-color: rgb(135, 206, 235); position: relative; overflow: hidden;">
-				<div class="sky" style="z-index:-1"></div>
+				<div class="sky" style="z-index:-0"></div>
 				<h3 class="w-100 py-2">
 					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
 				</h3>

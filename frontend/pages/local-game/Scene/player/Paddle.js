@@ -37,17 +37,20 @@ export class Paddle {
         this.#setCollisionSegments();
     }
 
-    updateFrame(timeDelta, pongGameBox, ballPosition = null) {
+    updateFrame(timeDelta, pongGameBox, ballPosition = null, gameStarted = false) {
+        if (!gameStarted) return; // Skip movement if the game is not active
+
         if (this.#isAIControlled && ballPosition) {
             this.#moveAIPaddle(ballPosition);
-        } else {
+        }
+
+        if (!this.#isAIControlled) {
             const movement = new THREE.Vector3()
                 .copy(this.#movement)
                 .multiplyScalar(timeDelta);
             this.#threeJSGroup.position.add(movement);
         }
 
-        // Paddle boundary enforcement
         this.#constrainPaddle(pongGameBox);
         this.#setCollisionSegments();
     }
@@ -65,13 +68,13 @@ export class Paddle {
             this.#paddleSize.z
         );
     }
-
-    resetPaddle() {
+    
+    disableAIMovementTemporarily() {
         this.#isResetting = true;
 
         setTimeout(() => {
             this.#isResetting = false; // Re-enable AI movement after reset
-        }, 100); // Allow 100ms delay for reset to take effect
+        }, 1000); // Allow delay for reset to take effect
     }
 
     #moveAIPaddle(ballPosition, ballVelocity) {

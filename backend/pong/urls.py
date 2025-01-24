@@ -16,15 +16,15 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
-
+from django.urls import path, include  # For defining routes and including app-specific URL configurations.
+                                        #include(): Imports routes from individual apps to keep the structure modular.
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
-)
+)  #Generate API schema and interactive documentation.
 
 from django.conf import settings
-from django.conf.urls.static import static
+from django.conf.urls.static import static  #Serves media files during development.
 
 urlpatterns = [
     path("admin/", admin.site.urls),
