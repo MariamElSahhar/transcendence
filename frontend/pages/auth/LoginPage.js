@@ -168,6 +168,7 @@ export class LoginPage extends Component {
 		const { success, error } = await login({ username, password });
 		if (success) {
 			errorAlert.classList.add("d-none");
+			// TODO: not require isAuth check to know if OTP is required
 			const authenticated = await isAuth();
 			if (authenticated) {
 				window.redirect("/home");
