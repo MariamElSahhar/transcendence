@@ -184,6 +184,11 @@ class CreateRemoteGameSerializer(serializers.ModelSerializer):
         if not CustomUser.objects.filter(id=loser.id).exists():
             raise serializers.ValidationError(f"Loser with ID {loser} does not exist.")
 
+        if data.get("winner_score") < data.get("loser_score"):
+            raise serializers.ValidationError(
+                "Winner score should be higher than loser score."
+            )
+
         return data
 
     def create(self, validated_data):
