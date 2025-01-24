@@ -29,9 +29,12 @@ urlpatterns = [
         name="user-retrieve-update-destroy",
     ),
     path('default-avatars/', get_default_avatars, name='default_avatars'),
-
-    #user data
     path("users/<int:user_id>/avatar/", avatar_view, name="avatar"),
+
+    # Friends
+    path("users/<int:user_id>/friends/", get_add_friends_view, name="add-get-friends"),
+    path("users/<int:user_id>/friends/<int:friend_id>/", remove_friend_view, name="remove-friend"),
+
     # Authentication
     path("register/", register_view, name="register"),
     path("login/", login_view, name="login"),
@@ -39,7 +42,4 @@ urlpatterns = [
     path("verify-otp/", verify_otp_view, name="verify-otp"),
     path("token/refresh/", token_refresh_view, name="token_refresh"),
     path("token/status/", token_status_view, name="token_status"),
-    # Friends
-    path("friends/", get_add_friends_view, name="add-get-friends"),
-    path("friends/<int:friend_id>/", remove_friend_view, name="remove-friend"),
 ]
