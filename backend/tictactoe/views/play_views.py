@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.timezone import now
 from rest_framework.exceptions import ValidationError
 
-from game.models import TicTacToeLog
+from gamelog.models import TicTacToeLog
 
 from ..models import Game
 from django.db import models

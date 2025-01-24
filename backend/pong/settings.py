@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "users",
-    "game",
+    "gamelog",
     "tictactoe",
     "corsheaders",
     "drf_spectacular",

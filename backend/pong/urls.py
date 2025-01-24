@@ -32,7 +32,7 @@ urlpatterns = [
     # TicTacToe app
     path("api/tictactoe/", include("tictactoe.urls")),
     # GameLog app
-    path("api/", include("game.urls")),
+    path("api/", include("gamelog.urls")),
     # Users app
     path("api/", include("users.urls")),
 

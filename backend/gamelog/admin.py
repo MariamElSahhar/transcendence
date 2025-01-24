@@ -1,5 +1,5 @@
 from django.contrib import admin
-from game.models import RemoteGameLog, LocalGameLog, TicTacToeLog
+from gamelog.models import RemoteGameLog, LocalGameLog, TicTacToeLog
 
 
 @admin.register(RemoteGameLog)
