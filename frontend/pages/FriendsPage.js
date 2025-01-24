@@ -3,15 +3,17 @@ import {
 	fetchFriends,
 	removeFriend,
 } from "../scripts/clients/friends-client.js";
+import { getUserSessionData } from "../scripts/utils/session-manager.js";
 
 export class FriendsPage extends Component {
 	constructor() {
 		super();
 		this.friends = [];
+		this.user_id = getUserSessionData().userid;
 	}
 
 	async connectedCallback() {
-		await this.fetchFriends();
+		await this.fetchFriends(this.user_id);
 		super.connectedCallback();
 	}
 
@@ -77,15 +79,18 @@ export class FriendsPage extends Component {
 		`;
 	}
 
-	async removeFriend(id) {
-		const { success, data, error } = await removeFriend(id);
+	async removeFriend(friend_id) {
+		const { success, data, error } = await removeFriend(
+			this.user_id,
+			friend_id
+		);
 		if (!success) {
 			console.error("Failed to remove friend:", error);
 		}
 	}
 
 	async fetchFriends() {
-		const { success, data, error } = await fetchFriends();
+		const { success, data, error } = await fetchFriends(this.user_id);
 		// Fetch friends
 		if (success) {
 			this.friends = data;
