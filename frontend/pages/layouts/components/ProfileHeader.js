@@ -3,6 +3,7 @@ import {
 	addFriend,
 	removeFriend,
 } from "../../../scripts/clients/friends-client.js";
+import { getUserSessionData } from "../../../scripts/utils/session-manager.js";
 
 export class ProfileHeader extends Component {
 	constructor() {
@@ -63,10 +64,16 @@ export class ProfileHeader extends Component {
 			"click",
 			async () => {
 				if (this.data.is_friend) {
-					const { success } = await removeFriend(this.data.userid);
+					const { success } = await removeFriend(
+						getUserSessionData().userid,
+						this.data.userid
+					);
 					if (success) this.data.is_friend = false;
 				} else {
-					const { success } = await addFriend(this.data.userid);
+					const { success } = await addFriend(
+						getUserSessionData().userid,
+						this.data.userid
+					);
 					if (success) this.data.is_friend = true;
 				}
 				this.update();

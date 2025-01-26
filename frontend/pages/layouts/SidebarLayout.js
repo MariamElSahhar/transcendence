@@ -43,7 +43,7 @@ export class SidebarLayout extends Component {
 			<div class="min-vh-100 d-flex flex-column">
 				<navbar-component></navbar-component>
 				<div class="d-flex h-100">
-					<div class="d-flex flex-column w-25">
+					<div class=" d-none d-md-flex flex-column w-25">
 						<profile-header></profile-header>
 						<friends-sidebar></friends-sidebar>
 					</div>
@@ -92,7 +92,9 @@ export class SidebarLayout extends Component {
 	}
 
 	async getUserFriends() {
-		const { success, data } = await fetchFriends();
+		const { success, data } = await fetchFriends(
+			getUserSessionData().userid
+		);
 		this.friends = success ? data : [];
 	}
 

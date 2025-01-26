@@ -50,57 +50,91 @@ footer {
 
 /* Card styling - make the cards smaller and rectangular */
 .card {
-	background-color: #f8f9fa; /* Light background for the cards */
-	border-radius: 10px;
-	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow */
-	height: 120px; /* Smaller height for the rectangular look */
-	margin-bottom: 30px; /* Space between cards */
-	transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transition */
-	width: 100%; /* Full width of column */
-	max-width: 350px; /* Smaller card width */
+    width: 100%;
+    max-width: 400px; /* Limit the card width */
+    margin: 20px auto; /* Center the card horizontally */
+    border-radius: 15px; /* Add rounded corners */
+    overflow: hidden; /* Prevent content from overflowing the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
 }
 
-/* Make the cards smaller */
-.card-body {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	padding: 15px;
-}
-
-/* Apply a gradient mix of red and blue for the cards */
-.card:nth-child(1) .card-body {
-	background: linear-gradient(
-		135deg,
-		#ff416c,
-		#3f5efb
-	); /* Red to blue gradient */
-	color: white;
-}
-
-.card:nth-child(2) .card-body {
-	background: linear-gradient(
-		135deg,
-		#3f5efb,
-		#ff416c
-	); /* Blue to red gradient (opposite) */
-	color: white;
-}
-
-/* Hover effect to make the cards pop and grow */
 .card:hover {
-	transform: translateY(-8px) scale(1.03); /* Lift and slightly enlarge the card */
-	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Darker shadow on hover */
+    transform: translateY(-5px); /* Slight upward lift on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center; /* Center-align content */
+    padding: 15px;
+    position: relative;
+    background: linear-gradient(135deg, #da7b27, #e07f2a); /* Earthy gradient background */
+    color: white;
+}
+
+/* Title styles */
+.card-body h2{
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center; /* Center-align text */
+    color: #fff;
+}
+
+/* Text styles */
+.card-body p {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #ddd; /* Slightly lighter shade for better readability */
+    text-align: center;
+}
+
+/* Button styles */
+.card-body button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white!important; /* Gradient button matching the card */
+	background: #964B00!important; /* Gradient button matching the card */
+    border: none;
+    border-radius: 5px; /* Rounded corners for a polished look */
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+}
+
+.card-body button:hover {
+    background: linear-gradient(135deg, rgba(245, 165, 97, 0.4), rgba(245, 165, 97, 0.4))!important; /* Reverse gradient on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* Centered image */
+.card-body .card-image {
+    width: 150px; /* Set the size of the image */
+    height: auto; /* Maintain the aspect ratio */
+    margin: 10px auto; /* Center the image vertically and horizontally */
+    display: block;
+    object-fit: contain; /* Ensure the image fits well */
+    border-radius: 10px; /* Optional: Add rounded corners */
+}
+
+/* If you want the image at the bottom */
+.card-body .card-image.bottom {
+    margin-top: auto; /* Push the image to the bottom */
 }
 
 /* Button styling inside the cards */
 .card .btn {
-	background-color: white;
-	color: #333;
-	border: none;
-	font-weight: bold;
-	margin-top: auto;
+    background-color: white;
+    color: #333;
+    border: none;
+    font-weight: bold;
+    margin-top: auto;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
+
+
 
 #registerForm {
 	width: 100%;

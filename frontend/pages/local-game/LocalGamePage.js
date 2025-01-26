@@ -15,28 +15,28 @@ export class LocalGamePage extends Component {
 	}
 
 	connectedCallback() {
-		// const userData = getUserSessionData();
-		// const firstPlayerName = userData.username || "Player 1";
-		// this.playerNames.push(firstPlayerName);
 		this.playerNames.push(getUserSessionData().username || "player 1");
 
-		this.innerHTML = `
-            <div id="player-setup" class="p-3 border rounded bg-light" style="max-width: 400px; margin: 40px auto 0;">
-              <h3 class="text-center">Setup Players</h3>
-              <form id="player-form">
-				<div id="player-names">
-                  <div class="mb-3">
-                    <label for="player2-name" class="form-label d-block"></label>
-                    <input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100" placeholder="Player 2 display name"/>
-                  </div>
-                </div>
-				<div class="form-check mb-3">
-                  <input type="checkbox" class="form-check-input" id="play-against-ai">
-                  <label class="form-check-label" for="play-against-ai">Play against computer</label>
-                </div>
-                <button id="submit-players" type="submit" class="btn btn-primary mt-3 w-100" disabled>Start Game</button>
-              </form>
+		this.innerHTML = `    
+		<div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light " style="max-width: 400px;  margin: 200px auto 0;">
+				<div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-while">
+					<h3 class="fw-bold  m-0">Setup Players</h3>
+				</div>
+              	<form id="player-form">
+					<div id="player-names">
+                  		<div class="mb-3" >
+                    		<label for="player2-name" class="form-label d-block"></label>
+                    		<input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100 border border-secondary text-dark" placeholder="Player 2 display name"/>
+                  		</div>
+                	</div>
+					<div class="form-check mb-3">
+                  		<input type="checkbox" class="form-check-input border border-secondary" id="play-against-ai" >
+                  		<label class="form-check-label" for="play-against-ai"> <i class="bi bi-robot fs-4 text-primary"></i> Play against computer </label>
+                	</div>
+                	<button id="submit-players" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark"  disabled>Start Game</button>
+              	</form>
             </div>
+			
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
 
@@ -159,10 +159,12 @@ export class LocalGamePage extends Component {
 		);
 		this.overlay.style.zIndex = "9999";
 		this.overlay.innerHTML = `
-          <div class="card text-center text-dark bg-light" style="width: 18rem;">
+          <div class="card text-center text-dark bg-light" style="width: 30rem;">
             <div class="card-body">
               <h1 id="countdown" class="display-1 fw-bold">5</h1>
-              <p class="card-text">Get ready! The game will start soon.</p>
+			  <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
+
+              <p class="carxd-text">Get ready! The game will start soon.</p>
             </div>
           </div>
         `;
@@ -189,21 +191,21 @@ export class LocalGamePage extends Component {
 
 		this.createOverlay();
 		this.overlay.innerHTML = `
-        <div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
-          <div class="card-header">
-            <h1 class="card-title text-success">Game Over</h1>
-          </div>
+        <div id="end-game-card" class="card text-center border-warning text-dark bg-light" style="max-width: 30rem;">
+
           <div class="card-body">
+		  <h1 class="card-title text-success">Game Over</h1>
             <h5 class="card-subtitle mb-3 text-muted">Final Score</h5>
+			<img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
+
             <div class="d-flex justify-content-center align-items-center mb-4">
-              <div class="text-center me-3">
-                <h6 class="fw-bold text-truncate" style="max-width: 100px;">${playerName}</h6>
-                <p class="display-6 fw-bold">${playerScore}</p>
+              <div class="text-center me-3" style="width:120px">
+                <h4 class="fw-bold text-truncate text-primary text-center" style="max-width: 150px;">${playerName}</h4>
+                <p class="display-6 fw-bold text-center" style="max-width: 150px;">${playerScore}</p>
               </div>
-              <div class="px-3 display-6 fw-bold align-self-center">:</div>
-              <div class="text-center ms-3">
-                <h6 class="fw-bold text-truncate" style="max-width: 100px;">${opponentName}</h6>
-                <p class="display-6 fw-bold">${opponentScore}</p>
+              <div class="text-center ms-3" style="width:120px">
+                <h4 class="fw-bold text-truncate text-danger text-center" style="max-width: 150px;">${opponentName}</h4>
+                <p class="display-6 fw-bold text-center" style="max-width: 150px;">${opponentScore}</p>
               </div>
             </div>
             <button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
