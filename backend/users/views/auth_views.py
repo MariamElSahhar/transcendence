@@ -36,7 +36,7 @@ def login_view(request):
                                 "username": user.username,
                                 "user_id": user.id,
                                 "user_email": user.email,
-                                "otp": user.enable_otp,
+                                "otp": False,
                                 "avatar": user.avatar.url if user.avatar else None,
                             },
                         },
