@@ -88,9 +88,10 @@ export class RemoteGamePage extends Component {
    }
 
 	onWebSocketMessage(data) {
-	//    console.log('Received data:', data);
+	   console.log('Received data:', data);
 	   if (data["message"] === "Match found!" && !this.playerSet) {
 			this.playerSide = data["position"]
+			this.gameID=data["game_session_id"]
 		   this.playerSet = true;
 		   this.updateLoaders(data);
 			// console.log(this.playerSide)
@@ -312,7 +313,7 @@ this.postRender();
 			}
 
 			startGame() {
-				this.engine = new Engine(this, this.isAIEnabled, this.playerNames, this.playerSide);
+				this.engine = new Engine(this, this.isAIEnabled, this.playerNames, this.playerSide,this.gameID);
 				this.engine.startGame();
 				this.removeOverlay();
 			}

@@ -9,7 +9,7 @@ export class KeyHandler {
         this.#gameEngine = gameEngine;
     }
 
-    startListeningForKeys(player="local",playerSide="NA",players=null) {
+    startListeningForKeys(player="local",playerSide="NA",players=null,gameSession=-1) {
 		this.#gameEngine.component.addComponentEventListener(
 			window, 'keydown', (event) => {
 				if(player=="remote")
@@ -17,7 +17,7 @@ export class KeyHandler {
 						if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
 						{
 							// console.log(event, event.key)
-							sendWebSocketMessage({action:"move",key: event.key, players:players, playerSide:playerSide});
+							sendWebSocketMessage({action:"move",key: event.key, players:players, playerSide:playerSide,gameSession:gameSession});
 						}
 				}
 				else

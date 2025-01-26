@@ -11,10 +11,11 @@ export class Engine {
   #component;
   #isAIGame;
 
-  constructor(component, isAIGame = false, players,playerSide="NA") {
+  constructor(component, isAIGame = false, players,playerSide="NA",gameSession=-1) {
     this.#component = component;
     this.#isAIGame = isAIGame;
 	this.playerSide = playerSide
+	this.gameSession=gameSession
     this.players = players;
     this.#threeJS = new ThreeJSUtils(this);
     this.keyHookHandler = new KeyHandler (this, this.#isAIGame);
@@ -133,6 +134,6 @@ export class Engine {
   startListeningForKeyHooks() {
     // this.#keyHookHandler.startListeningForKeys();
 	console.log(this.playerSide, this.players)
-	this.keyHookHandler.startListeningForKeys("remote",this.playerSide, this.players);
+	this.keyHookHandler.startListeningForKeys("remote",this.playerSide, this.players, this.gameSession);
   }
 }

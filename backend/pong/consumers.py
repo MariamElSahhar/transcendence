@@ -5,18 +5,21 @@ from channels.layers import get_channel_layer
 from rest_framework_simplejwt.tokens import AccessToken
 from asgiref.sync import async_to_sync, sync_to_async
 import json
+import aioredis
 from users.models import CustomUser
 
 class PongConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         clientIP=self.scope["client"][0]
-        if clientIP == '127.0.0.1':
-            self.is_same_system = True  # Same system
-        else:
-            self.is_same_system = False
+        # self.redis = await aioredis.from_url("redis://localhost")
+        # self.channel_name = self.channel_name
+        # if clientIP == '127.0.0.1':
+        #     self.is_same_system = True  # Same system
+        # else:
+        #     self.is_same_system = False
         access_token=AccessToken(self.scope['cookies']['access_token'])
-        username = await sync_to_async(CustomUser.objects.get)(id=access_token['user_id'])
-        self.room_group_name = f"user_{username}"
+        self.username = await sync_to_async(CustomUser.objects.get)(id=access_token['user_id'])
+        self.room_group_name = f"user_{self.username}"
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -24,6 +27,7 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
+        # await self.redis.delete(f"user:{self.username}:channel")
         print(f"Disconnected: {close_code}")
 
     async def move(self, event):
@@ -44,19 +48,20 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
                 key = data.get("key")
                 players = data.get("players")
                 playerSide = data.get("playerSide")
+                gameSession = data.get("gameSession")
                 # valid_keys = ["w", "s"] if playerSide == "left" else ["ArrowUp", "ArrowDown"]
                 # if key not in valid_keys:
                 #     print(f"Invalid move by on {playerSide}: {key}")
                 #     return
                 channel_layer = get_channel_layer()
-                for player in players:
-                    await channel_layer.group_send(
-                        f"user_{player}",
-                        {
-                            "type": "move",
-                            "key": key,
-                        }
-                    )
+                # for player in players:
+                await channel_layer.group_send(
+                    f"game_session_{gameSession}",
+                    {
+                        "type": "move",
+                        "key": key,
+                    }
+                )
             await self.send(text_data=json.dumps({
                 'message': 'Message received!'
             }))
@@ -90,6 +95,13 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
 
     async def match_found(self, event):
         print(f"Message received: {event}")
+        gamesession=event["game_session_id"]
+        print(gamesession)
+        group_name = f"game_session_{gamesession}"
+        await self.channel_layer.group_add(
+            group_name,
+            self.channel_name
+        )
         await self.send(text_data=json.dumps({
             "message": "Match found!",
             "game_session_id": event["game_session_id"],
@@ -105,6 +117,22 @@ def notify_match(player1, player2, game_session):
     channel_layer = get_channel_layer()
     print("CHANELS", channel_layer)
     print("MATCH FOUND: ", group_name, player1.username, player2.username)
+    # PongConsumer.objects.get(username=player1.username)
+    # for player in [player1, player2]:
+        # Retrieve channel_name from Redis
+        # channel = async_to_sync(self.redis.get)(f"user:{player}:channel")
+        # if channel:
+        #     async_to_sync(channel_layer.group_add)(group_name, channel.decode("utf-8"))
+    # for player in [player1, player2]:
+        # channel = async_to_sync(self.redis.get)(f"user:{player}:channel")
+        # if channel:
+        #     async_to_sync(channel_layer.send)(
+        #         channel.decode("utf-8"),
+        #         {
+        #             "type": "TESTING FOR NEW"
+        #         },
+        #     )
+
     async_to_sync(channel_layer.group_send)(
         f"user_{player1.username}",
         {

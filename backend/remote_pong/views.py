@@ -20,6 +20,8 @@ def test_view(request):
 def match_maker(request):
 	if request.META["REMOTE_ADDR"] == '127.0.0.1':
 		same_system = True
+	else:
+		same_system = False
 	if request.method == "POST":
 		player = request.user
 		user1 =  CustomUser.objects.get(username=player)
