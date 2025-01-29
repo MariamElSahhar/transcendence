@@ -16,7 +16,6 @@ export class KeyHandler {
 					{
 						if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
 						{
-							// console.log(event, event.key)
 							sendWebSocketMessage({action:"move",key: event.key, players:players, playerSide:playerSide,gameSession:gameSession});
 						}
 				}
@@ -43,7 +42,6 @@ export class KeyHandler {
     }
 
     handleKeyPress(event) {
-		console.log("in key press", event.key,".")
         switch (event.key) {
             case 'w':
             case 'W':
@@ -65,7 +63,6 @@ export class KeyHandler {
     }
 
     #handleKeyRelease(event) {
-		// console.log("in key releade", event.key)
         switch (event.key) {
             case 'w':
             case 'W':
@@ -91,15 +88,12 @@ export class KeyHandler {
         if (oppositeKey[index]) {
 			this.#stopMovement(index);
         } else {
-			// console.log()
-			// console.log("PLSSSSSSSSSSSSSS",direction,index);
             direction === 'up' ? this.#moveUp(index) : this.#moveDown(index);
         }
         direction === 'up' ? (this.#isUpKeyPressed[index] = true) : (this.#isDownKeyPressed[index] = true);
     }
 
     #releaseKey(index, direction) {
-		// console.log("PLSSSSSSSSSSSSSS",direction);
         const pressedKey = direction === 'up' ? this.#isDownKeyPressed : this.#isUpKeyPressed;
         if (pressedKey[index]) {
             direction === 'up' ? this.#moveDown(index) : this.#moveUp(index);

@@ -7,7 +7,7 @@ import { Scene } from "./Scene/Scene.js";
 export class Engine {
   #threeJS;
   keyHookHandler;
-  #scene;
+  scene;
   #component;
   #isAIGame;
 
@@ -19,7 +19,7 @@ export class Engine {
     this.players = players;
     this.#threeJS = new ThreeJSUtils(this);
     this.keyHookHandler = new KeyHandler (this, this.#isAIGame);
-    this.#scene = new Scene();
+    this.scene = new Scene();
   }
 
   async startGame() {
@@ -40,10 +40,10 @@ export class Engine {
     const player2 = new Player(this.#isAIGame);
     await player2.init(1, 3, this.players[1]);
 
-    await this.#scene.init(this, [player1, player2]);
+    await this.scene.init(this, [player1, player2]);
 
-    if (this.#scene) {
-      this.#scene.updateCamera();
+    if (this.scene) {
+      this.scene.updateCamera();
       this.startListeningForKeyHooks();
       this.displayGameScene();
     } else {
@@ -52,12 +52,12 @@ export class Engine {
   }
 
   cleanUp() {
-    this.clearScene(this.#scene.threeJSScene);
+    this.clearScene(this.scene.threeJSScene);
     this.#threeJS.clearRenderer();
   }
 
   renderFrame() {
-    this.#threeJS.renderFrame(this.#scene.threeJSScene);
+    this.#threeJS.renderFrame(this.scene.threeJSScene);
   }
 
   get isAIGame() {
@@ -65,12 +65,12 @@ export class Engine {
   }
 
   get scene() {
-    return this.#scene;
+    return this.scene;
   }
 
   set scene(newScene) {
-    this.clearScene(this.#scene.threeJSScene);
-    this.#scene = newScene;
+    this.clearScene(this.scene.threeJSScene);
+    this.scene = newScene;
   }
 
   clearScene(scene) {
@@ -100,7 +100,7 @@ export class Engine {
     this.setAnimationLoop(() => {
       const currentTime = Date.now();
       const delta = clock.getDelta();
-      this.#scene.updateFrame(currentTime, delta);
+      this.scene.updateFrame(currentTime, delta);
 
       this.#threeJS.updateControls();
       this.renderFrame();
@@ -126,14 +126,15 @@ export class Engine {
   }
 
   resizeHandler() {
-    if (this.#scene instanceof Scene) {
-      this.#scene.updateCamera();
+    if (this.scene instanceof Scene) {
+      this.scene.updateCamera();
     }
   }
 
   startListeningForKeyHooks() {
-    // this.#keyHookHandler.startListeningForKeys();
-	console.log(this.playerSide, this.players)
-	this.keyHookHandler.startListeningForKeys("remote",this.playerSide, this.players, this.gameSession);
+	  if(this.gameSession != -1)
+		this.keyHookHandler.startListeningForKeys("remote",this.playerSide, this.players, this.gameSession);
+	  else
+	  	this.keyHookHandler.startListeningForKeys();
   }
 }

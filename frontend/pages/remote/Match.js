@@ -1,5 +1,5 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-import { Player } from "../local-game/Scene/player/Player.js";
+import { Player } from "./player/Player.js";
 import { Ball } from "./Ball.js";
 import { addLocalGame } from "../../../scripts/clients/gamelog-client.js";
 
@@ -7,7 +7,7 @@ export class Match {
 	#engine;
 	#threeJSGroup = new THREE.Group();
 	#players = [null, null];
-	#ball;
+	ball;
 	#ballIsWaiting;
 	#ballStartTime;
 	#pointsToWinMatch = 1;
@@ -26,8 +26,8 @@ export class Match {
 
 		// console.log("Engine players:", engine.players);
 
-		this.#ball = new Ball();
-		this.#threeJSGroup.add(this.#ball.threeJSGroup);
+		this.ball = new Ball();
+		this.#threeJSGroup.add(this.ball.threeJSGroup);
 
 		this.#threeJSGroup.position.set(30, 23.75, 0);
 
@@ -56,7 +56,7 @@ export class Match {
 	prepareBallForMatch() {
 		this.#ballIsWaiting = true;
 		this.#ballStartTime = Date.now() + 3000; // 3-second delay
-		this.#ball.prepareForMatch();
+		this.ball.prepareForMatch();
 
 		this.#players.forEach((player, index) => {
 			if (player) {
@@ -77,7 +77,7 @@ export class Match {
 	}
 
 	updateFrame(timeDelta, currentTime, pongGameBox, boardSize) {
-		const ballPosition = this.#ball.getPosition();
+		const ballPosition = this.ball.getPosition();
 		// console.log(ballPosition)
 		this.#players.forEach((player, index) => {
 			if (player) {
@@ -91,10 +91,76 @@ export class Match {
 				this.startGame(); // Start the game when the ball is ready
 			}
 			if (!this.#ballIsWaiting) {
-				this.#ball.updateFrame(timeDelta, boardSize, this);
+				this.ball.updateFrame(timeDelta, boardSize, this);
 			}
 		}
 	}
+    prepareBallForMatch() {
+        this.#ballIsWaiting = true;
+        this.#ballStartTime = Date.now() + 3000; // 3-second delay
+        this.ball.prepareForMatch();
+
+        this.#players.forEach((player, index) => {
+            if (player) {
+                player.resetPaddle();
+                player.stopGame(); // Ensure paddles cannot move while waiting
+            }
+        });
+
+        console.log("Players have been reset for the next round.");
+    }
+
+    startGame() {
+        this.#players.forEach((player) => {
+            if (player) {
+                player.startGame(); // Enable paddle movement when the game starts
+            }
+        });
+    }
+
+    updateFrame(timeDelta, currentTime, pongGameBox, boardSize) {
+        const ballPosition = this.ball.getPosition();
+
+        this.#players.forEach((player, index) => {
+            if (player) {
+
+                player.updateFrame(
+                    timeDelta,
+                    pongGameBox,
+                    index === 1 ? ballPosition : null,
+                    !this.#ballIsWaiting && !this.#matchIsOver // Only update if game is active
+                );
+            }
+        });
+
+        if (!this.#matchIsOver) {
+            if (this.#ballIsWaiting && currentTime >= this.#ballStartTime) {
+                this.#ballIsWaiting = false;
+                this.startGame(); // Start the game when the ball is ready
+            }
+            if (!this.#ballIsWaiting) {
+                this.ball.updateFrame(timeDelta, boardSize, this);
+            }
+        }
+    }
+
+	// if (this.gameType === "remote") {
+	// 	console.log("Remote");
+	// 	if (this.isHost) {
+	// 		console.log("are we host??????!!!!!!")
+	// 		// this.#engine.sendBallPosition(ballPosition);
+	// 		sendWebSocketMessage({type:"ballPosition",position:ballPosition, gameSession:this.#engine.gameID});
+	// 		// this.#ball.setPosition(receivedBallPosition);
+	// 	}
+	// 	// else {
+	// 	// 	// If this is the opponent, update the ball's position from received data.
+	// 	// 	const receivedBallPosition = this.#engine.getReceivedBallPosition();
+	// 	// 	if (receivedBallPosition) {
+	// 	// 		this.#ball.setPosition(receivedBallPosition);
+	// 	// 	}
+	// 	// }
+	// }
+
 
 	playerMarkedPoint(playerIndex) {
 		this.#points[playerIndex]++;
@@ -116,7 +182,7 @@ export class Match {
 	// async
 	endGame() {
 		this.#matchIsOver = true;
-		this.#ball.removeBall();
+		this.ball.removeBall();
 		this.#engine.component.addEndGameCard(this.#points[0], this.#points[1]);
 
 		// const { error } = await addLocalGame({
@@ -141,11 +207,11 @@ export class Match {
 	}
 
 	setBallMovement(movementJson) {
-		this.#ball.setMovement(movementJson);
+		this.ball.setMovement(movementJson);
 	}
 
 	setBallPosition(positionJson) {
-		this.#ball.setPosition(positionJson);
+		this.ball.setPosition(positionJson);
 	}
 
 	getPosition() {
@@ -161,10 +227,10 @@ export class Match {
 	}
 
 	get ball() {
-		return this.#ball;
+		return this.ball;
 	}
 
 	get ballStartTime() {
-		return this.#ballStartTime;
+		return this.ballStartTime;
 	}
 }

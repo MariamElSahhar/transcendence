@@ -124,6 +124,10 @@ export class RemoteGamePage extends Component {
 				// console.log("right has clicked!!!!")
 			// }
 	   }
+	   else if(data["message"] == "Move ball")
+	   {
+		// this.engine.scene.match.ball.setMovement(data["position"])
+	   }
    }
 
 	onWebSocketClose() {

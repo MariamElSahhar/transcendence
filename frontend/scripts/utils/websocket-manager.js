@@ -14,7 +14,7 @@ export function initializeWebSocket(url, onOpen, onMessage, onClose, onError) {
     };
 
     socket.onmessage = (event) => {
-        console.log('Message from server:', event.data);
+        // console.log('Message from server:', event.data);
         const data = JSON.parse(event.data);
         if (onMessage) onMessage(data);
     };

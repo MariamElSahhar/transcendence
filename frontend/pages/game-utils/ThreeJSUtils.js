@@ -43,8 +43,8 @@ export class ThreeJSUtils {
   }
 
   #initRenderer() {
-    this.#renderer = new THREE.WebGLRenderer({ antialias: true });
-    console.log("Renderer initialized:", this.#renderer); 
+    this.#renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance"  });
+    console.log("Renderer initialized:", this.#renderer);
     this.#renderer.shadowMap.enabled = true;
     this.#renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.#renderer.setPixelRatio(window.devicePixelRatio * 0.8);

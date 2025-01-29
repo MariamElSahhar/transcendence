@@ -37,6 +37,12 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
             "key":event["key"],
         }))
 
+    async def ball(self, event):
+        print(f"Message received: {event}")
+        await self.send(text_data=json.dumps({
+            "message": "Move ball",
+            "position":event["position"],
+        }))
 
     async def receive(self, text_data):
         print(f"Raw text_data: {text_data}")  # Log the raw input
@@ -60,6 +66,22 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
                     {
                         "type": "move",
                         "key": key,
+                    }
+                )
+            if data.get("type") == "ballPosition":
+                position = data.get("position")
+                gameSession = data.get("gameSession")
+                # valid_keys = ["w", "s"] if playerSide == "left" else ["ArrowUp", "ArrowDown"]
+                # if key not in valid_keys:
+                #     print(f"Invalid move by on {playerSide}: {key}")
+                #     return
+                channel_layer = get_channel_layer()
+                # for player in players:
+                await channel_layer.group_send(
+                    f"game_session_{gameSession}",
+                    {
+                        "type": "ball",
+                        "position": position,
                     }
                 )
             await self.send(text_data=json.dumps({
