@@ -32,7 +32,7 @@ export function initializeWebSocket(url, onOpen, onMessage, onClose, onError) {
 }
 
 export function sendWebSocketMessage(message) {
-	console.log(message)
+	// console.log(message)
     if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify(message));
     } else {

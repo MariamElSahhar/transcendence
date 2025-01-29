@@ -11,7 +11,7 @@ export class Match {
 	ball;
 	#ballIsWaiting;
 	#ballStartTime;
-	#pointsToWinMatch = 1;
+	#pointsToWinMatch = 5;
 	#matchIsOver = false;
 	#points = [0, 0];
 

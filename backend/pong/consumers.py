@@ -5,7 +5,6 @@ from channels.layers import get_channel_layer
 from rest_framework_simplejwt.tokens import AccessToken
 from asgiref.sync import async_to_sync, sync_to_async
 import json
-import aioredis
 from users.models import CustomUser
 
 class PongConsumer(AsyncJsonWebsocketConsumer):
@@ -31,24 +30,24 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         print(f"Disconnected: {close_code}")
 
     async def move(self, event):
-        print(f"Message received: {event}")
+        # print(f"Message received: {event}")
         await self.send(text_data=json.dumps({
             "message": "Move slab",
             "key":event["key"],
         }))
 
     async def ball(self, event):
-        print(f"Message received: {event}")
+        # print(f"Message received: {event}")
         await self.send(text_data=json.dumps({
             "message": "Move ball",
             "position":event["position"],
         }))
 
     async def receive(self, text_data):
-        print(f"Raw text_data: {text_data}")  # Log the raw input
+        # print(f"Raw text_data: {text_data}")  # Log the raw input
         try:
             data = json.loads(text_data)  # Parse JSON
-            print(f"Parsed data: {data}")  # Log the parsed dictionary
+            # print(f"Parsed data: {data}")  # Log the parsed dictionary
             # print(data.get("action"))
             if data.get("action") == "move":
                 key = data.get("key")

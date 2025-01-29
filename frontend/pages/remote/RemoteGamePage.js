@@ -88,7 +88,7 @@ export class RemoteGamePage extends Component {
    }
 
 	onWebSocketMessage(data) {
-	   console.log('Received data:', data);
+	//    console.log('Received data:', data);
 	   if (data["message"] === "Match found!" && !this.playerSet) {
 			this.playerSide = data["position"]
 			this.gameID=data["game_session_id"]
@@ -126,7 +126,7 @@ export class RemoteGamePage extends Component {
 	   }
 	   else if(data["message"] == "Move ball")
 	   {
-		// this.engine.scene.match.ball.setMovement(data["position"])
+		this.engine.scene.match.ball.setMovement(data["position"])
 	   }
    }
 

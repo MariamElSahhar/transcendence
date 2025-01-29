@@ -9,6 +9,7 @@ export class Ball {
   #radius = 1.;
   #mesh;
   #light;
+  movementSet=false;
 
   constructor() {
     this.#initializeBall();
@@ -38,9 +39,9 @@ export class Ball {
     this.#threeJSGroup.add(this.#light);
   }
 
-  prepareForMatch(gameType, isHost=null, gameID) {
+  async prepareForMatch(gameType, isHost=null, gameID) {
     this.#threeJSGroup.position.set(0., 0., this.#threeJSGroup.position.z);
-    this.randomizeMovement(gameType,isHost,gameID);
+    await this.randomizeMovement(gameType,isHost,gameID);
   }
 
   removeBall() {
@@ -65,32 +66,40 @@ export class Ball {
   }
 
   randomizeMovement(gameType, isHost, gameID) {
-	console.log(gameType,isHost,gameID)
-	  if (gameType === "remote") {
-		  // console.log("Remote");
-		  if (isHost) {
-			console.log("how?>>>>>>>>")
-			this.movement.x = Math.random() < 0.5 ? -1 : 1;
-			this.movement.y = Math.random() < 0.5 ? -0.5 : 0.5;
-			this.movement.normalize().multiplyScalar(15);
-			sendWebSocketMessage({type:"ballPosition",position:this.movement, gameSession:gameID});
-		}
-		console.log(this.movement)
-		this.movement.x = Math.random() < 0.5 ? -1 : 1;
-		this.movement.y = Math.random() < 0.5 ? -0.5 : 0.5;
-		this.movement.normalize().multiplyScalar(15);
-	}
-	else
-	{
-		this.movement.x = Math.random() < 0.5 ? -1 : 1;
-		this.movement.y = Math.random() < 0.5 ? -0.5 : 0.5;
-		this.movement.normalize().multiplyScalar(15);
-	}
-  }
+    console.log(gameType, isHost, gameID);
+
+    return new Promise((resolve) => {
+        if (gameType === "remote") {
+            if (isHost) {
+                console.log("how?>>>>>>>>");
+                this.movement.x = Math.random() < 0.5 ? -1 : 1;
+                this.movement.y = Math.random() < 0.5 ? -0.5 : 0.5;
+                this.movement.normalize().multiplyScalar(15);
+                sendWebSocketMessage({ type: "ballPosition", position: this.movement, gameSession: gameID });
+                this.movementSet = true;
+            }
+
+            // Check every 100ms if movement is set, then resolve
+            const checkInterval = setInterval(() => {
+                if (this.movementSet) {
+                    clearInterval(checkInterval);
+                    console.log("Movement set, resolving...");
+                    resolve("Success");
+                }
+            }, 100);
+        } else {
+            this.movement.x = Math.random() < 0.5 ? -1 : 1;
+            this.movement.y = Math.random() < 0.5 ? -0.5 : 0.5;
+            this.movement.normalize().multiplyScalar(15);
+            resolve("Success"); // Resolve immediately for non-remote mode
+        }
+    });
+}
 
   setMovement(movementJson) {
-	console.log("pls be here")
+	// console.log("pls be here")
     this.movement.set(movementJson.x, movementJson.y, movementJson.z);
+    this.movementSet=true;
   }
 
   setMovementX(x) {
