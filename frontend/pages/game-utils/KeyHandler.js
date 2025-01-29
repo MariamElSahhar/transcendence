@@ -14,10 +14,10 @@ export class KeyHandler {
 			window, 'keydown', (event) => {
 				if(player=="remote")
 					{
-						if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
-						{
-							sendWebSocketMessage({action:"move",key: event.key, players:players, playerSide:playerSide,gameSession:gameSession});
-						}
+						// if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
+						// {
+							sendWebSocketMessage({action:"move",type:"keydown",key: event.key, players:players, playerSide:playerSide,gameSession:gameSession});
+						// }
 				}
 				else
                		this.handleKeyPress(event);
@@ -25,14 +25,30 @@ export class KeyHandler {
         );
         this.#gameEngine.component.addComponentEventListener(
             window, 'keyup', (event) => {
-                this.#handleKeyRelease(event);
+                if(player=="remote")
+					{
+						// if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
+						// {
+							sendWebSocketMessage({action:"move",type:"keyup",key: event.key, players:players, playerSide:playerSide,gameSession:gameSession});
+						// }
+				}
+				else
+                this.handleKeyRelease(event);
             }, this,
         );
-        this.#gameEngine.component.addComponentEventListener(
-            window, 'blur', () => {
-                this.#handleFocusLoss();
-            }, this,
-        );
+        // this.#gameEngine.component.addComponentEventListener(
+        //     window, 'blur', () => {
+        //         if(player=="remote")
+		// 			{
+		// 				// if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
+		// 				// {
+		// 					sendWebSocketMessage({action:"move",type:"blur",key: -1, players:players, playerSide:playerSide,gameSession:gameSession});
+		// 				// }
+		// 		}
+		// 		else
+        //             this.handleFocusLoss();
+        //     }, this,
+        // );
     }
 
     stopListeningForKeys() {
@@ -62,7 +78,7 @@ export class KeyHandler {
         }
     }
 
-    #handleKeyRelease(event) {
+    handleKeyRelease(event) {
         switch (event.key) {
             case 'w':
             case 'W':
@@ -103,15 +119,16 @@ export class KeyHandler {
         direction === 'up' ? (this.#isUpKeyPressed[index] = false) : (this.#isDownKeyPressed[index] = false);
     }
 
-    #handleFocusLoss() {
-        this.#isUpKeyPressed[0] = false;
-        this.#isUpKeyPressed[1] = false;
-        this.#isDownKeyPressed[0] = false;
-        this.#isDownKeyPressed[1] = false;
 
-        this.#stopMovement(0);
-        this.#stopMovement(1);
-    }
+    // handleFocusLoss() {
+    //     this.#isUpKeyPressed[0] = false;
+    //     this.#isUpKeyPressed[1] = false;
+    //     this.#isDownKeyPressed[0] = false;
+    //     this.#isDownKeyPressed[1] = false;
+
+    //     this.#stopMovement(0);
+    //     this.#stopMovement(1);
+    // }
 
     #stopMovement(index) {
         this.#gameEngine.scene.setPlayerPaddleDirection('none', index);

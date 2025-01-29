@@ -110,6 +110,7 @@ export class RemoteGamePage extends Component {
 	   {
 		// const flag = 0;
 		// console.log(this.playerSide)
+		// console.log(data)
 		const event = {"key":data["key"]}
 			// if(this.playerSide == "left" &&( data["key"] == "w" ||  data["key"] =="s"))
 			// {
@@ -119,7 +120,12 @@ export class RemoteGamePage extends Component {
 			// }
 			// else if(this.playerSide == "right" && (data["key"] == "ArrowUp" ||  data["key"] =="ArrowDown"))
 			// {
-				this.engine.keyHookHandler.handleKeyPress(event)
+				if(data["keytype"] == "keydown")
+					this.engine.keyHookHandler.handleKeyPress(event)
+				else if(data["keytype"] == "keyup")
+					this.engine.keyHookHandler.handleKeyRelease(event)
+				// else if(data["keytype"] == "blur")
+				// 	this.engine.keyHookHandler.handleFocusLoss()
 				// flag = 1;
 				// console.log("right has clicked!!!!")
 			// }
@@ -302,7 +308,7 @@ this.postRender();
 					searchBox.querySelector(".circle").style.display = "none";
 					this.removeFromMatchmaking();
 					// return;
-				}, 12000); // 2 minutes in milliseconds
+				}, 180000); // 3 minutes in milliseconds
 				// if(flag == 0)
 				// {
 				const {status, success, data } = await matchMaker();

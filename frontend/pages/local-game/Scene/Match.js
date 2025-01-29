@@ -106,21 +106,21 @@ export class Match {
     prepareBallForMatch() {
         this.#ballIsWaiting = true;
         this.#ballStartTime = Date.now() + 3000; // 3-second delay
-		console.log(this.gameType, this.isHost, this.#engine.gameSession)
+		// console.log(this.gameType, this.isHost, this.#engine.gameSession)
 		this.ball.prepareForMatch(this.gameType, this.isHost, this.#engine.gameSession);
-		console.log(this.ball.movement)
+		// console.log(this.ball.movement)
 		// if (this.gameType === "remote") {
 		// 	// console.log("Remote");
 		// 	if (this.isHost) {
 		// 		sendWebSocketMessage({type:"ballPosition",position:this.ball.movement, gameSession:this.#engine.gameSession});
 		// 	}
 		// }
-        // this.#players.forEach((player, index) => {
-        //     if (player) {
-        //         player.resetPaddle();
-        //         player.stopGame(); // Ensure paddles cannot move while waiting
-        //     }
-        // });
+        this.#players.forEach((player, index) => {
+            if (player) {
+                player.resetPaddle();
+                player.stopGame(); // Ensure paddles cannot move while waiting
+            }
+        });
 
         // console.log("Players have been reset for the next round.");
     }

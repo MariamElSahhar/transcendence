@@ -34,6 +34,7 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "message": "Move slab",
             "key":event["key"],
+            "keytype":event["keytype"],
         }))
 
     async def ball(self, event):
@@ -54,6 +55,7 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
                 players = data.get("players")
                 playerSide = data.get("playerSide")
                 gameSession = data.get("gameSession")
+                type = data.get("type")
                 # valid_keys = ["w", "s"] if playerSide == "left" else ["ArrowUp", "ArrowDown"]
                 # if key not in valid_keys:
                 #     print(f"Invalid move by on {playerSide}: {key}")
@@ -65,6 +67,7 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
                     {
                         "type": "move",
                         "key": key,
+                        "keytype":type
                     }
                 )
             if data.get("type") == "ballPosition":
