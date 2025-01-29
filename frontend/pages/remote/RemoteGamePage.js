@@ -108,27 +108,12 @@ export class RemoteGamePage extends Component {
 	   }
 	   else if(data["message"] == "Move slab")
 	   {
-		// const flag = 0;
-		// console.log(this.playerSide)
-		// console.log(data)
 		const event = {"key":data["key"]}
-			// if(this.playerSide == "left" &&( data["key"] == "w" ||  data["key"] =="s"))
-			// {
-			// 	// console.log("left has clicked!!!!")
-			// 	this.engine.keyHookHandler.handleKeyPress(event)
-			// 	flag = 1;
-			// }
-			// else if(this.playerSide == "right" && (data["key"] == "ArrowUp" ||  data["key"] =="ArrowDown"))
-			// {
+
 				if(data["keytype"] == "keydown")
 					this.engine.keyHookHandler.handleKeyPress(event)
 				else if(data["keytype"] == "keyup")
 					this.engine.keyHookHandler.handleKeyRelease(event)
-				// else if(data["keytype"] == "blur")
-				// 	this.engine.keyHookHandler.handleFocusLoss()
-				// flag = 1;
-				// console.log("right has clicked!!!!")
-			// }
 	   }
 	   else if(data["message"] == "Move ball")
 	   {
@@ -156,17 +141,6 @@ export class RemoteGamePage extends Component {
 			this.onWebSocketError.bind(this)
 		);
 
-		// this.playerNames.push(getUserSessionData().username || "player 1");
-		// document.addEventListener("keydown", (event) => {
-		// 	if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-		// 		// const position = calculateNewPosition(event.key); // Implement this logic
-
-		// 		this.socket.send(JSON.stringify({
-		// 			action: "update_slab",
-		// 			position: position
-		// 		}));
-		// 	}
-		// });
 
 		this.innerHTML = `
 		<style>

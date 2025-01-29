@@ -63,19 +63,6 @@ export class Match {
 		this.prepareBallForMatch();
 	}
 
-	// prepareBallForMatch() {
-	// 	this.#ballIsWaiting = true;
-	// 	this.#ballStartTime = Date.now() + 3000; // 3-second delay
-	// 	this.#players.forEach((player, index) => {
-	// 		if (player) {
-	// 			player.resetPaddle();
-	// 			player.stopGame(); // Ensure paddles cannot move while waiting
-	// 		}
-	// 	});
-
-	// 	// console.log("Players have been reset for the next round.");
-	// }
-
 	startGame() {
 		this.#players.forEach((player) => {
 			if (player) {
@@ -84,37 +71,13 @@ export class Match {
 		});
 	}
 
-	// updateFrame(timeDelta, currentTime, pongGameBox, boardSize) {
-	// 	const ballPosition = this.#ball.getPosition();
-	// 	// console.log(ballPosition)
-	// 	this.#players.forEach((player, index) => {
-	// 		if (player) {c
-	// 			player.updateFrame(timeDelta, pongGameBox, index === 1 ? ballPosition : null);
-	// 		}
-	// 	});
 
-	// 	if (!this.#matchIsOver) {
-	// 		if (this.#ballIsWaiting && currentTime >= this.#ballStartTime) {
-	// 			this.#ballIsWaiting = false;
-	// 			this.startGame(); // Start the game when the ball is ready
-	// 		}
-	// 		if (!this.#ballIsWaiting) {
-	// 			this.#ball.updateFrame(timeDelta, boardSize, this);
-	// 		}
-	// 	}
-	// }
     prepareBallForMatch() {
         this.#ballIsWaiting = true;
         this.#ballStartTime = Date.now() + 3000; // 3-second delay
 		// console.log(this.gameType, this.isHost, this.#engine.gameSession)
 		this.ball.prepareForMatch(this.gameType, this.isHost, this.#engine.gameSession);
-		// console.log(this.ball.movement)
-		// if (this.gameType === "remote") {
-		// 	// console.log("Remote");
-		// 	if (this.isHost) {
-		// 		sendWebSocketMessage({type:"ballPosition",position:this.ball.movement, gameSession:this.#engine.gameSession});
-		// 	}
-		// }
+
         this.#players.forEach((player, index) => {
             if (player) {
                 player.resetPaddle();
@@ -158,23 +121,7 @@ export class Match {
                 this.startGame(); // Start the game when the ball is ready
             }
             if (!this.#ballIsWaiting) {
-					// if (this.gameType === "remote") {
-		// console.log("Remote");
-		// if (this.isHost) {
-		// 	// console.log("are we host??????!!!!!!")
-		// 	// this.#engine.sendBallPosition(ballPosition);
-		// 	sendWebSocketMessage({type:"ballPosition",position:ballPosition, gameSession:this.#engine.gameID});
-		// }
-		// this.setPosition(ballPosition);
 		this.setBallPosition(ballPosition)
-		// else {
-		// 	// If this is the opponent, update the ball's position from received data.
-		// 	const receivedBallPosition = this.#engine.getReceivedBallPosition();
-		// 	if (receivedBallPosition) {
-		// 		this.#ball.setPosition(receivedBallPosition);
-		// 	}
-		// }
-	// }
                 this.ball.updateFrame(timeDelta, boardSize, this);
             }
         }
