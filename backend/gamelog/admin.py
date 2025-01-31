@@ -6,7 +6,6 @@ from gamelog.models import RemoteGameLog, LocalGameLog, TicTacToeLog
 class RemoteGameAdmin(admin.ModelAdmin):
     list_display = (
         "get_users",
-        "game_type",
         "date",
         "winnerID",
         "loserID",
@@ -23,24 +22,24 @@ class RemoteGameAdmin(admin.ModelAdmin):
 class LocalGameAdmin(admin.ModelAdmin):
     list_display = (
         "users",
-        "game_type",
         "date",
         "opponent_username",
         "tournamentID",
         "my_score",
         "opponent_score",
     )
+    list_filter = ('users',)
 
 
 @admin.register(TicTacToeLog)
 class TicTacToeAdmin(admin.ModelAdmin):
     list_display = (
-        "users",
-        "game_type",
+        "get_users",
         "date",
-        "opponent_username",
-        "my_score",
-        "opponent_score",
+        "winnerID",
+        "loserID",
+        "winner_score",
+        "loser_score",
     )
 
     def get_users(self, obj):
