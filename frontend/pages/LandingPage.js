@@ -12,18 +12,18 @@ export class LandingPage extends Component {
 				<div class="sky"></div>
 
 				<!-- Title Image -->
-				<img class="title-img" src="/pages/titlepage.png" alt="X"/>
+				<img class="title-img" src="/assets/titlepage.png" alt="X"/>
 
 				<!-- Main Content Section -->
 				<div class="d-flex flex-column justify-content-center align-items-center gap-2">
 				</div>
 				<!-- Floor Section -->
 				<div class="container">
-					<img class="pipe" src="/pages/pipe.png" alt="X"/>
+					<img class="pipe" src="/assets/pipe.png" alt="X"/>
 					<img class="plant" src="/pages/tictactoe/plant.png" alt="X" onclick="window.redirect('/login')"/>
 				</div>
 				<div class="container2">
-					<img class="pipeRight" src="/pages/pipe.png" alt="X"/>
+					<img class="pipeRight" src="/assets/pipe.png" alt="X"/>
 					<img class="shrooms" src="/pages/tictactoe/shroom.png" alt="X" onclick="window.redirect('/sign-up')"/>
 				</div>
 				<div class="floor"></div>
@@ -77,7 +77,7 @@ export class LandingPage extends Component {
 					height: 100vh;
 					box-sizing: border-box;
 				}
-				
+
 				.container {
 					position: absolute;
 					bottom: 0em; /* Adjust this value to align with the floor height */
@@ -110,7 +110,7 @@ export class LandingPage extends Component {
 				.container:hover .plant {
 					bottom: 24.5em; /* Move the plant up to the same level as the pipe */
 				}
-				
+
 				.container2 {
 					position: absolute;
 					bottom: 0em; /* Adjust this value to align with the floor height */
