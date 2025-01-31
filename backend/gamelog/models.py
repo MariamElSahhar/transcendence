@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from users.models import CustomUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class RemoteGameLog(models.Model):
@@ -67,8 +68,7 @@ class LocalGameLog(models.Model):
     )
     date = models.DateTimeField(auto_now_add=True)
     opponent_username = models.CharField(max_length=100, default="Player2")
-    tournamentID = models.CharField(max_length=100, null=True, blank=True)
-
+    tournament_round = models.IntegerField(null=True, blank=True, validators=[MaxValueValidator(3), MinValueValidator(1)])
     my_score = models.PositiveIntegerField(default=0)
     opponent_score = models.PositiveIntegerField(default=0)
 

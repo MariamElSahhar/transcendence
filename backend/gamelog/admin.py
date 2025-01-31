@@ -24,7 +24,7 @@ class LocalGameAdmin(admin.ModelAdmin):
         "users",
         "date",
         "opponent_username",
-        "tournamentID",
+        "tournament_round",
         "my_score",
         "opponent_score",
     )

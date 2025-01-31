@@ -11,7 +11,7 @@ class CreateLocalGameSerializer(serializers.ModelSerializer):
             "opponent_username",
             "my_score",
             "opponent_score",
-            "tournamentID",
+            "tournament_round",
         ]
 
     def validate(self, data):
@@ -48,6 +48,7 @@ class LocalGameSerializer(serializers.ModelSerializer):
             "my_score",
             "opponent_score",
             "is_win",
+            "tournament_round"
         ]
 
     def get_is_win(self, obj):
