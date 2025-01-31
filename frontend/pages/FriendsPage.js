@@ -80,6 +80,7 @@ export class FriendsPage extends Component {
 	}
 
 	async removeFriend(friend_id) {
+		if (!(await isAuth())) window.redirect("/");
 		const { success, data, error } = await removeFriend(
 			this.user_id,
 			friend_id

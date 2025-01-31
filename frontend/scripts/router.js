@@ -32,56 +32,56 @@ const routes = {
 		layout: "sidebar",
 		component: "home-page",
 		path: "../pages/HomePage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | Homepage",
 	},
 	"/dashboard": {
 		layout: "sidebar",
 		component: "dashboard-page",
 		path: "../pages/dashboard/DashboardPage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | My Dashboard",
 	},
 	"/play/local": {
 		layout: "main",
 		component: "local-game-page",
 		path: "../pages/local-game/LocalGamePage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | Local Game",
 	},
 	"/play/remote": {
 		layout: "main",
 		component: "remote-game-page",
 		path: "../pages/local/RemoteGamePage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | Remote Game",
 	},
 	"/play/tournament": {
 		layout: "main",
 		component: "tournament-page",
 		path: "../pages/tournament/TournamentPage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | Tournament",
 	},
 	"/play/tictactoe": {
 		layout: "main",
 		component: "tictactoe-page",
 		path: "../pages/tictactoe/TictactoePage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | Play Tictactoe",
 	},
 	"/friends": {
 		layout: "main",
 		component: "friends-page",
 		path: "../pages/FriendsPage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | My Friends",
 	},
 	"/settings": {
 		layout: "main",
 		component: "settings-page",
 		path: "../pages/SettingsPage.js",
-		protected: false,
+		protected: true,
 		title: "Pong | Profile Settings",
 	},
 };
@@ -111,13 +111,13 @@ const handleLocation = async () => {
 			: routes[404];
 	} else route = routes[path] || routes[404];
 
-	/* const isProtected = route.protected;
+	const isProtected = route.protected;
 	const authenticated = await isAuth();
 	if (isProtected && !authenticated && route != routes[404]) {
 		route = routes[404];
 	} else if (!isProtected && authenticated && route != routes[404]) {
 		route = routes["/home"];
-	} */
+	}
 	const layout = layouts[route.layout];
 	loadRoute(route, layout);
 };

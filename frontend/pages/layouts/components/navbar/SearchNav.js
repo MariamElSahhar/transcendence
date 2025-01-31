@@ -1,5 +1,6 @@
 import { Component } from "../../../Component.js";
 import { searchUsers } from "../../../../scripts/clients/users-client.js";
+import { isAuth } from "../../../../scripts/utils/session-manager.js";
 
 export class SearchNav extends Component {
 	constructor() {
@@ -65,6 +66,7 @@ export class SearchNav extends Component {
 			this.searchResults.style.display = "none";
 			return;
 		}
+		if (!(await isAuth())) window.redirect("/");
 		const { success, body, error } = await searchUsers(event.target.value);
 		this.searchResults.innerHTML = "";
 		if (success) {
