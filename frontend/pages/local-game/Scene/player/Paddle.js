@@ -58,7 +58,7 @@ export class Paddle {
     resetSize() {
         this.#paddleSize.copy(this.#originalSize);
         this.#updatePaddleGeometry();
-        console.log("Paddle size reset to:", this.#paddleSize.toArray());
+        // console.log("Paddle size reset to:", this.#paddleSize.toArray());
     }
 
     #updatePaddleGeometry() {
@@ -68,7 +68,7 @@ export class Paddle {
             this.#paddleSize.z
         );
     }
-    
+
     disableAIMovementTemporarily() {
         this.#isResetting = true;
 
@@ -79,7 +79,7 @@ export class Paddle {
 
     #moveAIPaddle(ballPosition, ballVelocity) {
         if (this.#isResetting) {
-            console.log("Skipping AI movement during reset");
+            // console.log("Skipping AI movement during reset");
             return;
         }
 
@@ -99,7 +99,7 @@ export class Paddle {
         const maxAISpeed = 3.5;
         let aiSpeed = Math.min(maxAISpeed, Math.abs(distanceToBall) * 0.15);
 
-        if (Math.abs(anticipatedPositionY) > this.#boardEdgeLimit) 
+        if (Math.abs(anticipatedPositionY) > this.#boardEdgeLimit)
         {
             aiSpeed *= 0.8;
         }
@@ -137,7 +137,7 @@ export class Paddle {
     }
 
     setPosition(positionJson) {
-        console.log("Setting paddle position to:", positionJson);
+        // console.log("Setting paddle position to:", positionJson);
         this.#threeJSGroup.position.set(
             positionJson["x"],
             positionJson["y"],

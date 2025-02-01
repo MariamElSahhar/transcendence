@@ -144,9 +144,9 @@ export class RemoteGamePage extends Component {
 	updateScore(playerIndex) {
 		if (playerIndex < this.scores.length) {
 			this.scores[playerIndex] += 1;
-			console.log(
-				`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
-			);
+			// console.log(
+			// 	`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
+			// );
 		} else {
 			console.error("Invalid player index:", playerIndex);
 		}

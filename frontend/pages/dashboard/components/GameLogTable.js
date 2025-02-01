@@ -87,9 +87,18 @@ export class GameLogTable extends Component {
 			.map(
 				(game) => `
                     <tr>
-                        <td><span class="badge badge-dot"><i class="${
-							game.is_win ? "bg-success" : "bg-danger"
-						}"></i></span>${game.is_win ? "Win" : "Loss"}</td>
+                        <td>
+                            ${
+								game.tournament_round == 3 && game.is_win
+									? `<i class="bi bi-award-fill text-success ms-1 me-2"></i>`
+									: `<span class="badge badge-dot mx-0"><i class="${
+											game.is_win
+												? "bg-success"
+												: "bg-danger"
+									  }"></i></span>`
+							}
+                            ${game.is_win ? "Win" : "Loss"}
+                        </td>
                         <td>${game.opponent_username}</td>
                         <td>${game.my_score} - ${game.opponent_score} </td>
                         <td>${game.date.split("T")[0]}</td>
@@ -99,7 +108,7 @@ export class GameLogTable extends Component {
 										game.tournament_round
 											? game.tournament_round < 3
 												? "First Round"
-												: "Final Round"
+												: `Final Round`
 											: "-"
 								  }</td>`
 								: ""

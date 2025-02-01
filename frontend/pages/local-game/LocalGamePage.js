@@ -88,7 +88,7 @@ export class LocalGamePage extends Component {
 				: player2NameInput.value;
 			this.playerNames.push(player2Name || "Player 2");
 
-			console.log("Players after form submission:", this.playerNames);
+			// console.log("Players after form submission:", this.playerNames);
 
 			this.isAIEnabled = AICheckbox.checked;
 
@@ -118,9 +118,9 @@ export class LocalGamePage extends Component {
 	updateScore(playerIndex) {
 		if (playerIndex < this.scores.length) {
 			this.scores[playerIndex] += 1;
-			console.log(
-				`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
-			);
+			// console.log(
+			// 	`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
+			// );
 		} else {
 			console.error("Invalid player index:", playerIndex);
 		}

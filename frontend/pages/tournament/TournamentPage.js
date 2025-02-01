@@ -1,17 +1,24 @@
 import { Component } from "../Component.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
+import { addLocalGame } from "../../scripts/clients/gamelog-client.js";
+import { isAuth } from "../../scripts/utils/session-manager.js";
 
 export class TournamentPage extends Component {
 	constructor() {
 		super();
+		this.me = getUserSessionData();
 		this.container = null;
 		this.engine = null;
 		this.overlay = null;
 		this.players = [];
 		this.currentMatchIndex = 0;
 		this.maxScore = 5;
-		this.scores = [0, 0];
+		this.scores = [
+			[0, 0],
+			[0, 0],
+			[0, 0],
+		];
 		this.matches = [];
 		this.winners = [];
 		this.playerWins = {}; // Tracks the number of wins for each player
@@ -22,9 +29,7 @@ export class TournamentPage extends Component {
 	}
 
 	setupTournament() {
-		const userData = getUserSessionData();
-		const firstPlayerName = userData.username || "Player 1";
-		this.players.push(firstPlayerName);
+		this.players.push(this.me.username);
 
 		this.innerHTML = `
             <div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light " style="max-width: 400px; margin: 100px auto 0;">
@@ -34,7 +39,9 @@ export class TournamentPage extends Component {
                 <form id="player-form">
                     <div class="mb-3">
                         <label for="player1-name" class="form-label">Registered Player:</label>
-                        <input type="text" id="player1-name" name="player1-name" class="form-control border border-secondary text-dark" value="${firstPlayerName}" disabled />
+                        <input type="text" id="player1-name" name="player1-name" class="form-control border border-secondary text-dark" value="${
+							this.me.username
+						}" disabled />
                     </div>
                     ${this.renderPlayerInputs()}
                     <div id="error-message" class="text-danger mt-2"></div>
@@ -141,7 +148,6 @@ export class TournamentPage extends Component {
 
 	initTournament() {
 		this.winners = [];
-		this.scores = [0, 0];
 		this.currentMatchIndex = 0;
 
 		// Shuffle players to create random matchups
@@ -165,18 +171,16 @@ export class TournamentPage extends Component {
 				this.players[i],
 			];
 		}
-		console.log("Shuffled players:", this.players);
+		// console.log("Shuffled players:", this.players);
 	}
 
 	startNextMatch() {
 		if (this.currentMatchIndex < 2) {
 			const [player1, player2] = this.matches[this.currentMatchIndex];
-			this.scores = [0, 0];
 			this.createStartGameCard(player1, player2);
 		} else if (this.currentMatchIndex === 2 && this.winners.length === 2) {
 			this.matches[2] = [this.winners[0], this.winners[1]];
 			const [finalist1, finalist2] = this.matches[2];
-			this.scores = [0, 0];
 			this.createStartGameCard(finalist1, finalist2);
 		} else {
 			this.showTournamentWinner();
@@ -251,8 +255,6 @@ export class TournamentPage extends Component {
 			return;
 		}
 
-		console.log(`Starting match between ${player1} and ${player2}`);
-
 		if (this.engine) {
 			this.engine.cleanUp();
 			this.engine = null;
@@ -261,19 +263,29 @@ export class TournamentPage extends Component {
 		this.container.innerHTML = "";
 		this.container.style.display = "block";
 
-		this.engine = new Engine(this, (winner) =>
-			this.endMatch(winner, player1, player2)
+		this.engine = new Engine(this, (winner, score1, score2) =>
+			this.endMatch(winner, player1, player2, score1, score2)
 		);
 		this.engine.startGame([player1, player2]);
 	}
 
-	endMatch(winner, player1, player2) {
-		console.log(`${winner} won the match`);
-
+	async endMatch(winner, player1, player2, score1, score2) {
 		this.playerWins[winner] += 1;
 		this.winners.push(winner);
 
 		const loser = winner === player1 ? player2 : player1;
+		this.scores[this.currentMatchIndex] = [score1, score2];
+		// if one of the players is the main player
+		if (player1 == this.me.username || player2 == this.me.username) {
+			await isAuth();
+			await addLocalGame({
+				my_score: this.me.username == player1 ? score1 : score2,
+				opponent_username:
+					this.me.username != player1 ? player1 : player2,
+				opponent_score: this.me.username == player1 ? score2 : score1,
+				tournament_round: this.currentMatchIndex + 1,
+			});
+		}
 
 		if (this.currentMatchIndex < 2) {
 			this.createOverlay(
@@ -312,7 +324,7 @@ export class TournamentPage extends Component {
             </div>
         `,
 			() => {
-				this.declareWinner();
+				this.displayRanks();
 			}
 		);
 	}
@@ -369,7 +381,6 @@ export class TournamentPage extends Component {
 
 		this.createOverlay(`
             <div class="card text-center text-dark bg-light" style="width: 30rem;">
-
                 <div class="card-body">
                 <h2 class="card-title">Tournament Ranks</h2>
                     <table class="table">
@@ -384,15 +395,11 @@ export class TournamentPage extends Component {
                             ${rankHtml}
                         </tbody>
                     </table>
-                    <button class="btn btn-primary mt-3" onclick="window.redirect('/tournament')">Restart Tournament</button>
+                    <button class="btn btn-primary mt-3" onclick="window.redirect('/play/tournament')">Restart Tournament</button>
 					<button class="btn btn-secondary mt-3" onclick="window.location.href='/home'">Go Home</button>
                 </div>
             </div>
         `);
-	}
-
-	declareWinner() {
-		this.displayRanks();
 	}
 
 	removeOverlay() {

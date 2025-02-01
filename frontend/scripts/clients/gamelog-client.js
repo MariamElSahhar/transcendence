@@ -14,99 +14,6 @@ export const fetchUserGameLog = async (user_id) => {
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
 	return { success: true, data: body };
-	/* // DUMMY DATA
-	const gamelog = {
-		local: [
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 20",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-11-20",
-				opponent: "Player 3",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-		],
-		remote: [
-			{
-				date: "2024-11-20",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: true,
-			},
-			{
-				date: "2024-09-19",
-				opponent: "Player 2",
-				my_score: "3",
-				opponent_score: "2",
-				is_win: false,
-			},
-		],
-		ttt: [],
-	}; */
-	return { success: true, data: gamelog };
 };
 
 // Add remote game to gamelog
@@ -123,16 +30,16 @@ export const addLocalGame = async ({
 	opponent_score,
 	my_score,
 	opponent_username,
-	tournament,
+	tournament_round,
 }) => {
 	const url = URIs.gamelogLocal;
 	const requestBody = {
 		opponent_score,
 		my_score,
 		opponent_username,
-		tournament,
+		tournament_round,
 	};
-	const { status, body, error } = await post(url, requestBody);
+	const { error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };
 };

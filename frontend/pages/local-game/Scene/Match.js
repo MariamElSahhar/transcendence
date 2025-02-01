@@ -18,13 +18,13 @@ export class Match {
 
     async init(engine) {
         this.#engine = engine;
-        console.log("AI enabled:", engine.isAIGame);
+        // console.log("AI enabled:", engine.isAIGame);
 
         if (!engine.players || !Array.isArray(engine.players) || engine.players.length < 2) {
             throw new Error("Invalid or incomplete players data in engine.players");
         }
 
-        console.log("Engine players:", engine.players);
+        // console.log("Engine players:", engine.players);
 
         this.#ball = new Ball();
         this.#threeJSGroup.add(this.#ball.threeJSGroup);
@@ -35,20 +35,20 @@ export class Match {
             try {
                 const isAIControlled = engine.isAIGame && i === 1;
                 const playerName = engine.players[i] || `Player ${i + 1}`;
-                console.log(`Initializing player ${i} with name: ${playerName}`);
+                // console.log(`Initializing player ${i} with name: ${playerName}`);
 
                 this.#players[i] = new Player(isAIControlled);
                 await this.#players[i].init(i, this.#pointsToWinMatch, playerName);
                 this.#threeJSGroup.add(this.#players[i].threeJSGroup);
 
-                console.log(`Player ${i} initialized successfully.`);
+                // console.log(`Player ${i} initialized successfully.`);
             } catch (error) {
                 console.error(`Failed to initialize player ${i}:`, error);
                 this.#players[i] = null;
             }
         }
 
-        console.log("Final players array after initialization:", this.#players);
+        // console.log("Final players array after initialization:", this.#players);
 
         this.prepareBallForMatch();
     }
@@ -57,17 +57,17 @@ export class Match {
         this.#ballIsWaiting = true;
         this.#ballStartTime = Date.now() + 3000; // 3-second delay
         this.#ball.prepareForMatch();
-    
+
         this.#players.forEach((player, index) => {
             if (player) {
                 player.resetPaddle();
                 player.stopGame(); // Ensure paddles cannot move while waiting
             }
         });
-    
-        console.log("Players have been reset for the next round.");
+
+        // console.log("Players have been reset for the next round.");
     }
-    
+
     startGame() {
         this.#players.forEach((player) => {
             if (player) {
@@ -75,7 +75,7 @@ export class Match {
             }
         });
     }
-    
+
     updateFrame(timeDelta, currentTime, pongGameBox, boardSize) {
         const ballPosition = this.#ball.getPosition();
 
@@ -109,7 +109,7 @@ export class Match {
             console.error(`Player ${playerIndex} is null during scoring.`);
         }
 
-        console.log(`Score Update: Player 1: ${this.#points[0]}, Player 2: ${this.#points[1]}`);
+        // console.log(`Score Update: Player 1: ${this.#points[0]}, Player 2: ${this.#points[1]}`);
 
         if (this.#points[playerIndex] >= this.#pointsToWinMatch) {
             this.endGame();
@@ -128,22 +128,22 @@ export class Match {
             opponent_score: this.#points[1],
             opponent_username: this.#players[1].board.playerName,
         });
-        
-        if (error) 
+
+        if (error)
         {
             console.error("Failed to save game to gamelog");
         }
 
         this.#players.forEach((player, index) => {
             if (player) {
-                player.stopGame(); 
+                player.stopGame();
                 player.resetPaddle(); // Reset paddles at the end of the game
             } else {
                 console.error(`Player ${index} is null during reset at game end.`);
             }
         });
 
-        console.log("Game ended. Players reset to their initial positions.");
+        // console.log("Game ended. Players reset to their initial positions.");
     }
 
     setBallMovement(movementJson) {

@@ -2,6 +2,8 @@ import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/
 import { Match } from "./Match.js";
 import { PongGameBox } from "../local-game/Scene/PongGameBox.js";
 
+const POINTS = 1
+
 export class Scene
 {
     #engine;
@@ -12,68 +14,68 @@ export class Scene
     #matchHalfHeight = 13.75;
     #cameraPadding = 10.0;
     #boardSize;
-    
+
     constructor() {}
 
     async init(engine, playerNames, onMatchEndCallback) {
         this.#engine = engine;
         this.cleanUp();
-    
+
         try {
-            console.log("Initializing match...");
-            this.#match = new Match("match_1", playerNames, 5, onMatchEndCallback);
+            // console.log("Initializing match...");
+            this.#match = new Match("match_1", playerNames, POINTS, onMatchEndCallback);
             await this.#match.init(engine);
             this.#threeJSScene.add(this.#match.threeJSGroup);
-            console.log("Match initialized with players:", this.#match.players.map((p) => p.name));
-    
+            // console.log("Match initialized with players:", this.#match.players.map((p) => p.name));
+
             const player = this.#match.players[0];
             if (!player || !player.board || !player.board.size) {
                 throw new Error("Player board size is not defined.");
             }
             this.#boardSize = player.board.size;
-            console.log("Player and board size initialized:", this.#boardSize);
-    
+            // console.log("Player and board size initialized:", this.#boardSize);
+
             if (typeof PongGameBox === "function") {
                 this.#pongGameBox = new PongGameBox(
                     this.#boardSize.y,
                     player.paddle.size.y
                 );
-                console.log("PongGameBox initialized:", this.#pongGameBox);
+                // console.log("PongGameBox initialized:", this.#pongGameBox);
             } else {
                 throw new Error("PongGameBox is not defined.");
             }
-    
-            console.log("Loading background image...");
+
+            // console.log("Loading background image...");
             const textureLoader = new THREE.TextureLoader();
             const backgroundTexture = textureLoader.load(
-                '/assets/textures/newmario.jpg', 
-                () => console.log("Background image loaded successfully."),
+                '/assets/textures/newmario.jpg',
+                undefined,
                 undefined,
                 (error) => console.error("Error loading background image:", error)
             );
-    
+
             this.#threeJSScene.background = backgroundTexture;
-            console.log("Background image set.");
-    
+            // console.log("Background image set.");
+
             // Add lights
-            console.log("Setting up lights...");
+            // console.log("Setting up lights...");
             const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
             this.#threeJSScene.add(ambientLight);
-    
+
             const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
             directionalLight.position.set(50, 100, 50);
             this.#threeJSScene.add(directionalLight);
-            console.log("Lights added to the scene.");
-    
+            // console.log("Lights added to the scene.");
+
             // Adjust camera
             const camera = this.#engine.threeJS.getCamera();
             camera.position.set(0, 50, 100);
             camera.lookAt(0, 0, 0);
-            console.log("Camera positioned.");
-    
+            // console.log("Camera positioned.");
+
             if (this.#engine.threeJS.controls) {
                 this.#engine.threeJS.controls.target.set(30, 25, 0);
-                console.log("Camera controls set.");
+                // console.log("Camera controls set.");
             } else {
                 throw new Error("threeJS controls are not defined on engine.");
             }
@@ -82,13 +84,13 @@ export class Scene
             throw error;
         }
     }
-    
+
     setPlayerPaddleDirection(direction, index) {
         if (this.#match && this.#match.players[index]) {
             this.#match.players[index].paddle.setDirection(direction);
-            console.log(`Player ${index} paddle direction set to: ${direction}`);
+            // console.log(`Player ${index} paddle direction set to: ${direction}`);
         } else {
-            console.error(`Player ${index} or match is not initialized.`);
+            // console.error(`Player ${index} or match is not initialized.`);
         }
     }
 
@@ -126,13 +128,13 @@ export class Scene
     }
 
     cleanUp() {
-        console.log("Cleaning up the scene...");
+        // console.log("Cleaning up the scene...");
         while (this.#threeJSScene.children.length > 0) {
             const child = this.#threeJSScene.children[0];
             this.disposeObject(child);
             this.#threeJSScene.remove(child);
         }
-        console.log("Scene cleaned up.");
+        // console.log("Scene cleaned up.");
     }
 
     disposeObject(object) {

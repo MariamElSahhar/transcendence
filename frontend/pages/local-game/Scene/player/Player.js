@@ -14,7 +14,7 @@ export class Player {
     }
 
     async init(index, pointsToWinMatch, playerName) {
-        console.log(`Player.init called with index: ${index}, playerName: ${playerName}`);
+        // console.log(`Player.init called with index: ${index}, playerName: ${playerName}`);
 
         if (index === 0) {
             this.#threeJSGroup.position.set(-10, 0, 0); // Left player
@@ -48,7 +48,7 @@ export class Player {
     resetPaddle() {
         if (this.#paddle && this.#board) {
             const boardSize = this.#board.size;
-            
+
             const startingX = this.#threeJSGroup.position.x > 0
                 ? boardSize.x / 2 - 2 // Right player
                 : -boardSize.x / 2 + 2; // Left player
@@ -62,10 +62,10 @@ export class Player {
                 this.#paddle.disableAIMovementTemporarily();
             }
 
-            console.log("Paddle reset to position and size:", {
-                position: this.#paddle.getPosition(),
-                size: this.#paddle.size,
-            });
+            // console.log("Paddle reset to position and size:", {
+            //     position: this.#paddle.getPosition(),
+            //     size: this.#paddle.size,
+            // });
         }
     }
 
