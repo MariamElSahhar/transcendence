@@ -559,7 +559,6 @@ div.camera-icon-circle:hover i.bi-camera {
 
 	#passwordChecker() {
 		if (this.password.value === "") {
-			console.log();
 			this.password.classList.remove("is-invalid", "is-valid");
 			this.passwordFeeback.innerHTML = "";
 			this.passwordDiff = false;

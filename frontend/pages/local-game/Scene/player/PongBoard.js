@@ -17,8 +17,6 @@ export class PongBoard {
 	constructor() {}
 
 	async init(side, maxScore, playerName) {
-		// console.log(`PongBoard.init called with side: ${side}, playerName: ${playerName}`);
-
 		if (!playerName || playerName.trim() === "") {
 			playerName = "Unknown Player";
 		}
