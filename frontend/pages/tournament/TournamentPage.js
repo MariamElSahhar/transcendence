@@ -28,6 +28,10 @@ export class TournamentPage extends Component {
 		this.setupTournament();
 	}
 
+	disconnectedCallback() {
+		// TODO: stop game when player leaves page
+	}
+
 	setupTournament() {
 		this.players.push(this.me.username);
 
@@ -277,7 +281,7 @@ export class TournamentPage extends Component {
 		this.scores[this.currentMatchIndex] = [score1, score2];
 		// if one of the players is the main player
 		if (player1 == this.me.username || player2 == this.me.username) {
-			await isAuth();
+			if (!(await isAuth())) window.redirect("/");
 			await addLocalGame({
 				my_score: this.me.username == player1 ? score1 : score2,
 				opponent_username:

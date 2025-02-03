@@ -44,6 +44,10 @@ export class LocalGamePage extends Component {
 		this.setupPlayerForm();
 	}
 
+	disconnectedCallback() {
+		// TODO: stop game when player leaves page
+	}
+
 	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
 		const submit = this.querySelector("#submit-players");

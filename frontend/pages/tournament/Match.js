@@ -27,7 +27,7 @@ export class Match {
 		this.#pointsToWinMatch = pointsToWinMatch;
 		this.#onMatchEndCallback = onMatchEndCallback;
 
-		// console.log("Initializing Match with players:", this.#playerNames);
+		console.log("Initializing Match with players:", this.#playerNames);
 	}
 
 	async init(engine) {
@@ -79,7 +79,7 @@ export class Match {
 	}
 
 	startGame() {
-		// console.log("Starting the match...");
+		console.log("Starting the match...");
 		this.#players.forEach((player) => {
 			if (player) {
 				player.startGame(); // Enable paddle movement
@@ -88,7 +88,7 @@ export class Match {
 	}
 
 	stopGame() {
-		// console.log("Stopping the match...");
+		console.log("Stopping the match...");
 		this.#players.forEach((player) => {
 			if (player) {
 				player.stopGame(); // Disable paddle movement
@@ -101,7 +101,7 @@ export class Match {
 		this.#ballStartTime = Date.now() + 3000; // 3-second delay before the ball starts moving
 		this.#ball.prepareForMatch();
 
-		// console.log("Preparing ball and resetting players...");
+		console.log("Preparing ball and resetting players...");
 		this.#players.forEach((player) => {
 			if (player) {
 				player.resetPaddle(); // Reset paddle position and size
@@ -114,14 +114,11 @@ export class Match {
 		this.#points[playerIndex]++;
 		this.#players[playerIndex].addPoint();
 
-		// console.log(`Score Update: ${this.#playerNames[0]} ${this.#points[0]} - ${this.#playerNames[1]} ${this.#points[1]}`);
-
 		if (this.#points[playerIndex] >= this.#pointsToWinMatch) {
 			this.#matchIsOver = true;
 			this.#ball.removeBall();
 
 			const winnerName = this.#playerNames[playerIndex];
-			// console.log(`${winnerName} won the match`);
 
 			if (this.#engine.getComponent().addEndGameCard) {
 				this.#engine
@@ -153,7 +150,7 @@ export class Match {
 	}
 
 	resetMatch() {
-		// console.log("Resetting match...");
+		console.log("Resetting match...");
 		this.#points = [0, 0];
 		this.#matchIsOver = false;
 
