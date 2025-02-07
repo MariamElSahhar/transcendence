@@ -1,6 +1,5 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { HandlePaddleEdge } from "../HandlePaddleEdge.js";
-import {sendWebSocketMessage} from "../../../../scripts/utils/websocket-manager.js"
 
 
 export class Paddle {
@@ -24,11 +23,9 @@ export class Paddle {
     #originalSize = this.#paddleSize.clone();
     #paddleIsOnTheRight;
 
-    constructor(paddleIsOnTheRight, playerPosition, isAIControlled = false,gameSession,gameType) {
+    constructor(paddleIsOnTheRight, playerPosition, isAIControlled = false) {
         this.#paddleIsOnTheRight = paddleIsOnTheRight;
         this.#isAIControlled = isAIControlled;
-        this.gameSession=gameSession;
-        this.gameType=gameType;
         this.#threeJSGroup.position.set(paddleIsOnTheRight ? 8 : -8, 0, 1); // Lift paddle above the board.
 
         const color = this.#getColor();
@@ -138,14 +135,11 @@ export class Paddle {
                 : direction === "down"
                 ? -this.#moveSpeed
                 : 0;
-        // sendWebSocketMessage({action:"updatepaddle", right:this.#paddleIsOnTheRight,gameSession:this.gameSession,coords:this.getPosition()});
 
     }
 
     setPosition(positionJson) {
-        // console.log("Setting paddle position to:", positionJson);
 
-        // console.log(this.#paddleIsOnTheRight)
        this.#threeJSGroup.position.set(
             positionJson["x"],
             positionJson["y"],

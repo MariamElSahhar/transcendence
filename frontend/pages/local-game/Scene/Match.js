@@ -39,7 +39,7 @@ export class Match {
 				const playerName = engine.players[i] || `Player ${i + 1}`;
 				// console.log(`Initializing player ${i} with name: ${playerName}`);
 
-				this.players[i] = new Player(isAIControlled,this.engine.gameSession,this.gameType);
+				this.players[i] = new Player(isAIControlled);
 				await this.players[i].init(i, this.#pointsToWinMatch, playerName);
 				this.#threeJSGroup.add(this.players[i].threeJSGroup);
 
@@ -61,12 +61,6 @@ export class Match {
 			}
 			else
 				this.gameType="local"
-			// if (this.gameType === "remote") {
-			// 	sendWebSocketMessage({
-			// 		action: "ready",
-			// 		game_session_id: this.engine.gameSession
-			// 	});
-			// }
 		this.prepareBallForMatch();
 	}
 
@@ -82,7 +76,6 @@ export class Match {
     prepareBallForMatch() {
         this.#ballIsWaiting = true;
         this.#ballStartTime = Date.now() + 3000; // 3-second delay
-		// console.log(this.gameType, this.isHost, this.engine.gameSession)
 		if(this.gameType =="local" || (this.ball.movementSet==false))
 			this.ball.prepareForMatch(this.gameType, this.isHost, this.engine.gameSession);
 
@@ -97,13 +90,6 @@ export class Match {
     }
 
     startGame() {
-		// if(this.isHost)
-		// {
-		// 	setInterval(() => {
-		// 		// console.log(this.ball.getPosition(),this.players[0].paddle.getPosition(),this.players[1].paddle.getPosition() )
-		// 			sendWebSocketMessage({ type: "update_positions", ballposition:this.ball.getPosition(),gameSession:this.engine.gameSession,leftpaddle:this.players[0].paddle.getPosition(),rightpaddle:this.players[1].paddle.getPosition() });
-		// 	}, 100);
-		// }
         this.players.forEach((player) => {
             if (player) {
                 player.startGame(); // Enable paddle movement when the game starts
@@ -153,20 +139,13 @@ export class Match {
 			this.startNewRound();
 			this.#ballStartTime = Date.now() + 3000;
 			this.prepareBallForMatch();
-		} else {
-			// if(currentTime)
-			// this.#ballStartTime = Date.now() + 1000;
-			// console.log("Waiting for both players to be ready...");
 		}
 	}
 
 	onPlayerReady(playerIndex) {
 
-		// console.log(this.playersReady)
-        // Mark this player as ready
         this.playersReady = true;
 
-        // Now check if both players are ready
         this.waitForPlayersToBeReady();
     }
 
@@ -205,18 +184,27 @@ export class Match {
 		}
 	}
 
-	// async
-	endGame() {
+	async endGame() {
 		this.#matchIsOver = true;
 		this.ball.removeBall();
 		this.engine.component.addEndGameCard(this.#points[0], this.#points[1]);
 
-		// const { error } = await addLocalGame({
-		// 	my_score: this.#points[0],
-		// 	opponent_score: this.#points[1],
-		// 	opponent_username: this.players[1].board.playerName,
-		// });
-
+		if(this.gameType == "local")
+		{
+			const { error } = await addLocalGame({
+				my_score: this.#points[0],
+				opponent_score: this.#points[1],
+				opponent_username: this.players[1].board.playerName,
+			});
+		// }
+		// else
+		// {
+		// 	const { error } = await addLocalGame({
+		// 		my_score: this.#points[0],
+		// 		opponent_score: this.#points[1],
+		// 		opponent_username: this.players[1].board.playerName,
+		// 	});
+		// }
 		// if (error) {
 		// 	// console.error("Failed to save game to gamelog");
 		// }
