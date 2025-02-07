@@ -1,7 +1,7 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Player } from "./player/Player.js";
 import { Ball } from "./Ball.js";
-import { addLocalGame } from "../../../scripts/clients/gamelog-client.js";
+import { addLocalGame,addRemoteGame } from "../../../scripts/clients/gamelog-client.js";
 import {sendWebSocketMessage} from "../../../scripts/utils/websocket-manager.js"
 
 export class Match {
@@ -11,7 +11,7 @@ export class Match {
 	ball;
 	#ballIsWaiting;
 	#ballStartTime;
-	#pointsToWinMatch = 5;
+	#pointsToWinMatch = 1;
 	#matchIsOver = false;
 	#points = [0, 0];
 	playersReady = true;
@@ -188,23 +188,27 @@ export class Match {
 		this.#matchIsOver = true;
 		this.ball.removeBall();
 		this.engine.component.addEndGameCard(this.#points[0], this.#points[1]);
-
+		console.log(this.players[1])
 		if(this.gameType == "local")
 		{
 			const { error } = await addLocalGame({
 				my_score: this.#points[0],
 				opponent_score: this.#points[1],
-				opponent_username: this.players[1].board.playerName,
+				opponent_username: this.engine.players[1],
 			});
-		// }
-		// else
-		// {
-		// 	const { error } = await addLocalGame({
-		// 		my_score: this.#points[0],
-		// 		opponent_score: this.#points[1],
-		// 		opponent_username: this.players[1].board.playerName,
-		// 	});
-		// }
+		}
+		else if(this.isHost)
+		{
+			// const { success, data } = await fetchUserById(
+			// 	getUserSessionData().userid
+			// );
+			const { error } = await addRemoteGame({
+				opponent_score: this.#points[1],
+				my_score: this.#points[0],
+				opponent_username: this.engine.players[1],
+				tournament:this.engine.gameSession,
+			});
+		}
 		// if (error) {
 		// 	// console.error("Failed to save game to gamelog");
 		// }

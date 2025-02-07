@@ -127,9 +127,18 @@ export const fetchUserGameLog = async (user_id) => {
 };
 
 // Add remote game to gamelog
-export const addRemoteGame = async (gameData) => {
+export const addRemoteGame = async ({	opponent_score,
+	my_score,
+	opponent_username,
+	tournament}) => {
 	const url = URIs.gamelogRemote;
-	const requestBody = { gameData };
+	const requestBody = {
+		opponent_score,
+		my_score,
+		opponent_username,
+		tournament,
+	};
+	console.log(requestBody )
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };

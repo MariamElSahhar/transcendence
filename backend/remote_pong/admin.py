@@ -8,3 +8,13 @@ class MatchmakingQueue(admin.ModelAdmin):
         "player",
         "joined_at",
     )
+@admin.register(GameSession)
+class GameSession(admin.ModelAdmin):
+    list_display = (
+        "STATUS_CHOICES",
+        "player1",
+        "player2",
+        "status",
+        "score_player1",
+        "score_player2",
+    )

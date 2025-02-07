@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from remote_pong.models import  GameSession
 from users.models import CustomUser
 from ..models import RemoteGameLog, LocalGameLog, TicTacToeLog
 from ..serializers import (
@@ -16,7 +16,25 @@ from ..serializers import (
 
 @api_view(["POST"])
 def create_gamelog_remote(request):
-    serializer = CreateRemoteGameSerializer(data=request.data)
+    print(request.data)
+    gamedata = GameSession.objects.get(id=request.data["tournament"])
+    # print(gamedata.player1)
+    user1 = request.user.id
+    user2 = CustomUser.objects.get(username=request.data["opponent_username"]).id
+    if(request.data["my_score"] > request.data["opponent_score"]):
+        winnerID=user1
+        winner_score=request.data["my_score"]
+        loserID=user2
+        loser_score=request.data["opponent_score"]
+    else:
+        winnerID=user2
+        winner_score=request.data["opponent_score"]
+        loserID=user1
+        loser_score=request.data["my_score"]
+    data={"winnerID":winnerID,"loserID":loserID,"winner_score":winner_score,"loser_score":loser_score}
+    print(data)
+
+    serializer = CreateRemoteGameSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         return Response(
