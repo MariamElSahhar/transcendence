@@ -21,7 +21,10 @@ export function initializeWebSocket(url, onOpen, onMessage, onClose, onError) {
 
     socket.onclose = () => {
         console.log('WebSocket closed');
-        if (onClose) onClose();
+        if(socket)
+        {
+            if (onClose) onClose();
+        }
         socket = null;
     };
 

@@ -1,6 +1,7 @@
 import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
 import { removeMatchMaking } from "./clients/gamelog-client.js";
+import {closeWebSocket} from "./utils/websocket-manager.js";
 const routes = {
 	// PUBLIC SCREENS
 	"/": {
@@ -123,6 +124,7 @@ const handleLocation = async () => {
 	if (previouspath && previouspath.startsWith("/play/remote")) {
 		try {
 			const { status, success, data } = await removeMatchMaking();
+			closeWebSocket();
 			if (success) {
 				console.log("Successfully removed from matchmaking queue:", data);
 			} else {

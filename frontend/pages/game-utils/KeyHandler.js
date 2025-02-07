@@ -14,10 +14,10 @@ export class KeyHandler {
 			window, 'keydown', (event) => {
 				if(player=="remote")
 					{
-						// if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
-						// {
-							sendWebSocketMessage({action:"move",type:"keydown",key: event.key, players:players, playerSide:playerSide,gameSession:gameSession});
-						// }
+						if ((event.key === "W" || event.key === "S"||  event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
+						{
+							sendWebSocketMessage({action:"move",type:"keydown",key: event.key, playerSide:playerSide,gameSession:gameSession});
+						}
 				}
 				else
                		this.handleKeyPress(event);
@@ -27,10 +27,10 @@ export class KeyHandler {
             window, 'keyup', (event) => {
                 if(player=="remote")
 					{
-						// if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
-						// {
-							sendWebSocketMessage({action:"move",type:"keyup",key: event.key, players:players, playerSide:playerSide,gameSession:gameSession});
-						// }
+						if ((event.key === "W" || event.key === "S"|| event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
+						{
+							sendWebSocketMessage({action:"move",type:"keyup",key: event.key, playerSide:playerSide,gameSession:gameSession});
+						}
 				}
 				else
                 this.handleKeyRelease(event);

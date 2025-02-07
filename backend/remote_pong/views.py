@@ -25,11 +25,11 @@ def match_maker(request):
 	if request.method == "POST":
 		player = request.user
 		user1 =  CustomUser.objects.get(username=player)
-		if MatchmakingQueue.objects.filter(player=player).exists():
-			return Response({"message": "You are already in the queue"}, status=400)
-
-		MatchmakingQueue.objects.create(player=player)
 		other_player = MatchmakingQueue.objects.exclude(player=player).first()
+		if MatchmakingQueue.objects.filter(player=player).exists() and not other_player:
+			return Response({"message": "You are already in the queue"}, status=400)
+		if not MatchmakingQueue.objects.filter(player=player).exists():
+			MatchmakingQueue.objects.create(player=player)
 		if other_player:
 			game_session = GameSession.objects.create(
 				player1=other_player.player, player2=player, status='active'

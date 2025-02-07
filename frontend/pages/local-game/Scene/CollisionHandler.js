@@ -1,5 +1,7 @@
 import { HandlePaddleEdge } from './HandlePaddleEdge.js';
+import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 
+import {sendWebSocketMessage} from "../../../scripts/utils/websocket-manager.js"
 class PhysicalObject {
   constructor() {
     this.intersection = null;
@@ -15,7 +17,7 @@ class PhysicalObject {
 
     // // Reset both players to their starting positions.
     // _match.resetPlayers();
-  
+
     // return null;
     // //throw new Error('Not implemented');
     throw new Error('Not implemented');
@@ -51,6 +53,7 @@ class Wall extends PhysicalObject {
   }
 
   handleCollision(travel, ball, _collisionHandler, _match) {
+
     ball.setMovementY(ball.movement.y * -1);
     const newTravelVector = travel.vector.clone().multiplyScalar(1 - this.t);
     newTravelVector.y *= -1;
@@ -91,7 +94,23 @@ class Goal extends PhysicalObject {
   }
 
   handleCollision(_travel, _ball, _collisionHandler, match) {
-    match.playerMarkedPoint(1 - this.isRight);
+    // if(match.isHost)
+    // {
+      if(match.gameType=="local" || match.isHost)//(_ball.movement.x < 0 && match.engine.playerSide =="left" )|| (_ball.movement.x > 0 && match.engine.playerSide =="right"))
+      {
+        console.log( match.engine.playerSide)
+        sendWebSocketMessage({ type: "ballPosition", position:new THREE.Vector3(0., 0., 0.), gameSession: match.engine.gameSession });
+        sendWebSocketMessage({ type: "update_positions", ballposition:new THREE.Vector3(0., 0., 1.),gameSession:match.engine.gameSession,leftpaddle:match.players[0].paddle.getPosition(),rightpaddle:match.players[1].paddle.getPosition() });
+
+        sendWebSocketMessage({type:"match_end", gameSession: match.engine.gameSession, index:1-this.isRight})
+        match.playerMarkedPoint(1 - this.isRight);
+  // }
+        // sendWebSocketMessage({ type: "ballPosition", position:_ball.movement, gameSession: match.engine.gameSession });
+      //   console.log("collission on left")
+      //  if()
+      //   console.log("collission on right")
+    }
+    // console.log("ohno???????????????")
     return null;
   }
 }
@@ -169,13 +188,34 @@ class Paddle extends PhysicalObject {
       const normalizedMovement = this.intersection.clone()
         .sub(movementReference)
         .normalize();
+
       ball.movement = normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration);
       newTravelVector = normalizedMovement.multiplyScalar(newTravelVector.length());
-    } else {
+      // console.log("collided????? here", ball.movement)
+      // if(_match.isHost)
+      // {
+      //   console.log("here!!")
+      //   sendWebSocketMessage({ type: "ballPosition", position: ball.movement, gameSession: _match.engine.gameSession });
+      // }
+      } else {
       ball.setMovementY(ball.movement.y * -1);
+      // let movement = ball.movement;
+      // movement.y = ball.movement.y * -1;
+      // sendWebSocketMessage({ type: "update_positions", ballposition:movement,gameSession:_match.engine.gameSession,leftpaddle:_match.players[0].paddle.getPosition(),rightpaddle:_match.players[1].paddle.getPosition() });
+
       newTravelVector.y *= -1;
     }
-
+    if(_match.isHost)
+    {
+      // console.log("hee??????????????")
+    sendWebSocketMessage({ type: "ballPosition", position:ball.movement, gameSession: _match.engine.gameSession });
+    }
+    // if(_match.isHost)
+    // {
+    //   console.log("WE'RE THE HOSTTTTT")
+        // sendWebSocketMessage({ type: "ballPosition", position: ball.movement, gameSession: _match.engine.gameSession });
+					// sendWebSocketMessage({ type: "update_positions", ballposition:ball.getPosition(),gameSession:_match.engine.gameSession,leftpaddle:_match.players[0].paddle.getPosition(),rightpaddle:_match.players[1].paddle.getPosition() });
+    // }
     return new HandlePaddleEdge(
       this.intersection,
       this.intersection.clone().add(newTravelVector),
@@ -199,14 +239,24 @@ export class CollisionHandler {
       ball.getPosition(),
       ball.getPosition().clone().add(ball.movement.clone().multiplyScalar(timeDelta))
     );
-
+      // console.log( ball.getPosition().clone().add(ball.movement.clone().multiplyScalar(timeDelta)))
     while (travel !== null) {
       const closestObjectHit = this.getClosestObjectHit(travel, ball.radius);
       if (!closestObjectHit) {
-        ball.setPosition(travel.end);
+        // console.log("here")
+        // if(match.gameType=="local")
+          ball.setPosition(travel.end);
+        // else if(match.isHost)
+        // {
+        // sendWebSocketMessage({ type: "update_positions", ballposition:travel.end,gameSession:match.engine.gameSession,leftpaddle:match.players[0].paddle.getPosition(),rightpaddle:match.players[1].paddle.getPosition() });
+        // }
         return;
       }
-      travel = closestObjectHit.handleCollision(travel, ball, this, match);
+
+      // if(match.isHost)
+      // {
+      travel=closestObjectHit.handleCollision(travel, ball, this, match);
+      // }
     }
   }
 

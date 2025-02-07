@@ -84,24 +84,25 @@ export class RemoteGamePage extends Component {
 
 	onWebSocketOpen(socket) {
 	   console.log('WebSocket connected');
-	   sendWebSocketMessage({ action: "test" });
    }
 
 	onWebSocketMessage(data) {
+		// console.log(Date.now())
 	//    console.log('Received data:', data);
 	   if (data["message"] === "Match found!" && !this.playerSet) {
 			this.playerSide = data["position"]
 			this.gameID=data["game_session_id"]
 		   this.playerSet = true;
 		   this.updateLoaders(data);
+		   sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
 			// console.log(this.playerSide)
 		   if (WebGL.isWebGLAvailable()) {
 			   this.createOverlay();
-			   const countdownStart = Date.now() / 1000 + 3;
+
 			   document.getElementById("searchdiv").classList.remove("d-flex");
 			   document.getElementById("searchdiv").classList.add("d-none");
 			   this.container.style.display = "block";
-			   this.startCountdown(countdownStart);
+
 		   } else {
 			   console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
 		   }
@@ -119,7 +120,51 @@ export class RemoteGamePage extends Component {
 	   {
 		this.engine.scene.match.ball.setMovement(data["position"])
 	   }
+	   else if(data["message"] == "Update positions")
+	   {
+			// if(data["right"] == true && this.engine.scene.match.players[1].paddle.getPosition()!=data["position"])
+			// {
+				// console.log(data)
+				if(this.playerSide=="right")
+				{
+				this.engine.scene.match.ball.setPosition(data["ball"])
+				this.engine.scene.match.players[0].paddle.setPosition(data["leftpaddle"])
+				this.engine.scene.match.players[1].paddle.setPosition(data["rightpaddle"])
+				}
+				// }
+			// 	else if(data["right"] == false &&  this.engine.scene.match.players[0].paddle.getPosition()!=data["position"]){
+			// this.engine.scene.match.players[0].paddle.setPosition(data["position"])
+	// }
+			// this.engine.scene.match.ball.setMovement(data["position"])
+	   }
+	   else if(data["message"] == "startRound")
+	   {
+		// console.log("ARE YOU READYYYYY")
+		// console.log(data);
+		if(data["round"] == 1)
+		{
+			const countdownStart = Date.now() / 1000 + 3;
+			this.startCountdown(countdownStart);
+			// console.log("here")
+		}
+		else
+		{
+			// console.log("here",data["index"])
+			this.engine.scene.match.onPlayerReady(data["index"]);
+		// this.startGame()
+	   }
    }
+   else if(data["message"] == "endgame")
+   {
+	// let index;
+	console.log("LETS END IT HERE")
+	if(!this.engine.scene.match.isHost)
+		this.engine.scene.match.playerMarkedPoint(data["index"])
+	// 	index = 1;
+	// else
+	// 	index = 0;
+   }
+}
 
 	onWebSocketClose() {
 	   console.log('WebSocket closed');
