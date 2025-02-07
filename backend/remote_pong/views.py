@@ -25,7 +25,7 @@ def match_maker(request):
 	if request.method == "POST":
 		player = request.user
 		user1 =  CustomUser.objects.get(username=player)
-		other_player = MatchmakingQueue.objects.exclude(player=player).first()
+		other_player = MatchmakingQueue.objects.exclude(player=player).order_by('joined_at').first()
 		if MatchmakingQueue.objects.filter(player=player).exists() and not other_player:
 			return Response({"message": "You are already in the queue"}, status=400)
 		if not MatchmakingQueue.objects.filter(player=player).exists():
