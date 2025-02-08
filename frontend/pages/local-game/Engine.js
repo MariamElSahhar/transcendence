@@ -50,8 +50,10 @@ export class Engine {
 
   cleanUp() {
     this.clearScene(this.#scene.threeJSScene);
+    this.stopAnimationLoop();
     this.#threeJS.clearRenderer();
   }
+
 
   renderFrame() {
     this.#threeJS.renderFrame(this.#scene.threeJSScene);

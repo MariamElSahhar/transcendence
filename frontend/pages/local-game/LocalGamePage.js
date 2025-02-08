@@ -20,8 +20,16 @@ export class LocalGamePage extends Component {
 	}
 
 	disconnectedCallback() {
-		// TODO: stop game when player leaves page
-	}
+		console.log("LocalGamePage is being disconnected. Cleaning up...");
+		if (this.engine) {
+		  this.engine.stopAnimationLoop();
+		  this.engine.cleanUp();
+		}
+		if (this.countDownIntervalId) {
+		  clearInterval(this.countDownIntervalId);
+		  this.countDownIntervalId = null;
+		}
+	  }
 
 	render() {
 		return `
@@ -133,17 +141,18 @@ export class LocalGamePage extends Component {
 	startCountdown(startDateInSeconds) {
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 		this.updateOverlayCountdown(secondsLeft);
-
-		const countDownInterval = setInterval(() => {
-			secondsLeft -= 1;
-			this.updateOverlayCountdown(secondsLeft);
-
-			if (secondsLeft <= 0) {
-				clearInterval(countDownInterval);
-				this.startGame();
-			}
+	
+		this.countDownIntervalId = setInterval(() => {
+		  secondsLeft -= 1;
+		  this.updateOverlayCountdown(secondsLeft);
+	
+		  if (secondsLeft <= 0) {
+			clearInterval(this.countDownIntervalId);
+			this.countDownIntervalId = null;
+			this.startGame();
+		  }
 		}, 1000);
-	}
+	  }
 
 	createOverlay() {
 		this.overlay = document.createElement("div");
