@@ -25,17 +25,16 @@ export class TournamentPage extends Component {
 	}
 
 	connectedCallback() {
-		this.setupTournament();
+		this.players.push(this.me.username);
+		super.connectedCallback();
 	}
 
 	disconnectedCallback() {
 		// TODO: stop game when player leaves page
 	}
 
-	setupTournament() {
-		this.players.push(this.me.username);
-
-		this.innerHTML = `
+	render() {
+		return `
             <div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light " style="max-width: 400px; margin: 100px auto 0;">
                 <div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-white">
 					<h3 class="fw-bold  m-0">Setup Tournament</h3>
@@ -54,7 +53,9 @@ export class TournamentPage extends Component {
             </div>
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
+	}
 
+	postRender() {
 		this.container = this.querySelector("#container");
 		this.setupPlayerForm();
 	}
