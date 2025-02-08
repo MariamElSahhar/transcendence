@@ -14,8 +14,6 @@ export class Player {
     }
 
     async init(index, pointsToWinMatch, playerName) {
-        // console.log(`Player.init called with index: ${index}, playerName: ${playerName}`);
-
         if (index === 0) {
             this.#threeJSGroup.position.set(-10, 0, 0); // Left player
         } else {
@@ -61,11 +59,6 @@ export class Player {
             if (this.#isAIControlled) {
                 this.paddle.disableAIMovementTemporarily();
             }
-
-            // console.log("Paddle reset to position and size:", {
-            //     position: this.paddle.getPosition(),
-            //     size: this.paddle.size,
-            // });
         }
     }
 

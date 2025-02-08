@@ -17,7 +17,7 @@ export class GameHeatMap extends Component {
 	render() {
 		return `
             <div class="h-100 w-100 p-3 flex-column d-flex justify-content-center align-items-start">
-                <small class="my-0">${this.stats.totalPlayed} games played in the last year</small>
+                <small class="my-0">${this.stats.totalPlayed} games played in 2025</small>
                 <div class="heatmap-grid d-grid justify-content-start overflow-scroll w-100"></div>
             </div>
         `;

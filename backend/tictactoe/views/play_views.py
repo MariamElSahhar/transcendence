@@ -253,20 +253,12 @@ def make_move_view(request):
                 game.game_winner = None  # No overall winner
 
             # The game is finished
-            # Log the game results
-            # Determine the opponent
-            opponent = game.player_2 if game.player_1 == user else game.player_1
-
-            # Determine the scores for both the user and the opponent
-            my_score = player_1_wins if game.player_1 == user else player_2_wins
-            opponent_score = player_2_wins if game.player_1 == user else player_1_wins
-
             # Create the TicTacToeLog entry for the user
             TicTacToeLog.objects.create(
-                users=user,
-                opponent_username=opponent.username if opponent else "Unknown",
-                my_score=my_score,
-                opponent_score=opponent_score,
+                winnerID = game.player_1 if player_1_wins > player_2_wins else game.player_2,
+                loserID = game.player_2 if player_1_wins > player_2_wins else game.player_1,
+                winner_score=max(player_1_wins, player_2_wins),
+                loser_score=min(player_1_wins, player_2_wins),
             )
         else:
             game.current_round += 1

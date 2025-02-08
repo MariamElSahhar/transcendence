@@ -17,26 +17,26 @@ export class LocalGamePage extends Component {
 	connectedCallback() {
 		this.playerNames.push(getUserSessionData().username || "player 1");
 
-		this.innerHTML = `    
-		<div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light " style="max-width: 400px;  margin: 200px auto 0;">
-				<div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-while">
-					<h3 class="fw-bold  m-0">Setup Players</h3>
+		this.innerHTML = `
+				<div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light" style="max-width: 400px;">
+					<div class="text-center p-3 rounded mb-4 bg-danger text-warning border-while">
+						<h3 class="fw-bold  m-0">Setup Players</h3>
+					</div>
+					<form id="player-form">
+						<div id="player-names">
+							<div class="mb-3" >
+								<label for="player2-name" class="form-label d-block"></label>
+								<input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100 border border-secondary text-dark" placeholder="Player 2 display name"/>
+							</div>
+						</div>
+						<div class="form-check mb-3">
+							<input type="checkbox" class="form-check-input border border-secondary" id="play-against-ai" >
+							<label class="form-check-label" for="play-against-ai"> <i class="bi bi-robot fs-4 text-primary"></i> Play against computer </label>
+						</div>
+						<button id="submit-players" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark"  disabled>Start Game</button>
+					</form>
 				</div>
-              	<form id="player-form">
-					<div id="player-names">
-                  		<div class="mb-3" >
-                    		<label for="player2-name" class="form-label d-block"></label>
-                    		<input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100 border border-secondary text-dark" placeholder="Player 2 display name"/>
-                  		</div>
-                	</div>
-					<div class="form-check mb-3">
-                  		<input type="checkbox" class="form-check-input border border-secondary" id="play-against-ai" >
-                  		<label class="form-check-label" for="play-against-ai"> <i class="bi bi-robot fs-4 text-primary"></i> Play against computer </label>
-                	</div>
-                	<button id="submit-players" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark"  disabled>Start Game</button>
-              	</form>
-            </div>
-			
+
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
 
@@ -88,7 +88,7 @@ export class LocalGamePage extends Component {
 				: player2NameInput.value;
 			this.playerNames.push(player2Name || "Player 2");
 
-			console.log("Players after form submission:", this.playerNames);
+			// console.log("Players after form submission:", this.playerNames);
 
 			this.isAIEnabled = AICheckbox.checked;
 
@@ -118,9 +118,9 @@ export class LocalGamePage extends Component {
 	updateScore(playerIndex) {
 		if (playerIndex < this.scores.length) {
 			this.scores[playerIndex] += 1;
-			console.log(
-				`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
-			);
+			// console.log(
+			// 	`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
+			// );
 		} else {
 			console.error("Invalid player index:", playerIndex);
 		}

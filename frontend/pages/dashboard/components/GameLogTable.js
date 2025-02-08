@@ -61,26 +61,20 @@ export class GameLogTable extends Component {
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-local" role="tabpanel" aria-labelledby="pills-local-tab">
-                        ${this.renderMatches(
-							this.gamelog.local,
-							"#pills-local"
-						)}
+                        ${this.renderMatches(this.gamelog.local, "local")}
                     </div>
                     <div class="tab-pane fade" id="pills-remote" role="tabpanel" aria-labelledby="pills-remote-tab">
-                        ${this.renderMatches(
-							this.gamelog.remote,
-							"#pills-remote"
-						)}
+                        ${this.renderMatches(this.gamelog.remote, "remote")}
                     </div>
                     <div class="tab-pane fade" id="pills-ttt" role="tabpanel" aria-labelledby="pills-ttt-tab">
-                        ${this.renderMatches(this.gamelog.ttt, "#pills-ttt")}
+                        ${this.renderMatches(this.gamelog.ttt, "ttt")}
                     </div>
                 </div>
             </div>
         `;
 	}
 
-	renderMatches(gamelog) {
+	renderMatches(gamelog, gametype) {
 		if (!gamelog || gamelog.length === 0) {
 			return `
                 <div class="d-flex flex-column justify-content-start align-items-center w-100">
@@ -93,12 +87,32 @@ export class GameLogTable extends Component {
 			.map(
 				(game) => `
                     <tr>
-                        <td><span class="badge badge-dot"><i class="${
-							game.is_win ? "bg-success" : "bg-danger"
-						}"></i></span>${game.is_win ? "Win" : "Loss"}</td>
+                        <td>
+                            ${
+								game.tournament_round == 3 && game.is_win
+									? `<i class="bi bi-award-fill text-success ms-1 me-2"></i>`
+									: `<span class="badge badge-dot mx-0"><i class="${
+											game.is_win
+												? "bg-success"
+												: "bg-danger"
+									  }"></i></span>`
+							}
+                            ${game.is_win ? "Win" : "Loss"}
+                        </td>
                         <td>${game.opponent_username}</td>
                         <td>${game.my_score} - ${game.opponent_score} </td>
                         <td>${game.date.split("T")[0]}</td>
+                        ${
+							gametype == "local"
+								? `<td>${
+										game.tournament_round
+											? game.tournament_round < 3
+												? "First Round"
+												: `Final Round`
+											: "-"
+								  }</td>`
+								: ""
+						}
                     </tr>
                 `
 			)
@@ -113,6 +127,11 @@ export class GameLogTable extends Component {
                             <th scope="col">Opponent</th>
                             <th scope="col">Score</th>
                             <th scope="col">Date</th>
+                            ${
+								gametype == "local"
+									? `<th scope="col">Tournament</th>`
+									: ""
+							}
                         </tr>
                     </thead>
                     <tbody>

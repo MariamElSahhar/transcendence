@@ -19,52 +19,42 @@ export class Scene {
     this.#engine = engine;
 
     try {
-    //   console.log("Initializing match...");
-      await this.match.init(engine);
-      this.#threeJSScene.add(this.match.threeJSGroup);
-    //   console.log("Match initialized and added to scene.");
+      await this.#match.init(engine);
+      this.#threeJSScene.add(this.#match.threeJSGroup);
 
       // Load background image
-    //   console.log("Loading background image...");
       const textureLoader = new THREE.TextureLoader();
       const backgroundTexture = textureLoader.load(
         '/assets/textures/newmario.jpg',
-        () => console.log("Background image loaded successfully."),
+        Null,
         undefined,
         (error) => console.error("Error loading background image:", error)
       );
 
       // Set the background of the scene
       this.#threeJSScene.background = backgroundTexture;
-    //   console.log("Background image set.");
 
       // Set the camera position
       const camera = engine.threeJS.getCamera();
       camera.position.set(0, 50, 100);
       camera.lookAt(0, 0, 0);
-    //   console.log("Camera positioned.");
 
-    //   console.log("Setting up lights...");
       const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
       this.#threeJSScene.add(ambientLight);
-    //   console.log("Ambient light added.");
 
       const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
       directionalLight.position.set(50, 100, 50);
       this.#threeJSScene.add(directionalLight);
-    //   console.log("Directional light added.");
 
       const player = this.match.players[0];
       if (!player) throw new Error("Player not initialized in match.");
       this.#boardSize = player.board.size;
-    //   console.log("Player and board size initialized:", this.#boardSize);
 
       if (typeof PongGameBox === "function") {
         this.#pongGameBox = new PongGameBox(
           this.#boardSize.y,
           player.paddle.size.y
         );
-        // console.log("PongGameBox initialized.");
       } else {
         throw new Error("PongGameBox is not defined.");
       }

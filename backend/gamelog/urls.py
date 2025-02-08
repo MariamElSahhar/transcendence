@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.gamelog import create_gamelog_ttt, gamelog, create_gamelog_local, create_gamelog_remote
+from .views import create_gamelog_ttt, gamelog, create_gamelog_local, create_gamelog_remote
 
 urlpatterns = [
     path("users/<int:user_id>/gamelog/", gamelog, name="gamelog"),

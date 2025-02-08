@@ -1,5 +1,9 @@
 import { Component } from "./Component.js";
-import {isValidSecurePassword, isValidUsername, isValidEmail} from '../scripts/utils/input-validator.js'
+import {
+	isValidSecurePassword,
+	isValidUsername,
+	isValidEmail,
+} from "../scripts/utils/input-validator.js";
 
 import {
 	uploadAvatar,
@@ -7,15 +11,14 @@ import {
 	fetchUserById,
 	updateUser,
 	deleteUser,
-} from "../scripts/clients/users-client.js"
-
-import {getDefaultAvatars} from "../scripts/clients/token-client.js"
+} from "../scripts/clients/users-client.js";
+import { getDefaultAvatars } from "../scripts/clients/token-client.js";
 import {
 	storeUserSession,
 	clearUserSession,
 	getUserSessionData,
+	isAuth,
 } from "../scripts/utils/session-manager.js";
-import { redirect } from "../scripts/router.js";
 const backendURL = "http://127.0.0.1:8000";
 
 export class SettingsPage extends Component {
@@ -32,23 +35,27 @@ export class SettingsPage extends Component {
 		this.emailDiff = false;
 		this.passwordDiff = false;
 		this.avatarfile = null;
-		this.vars={}
+		this.vars = {};
 	}
 
 	async connectedCallback() {
+		if (!(await isAuth())) window.redirect("/");
 		const { success, data } = await getDefaultAvatars();
-		this.avatars=[
-			backendURL +  data.default_avatars[0]+ "/",
-			backendURL +  data.default_avatars[1]+ "/",
-			backendURL +  data.default_avatars[2]+ "/",
-			backendURL +  data.default_avatars[3]+ "/",
-			backendURL +  data.default_avatars[4]+ "/",
-			backendURL +  data.default_avatars[5]+ "/",
-	]
+		if (success) {
+			this.avatars = [
+				backendURL + data.default_avatars[0] + "/",
+				backendURL + data.default_avatars[1] + "/",
+				backendURL + data.default_avatars[2] + "/",
+				backendURL + data.default_avatars[3] + "/",
+				backendURL + data.default_avatars[4] + "/",
+				backendURL + data.default_avatars[5] + "/",
+			];
+		}
 		this.render();
 	}
+
 	renderWithSettings() {
-	return `
+		return `
 	<div id="settings" class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-4">
 		<!-- Title -->
 		<div class="form-wrapper">
@@ -68,12 +75,24 @@ export class SettingsPage extends Component {
 
 				<!-- Avatar Options -->
 				<div id="avatar-options" class="position-absolute top-50 start-50 translate-middle ">
-					<img src="${this.avatars[3]}" class="rounded avatar-option position-absolute" style="top: 0px; left: -30px;">
-					<img src="${this.avatars[0]}" class="rounded avatar-option position-absolute" style="top: 0px; left: 250px;">
-					<img src="${this.avatars[5]}" class="rounded avatar-option position-absolute" style="top: 70px; left: -30px;">
-					<img src="${this.avatars[1]}" class="rounded avatar-option position-absolute" style="top: 70px; left: 250px;">
-					<img src="${this.avatars[4]}" class="rounded avatar-option position-absolute" style="top: 140px; left: -30px;">
-					<img src="${this.avatars[2]}" class="rounded avatar-option position-absolute" style="top: 140px; left: 250px;">
+					<img src="${
+						this.avatars[3]
+					}" class="rounded avatar-option position-absolute" style="top: 0px; left: -30px;">
+					<img src="${
+						this.avatars[0]
+					}" class="rounded avatar-option position-absolute" style="top: 0px; left: 250px;">
+					<img src="${
+						this.avatars[5]
+					}" class="rounded avatar-option position-absolute" style="top: 70px; left: -30px;">
+					<img src="${
+						this.avatars[1]
+					}" class="rounded avatar-option position-absolute" style="top: 70px; left: 250px;">
+					<img src="${
+						this.avatars[4]
+					}" class="rounded avatar-option position-absolute" style="top: 140px; left: -30px;">
+					<img src="${
+						this.avatars[2]
+					}" class="rounded avatar-option position-absolute" style="top: 140px; left: 250px;">
 				</div>
 
 				<!-- Button Below the Avatar Options -->
@@ -154,7 +173,9 @@ export class SettingsPage extends Component {
 				<!-- Two-Factor Authentication -->
 				<div class="form-group mb-4 ">
 					<div class="form-check form-switch d-flex align-items-center">
-						<input class="form-check-input" type="checkbox" id="twofa" ${getUserSessionData().otp == 'true' ? 'checked' : ''}>
+						<input class="form-check-input" type="checkbox" id="twofa" ${
+							getUserSessionData().otp == "true" ? "checked" : ""
+						}>
 						<label class="form-check-label ms-2" for="twofa">Two-factor authentication</label>
 					</div>
 				</div>
@@ -201,7 +222,7 @@ export class SettingsPage extends Component {
 			</div>
 			</div>
 	</div>`;
-}
+	}
 
 	style() {
 		return `
@@ -293,13 +314,13 @@ div.camera-icon-circle:hover i.bi-camera {
 	}
 
 	async render() {
-		this.defaultHas2FA = getUserSessionData().otp == "true" ? true:false;
-		this.initialUser=getUserSessionData().username;
-		this.initialEmail=getUserSessionData().email;
+		this.defaultHas2FA = getUserSessionData().otp == "true" ? true : false;
+		this.initialUser = getUserSessionData().username;
+		this.initialEmail = getUserSessionData().email;
 		if (!(await this.loadSettings())) {
 			return;
 		}
-		this.avatar =  this.querySelector("#avatar");
+		this.avatar = this.querySelector("#avatar");
 		this.photoUpload = this.querySelector("#photoUpload");
 		super.addComponentEventListener(
 			this.photoUpload,
@@ -321,8 +342,12 @@ div.camera-icon-circle:hover i.bi-camera {
 		);
 
 		this.avatarOptions = this.querySelectorAll(".avatar-option"); // Select all elements
-		this.avatarOptions.forEach(option => {
-			super.addComponentEventListener(option, "click", this.#avatarSelector);
+		this.avatarOptions.forEach((option) => {
+			super.addComponentEventListener(
+				option,
+				"click",
+				this.#avatarSelector
+			);
 		});
 
 		this.email = this.querySelector("#email");
@@ -340,7 +365,6 @@ div.camera-icon-circle:hover i.bi-camera {
 			"input",
 			this.#passwordChecker
 		);
-
 
 		this.confirmPassword = this.querySelector("#confirm-password");
 
@@ -371,12 +395,16 @@ div.camera-icon-circle:hover i.bi-camera {
 			this.#saveEnabler();
 		});
 
-		const deleteModal = document.getElementById('confirm-delete-modal');
+		const deleteModal = document.getElementById("confirm-delete-modal");
 		this.deleteModal = new bootstrap.Modal(deleteModal);
-		const errorModal = document.getElementById('errorModal');
+		const errorModal = document.getElementById("errorModal");
 		this.errorModal = new bootstrap.Modal(errorModal);
-		this.deleteError = document.getElementById('errorClose');
-		super.addComponentEventListener(this.deleteError, "click", this.#closeError)
+		this.deleteError = document.getElementById("errorClose");
+		super.addComponentEventListener(
+			this.deleteError,
+			"click",
+			this.#closeError
+		);
 		this.deleteButton = this.querySelector("#deletePrompt");
 		super.addComponentEventListener(
 			this.deleteButton,
@@ -401,63 +429,59 @@ div.camera-icon-circle:hover i.bi-camera {
 
 	async loadSettings() {
 		try {
-
 			this.innerHTML = this.renderWithSettings() + this.style();
 			return true;
 		} catch (error) {
-			this.#showError()
+			this.#showError();
 		}
 		return false;
 	}
 
-
-	async #avatarSelector(event)
-	{
-		this.avatarfile=event.target.src;
-		this.avatar.src=event.target.src;
+	async #avatarSelector(event) {
+		this.avatarfile = event.target.src;
+		this.avatar.src = event.target.src;
 		this.avatarDiff = true;
 		this.#saveEnabler();
 	}
 
 	async #uploadAvatar(event) {
 		let input = document.querySelector("#photoUpload");
-			const file = event.target.files[0];
-			console.log(event.target.files[0])
-			if(file)
-			{
-				const reader = new FileReader();
-				reader.onload = async (event) => {
-					this.avatarfile = event.target.result;
-					this.avatarDiff = true;
-					this.avatar.src = event.target.result;
-					this.#saveEnabler();
-				};
-				reader.readAsDataURL(file);
-			} else {
-				this.#showError()
-				return;
-			}
-		};
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = async (event) => {
+				this.avatarfile = event.target.result;
+				this.avatarDiff = true;
+				this.avatar.src = event.target.result;
+				this.#saveEnabler();
+			};
+			reader.readAsDataURL(file);
+		} else {
+			this.#showError();
+			return;
+		}
+	}
 
 	async #deleteAvatarHandler(event) {
 		event.preventDefault();
 		this.avatarDiff = true;
-		this.avatar.src = 'http://127.0.0.1:8000/media//default_avatar/default_avatar.jpg';
+		this.avatar.src =
+			"http://127.0.0.1:8000/media//default_avatar/default_avatar.jpg";
 		this.#saveEnabler();
 	}
 	async #changeAvatar() {
 		if (this.avatarfile === null) {
 			try {
-				const { success, body } = await deleteAvatar(
-					{user_id: getUserSessionData().userid},
-				);
+				const { success, body } = await deleteAvatar({
+					user_id: getUserSessionData().userid,
+				});
 				if (!success) {
-					this.#showError()
+					this.#showError();
 					return false;
 				}
 				return true;
 			} catch (error) {
-				this.#showError()
+				this.#showError();
 				return false;
 			}
 		}
@@ -465,159 +489,152 @@ div.camera-icon-circle:hover i.bi-camera {
 	}
 
 	async #updateAvatar() {
-		try {
-			console.log("here?", this.avatarfile,)
-			const { success, body } = await uploadAvatar(
-				{avatar: this.avatarfile, user_id: getUserSessionData().userid},
-			);
-			if (!success) {
-				this.#showError()
-				return false;
-			}
-			return true;
-		} catch (error) {
-			this.#showError()
+		if (!(await isAuth())) window.redirect("/");
+		const { success } = await uploadAvatar({
+			avatar: this.avatarfile,
+			user_id: getUserSessionData().userid,
+		});
+		if (!success) {
+			this.#showError();
 			return false;
 		}
+		return true;
 	}
-
 
 	async #usernameHandler() {
 		clearTimeout(this.usernameTimeout);
 		if (this.username.value === this.initialUser) {
-			this.username.classList.remove('is-invalid', 'is-valid');
-			this.usernameFeedback.innerHTML = ""
+			this.username.classList.remove("is-invalid", "is-valid");
+			this.usernameFeedback.innerHTML = "";
 			this.usernameDiff = false;
-		   this.validUsername = true;
-		   this.#saveEnabler();
-			return;
-		}
-		const { validity, message } =
-			isValidUsername(this.username.value);
-		if (validity) {
-			this.usernameTimeout = setTimeout(() => {
-				this.username.classList.remove('is-invalid');
-			  this.username.classList.add('is-valid');
-			this.usernameDiff = true;
 			this.validUsername = true;
 			this.#saveEnabler();
+			return;
+		}
+		const { validity, message } = isValidUsername(this.username.value);
+		if (validity) {
+			this.usernameTimeout = setTimeout(() => {
+				this.username.classList.remove("is-invalid");
+				this.username.classList.add("is-valid");
+				this.usernameDiff = true;
+				this.validUsername = true;
+				this.#saveEnabler();
 			}, 500);
 		} else {
-			this.username.classList.remove('is-valid');
-			  this.username.classList.add('is-invalid');
+			this.username.classList.remove("is-valid");
+			this.username.classList.add("is-invalid");
 			this.usernameFeedback.innerHTML = message;
 			this.validUsername = false;
 		}
 		this.#saveEnabler();
-
 	}
 
 	#emailHandler() {
 		clearTimeout(this.emailTimeout);
 		if (this.email.value === this.initialEmail) {
-			this.email.classList.remove('is-invalid',"is-valid")
+			this.email.classList.remove("is-invalid", "is-valid");
 			this.emailDiff = false;
 			this.validEmail = true;
 			this.#saveEnabler();
 			return;
 		}
-		const { validity, message } = isValidEmail(
-			this.email.value
-		);
+		const { validity, message } = isValidEmail(this.email.value);
 		if (validity) {
 			this.emailTimeout = setTimeout(() => {
 				this.validEmail = true;
-			this.email.classList.remove('is-invalid');
-			this.email.classList.add('is-valid');
-			this.emailDiff = true;
-			this.validEmail = true;
-			this.#saveEnabler();
-		}, 500);
-	} else {
-		this.email.classList.remove('is-valid');
-		this.email.classList.add('is-invalid');
-		this.emailFeedback.innerHTML = message;
-		this.validEmail = false;
-	}
-	this.#saveEnabler();
+				this.email.classList.remove("is-invalid");
+				this.email.classList.add("is-valid");
+				this.emailDiff = true;
+				this.validEmail = true;
+				this.#saveEnabler();
+			}, 500);
+		} else {
+			this.email.classList.remove("is-valid");
+			this.email.classList.add("is-invalid");
+			this.emailFeedback.innerHTML = message;
+			this.validEmail = false;
+		}
+		this.#saveEnabler();
 	}
 
 	#passwordChecker() {
 		if (this.password.value === "") {
-			console.log()
-			this.password.classList.remove('is-invalid','is-valid');
+			this.password.classList.remove("is-invalid", "is-valid");
 			this.passwordFeeback.innerHTML = "";
-			this.passwordDiff=false;
-			this.validPassword=true;
-			if(this.confirmPassword.value == "")
-				{
-					this.confirmPassword.classList.remove('is-invalid','is-valid');
-					this.confirmPasswordFeedback.innerHTML = "";
-					this.validConfirmPassword = true;
+			this.passwordDiff = false;
+			this.validPassword = true;
+			if (this.confirmPassword.value == "") {
+				this.confirmPassword.classList.remove("is-invalid", "is-valid");
+				this.confirmPasswordFeedback.innerHTML = "";
+				this.validConfirmPassword = true;
 			}
 			this.#saveEnabler();
 			return;
 		}
-		const { validity, message } =
-			isValidSecurePassword(this.password.value);
-			if (validity) {
-				this.password.classList.remove('is-invalid');
-				this.password.classList.add('is-valid');
-				this.validPassword = true;
-				this.passwordDiff=true;
+		const { validity, message } = isValidSecurePassword(
+			this.password.value
+		);
+		if (validity) {
+			this.password.classList.remove("is-invalid");
+			this.password.classList.add("is-valid");
+			this.validPassword = true;
+			this.passwordDiff = true;
 			if (this.confirmPassCheck) {
 				if (this.confirmPassword.value === this.password.value) {
-					this.confirmPassword.classList.remove('is-invalid');
-					this.confirmPassword.classList.add('is-valid');
+					this.confirmPassword.classList.remove("is-invalid");
+					this.confirmPassword.classList.add("is-valid");
 					this.validConfirmPassword = true;
-					this.passwordDiff=true;
+					this.passwordDiff = true;
 				} else {
-					this.confirmPassword.classList.remove('is-valid');
-      				this.confirmPassword.classList.add('is-invalid');
-					this.confirmPasswordFeedback.innerHTML = "passwords do not match";
+					this.confirmPassword.classList.remove("is-valid");
+					this.confirmPassword.classList.add("is-invalid");
+					this.confirmPasswordFeedback.innerHTML =
+						"passwords do not match";
 					this.validConfirmPassword = false;
 				}
-			}
-			else
-				this.validConfirmPassword = false;
+			} else this.validConfirmPassword = false;
 		} else {
-			this.password.classList.add('is-invalid');
-			this.password.classList.remove('is-valid');
+			this.password.classList.add("is-invalid");
+			this.password.classList.remove("is-valid");
 			this.passwordFeeback.innerHTML = message;
 			this.validPassword = false;
 			if (this.confirmPassCheck) {
-				this.confirmPassword.classList.remove('is-valid');
-      				this.confirmPassword.classList.add('is-invalid');
-					this.confirmPasswordFeedback.innerHTML = "passwords do not match";
-					this.validConfirmPassword = false;
-			}
-			else
-			this.validConfirmPassword = false;
+				this.confirmPassword.classList.remove("is-valid");
+				this.confirmPassword.classList.add("is-invalid");
+				this.confirmPasswordFeedback.innerHTML =
+					"passwords do not match";
+				this.validConfirmPassword = false;
+			} else this.validConfirmPassword = false;
 		}
 		this.#saveEnabler();
 	}
 
 	#confirmpasswordChecker() {
-		console.log("helloooo?")
 		if (!this.confirmPassCheck) {
 			this.confirmPassCheck = true;
 		}
 		this.#passwordChecker();
-		if (this.confirmPassword.value === "" && this.password=="") {
-			console.log("??")
-			this.confirmPassword.classList.remove('is-invalid','is-valid');
-				this.confirmPasswordFeedback.innerHTML = "";
-				this.validConfirmPassword = true;
+		if (this.confirmPassword.value === "" && this.password == "") {
+			this.confirmPassword.classList.remove("is-invalid", "is-valid");
+			this.confirmPasswordFeedback.innerHTML = "";
+			this.validConfirmPassword = true;
 			return;
 		}
 	}
 
-
 	#saveEnabler() {
-		const allFieldsValid = this.validUsername && this.validEmail && this.validPassword && this.validConfirmPassword;
-		const changeInField = this.avatarDiff || this.defaultHas2FA !== this.twofaBtn.checked || this.usernameDiff || this.emailDiff || this.passwordDiff;
-		if ( changeInField && allFieldsValid)
-		 {
+		const allFieldsValid =
+			this.validUsername &&
+			this.validEmail &&
+			this.validPassword &&
+			this.validConfirmPassword;
+		const changeInField =
+			this.avatarDiff ||
+			this.defaultHas2FA !== this.twofaBtn.checked ||
+			this.usernameDiff ||
+			this.emailDiff ||
+			this.passwordDiff;
+		if (changeInField && allFieldsValid) {
 			this.saveButton.disabled = false;
 		} else {
 			this.saveButton.disabled = true;
@@ -627,15 +644,18 @@ div.camera-icon-circle:hover i.bi-camera {
 	async #updateInfo() {
 		const newUsername = this.validUsername ? this.username.value : null;
 		const newEmail = this.validEmail ? this.email.value : null;
-		const newPassword = this.validPassword && this.validConfirmPassword ? this.password.value : null;
+		const newPassword =
+			this.validPassword && this.validConfirmPassword
+				? this.password.value
+				: null;
 		if (this.usernameDiff) {
-			this.vars['username'] = newUsername;
+			this.vars["username"] = newUsername;
 		}
 		if (this.emailDiff) {
-			this.vars['email'] = newEmail;
+			this.vars["email"] = newEmail;
 		}
 		if (this.passwordDiff) {
-			this.vars['password'] = newPassword;
+			this.vars["password"] = newPassword;
 		}
 	}
 
@@ -652,13 +672,11 @@ div.camera-icon-circle:hover i.bi-camera {
 		this.deleteModal.show();
 	}
 
-	async #showError(event)
-	{
+	async #showError(event) {
 		this.errorModal.show();
 	}
 
-	async #closeError(event)
-	{
+	async #closeError(event) {
 		event.preventDefault();
 		this.errorModal.hide();
 	}
@@ -675,21 +693,17 @@ div.camera-icon-circle:hover i.bi-camera {
       <span class="sr-only">Delete</span>
     `;
 		this.deleteAccountButton.disabled = true;
-		try {
-			const { success, data } = await deleteUser(getUserSessionData().userid);
-			if (success) {
-				clearUserSession();
-				this.deleteModal.hide();
-				redirect('/');
-			}
-			else {
-				this.#showError()
-			}
-			this.deleteAccountButton.innerHTML = "Delete";
-			this.deleteAccountButton.disabled = false;
-		} catch (error) {
-			this.#showError()
+		if (!(await isAuth())) window.redirect("/");
+		const { success } = await deleteUser(getUserSessionData().userid);
+		if (success) {
+			clearUserSession();
+			this.deleteModal.hide();
+			window.redirect("/");
+		} else {
+			this.#showError();
 		}
+		this.deleteAccountButton.innerHTML = "Delete";
+		this.deleteAccountButton.disabled = false;
 	}
 
 	#startLoadButton() {
@@ -699,64 +713,65 @@ div.camera-icon-circle:hover i.bi-camera {
 		this.saveButton.disabled = true;
 	}
 
-
 	async #saveHandler() {
 		this.#startLoadButton();
+		if (!(await isAuth())) window.redirect("/");
 		if (this.avatarDiff) {
 			await this.#changeAvatar();
 		}
-		if (this.validUsername || this.validEmail ||
-			(this.validPassword && this.validConfirmPassword)) {
-				this.#updateInfo();
-
+		if (
+			this.validUsername ||
+			this.validEmail ||
+			(this.validPassword && this.validConfirmPassword)
+		) {
+			this.#updateInfo();
 		}
 		if (this.defaultHas2FA !== this.twofaBtn.checked) {
 			this.#update2FA();
 		}
-		if(this.defaultHas2FA !== this.twofaBtn.checked || this.usernameDiff || this.emailDiff || this.passwordDiff)
-		{
-			try
-			{
-				const { success, body ,error} = await updateUser(getUserSessionData().userid,this.vars);
+		if (
+			this.defaultHas2FA !== this.twofaBtn.checked ||
+			this.usernameDiff ||
+			this.emailDiff ||
+			this.passwordDiff
+		) {
+			const { success, body, error } = await updateUser(
+				getUserSessionData().userid,
+				this.vars
+			);
 
-				if(!success)
-				{
-					if (error.username) {
-						this.username.classList.remove('is-valid');
-						this.username.classList.add('is-invalid');
+			if (!success) {
+				if (error.username) {
+					this.username.classList.remove("is-valid");
+					this.username.classList.add("is-invalid");
 
-						this.usernameFeedback.innerHTML = error.username[0]; // Set the error message for username
-					}
-					if (error.email) {
-						this.email.classList.remove('is-valid');
-						this.email.classList.add('is-invalid');
-						this.emailFeedback.innerHTML = error.email[0]; // Set the error message for email
-					}
-					this.saveButton.innerHTML = `
+					this.usernameFeedback.innerHTML = error.username[0]; // Set the error message for username
+				}
+				if (error.email) {
+					this.email.classList.remove("is-valid");
+					this.email.classList.add("is-invalid");
+					this.emailFeedback.innerHTML = error.email[0]; // Set the error message for email
+				}
+				this.saveButton.innerHTML = `
       <i class="bi bi-floppy2-fill"></i>
     `;
-		this.saveButton.disabled = true;
-					return false;
-				}
-			} catch (error) {
-				this.#showError()
+				this.saveButton.disabled = true;
 				return false;
-				}
+			}
 		}
 		const { success, data } = await fetchUserById(
 			getUserSessionData().userid
 		);
-		if(success)
-		{
-		storeUserSession({
-			username: data.username,
-			id: data.id,
-			email: data.email,
-			avatar: data.avatar,
-			otp: data.enable_otp,
-		});
-		window.location.reload();
-	}
+		if (success) {
+			storeUserSession({
+				username: data.username,
+				id: data.id,
+				email: data.email,
+				avatar: data.avatar,
+				otp: data.enable_otp,
+			});
+			window.redirect("/settings");
+		}
 	}
 }
 

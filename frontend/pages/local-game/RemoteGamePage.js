@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
-import { Engine } from "../local-game/Engine.js";
+import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 // import { matchMaker } from "../../scripts/clients/user-clients.js";
 import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";

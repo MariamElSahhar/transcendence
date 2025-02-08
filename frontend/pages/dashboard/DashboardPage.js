@@ -1,7 +1,10 @@
 // UserProfilePage.js
 import { Component } from "../Component.js";
 import { fetchUserGameLog } from "../../scripts/clients/gamelog-client.js";
-import { getUserSessionData } from "../../scripts/utils/session-manager.js";
+import {
+	isAuth,
+	getUserSessionData,
+} from "../../scripts/utils/session-manager.js";
 
 export class DashboardPage extends Component {
 	constructor() {

@@ -58,7 +58,6 @@ export class Paddle {
     resetSize() {
         this.#paddleSize.copy(this.#originalSize);
         this.#updatePaddleGeometry();
-        // console.log("Paddle size reset to:", this.#paddleSize.toArray());
     }
 
     #updatePaddleGeometry() {
@@ -79,7 +78,6 @@ export class Paddle {
 
     #moveAIPaddle(ballPosition, ballVelocity) {
         if (this.#isResetting) {
-            // console.log("Skipping AI movement during reset");
             return;
         }
 
@@ -139,8 +137,7 @@ export class Paddle {
     }
 
     setPosition(positionJson) {
-
-       this.#threeJSGroup.position.set(
+        this.#threeJSGroup.position.set(
             positionJson["x"],
             positionJson["y"],
             positionJson["z"]

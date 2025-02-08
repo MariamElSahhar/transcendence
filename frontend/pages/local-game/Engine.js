@@ -28,7 +28,6 @@ export class Engine {
       return;
     }
 
-    console.log("Players in Engine:", this.players);
     if (!this.players || this.players.length < 2) {
       console.error("Players are not correctly initialized:", this.players);
       return;

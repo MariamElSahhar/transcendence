@@ -3,12 +3,17 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from remote_pong.models import  GameSession
 from users.models import CustomUser
-from ..models import RemoteGameLog, LocalGameLog, TicTacToeLog
-from ..serializers import (
+from .models import RemoteGameLog, LocalGameLog, TicTacToeLog
+
+from .serializers.local import (
+    LocalGameSerializer,
     CreateLocalGameSerializer,
+)
+from .serializers.remote import (
     RemoteGameSerializer,
     CreateRemoteGameSerializer,
-    LocalGameSerializer,
+)
+from .serializers.ttt import (
     CreateTTTGameSerializer,
     TicTacToeSerializer,
 )
@@ -55,7 +60,7 @@ def create_gamelog_local(request):
 
     serializer = CreateLocalGameSerializer(data=datamod)
     if serializer.is_valid():
-        game_log = serializer.save(user=user)
+        serializer.save(user=user)
         return Response(
             {
                 "message": "Local game log created successfully.",
@@ -68,15 +73,15 @@ def create_gamelog_local(request):
 
 @api_view(["POST"])
 def create_gamelog_ttt(request):
-    user = request.user
-    datamod = request.data.copy()
-    datamod["user"] = user.id
-
-    serializer = CreateTTTGameSerializer(data=datamod)
+    print(request.data)
+    serializer = CreateTTTGameSerializer(data=request.data)
     if serializer.is_valid():
-        game_log = serializer.save(user=user)
+        serializer.save()
         return Response(
-            {"message": "TTT game log created successfully.", "data": serializer.data},
+            {
+                "message": "Tictactoe game log created successfully.",
+                "data": serializer.data,
+            },
             status=status.HTTP_201_CREATED,
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -89,16 +94,18 @@ def gamelog(request, user_id):
     if not target_user:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    remote_games = RemoteGameLog.objects.filter(users=target_user, game_type="Remote").order_by("-date")
-    local_games = LocalGameLog.objects.filter(users=target_user, game_type="Local").order_by("-date")
-    ttt_games = TicTacToeLog.objects.filter(users=target_user, game_type="TicTacToe").order_by("-date")
+    remote_games = target_user.remote_games.all().order_by("-date")
+    local_games = target_user.local_games.all().order_by("-date")
+    ttt_games = target_user.ttt_games.all().order_by("-date")
+
+    print(target_user.local_games.all())
 
     response_data = {
-        "remote": RemoteGameSerializer(
-            remote_games, many=True, context={"request": request}
-        ).data,
         "local": LocalGameSerializer(
             local_games, many=True, context={"request": request}
+        ).data,
+        "remote": RemoteGameSerializer(
+            remote_games, many=True, context={"request": request}
         ).data,
         "ttt": TicTacToeSerializer(
             ttt_games, many=True, context={"request": request}
