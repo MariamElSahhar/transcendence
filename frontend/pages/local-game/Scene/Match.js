@@ -3,6 +3,7 @@ import { Player } from "./player/Player.js";
 import { Ball } from "./Ball.js";
 import { addLocalGame,addRemoteGame } from "../../../scripts/clients/gamelog-client.js";
 import {sendWebSocketMessage} from "../../../scripts/utils/websocket-manager.js"
+import { isAuth } from "../../../scripts/utils/session-manager.js";
 
 export class Match {
 	engine;
@@ -16,13 +17,18 @@ export class Match {
 	#points = [0, 0];
 	playersReady = true;
 
-	constructor() { }
+	constructor() {}
 
 	async init(engine) {
-		this.engine = engine;
-
-		if (!engine.players || !Array.isArray(engine.players) || engine.players.length < 2) {
-			throw new Error("Invalid or incomplete players data in engine.players");
+		this.#engine = engine;
+		if (
+			!engine.players ||
+			!Array.isArray(engine.players) ||
+			engine.players.length < 2
+		) {
+			throw new Error(
+				"Invalid or incomplete players data in engine.players"
+			);
 		}
 
 
@@ -169,6 +175,8 @@ export class Match {
 		this.#matchIsOver = true;
 		this.ball.removeBall();
 		this.engine.component.addEndGameCard(this.#points[0], this.#points[1]);
+		if (!(await isAuth())) window.redirect("/");
+		console.log("sending to api");
 		if(this.gameType == "local")
 		{
 			const { error } = await addLocalGame({
@@ -189,7 +197,12 @@ export class Match {
 
 		this.players.forEach((player, index) => {
 			if (player) {
-				player.resetPaddle();
+				player.stopGame();
+				player.resetPaddle(); // Reset paddles at the end of the game
+			} else {
+				console.error(
+					`Player ${index} is null during reset at game end.`
+				);
 			}
 		});
 

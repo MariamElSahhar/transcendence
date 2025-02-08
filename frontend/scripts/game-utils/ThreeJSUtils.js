@@ -7,21 +7,19 @@ export class ThreeJSUtils {
   #engine;
   #controls;
 
+  resizeListener;
+
   constructor(engine) {
     this.#engine = engine;
     this.#initRenderer();
     this.#initCamera();
     this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
     this.#controls.target.set(0, 0, 0);
-    this.#engine.component.addComponentEventListener(
-      window,
-      "resize",
-      () => {
-        this.#onWindowResize();
-        this.#engine.resizeHandler();
-      },
-      this
-    );
+    this.resizeListener = () => {
+      this.#onWindowResize();
+      this.#engine.resizeHandler();
+    };
+    window.addEventListener("resize", this.resizeListener);
   }
 
   get width() {
@@ -113,6 +111,7 @@ export class ThreeJSUtils {
   }
 
   clearRenderer() {
+    window.removeEventListener("resize", this.resizeListener);
     this.#renderer.dispose();
   }
 

@@ -2,6 +2,11 @@ import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
 import { removeMatchMaking } from "./clients/gamelog-client.js";
 import {closeWebSocket} from "./utils/websocket-manager.js";
+window.APP_CONFIG = {
+	backendUrl: "http://127.0.0.1:8000",
+	pointsToWinPongMatch: 1,
+};
+
 const routes = {
 	// PUBLIC SCREENS
 	"/": {
@@ -183,4 +188,5 @@ const validDashboardPath = async (path) => {
 
 window.onpopstate = handleLocation;
 window.redirect = redirect;
+
 handleLocation();

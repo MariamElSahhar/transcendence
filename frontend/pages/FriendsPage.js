@@ -5,7 +5,6 @@ import {
 } from "../scripts/clients/friends-client.js";
 import { getUserSessionData } from "../scripts/utils/session-manager.js";
 import { isAuth } from "../scripts/utils/session-manager.js";
-const backendURL = "http://127.0.0.1:8000";
 
 export class FriendsPage extends Component {
 	constructor() {
@@ -70,7 +69,9 @@ export class FriendsPage extends Component {
 		return `
 		<div class="p-2 d-flex flex-row w-400px minw-200 h-60px p-auto justify-content-between bg-light rounded">
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
-				<img src="${backendURL}${avatar}" class="h-100 rounded-circle"/>
+				<img src="${
+					window.APP_CONFIG.backendUrl
+				}${avatar}" class="h-100 rounded-circle"/>
 				<div>
 					<h4 class="m-0 link-dark">${username}</h4>
 					<small class="m-0 link-dark">${is_online ? "Online" : "Offline"}</small>

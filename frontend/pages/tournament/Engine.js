@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-import { ThreeJSUtils } from "../game-utils/ThreeJSUtils.js";
-import { KeyHandler } from "../game-utils/KeyHandler.js";
+import { ThreeJSUtils } from "../../scripts/game-utils/ThreeJSUtils.js";
+import { KeyHandler } from "../../scripts/game-utils/KeyHandler.js";
 import { Scene } from "./TournamentScene.js";
 
 export class Engine {
@@ -23,7 +23,7 @@ export class Engine {
 			console.error("Invalid player names:", playerNames);
 			return;
 		}
-		// console.log(`Starting game with players: ${playerNames.join(" vs ")}`);
+		console.log(`Starting game with players: ${playerNames.join(" vs ")}`);
 
 		if (!this.#component || !this.#component.container) {
 			console.error("Invalid component or container.");

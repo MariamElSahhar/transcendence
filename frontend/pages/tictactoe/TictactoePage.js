@@ -37,13 +37,16 @@ class TicTacToePage extends Component {
 		const lastStatus = this.inGame
 			? "PLAYING"
 			: this.inMatchmaking
-			? "MATCHMAKING" 
-			: this.isFinished 
-			? "FINISHED" 
+			? "MATCHMAKING"
+			: this.isFinished
+			? "FINISHED"
 			: "NONE";
 		const previousLastPlay = this.lastPlayTime;
 
-		if (gameInfo && gameInfo.status === "PLAYING" || gameInfo.status === "FINISHED") {
+		if (
+			(gameInfo && gameInfo.status === "PLAYING") ||
+			gameInfo.status === "FINISHED"
+		) {
 			this.gameId = gameInfo.id;
 			this.status = gameInfo.status;
 			this.player1 = gameInfo.player1;
@@ -84,15 +87,15 @@ class TicTacToePage extends Component {
 				}
 
 				if (
-					(lastStatus !== "PLAYING" ||
-					previousLastPlay !== this.lastPlayTime)
+					lastStatus !== "PLAYING" ||
+					previousLastPlay !== this.lastPlayTime
 				) {
 					this.menuActivation(false);
 					this.refreshScoresHtml();
 					this.refreshBoardWrapperHtml();
 				}
 			} else {
-				if (lastStatus !== 'FINISHED') {
+				if (lastStatus !== "FINISHED") {
 					this.isFinished = true;
 					this.inMatchmaking = false;
 					this.inGame = false;
@@ -267,15 +270,17 @@ class TicTacToePage extends Component {
 
 	render() {
 		return `
-			<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative overflow-hidden menu-activated" style="background-color: rgb(135, 206, 235);">
-				<div class="sky"></div>
+			<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative overflow-hidden menu-activated">
+				<div class="sky-wrapper w-100 overflow-hidden">
+					<div class="sky"></div>
+				</div>
 				<img class="title-img" src="/pages/tictactoe/title.png" alt="X"/>
 
 				<div class="relative h-full w-full z-[3]">
 					<div class="board-wrapper">
 						${this.getBoardWrapperHtml()}
 					</div>
-				
+
 					<div class="play-btn">Play</div>
 				</div>
 
@@ -291,6 +296,10 @@ class TicTacToePage extends Component {
 	style() {
 		return `
 			<style>
+				.tictactoe {
+				 	background-color: rgb(135, 206, 235);
+				}
+
 				.board-wrapper {
 					position: relative;
 					z-index: 3;
@@ -344,8 +353,8 @@ class TicTacToePage extends Component {
 					background-repeat: repeat-x;
 					position: absolute;
 					top: 0;
-					left: -400%;
-					width: 500%;
+					left: 0;
+					width: 100%;
 					height: 20em;
 					animation: move-sky 500s linear infinite;
 					z-index: 1;
@@ -354,10 +363,10 @@ class TicTacToePage extends Component {
 
 				@keyframes move-sky {
 					from {
-						transform: translateX(0%);
+						background-position: 0 0;
 					}
 					to {
-						transform: translateX(60%);
+						background-position: 10000px 0;
 					}
 				}
 

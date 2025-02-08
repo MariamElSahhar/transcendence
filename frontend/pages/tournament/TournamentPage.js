@@ -13,7 +13,7 @@ export class TournamentPage extends Component {
 		this.overlay = null;
 		this.players = [];
 		this.currentMatchIndex = 0;
-		this.maxScore = 5;
+		this.maxScore = window.APP_CONFIG.pointsToWinPongMatch;
 		this.scores = [
 			[0, 0],
 			[0, 0],
@@ -25,13 +25,16 @@ export class TournamentPage extends Component {
 	}
 
 	connectedCallback() {
-		this.setupTournament();
+		this.players.push(this.me.username);
+		super.connectedCallback();
 	}
 
-	setupTournament() {
-		this.players.push(this.me.username);
+	disconnectedCallback() {
+		// TODO: stop game when player leaves page
+	}
 
-		this.innerHTML = `
+	render() {
+		return `
             <div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light " style="max-width: 400px; margin: 100px auto 0;">
                 <div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-white">
 					<h3 class="fw-bold  m-0">Setup Tournament</h3>
@@ -50,7 +53,9 @@ export class TournamentPage extends Component {
             </div>
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
+	}
 
+	postRender() {
 		this.container = this.querySelector("#container");
 		this.setupPlayerForm();
 	}
@@ -277,7 +282,7 @@ export class TournamentPage extends Component {
 		this.scores[this.currentMatchIndex] = [score1, score2];
 		// if one of the players is the main player
 		if (player1 == this.me.username || player2 == this.me.username) {
-			await isAuth();
+			if (!(await isAuth())) window.redirect("/");
 			await addLocalGame({
 				my_score: this.me.username == player1 ? score1 : score2,
 				opponent_username:

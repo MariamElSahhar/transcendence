@@ -16,8 +16,23 @@ export class LocalGamePage extends Component {
 
 	connectedCallback() {
 		this.playerNames.push(getUserSessionData().username || "player 1");
+		super.connectedCallback();
+	}
 
-		this.innerHTML = `
+	disconnectedCallback() {
+		console.log("LocalGamePage is being disconnected. Cleaning up...");
+		if (this.engine) {
+		  this.engine.stopAnimationLoop();
+		  this.engine.cleanUp();
+		}
+		if (this.countDownIntervalId) {
+		  clearInterval(this.countDownIntervalId);
+		  this.countDownIntervalId = null;
+		}
+	  }
+
+	render() {
+		return `
 				<div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light" style="max-width: 400px;">
 					<div class="text-center p-3 rounded mb-4 bg-danger text-warning border-while">
 						<h3 class="fw-bold  m-0">Setup Players</h3>
@@ -39,12 +54,10 @@ export class LocalGamePage extends Component {
 
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
-
-		this.container = this.querySelector("#container");
-		this.setupPlayerForm();
 	}
 
-	setupPlayerForm() {
+	postRender() {
+		this.container = this.querySelector("#container");
 		const form = this.querySelector("#player-form");
 		const submit = this.querySelector("#submit-players");
 		const AICheckbox = this.querySelector("#play-against-ai");
@@ -95,18 +108,17 @@ export class LocalGamePage extends Component {
 			this.querySelector("#player-setup").style.display = "none";
 			this.container.style.display = "block";
 
-			this.postRender();
+			if (WebGL.isWebGLAvailable()) {
+				this.createOverlay();
+				const countdownStart = Date.now() / 1000 + 3;
+				this.startCountdown(countdownStart);
+			} else {
+				console.error(
+					"WebGL not supported:",
+					WebGL.getWebGLErrorMessage()
+				);
+			}
 		});
-	}
-
-	postRender() {
-		if (WebGL.isWebGLAvailable()) {
-			this.createOverlay();
-			const countdownStart = Date.now() / 1000 + 3;
-			this.startCountdown(countdownStart);
-		} else {
-			console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
-		}
 	}
 
 	startGame() {
@@ -129,17 +141,18 @@ export class LocalGamePage extends Component {
 	startCountdown(startDateInSeconds) {
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 		this.updateOverlayCountdown(secondsLeft);
-
-		const countDownInterval = setInterval(() => {
-			secondsLeft -= 1;
-			this.updateOverlayCountdown(secondsLeft);
-
-			if (secondsLeft <= 0) {
-				clearInterval(countDownInterval);
-				this.startGame();
-			}
+	
+		this.countDownIntervalId = setInterval(() => {
+		  secondsLeft -= 1;
+		  this.updateOverlayCountdown(secondsLeft);
+	
+		  if (secondsLeft <= 0) {
+			clearInterval(this.countDownIntervalId);
+			this.countDownIntervalId = null;
+			this.startGame();
+		  }
 		}, 1000);
-	}
+	  }
 
 	createOverlay() {
 		this.overlay = document.createElement("div");
