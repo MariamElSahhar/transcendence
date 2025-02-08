@@ -5,7 +5,7 @@ import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 // import { matchMaker } from "../../scripts/clients/user-clients.js";
 import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";
 import { initializeWebSocket, sendWebSocketMessage, closeWebSocket } from '../../scripts/utils/websocket-manager.js';
-import { KeyHandler } from "../game-utils/KeyHandler.js";
+// import { KeyHandler } from "../game-utils/KeyHandler.js";
 const backendURL = "http://127.0.0.1:8000";
 export class RemoteGamePage extends Component {
 	constructor() {
@@ -96,6 +96,7 @@ export class RemoteGamePage extends Component {
 		   this.updateLoaders(data);
 		   sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
 			// console.log(this.playerSide)
+			setTimeout(() => {
 		   if (WebGL.isWebGLAvailable()) {
 			   this.createOverlay();
 
@@ -106,6 +107,7 @@ export class RemoteGamePage extends Component {
 		   } else {
 			   console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
 		   }
+		},3000);
 	   }
 	   else if(data["message"] == "Move slab")
 	   {

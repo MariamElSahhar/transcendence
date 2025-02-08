@@ -18,8 +18,8 @@ export class Scene {
 		this.#engine = engine;
 
 		try {
-			await this.#match.init(engine);
-			this.#threeJSScene.add(this.#match.threeJSGroup);
+			await this.match.init(engine);
+			this.#threeJSScene.add(this.match.threeJSGroup);
 
 			// Load background image
 			const textureLoader = new THREE.TextureLoader();
