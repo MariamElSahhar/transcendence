@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-import { ThreeJSUtils } from "../game-utils/ThreeJSUtils.js";
-import { KeyHandler  } from "../game-utils/KeyHandler.js";
+import { ThreeJSUtils } from "../../scripts/game-utils/ThreeJSUtils.js";
+import { KeyHandler  } from "../../scripts/game-utils/KeyHandler.js";
 import { Player } from "./Scene/player/Player.js";
 import { Scene } from "./Scene/Scene.js";
 
