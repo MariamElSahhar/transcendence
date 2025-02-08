@@ -30,7 +30,15 @@ export class TournamentPage extends Component {
 	}
 
 	disconnectedCallback() {
-		// TODO: stop game when player leaves page
+		console.log("TournamentPage is being disconnected. Cleaning up...");
+		if (this.engine) {
+			this.engine.cleanUp();
+			this.engine = null;
+		}
+		if (this.countDownIntervalId) {
+			clearInterval(this.countDownIntervalId);
+			this.countDownIntervalId = null;
+		}
 	}
 
 	render() {
@@ -234,12 +242,13 @@ export class TournamentPage extends Component {
 		let countdown = 3;
 		this.updateCountdownDisplay(countdown);
 
-		const countdownInterval = setInterval(() => {
+		this.countDownIntervalId = setInterval(() => {
 			countdown -= 1;
 			this.updateCountdownDisplay(countdown);
 
 			if (countdown <= 0) {
-				clearInterval(countdownInterval);
+				clearInterval(this.countDownIntervalId);
+				this.countDownIntervalId = null;
 				this.removeOverlay();
 				this.startGame(player1, player2);
 			}
