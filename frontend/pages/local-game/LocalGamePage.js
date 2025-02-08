@@ -16,8 +16,15 @@ export class LocalGamePage extends Component {
 
 	connectedCallback() {
 		this.playerNames.push(getUserSessionData().username || "player 1");
+		super.connectedCallback();
+	}
 
-		this.innerHTML = `
+	disconnectedCallback() {
+		// TODO: stop game when player leaves page
+	}
+
+	render() {
+		return `
 				<div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light" style="max-width: 400px;">
 					<div class="text-center p-3 rounded mb-4 bg-danger text-warning border-while">
 						<h3 class="fw-bold  m-0">Setup Players</h3>
@@ -39,16 +46,10 @@ export class LocalGamePage extends Component {
 
             <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
+	}
 
+	postRender() {
 		this.container = this.querySelector("#container");
-		this.setupPlayerForm();
-	}
-
-	disconnectedCallback() {
-		// TODO: stop game when player leaves page
-	}
-
-	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
 		const submit = this.querySelector("#submit-players");
 		const AICheckbox = this.querySelector("#play-against-ai");
@@ -99,18 +100,17 @@ export class LocalGamePage extends Component {
 			this.querySelector("#player-setup").style.display = "none";
 			this.container.style.display = "block";
 
-			this.postRender();
+			if (WebGL.isWebGLAvailable()) {
+				this.createOverlay();
+				const countdownStart = Date.now() / 1000 + 3;
+				this.startCountdown(countdownStart);
+			} else {
+				console.error(
+					"WebGL not supported:",
+					WebGL.getWebGLErrorMessage()
+				);
+			}
 		});
-	}
-
-	postRender() {
-		if (WebGL.isWebGLAvailable()) {
-			this.createOverlay();
-			const countdownStart = Date.now() / 1000 + 3;
-			this.startCountdown(countdownStart);
-		} else {
-			console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
-		}
 	}
 
 	startGame() {

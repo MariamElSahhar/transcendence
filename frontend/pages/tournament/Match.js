@@ -19,7 +19,7 @@ export class Match {
 	constructor(
 		matchID,
 		playerNames,
-		pointsToWinMatch = 5,
+		pointsToWinMatch = window.APP_CONFIG.pointsToWinPongMatch,
 		onMatchEndCallback = null
 	) {
 		this.#matchID = matchID;

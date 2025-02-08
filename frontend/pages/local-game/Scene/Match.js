@@ -11,7 +11,7 @@ export class Match {
 	#ball;
 	#ballIsWaiting;
 	#ballStartTime;
-	#pointsToWinMatch = 5;
+	#pointsToWinMatch = window.APP_CONFIG.pointsToWinPongMatch;
 	#matchIsOver = false;
 	#points = [0, 0];
 

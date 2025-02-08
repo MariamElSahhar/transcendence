@@ -1,5 +1,4 @@
 import { Component } from "../../Component.js";
-const backendURL = "http://127.0.0.1:8000";
 
 export class FriendsSidebar extends Component {
 	constructor() {
@@ -57,7 +56,9 @@ export class FriendsSidebar extends Component {
 		return `
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
 				<div class="position-relative">
-					<img src="${backendURL + avatar}" class="friend-avatar h-100 rounded-circle" />
+					<img src="${
+						window.APP_CONFIG.backendUrl + avatar
+					}" class="friend-avatar h-100 rounded-circle" />
 					${
 						is_online
 							? `<span

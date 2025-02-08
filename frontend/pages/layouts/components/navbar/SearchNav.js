@@ -1,7 +1,6 @@
 import { Component } from "../../../Component.js";
 import { searchUsers } from "../../../../scripts/clients/users-client.js";
 import { isAuth } from "../../../../scripts/utils/session-manager.js";
-const backendURL = "http://127.0.0.1:8000";
 
 export class SearchNav extends Component {
 	constructor() {
@@ -90,7 +89,7 @@ export class SearchNav extends Component {
 			.map((user) => {
 				return `
 					<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.id}/')">
-						<img src="${backendURL}${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
+						<img src="${window.APP_CONFIG.backendUrl}${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
 						${user.username}
 					</div>
 				`;

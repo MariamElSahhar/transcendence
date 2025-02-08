@@ -17,39 +17,6 @@ export class LoginPage extends Component {
 
 	render() {
 		return `
-		<style>
-			/* Mario font */
-			body, h1, h2, h3, .form-label, .btn, .input-group-text {
-				font-family: 'New Super Mario Font U', sans-serif !important;
-			}
-
-			/* Sky animation */
-			.sky {
-				display: flex;
-				background: url(/pages/tictactoe/sky.png);
-				background-size: contain;
-				background-repeat: repeat-x;
-				position: absolute;
-				top: 0;
-				left: -400%;
-				width: 500%;
-				height: 20em;
-				animation: move-sky 500s linear infinite;
-				opacity: 0.2;
-				z-index: 0;
-				pointer-events: none; /* Allow interactions with elements above */
-			}
-
-			@keyframes move-sky {
-				from {
-					transform: translateX(0%);
-				}
-				to {
-					transform: translateX(60%);
-				}
-			}
-
-		</style>
 			<div
 				id="container"
 				class="d-flex flex-column w-100 vh-100"
@@ -96,6 +63,43 @@ export class LoginPage extends Component {
 				</main>
 			</div>
 		`;
+	}
+
+	style() {
+		return `
+		<style>
+			/* Mario font */
+			body, h1, h2, h3, .form-label, .btn, .input-group-text {
+				font-family: 'New Super Mario Font U', sans-serif !important;
+			}
+
+			/* Sky animation */
+			.sky {
+				display: flex;
+				background: url(/pages/tictactoe/sky.png);
+				background-size: contain;
+				background-repeat: repeat-x;
+				position: absolute;
+				top: 0;
+				left: -400%;
+				width: 500%;
+				height: 20em;
+				animation: move-sky 500s linear infinite;
+				opacity: 0.2;
+				z-index: 0;
+				pointer-events: none; /* Allow interactions with elements above */
+			}
+
+			@keyframes move-sky {
+				from {
+					transform: translateX(0%);
+				}
+				to {
+					transform: translateX(60%);
+				}
+			}
+
+		</style>`;
 	}
 
 	postRender() {

@@ -13,7 +13,7 @@ export class TournamentPage extends Component {
 		this.overlay = null;
 		this.players = [];
 		this.currentMatchIndex = 0;
-		this.maxScore = 5;
+		this.maxScore = window.APP_CONFIG.pointsToWinPongMatch;
 		this.scores = [
 			[0, 0],
 			[0, 0],

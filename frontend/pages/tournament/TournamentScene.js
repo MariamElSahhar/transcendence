@@ -2,8 +2,6 @@ import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/
 import { Match } from "./Match.js";
 import { PongGameBox } from "../local-game/Scene/PongGameBox.js";
 
-const POINTS = 5;
-
 export class Scene {
 	#engine;
 	#threeJSScene = new THREE.Scene();
@@ -24,7 +22,7 @@ export class Scene {
 			this.#match = new Match(
 				"match_1",
 				playerNames,
-				POINTS,
+				window.APP_CONFIG.pointsToWinPongMatch,
 				onMatchEndCallback
 			);
 			await this.#match.init(engine);

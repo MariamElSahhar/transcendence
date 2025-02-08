@@ -19,7 +19,6 @@ import {
 	getUserSessionData,
 	isAuth,
 } from "../scripts/utils/session-manager.js";
-const backendURL = "http://127.0.0.1:8000";
 
 export class SettingsPage extends Component {
 	constructor() {
@@ -43,12 +42,12 @@ export class SettingsPage extends Component {
 		const { success, data } = await getDefaultAvatars();
 		if (success) {
 			this.avatars = [
-				backendURL + data.default_avatars[0] + "/",
-				backendURL + data.default_avatars[1] + "/",
-				backendURL + data.default_avatars[2] + "/",
-				backendURL + data.default_avatars[3] + "/",
-				backendURL + data.default_avatars[4] + "/",
-				backendURL + data.default_avatars[5] + "/",
+				window.APP_CONFIG.backendUrl + data.default_avatars[0] + "/",
+				window.APP_CONFIG.backendUrl + data.default_avatars[1] + "/",
+				window.APP_CONFIG.backendUrl + data.default_avatars[2] + "/",
+				window.APP_CONFIG.backendUrl + data.default_avatars[3] + "/",
+				window.APP_CONFIG.backendUrl + data.default_avatars[4] + "/",
+				window.APP_CONFIG.backendUrl + data.default_avatars[5] + "/",
 			];
 		}
 		this.render();
@@ -56,7 +55,7 @@ export class SettingsPage extends Component {
 
 	renderWithSettings() {
 		return `
-	<div id="settings" class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-4">
+	<div id="settings" class="d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
 		<!-- Title -->
 		<div class="form-wrapper">
 		<!-- Profile Image and Form -->
@@ -226,88 +225,88 @@ export class SettingsPage extends Component {
 
 	style() {
 		return `
-      <style>
-	  body {
-  background-image: url("http://127.0.0.1:8000/media/images/bg.gif");
-}
+		<style>
+		body {
+			background-image: url("http://127.0.0.1:8000/media/images/bg.gif");
+		}
 
-  .icon-glow {
-  text-shadow: 0 0 8px skyblue
-}
+		.icon-glow {
+		text-shadow: 0 0 8px skyblue
+		}
 
-#avatar-div
-{
-position:relative;
-z-index:10;
-}
+		#avatar-div
+		{
+		position:relative;
+		z-index:10;
+		}
 
-.input-group
-{
-max-height:4rem;
-max-width:25rem;
-}
+		.input-group
+		{
+		max-height:4rem;
+		max-width:25rem;
+		}
 
-.valid-feedback,
-.invalid-feedback {
-    position: absolute;
-    top: 100%;
-}
-
-
-#settings {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.textbox
-{
-  background-color: rgba(255,255,255,0.6);
- }
+		.valid-feedback,
+		.invalid-feedback {
+			position: absolute;
+			top: 100%;
+		}
 
 
-#avatar-options {
-    width: 250px;
-    height: 250px;
-}
-	    .form-wrapper {
-        display: flex; /* Creates a flex container for alignment */
-    }
+		#settings {
+		background-color: rgba(255, 255, 255, 0.8);
+		}
+
+		.textbox
+		{
+		background-color: rgba(255,255,255,0.6);
+		}
 
 
-.avatar-option {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-	.avatar-option:hover {
-    transform: scale(1.2);
-}
-		  div.camera-icon-circle {
-		  transition: transform 0.3s ease;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 60px;  /* Size of the circle */
-    height: 60px;
-    background-color: rgba(255, 255, 255, 0.3); /* Grayed out background color */
-    border-radius: 50%; /* Makes the circle */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-i.bi-camera {
-	transition: transform 0.3s ease, color 0.3s ease; /* Smooth scaling and color change */
-	color: white;
-	cursor: pointer;
-	font-size: 2rem;
-}
-div.camera-icon-circle:hover {
-    transform: translate(-50%, -50%) scale(1.5); /* Enlarges the circle */
-}
+		#avatar-options {
+			width: 250px;
+			height: 250px;
+		}
+				.form-wrapper {
+				display: flex; /* Creates a flex container for alignment */
+			}
 
 
-div.camera-icon-circle:hover i.bi-camera {
-    transform: scale(1.5); /* Scale up the icon */
-}
+		.avatar-option {
+			width: 50px;
+			height: 50px;
+			cursor: pointer;
+			transition: transform 0.3s ease;
+		}
+			.avatar-option:hover {
+			transform: scale(1.2);
+		}
+				div.camera-icon-circle {
+				transition: transform 0.3s ease;
+			position: absolute;
+			transform: translate(-50%, -50%);
+			width: 60px;  /* Size of the circle */
+			height: 60px;
+			background-color: rgba(255, 255, 255, 0.3); /* Grayed out background color */
+			border-radius: 50%; /* Makes the circle */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		i.bi-camera {
+			transition: transform 0.3s ease, color 0.3s ease; /* Smooth scaling and color change */
+			color: white;
+			cursor: pointer;
+			font-size: 2rem;
+		}
+		div.camera-icon-circle:hover {
+			transform: translate(-50%, -50%) scale(1.5); /* Enlarges the circle */
+		}
+
+
+		div.camera-icon-circle:hover i.bi-camera {
+			transform: scale(1.5); /* Scale up the icon */
+		}
 
       </style>
     `;
