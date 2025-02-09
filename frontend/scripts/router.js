@@ -126,25 +126,25 @@ const handleLocation = async () => {
 	} else if (!isProtected && authenticated && route != routes[404]) {
 		route = routes["/home"];
 	}
-	else if (previouspath && previouspath.startsWith("/play/remote")) {
-		try {
-			const { status, success, data } = await removeMatchMaking();
-			closeWebSocket();
-			if (success) {
-				console.log("Successfully removed from matchmaking queue:", data);
-			} else {
-				console.warn("Failed to remove from matchmaking queue. Status:", status);
-			}
-			if (window.timeoutID) {
-				console.log("CLEARED TIMEOUT")
-				clearTimeout(window.timeoutID);
-				window.timeoutID = null; // Reset the global variable
-			}
-		} catch (error) {
-			console.error("Error while removing from matchmaking queue:", error);
-		}
-	}
-	previouspath=path;
+	// else if (previouspath && previouspath.startsWith("/play/remote")) {
+	// 	try {
+	// 		const { status, success, data } = await removeMatchMaking();
+	// 		closeWebSocket();
+	// 		if (success) {
+	// 			console.log("Successfully removed from matchmaking queue:", data);
+	// 		} else {
+	// 			console.warn("Failed to remove from matchmaking queue. Status:", status);
+	// 		}
+	// 		if (window.timeoutID) {
+	// 			console.log("CLEARED TIMEOUT")
+	// 			clearTimeout(window.timeoutID);
+	// 			window.timeoutID = null; // Reset the global variable
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Error while removing from matchmaking queue:", error);
+	// 	}
+	// }
+	// previouspath=path;
 	const layout = layouts[route.layout];
 	loadRoute(route, layout);
 };

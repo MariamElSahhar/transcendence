@@ -27,7 +27,7 @@ export class RemoteGamePage extends Component {
 	  }
 	updateLoaders(data) {
 
-		clearTimeout(window.timeoutID);
+		clearTimeout(this.timeoutID);
 		const status = document.getElementById("statusmsg");
 		const searchBox = document.getElementById("searchBox");
 
@@ -304,6 +304,35 @@ this.container = this.querySelector("#container");
 this.postRender();
 	}
 
+	async disconnectedCallback()
+	{
+		try {
+			const { status, success, data } = await removeMatchMaking();
+			closeWebSocket();
+			if (success) {
+				console.log("Successfully removed from matchmaking queue:", data);
+			} else {
+				console.warn("Failed to remove from matchmaking queue. Status:", status);
+			}
+			if (this.timeoutID) {
+				console.log("CLEARED TIMEOUT")
+				clearTimeout(this.timeoutID);
+				this.timeoutID = null; // Reset the global variable
+			}
+		} catch (error) {
+			console.error("Error while removing from matchmaking queue:", error);
+		}
+		console.log("remoteGamePage is being disconnected. Cleaning up...");
+		if (this.engine) {
+		  this.engine.stopAnimationLoop();
+		  this.engine.cleanUp();
+		}
+		if (this.countDownIntervalId) {
+		  clearInterval(this.countDownIntervalId);
+		  this.countDownIntervalId = null;
+		}
+	}
+
 	postRender() {
 		super.addComponentEventListener(
 			this.querySelector("#closebtn"),
@@ -322,7 +351,7 @@ this.postRender();
 		}
 
 			async waitForOpponent() {
-				window.timeoutID=setTimeout(() => {
+				this.timeoutID=setTimeout(() => {
 					const stat = document.getElementById("statusmsg");
 					const searchBox = document.getElementById("searchBox");
 					searchBox.querySelector(".heading").innerHTML = "We're sorry! :(";
@@ -365,14 +394,15 @@ this.postRender();
 				let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 				this.updateOverlayCountdown(secondsLeft);
 
-				const countDownInterval = setInterval(() => {
-					secondsLeft -= 1;
-					this.updateOverlayCountdown(secondsLeft);
+				this.countDownIntervalId = setInterval(() => {
+				secondsLeft -= 1;
+				this.updateOverlayCountdown(secondsLeft);
 
-					if (secondsLeft <= 0) {
-						clearInterval(countDownInterval);
-						this.startGame();
-					}
+				if (secondsLeft <= 0) {
+					clearInterval(this.countDownIntervalId);
+					this.countDownIntervalId = null;
+					this.startGame();
+				}
 				}, 1000);
 			}
 
