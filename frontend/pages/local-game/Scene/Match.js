@@ -191,7 +191,7 @@ export class Match {
 				opponent_score: this.#points[1],
 				my_score: this.#points[0],
 				opponent_username: this.engine.players[1],
-				tournament:this.engine.gameSession,
+				gameSession:this.engine.gameSession,
 			});
 		}
 

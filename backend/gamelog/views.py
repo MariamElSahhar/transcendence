@@ -22,7 +22,7 @@ from .serializers.ttt import (
 @api_view(["POST"])
 def create_gamelog_remote(request):
     print(request.data)
-    gamedata = GameSession.objects.get(id=request.data["tournament"])
+    gamedata = GameSession.objects.get(id=request.data["gameSession"])
     # print(gamedata.player1)
     user1 = request.user.id
     user2 = CustomUser.objects.get(username=request.data["opponent_username"]).id

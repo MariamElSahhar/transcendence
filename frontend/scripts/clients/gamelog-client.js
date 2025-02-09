@@ -37,13 +37,13 @@ export const fetchUserGameLog = async (user_id) => {
 export const addRemoteGame = async ({	opponent_score,
 	my_score,
 	opponent_username,
-	tournament}) => {
+	gameSession}) => {
 	const url = URIs.gamelogRemote;
 	const requestBody = {
 		opponent_score,
 		my_score,
 		opponent_username,
-		tournament,
+		gameSession,
 	};
 	console.log(requestBody )
 	const { status, body, error } = await post(url, requestBody);
