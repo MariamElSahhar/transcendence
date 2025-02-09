@@ -111,7 +111,7 @@ export class SignUpPage extends Component {
 			/* Sky animation */
 			.sky {
 				display: flex;
-				background: url(/pages/tictactoe/sky.png);
+				background: url(/assets/sky.png);
 				background-size: contain;
 				background-repeat: repeat-x;
 				position: absolute;

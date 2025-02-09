@@ -1,12 +1,13 @@
 /* color palette for the theme */
 :root {
-    --mario-blue-color: #6185f8;
-    --mario-green-color: #43b047;
-    --mario-yellow-color: #fbd000;
-	--mario-red-color: #E52521;
+	--mario-blue-color: #6185f8;
+	--mario-green-color: #43b047;
+	--mario-yellow-color: #fbd000;
+	--mario-red-color: #e52521;
 	--mario-brown-color: #742607;
-	--mario-pink-color: #f096BE;
-	--mario-orange-color: #EE830A;
+	--mario-pink-color: #f096be;
+	--mario-orange-color: #ee830a;
+	--mario-brick: #ffb020;
 }
 
 /* General resets */
@@ -29,6 +30,7 @@ body {
 /* Button default width */
 button {
 	max-width: 400px;
+	background-color: var(--mario-brick);
 }
 
 /* Smaller input boxes */
@@ -50,91 +52,97 @@ footer {
 
 /* Card styling - make the cards smaller and rectangular */
 .card {
-    width: 100%;
-    max-width: 400px; /* Limit the card width */
-    margin: 20px auto; /* Center the card horizontally */
-    border-radius: 15px; /* Add rounded corners */
-    overflow: hidden; /* Prevent content from overflowing the card */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+	width: 100%;
+	max-width: 400px; /* Limit the card width */
+	margin: 20px auto; /* Center the card horizontally */
+	border-radius: 15px; /* Add rounded corners */
+	overflow: hidden; /* Prevent content from overflowing the card */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+	transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
 }
 
 .card:hover {
-    transform: translateY(-5px); /* Slight upward lift on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+	transform: translateY(-5px); /* Slight upward lift on hover */
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
 }
 
 .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center; /* Center-align content */
-    padding: 15px;
-    position: relative;
-    background: linear-gradient(135deg, #da7b27, #e07f2a); /* Earthy gradient background */
-    color: white;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center; /* Center-align content */
+	padding: 15px;
+	position: relative;
+	background: linear-gradient(
+		135deg,
+		#da7b27,
+		#e07f2a
+	); /* Earthy gradient background */
+	color: white;
 }
 
 /* Title styles */
-.card-body h2{
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: center; /* Center-align text */
-    color: #fff;
+.card-body h2 {
+	font-weight: bold;
+	margin-bottom: 10px;
+	text-align: center; /* Center-align text */
+	color: #fff;
 }
 
 /* Text styles */
 .card-body p {
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #ddd; /* Slightly lighter shade for better readability */
-    text-align: center;
+	font-size: 20px;
+	margin-bottom: 15px;
+	color: #ddd; /* Slightly lighter shade for better readability */
+	text-align: center;
 }
 
 /* Button styles */
 .card-body button {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white!important; /* Gradient button matching the card */
-	background: #964B00!important; /* Gradient button matching the card */
-    border: none;
-    border-radius: 5px; /* Rounded corners for a polished look */
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+	padding: 10px 20px;
+	font-size: 16px;
+	font-weight: bold;
+	color: white !important; /* Gradient button matching the card */
+	background: #964b00 !important; /* Gradient button matching the card */
+	border: none;
+	border-radius: 5px; /* Rounded corners for a polished look */
+	cursor: pointer;
+	transition: background 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
 }
 
 .card-body button:hover {
-    background: linear-gradient(135deg, rgba(245, 165, 97, 0.4), rgba(245, 165, 97, 0.4))!important; /* Reverse gradient on hover */
-    transform: scale(1.05); /* Slight zoom effect */
+	background: linear-gradient(
+		135deg,
+		rgba(245, 165, 97, 0.4),
+		rgba(245, 165, 97, 0.4)
+	) !important; /* Reverse gradient on hover */
+	transform: scale(1.05); /* Slight zoom effect */
 }
 
 /* Centered image */
 .card-body .card-image {
-    width: 150px; /* Set the size of the image */
-    height: auto; /* Maintain the aspect ratio */
-    margin: 10px auto; /* Center the image vertically and horizontally */
-    display: block;
-    object-fit: contain; /* Ensure the image fits well */
-    border-radius: 10px; /* Optional: Add rounded corners */
+	width: 150px; /* Set the size of the image */
+	height: auto; /* Maintain the aspect ratio */
+	margin: 10px auto; /* Center the image vertically and horizontally */
+	display: block;
+	object-fit: contain; /* Ensure the image fits well */
+	border-radius: 10px; /* Optional: Add rounded corners */
 }
 
 /* If you want the image at the bottom */
 .card-body .card-image.bottom {
-    margin-top: auto; /* Push the image to the bottom */
+	margin-top: auto; /* Push the image to the bottom */
 }
 
 /* Button styling inside the cards */
 .card .btn {
-    background-color: white;
-    color: #333;
-    border: none;
-    font-weight: bold;
-    margin-top: auto;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+	background-color: white;
+	color: #333;
+	border: none;
+	font-weight: bold;
+	margin-top: auto;
+	transition: background-color 0.3s ease, transform 0.3s ease;
 }
-
-
 
 #registerForm {
 	width: 100%;
@@ -257,7 +265,6 @@ a {
 	filter: brightness(var(--light-hover-brightness));
 }
 
-
 /* Add specific styling for the canvas containers to ensure they show up */
 .game-canvas {
 	width: 70%; /* Canvas will take up 70% of the section */
@@ -276,7 +283,6 @@ a {
 	border-radius: 10px;
 	margin-bottom: 20px; /* Add space between game sections */
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-	
 }
 
 .btn-container {
