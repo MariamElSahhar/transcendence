@@ -1,6 +1,7 @@
 # Channel's version of views
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+import asyncio
 from channels.layers import get_channel_layer
 from rest_framework_simplejwt.tokens import AccessToken
 from remote_pong.models import  GameSession
@@ -142,26 +143,6 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
                         "ball":ball
                     }
                 )
-            # print(players[0],players[1],players)
-            # for key in {data}:
-            #     print(data[key])
-            # if isinstance(data, dict):  # Check if data is a dictionary
-            #     if data.get("action") == "move":
-            #         players = data.get("players")
-            #         key = data.get("key")
-            #         print(f"Action: move, Players: {players}, Key: {key}")  # Debug
-
-                    # Broadcast to both players
-                    # await self.channel_layer.group_send(
-                    #     self.room_group_name,
-                    #     {
-                    #         "type": "player_move",
-                    #         "key": key,
-                    #         "players": players,
-                    #     },
-                    # )
-            # else:
-            #     print("Received data is not a valid dictionary.")
             if data.get("action") == "ready":
                 print(data,data.get("playerSide"))
                 gameSession = data.get("gameSession")
@@ -213,9 +194,10 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         # print("THIS FOR KEY PRESS: ", text_data)
 
     async def match_found(self, event):
-        print(f"Message received: {event}")
+        # print(f"Message received: {event}")
         gamesession=event["game_session_id"]
-        print(gamesession)
+        # print(gamesession)
+
         group_name = f"game_session_{gamesession}"
         await self.channel_layer.group_add(
             group_name,
@@ -236,21 +218,7 @@ def notify_match(player1, player2, game_session):
     channel_layer = get_channel_layer()
     print("CHANELS", channel_layer)
     print("MATCH FOUND: ", group_name, player1.username, player2.username)
-    # PongConsumer.objects.get(username=player1.username)
-    # for player in [player1, player2]:
-        # Retrieve channel_name from Redis
-        # channel = async_to_sync(self.redis.get)(f"user:{player}:channel")
-        # if channel:
-        #     async_to_sync(channel_layer.group_add)(group_name, channel.decode("utf-8"))
-    # for player in [player1, player2]:
-        # channel = async_to_sync(self.redis.get)(f"user:{player}:channel")
-        # if channel:
-        #     async_to_sync(channel_layer.send)(
-        #         channel.decode("utf-8"),
-        #         {
-        #             "type": "TESTING FOR NEW"
-        #         },
-        #     )
+
 
     async_to_sync(channel_layer.group_send)(
         f"user_{player1.username}",

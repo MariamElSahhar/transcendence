@@ -84,6 +84,7 @@ export class RemoteGamePage extends Component {
 
 	onWebSocketOpen(socket) {
 	   console.log('WebSocket connected');
+	   this.waitForOpponent();
    }
 
 	onWebSocketMessage(data) {
@@ -311,7 +312,7 @@ this.postRender();
 				window.redirect("/home");
 			}
 		);
-		this.waitForOpponent();
+
 
 			}
 		async removeFromMatchmaking()
