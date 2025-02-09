@@ -50,7 +50,7 @@ export class Navbar extends Component {
 										data-bs-toggle="dropdown" aria-expanded="false">
 										<img id="nav-profile-img" src="${avatar}"
 										alt="profile image"
-										class="rounded-circle object-fit-cover w-40px h-40px">
+										class="rounded-circle object-fit-cover">
 								</span>
 								<ul class="dropdown-menu dropdown-menu-end"
 									aria-labelledby="dropdownMenuLink">
@@ -64,6 +64,19 @@ export class Navbar extends Component {
 				</div>
 			</nav>
     	`;
+	}
+
+	style() {
+		return `
+		<style>
+			#nav-profile-img {
+				max-width: 40px;
+				width: 40px;
+				max-height: auto;
+				height: auto;
+			}
+		</style>
+		`;
 	}
 
 	postRender() {
