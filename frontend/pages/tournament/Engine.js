@@ -11,6 +11,7 @@ export class Engine {
 	#onMatchEndCallback;
 
 	constructor(component, onMatchEndCallback) {
+		this.gameSession=-1;
 		this.#component = component;
 		this.#threeJS = new ThreeJSUtils(this);
 		this.#keyHookHandler = new KeyHandler(this);

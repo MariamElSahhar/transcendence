@@ -94,10 +94,10 @@ export class RemoteGamePage extends Component {
 			this.gameID=data["game_session_id"]
 		   this.playerSet = true;
 		   this.updateLoaders(data);
-		   sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
 			// console.log(this.playerSide)
 			setTimeout(() => {
 		   if (WebGL.isWebGLAvailable()) {
+			sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
 			   this.createOverlay();
 
 			   document.getElementById("searchdiv").classList.remove("d-flex");

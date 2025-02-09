@@ -22,6 +22,7 @@ export class Match {
 		pointsToWinMatch = window.APP_CONFIG.pointsToWinPongMatch,
 		onMatchEndCallback = null
 	) {
+		this.gameType="local"
 		this.#matchID = matchID;
 		this.#playerNames = playerNames || ["Player 1", "Player 2"];
 		this.#pointsToWinMatch = pointsToWinMatch;

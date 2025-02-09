@@ -20,7 +20,7 @@ export class Match {
 	constructor() {}
 
 	async init(engine) {
-		this.#engine = engine;
+		this.engine = engine;
 		if (
 			!engine.players ||
 			!Array.isArray(engine.players) ||
