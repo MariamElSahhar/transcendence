@@ -431,7 +431,7 @@ class TicTacToePage extends Component {
 				    width: 100%;
 					height: 10em;
 					display: flex;
-					background: url(/pages/tictactoe/floor.png);
+					background: url(/assets/textures/floor.png);
 					background-position: center;
 					background-size: contain;
 					position: absolute;
