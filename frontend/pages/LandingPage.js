@@ -1,4 +1,5 @@
 import { Component } from "./Component.js";
+import { Footer } from "../layouts/components/Footer.js";
 
 export class LandingPage extends Component {
 	constructor() {
@@ -7,16 +8,17 @@ export class LandingPage extends Component {
 
 	render() {
 		return `
-			<div class="landing-page d-flex flex-column justify-content-center align-items-center" style="background-color: rgb(135, 206, 235); height: 100vh; color: white;">
+			<div class="landing-page d-flex flex-column justify-content-center align-items-center min-vh-100">
 				<!-- Sky Section -->
 				<div class="sky"></div>
 
 				<!-- Title Image -->
-				<img class="title-img" src="/assets/titlepage.png" alt="X"/>
+				<img class="title-img" src="/assets/titlepage.png" alt="Welcome to Pong!"/>
 
 				<!-- Main Content Section -->
 				<div class="d-flex flex-column justify-content-center align-items-center gap-2">
 				</div>
+
 				<!-- Floor Section -->
 				<div class="container">
 					<img class="pipe" src="/assets/pipe.png" alt="X"/>
@@ -26,10 +28,17 @@ export class LandingPage extends Component {
 					<img class="pipeRight" src="/assets/pipe.png" alt="X"/>
 					<img class="shrooms" src="/pages/tictactoe/shroom.png" alt="X" onclick="window.redirect('/sign-up')"/>
 				</div>
-				<div class="floor"></div>
+				<footer-component class="mt-auto"></footer-component>
 			</div>
+		`;
+	}
 
+	style() {
+		return `
 			<style>
+				.landing-page {
+					background-color: rgb(135, 206, 235);
+				}
 
 				/* Sky Animation */
 				.sky {
@@ -39,20 +48,20 @@ export class LandingPage extends Component {
 					background-repeat: repeat-x;
 					position: absolute;
 					top: 0;
-					left: -400%;
-					width: 500%;
+					left: 0;
+					width: 100%;
 					height: 20em;
 					animation: move-sky 500s linear infinite;
 					z-index: 1;
 					opacity: 0.2;
 				}
 
-				@keyframes jump {
-					0%, 100% {
-						transform: translateY(0);
+				@keyframes move-sky {
+					from {
+						background-position: 0 0;
 					}
-					50% {
-						transform: translateY(-20px);
+					to {
+						background-position: 10000px 0;
 					}
 				}
 
@@ -67,15 +76,6 @@ export class LandingPage extends Component {
 					to {
 						transform: translateX(60%);
 					}
-				}
-
-				/* Main Page Layout */
-				.landing-page {
-					position: relative;
-					overflow: hidden; /* Prevent scrollbars caused by animation */
-					min-height: 100vh; /* Ensure the page fills the screen */
-					height: 100vh;
-					box-sizing: border-box;
 				}
 
 				.container {
@@ -138,21 +138,6 @@ export class LandingPage extends Component {
 
 				.container2:hover .shrooms {
 					bottom: 24.5em; /* Move the plant up to the same level as the pipe */
-				}
-
-				/* Floor Styling */
-				.floor {
-					width: 100%;
-					height: 10em;
-					display: flex;
-					background: url(/pages/tictactoe/floor.png);
-					background-position: center;
-					background-size: contain;
-					position: absolute;
-					bottom: 0;
-					left: 0;
-					border-top: 0.4em solid #4c2811;
-					z-index: 1;
 				}
 			</style>
 		`;

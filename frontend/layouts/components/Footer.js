@@ -7,7 +7,7 @@ export class Footer extends Component {
 
 	render() {
 		return `
-			<footer class="footer bg-light text-light text-center py-3">
+			<footer class="footer bg-light text-light text-center py-3 w-100 min-vw-100">
     			<small>&copy; 2024 Transcendence</small>
         	</footer>
 		`;
@@ -20,7 +20,7 @@ export class Footer extends Component {
 					height: 50px;
 					background-image: url(/assets/textures/floor.png);
 					background-repeat: repeat;
-					background-size: 70px 70px;
+					background-size: 80px 80px;
 				}
 			</style>
 		`;

@@ -5,6 +5,7 @@ import {
 	isValidUsername,
 	isValidEmail,
 } from "../../scripts/utils/input-validator.js";
+import { Footer } from "../../layouts/components/Footer.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -94,7 +95,8 @@ export class SignUpPage extends Component {
                             </small>
                         </div>
                     </div>
-                </main>
+					</main>
+				<footer-component class="mt-auto"></footer-component>
             </div>
         `;
 	}
