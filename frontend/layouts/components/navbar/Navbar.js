@@ -1,8 +1,8 @@
 import {
 	clearUserSession,
 	getUserSessionData,
-} from "../../../../scripts/utils/session-manager.js";
-import { Component } from "../../../Component.js";
+} from "../../../scripts/utils/session-manager.js";
+import { Component } from "../../../pages/Component.js";
 
 export class Navbar extends Component {
 	constructor() {

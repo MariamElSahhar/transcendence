@@ -1,6 +1,6 @@
-import { Component } from "../../../Component.js";
-import { searchUsers } from "../../../../scripts/clients/users-client.js";
-import { isAuth } from "../../../../scripts/utils/session-manager.js";
+import { Component } from "../../../pages/Component.js";
+import { searchUsers } from "../../../scripts/clients/users-client.js";
+import { isAuth } from "../../../scripts/utils/session-manager.js";
 
 export class SearchNav extends Component {
 	constructor() {

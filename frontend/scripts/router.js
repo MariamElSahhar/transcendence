@@ -94,11 +94,11 @@ const routes = {
 const layouts = {
 	main: {
 		component: "main-layout",
-		path: "../pages/layouts/MainLayout.js",
+		path: "../layouts/MainLayout.js",
 	},
 	sidebar: {
 		component: "sidebar-layout",
-		path: "../pages/layouts/SidebarLayout.js",
+		path: "../layouts/SidebarLayout.js",
 	},
 };
 
