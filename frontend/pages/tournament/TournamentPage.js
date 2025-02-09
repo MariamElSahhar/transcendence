@@ -22,6 +22,7 @@ export class TournamentPage extends Component {
 		this.matches = [];
 		this.winners = [];
 		this.playerWins = {}; // Tracks the number of wins for each player
+		this.countDownIntervalId = null;
 	}
 
 	connectedCallback() {
