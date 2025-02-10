@@ -17,6 +17,8 @@ export class RemoteGamePage extends Component {
 		this.scores = [0, 0]; // Tracks scores for both players
 		this.isAIEnabled = false;
 		this.playerSet = false;
+		this.playerLeft = false;
+		this.activeTimeouts = new Set();
 	}
 
 	blockWait(ms) {
@@ -25,6 +27,15 @@ export class RemoteGamePage extends Component {
 		  // Do nothing, just block the thread
 		}
 	  }
+
+	  setTrackedTimeout(callback, delay) {
+		const timeoutID = setTimeout(() => {
+			callback();
+			this.activeTimeouts.delete(timeoutID); // Remove timeout ID after execution
+		}, delay);
+		this.activeTimeouts.add(timeoutID); // Add timeout ID to the set
+		return timeoutID;
+	}4
 	updateLoaders(data) {
 
 		clearTimeout(this.timeoutID);
@@ -96,14 +107,19 @@ export class RemoteGamePage extends Component {
 		   this.playerSet = true;
 		   this.updateLoaders(data);
 			// console.log(this.playerSide)
-			setTimeout(() => {
+			this.timeoutID = this.setTrackedTimeout( () => {
 		   if (WebGL.isWebGLAvailable()) {
-			sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
-			   this.createOverlay();
-
-			   document.getElementById("searchdiv").classList.remove("d-flex");
-			   document.getElementById("searchdiv").classList.add("d-none");
-			   this.container.style.display = "block";
+			// if(!this.playerLeft)
+			// {
+				document.getElementById("searchdiv").classList.remove("d-flex");
+				document.getElementById("searchdiv").classList.add("d-none");
+				this.container.style.display = "block";
+				if(!this.playerLeft)
+				{
+				sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
+				this.createOverlay();
+			}
+			// }
 
 		   } else {
 			   console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
@@ -142,12 +158,13 @@ export class RemoteGamePage extends Component {
 	   }
 	   else if(data["message"] == "startRound")
 	   {
-		// console.log("ARE YOU READYYYYY")
 		// console.log(data);
 		if(data["round"] == 1)
 		{
 			const countdownStart = Date.now() / 1000 + 3;
-			this.startCountdown(countdownStart);
+			console.log(this.overlay)
+
+				this.startCountdown(countdownStart);
 			// console.log("here")
 		}
 		else
@@ -167,7 +184,48 @@ export class RemoteGamePage extends Component {
 	// else
 	// 	index = 0;
    }
+   else if(data["message"] == "opponent_left")
+   {
+	this.player_left()
+	}
+
 }
+
+player_left()
+{
+	this.playerLeft = true;
+   if (this.engine) {
+	   this.engine.stopAnimationLoop();
+	   this.engine.cleanUp();
+	}
+	if (this.countDownIntervalId) {
+		clearInterval(this.countDownIntervalId);
+		this.countDownIntervalId = null;
+	}
+	if(this.engine)
+	{
+			this.engine.scene.match.matchIsOver = true;
+			if(this.engine.scene.match.ball)
+				this.engine.scene.match.ball.removeBall();
+		}
+		this.addPlayerLeftCard();
+
+	}
+
+	addPlayerLeftCard() {
+		this.createOverlay();
+		this.overlay.innerHTML = `
+		<div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
+		<div class="card-header">
+			<h1 class="card-title text-warning">Oh no!</h1>
+		</div>
+		<div class="card-body">
+			<h5 class="card-subtitle mb-3 text-muted">Your opponent has disconnected /left the game :(</h5>
+			<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+			</div>
+			</div>
+			`;
+	}
 
 	onWebSocketClose() {
 	   console.log('WebSocket closed');
@@ -307,6 +365,9 @@ this.postRender();
 	async disconnectedCallback()
 	{
 		try {
+
+			if(!this.engine || !this.engine.scene.match.matchIsOver)
+				sendWebSocketMessage({action: "leavingMatch" , gameSession:this.gameID})
 			const { status, success, data } = await removeMatchMaking();
 			closeWebSocket();
 			if (success) {
@@ -322,6 +383,10 @@ this.postRender();
 		} catch (error) {
 			console.error("Error while removing from matchmaking queue:", error);
 		}
+		this.activeTimeouts.forEach(timeoutID => {
+			clearTimeout(timeoutID);
+		});
+		this.activeTimeouts.clear();
 		console.log("remoteGamePage is being disconnected. Cleaning up...");
 		if (this.engine) {
 		  this.engine.stopAnimationLoop();
@@ -341,6 +406,13 @@ this.postRender();
 				window.redirect("/home");
 			}
 		);
+		window.addEventListener("beforeunload", (event) => {
+			if(!this.engine || !this.engine.scene.match.matchIsOver)
+				sendWebSocketMessage({action: "leavingMatch" , gameSession:this.gameID})
+			// console.log("Page is being refreshed or navigated away!");
+			// Optionally, show a confirmation dialog (not recommended for modern browsers)
+			event.returnValue = ""; // Needed for the confirmation dialog to appear
+		});
 
 
 			}
@@ -351,7 +423,7 @@ this.postRender();
 		}
 
 			async waitForOpponent() {
-				this.timeoutID=setTimeout(() => {
+				this.timeoutID = this.setTrackedTimeout(() => {
 					const stat = document.getElementById("statusmsg");
 					const searchBox = document.getElementById("searchBox");
 					searchBox.querySelector(".heading").innerHTML = "We're sorry! :(";
@@ -373,9 +445,9 @@ this.postRender();
 				}
 			}
 
-			startGame() {
+			async startGame() {
 				this.engine = new Engine(this, this.isAIEnabled, this.playerNames, this.playerSide,this.gameID);
-				this.engine.startGame();
+				await this.engine.startGame();
 				this.removeOverlay();
 			}
 
@@ -432,6 +504,7 @@ this.postRender();
 					</div>
 					`;
 					this.container.appendChild(this.overlay);
+					console.log(this.overlay)
 				}
 
 			updateOverlayCountdown(secondsLeft) {
@@ -476,5 +549,7 @@ this.postRender();
 					</div>
 					`;
 				}
+
 		}
+
 customElements.define("remote-game-page", RemoteGamePage);

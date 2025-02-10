@@ -27,6 +27,7 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        print("player was made!!!!!!!!!!!!")
 
     async def disconnect(self, close_code):
         # await self.redis.delete(f"user:{self.username}:channel")
@@ -71,6 +72,12 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
             "index":event["index"]
         }))
 
+    async def leave_match(self, event):
+        await self.send(text_data=json.dumps({
+            "message": "opponent_left",
+        }))
+
+
     async def receive(self, text_data):
          # Log the raw input
         try:
@@ -87,6 +94,15 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
                     {
                         "type": "endgame",
                         "index":index
+                    }
+                )
+            if data.get("action") == "leavingMatch":
+                channel_layer = get_channel_layer()
+                gameSession = data.get("gameSession")
+                await channel_layer.group_send(
+                    f"game_session_{gameSession}",
+                    {
+                        "type": "leave_match"
                     }
                 )
             if data.get("action") == "move":

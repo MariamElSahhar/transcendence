@@ -93,7 +93,7 @@ class Goal extends PhysicalObject {
     return currentClosestPhysicalObjectHit;
   }
 
-  handleCollision(_travel, _ball, _collisionHandler, match) {
+   handleCollision(_travel, _ball, _collisionHandler, match) {
       if(match.gameType=="local" || match.isHost)//(_ball.movement.x < 0 && match.engine.playerSide =="left" )|| (_ball.movement.x > 0 && match.engine.playerSide =="right"))
       {
         if(match.gameType =="remote")
@@ -211,7 +211,7 @@ export class CollisionHandler {
     this.physicalPaddle = new Paddle(paddle);
   }
 
-  updateBallPositionAndMovement(timeDelta, match) {
+   updateBallPositionAndMovement(timeDelta, match) {
     const ball = match.ball;
     let travel = new HandlePaddleEdge(
       ball.getPosition(),

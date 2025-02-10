@@ -2,7 +2,6 @@ import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/
 import { Player } from "./player/Player.js";
 import { Ball } from "./Ball.js";
 import { addLocalGame,addRemoteGame } from "../../../scripts/clients/gamelog-client.js";
-import {sendWebSocketMessage} from "../../../scripts/utils/websocket-manager.js"
 import { isAuth } from "../../../scripts/utils/session-manager.js";
 
 export class Match {
@@ -13,7 +12,7 @@ export class Match {
 	#ballIsWaiting;
 	#ballStartTime;
 	#pointsToWinMatch = window.APP_CONFIG.pointsToWinPongMatch;
-	#matchIsOver = false;
+	matchIsOver = false;
 	#points = [0, 0];
 	playersReady = true;
 
@@ -108,12 +107,12 @@ export class Match {
                     timeDelta,
                     pongGameBox,
                     index === 1 ? ballPosition : null,
-                    !this.#ballIsWaiting && !this.#matchIsOver
+                    !this.#ballIsWaiting && !this.matchIsOver
 					                );
             }
         });
 
-        if (!this.#matchIsOver) {
+        if (!this.matchIsOver) {
             if (this.#ballIsWaiting && currentTime >= this.#ballStartTime) {
                 this.#ballIsWaiting = false;
                 this.startGame();
@@ -172,7 +171,7 @@ export class Match {
 	}
 
 	async endGame() {
-		this.#matchIsOver = true;
+		this.matchIsOver = true;
 		this.ball.removeBall();
 		this.engine.component.addEndGameCard(this.#points[0], this.#points[1]);
 		if (!(await isAuth())) window.redirect("/");

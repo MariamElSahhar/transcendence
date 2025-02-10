@@ -11,7 +11,7 @@ export class KeyHandler {
 
     startListeningForKeys(player="local",playerSide="NA",players=null,gameSession=-1) {
 		this.#gameEngine.component.addComponentEventListener(
-			window, 'keydown', (event) => {
+			window, 'keydown', async (event) => {
 				if(player=="remote")
 					{
 						if ((event.key === "W" || event.key === "S"||  event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
@@ -24,7 +24,7 @@ export class KeyHandler {
             }, this,
         );
         this.#gameEngine.component.addComponentEventListener(
-            window, 'keyup', (event) => {
+            window, 'keyup', async (event) => {
                 if(player=="remote")
 					{
 						if ((event.key === "W" || event.key === "S"|| event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))

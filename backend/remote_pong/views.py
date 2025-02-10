@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from django.db import transaction
 from .models import MatchmakingQueue, GameSession
 from users.models import CustomUser
+from asgiref.sync import async_to_sync
 from pong.consumers import notify_match
 import time
 

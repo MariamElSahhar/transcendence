@@ -39,10 +39,10 @@ export class Ball {
     this.#threeJSGroup.add(this.#light);
   }
 
-  async prepareForMatch(gameType, isHost=null, gameID) {
+  prepareForMatch(gameType, isHost=null, gameID) {
     // console.log("CENTERE")
     this.#threeJSGroup.position.set(0., 0., this.#threeJSGroup.position.z);
-    await this.randomizeMovement(gameType,isHost,gameID);
+    this.randomizeMovement(gameType,isHost,gameID);
   }
 
   removeBall() {
@@ -68,21 +68,21 @@ export class Ball {
   randomizeMovement(gameType, isHost, gameID) {
     // console.log(gameType, isHost, gameID);
 
-    return new Promise((resolve) => {
-        if (gameType === "remote") {
-          // console.log("here")
-            if (isHost) {
-                // console.log("how?>>>>>>>>");
-                let ballmovement = new THREE.Vector3(0., 0., 0.);
-                ballmovement.x = Math.random() < 0.5 ? -1 : 1;
-                ballmovement.y = Math.random() < 0.5 ? -0.5 : 0.5;
-                ballmovement.normalize().multiplyScalar(15);
-                sendWebSocketMessage({ type: "ballPosition", position: ballmovement, gameSession: gameID });
-            //     // this.movementSet = true;
-            }
+    if (gameType === "remote") {
+      // console.log("here")
+      if (isHost) {
+        // console.log("how?>>>>>>>>");
+        let ballmovement = new THREE.Vector3(0., 0., 0.);
+        ballmovement.x = Math.random() < 0.5 ? -1 : 1;
+        ballmovement.y = Math.random() < 0.5 ? -0.5 : 0.5;
+        ballmovement.normalize().multiplyScalar(15);
+        sendWebSocketMessage({ type: "ballPosition", position: ballmovement, gameSession: gameID });
+        //     // this.movementSet = true;
+      }
 
-            // // Check every 100ms if movement is set, then resolve
-            const checkInterval = setInterval(() => {
+      // // Check every 100ms if movement is set, then resolve
+      return new Promise((resolve) => {
+            const checkInterval = setInterval(async() => {
                 if (this.movementSet) {
                   let index = isHost?0 : 1
 				          sendWebSocketMessage({ action: "ready" , gameSession:gameID, playerSide:index});
@@ -93,13 +93,13 @@ export class Ball {
                     resolve("Success");
                 }
             }, 100);
+          });
         } else {
             this.movement.x = Math.random() < 0.5 ? -1 : 1;
             this.movement.y = Math.random() < 0.5 ? -0.5 : 0.5;
             this.movement.normalize().multiplyScalar(15);
-            resolve("Success"); // Resolve immediately for non-remote mode
+            return ("Success"); // Resolve immediately for non-remote mode
         }
-    });
 }
 
   setMovement(movementJson) {

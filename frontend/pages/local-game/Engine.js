@@ -51,7 +51,8 @@ export class Engine {
   }
 
   cleanUp() {
-    this.clearScene(this.scene.threeJSScene);
+    if(this.scene)
+      this.clearScene(this.scene.threeJSScene);
     this.stopAnimationLoop();
     this.#threeJS.clearRenderer();
   }
