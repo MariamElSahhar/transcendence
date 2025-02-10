@@ -1,6 +1,6 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../scripts/utils/session-manager.js";
 import { login } from "../../scripts/clients/token-client.js";
+import { Footer } from "../../layouts/components/Footer.js";
 
 export class LoginPage extends Component {
 	constructor() {
@@ -61,6 +61,7 @@ export class LoginPage extends Component {
 						</form>
 					</div>
 				</main>
+				<footer-component class="mt-auto"></footer-component>
 			</div>
 		`;
 	}
@@ -76,7 +77,7 @@ export class LoginPage extends Component {
 			/* Sky animation */
 			.sky {
 				display: flex;
-				background: url(/pages/tictactoe/sky.png);
+				background: url(/assets/sky.png);
 				background-size: contain;
 				background-repeat: repeat-x;
 				position: absolute;

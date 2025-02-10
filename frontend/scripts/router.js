@@ -97,11 +97,11 @@ let previouspath;
 const layouts = {
 	main: {
 		component: "main-layout",
-		path: "../pages/layouts/MainLayout.js",
+		path: "../layouts/MainLayout.js",
 	},
 	sidebar: {
 		component: "sidebar-layout",
-		path: "../pages/layouts/SidebarLayout.js",
+		path: "../layouts/SidebarLayout.js",
 	},
 };
 
@@ -178,6 +178,7 @@ const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
 		.replace("/dashboard/", "")
 		.replace(/\/+$/, "");
+	if (!(await isAuth())) return false;
 	const response = await fetchUserById(userid);
 	if (response.data) return true;
 	else {

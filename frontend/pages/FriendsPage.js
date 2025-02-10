@@ -65,13 +65,24 @@ export class FriendsPage extends Component {
 		}
 	}
 
+	style() {
+		return `
+		<style>
+			#friend-profile-img {
+				max-width: 44px;
+				max-height: auto;
+			}
+		</style>
+		`;
+	}
+
 	renderFriendCard({ id, username, avatar, is_online }) {
 		return `
 		<div class="p-2 d-flex flex-row w-400px minw-200 h-60px p-auto justify-content-between bg-light rounded">
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
 				<img src="${
 					window.APP_CONFIG.backendUrl
-				}${avatar}" class="h-100 rounded-circle"/>
+				}${avatar}" class="h-100 rounded-circle" id="friend-profile-img"/>
 				<div>
 					<h4 class="m-0 link-dark">${username}</h4>
 					<small class="m-0 link-dark">${is_online ? "Online" : "Offline"}</small>

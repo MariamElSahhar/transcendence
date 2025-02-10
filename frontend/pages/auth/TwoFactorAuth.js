@@ -11,12 +11,6 @@ export class TwoFactorAuth extends Component {
 
 	render() {
 		return `
-    	<style>
-			/* Mario font */
-			body, h1, h2, h3, .form-label, .btn, .input-group-text {
-				font-family: 'New Super Mario Font U', sans-serif !important;
-			}
-		</style>
         <div
           	<div
             id="container"
@@ -55,6 +49,15 @@ export class TwoFactorAuth extends Component {
             </main>
         </div>
     `;
+	}
+
+	style() {
+		return `<style>
+			/* Mario font */
+			body, h1, h2, h3, .form-label, .btn, .input-group-text {
+				font-family: 'New Super Mario Font U', sans-serif !important;
+			}
+		</style>`;
 	}
 
 	postRender() {

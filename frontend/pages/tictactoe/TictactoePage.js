@@ -287,8 +287,6 @@ class TicTacToePage extends Component {
 				<div class="scores">
 					${this.getScoresHtml()}
 				</div>
-
-				<div class="floor" />
 			</div>
 		`;
 	}
@@ -348,7 +346,7 @@ class TicTacToePage extends Component {
 
 				.sky {
 					display: flex;
-					background: url(/pages/tictactoe/sky.png);
+					background: url(/assets/sky.png);
 					background-size: contain;
 					background-repeat: repeat-x;
 					position: absolute;
@@ -425,20 +423,6 @@ class TicTacToePage extends Component {
 					span {
 						color: #e71f07
 					}
-				}
-
-				.floor {
-				    width: 100%;
-					height: 10em;
-					display: flex;
-					background: url(/pages/tictactoe/floor.png);
-					background-position: center;
-					background-size: contain;
-					position: absolute;
-					bottom: 0;
-					left: 0;
-					border-top: 0.4em solid #4c2811;
-					z-index: 1;
 				}
 
 				.board {

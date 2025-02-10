@@ -1,4 +1,4 @@
-import { Component } from "../../Component.js";
+import { Component } from "../../pages/Component.js";
 import {
 	addFriend,
 	removeFriend,
