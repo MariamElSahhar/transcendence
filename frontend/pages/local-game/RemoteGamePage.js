@@ -21,37 +21,26 @@ export class RemoteGamePage extends Component {
 		this.activeTimeouts = new Set();
 	}
 
-	blockWait(ms) {
-		const start = Date.now();
-		while (Date.now() - start < ms) {
-		  // Do nothing, just block the thread
-		}
-	  }
-
-	  setTrackedTimeout(callback, delay) {
+	setTrackedTimeout(callback, delay) {
 		const timeoutID = setTimeout(() => {
 			callback();
 			this.activeTimeouts.delete(timeoutID); // Remove timeout ID after execution
 		}, delay);
 		this.activeTimeouts.add(timeoutID); // Add timeout ID to the set
 		return timeoutID;
-	}4
+	}
 	updateLoaders(data) {
 
 		clearTimeout(this.timeoutID);
 		const status = document.getElementById("statusmsg");
 		const searchBox = document.getElementById("searchBox");
-
-		// Set the new message
 		searchBox.querySelector(".heading").innerHTML = "We have found your match!";
 		status.innerHTML = "";
 		searchBox.style.background = "linear-gradient(65deg, 	#409edb, 	#409edb 46%, white 48%, white 47%, #e55d82 , #e55d82 30%)";
 		searchBox.querySelector(".circle").style.display = "none";
 		searchBox.querySelector(".bi-person").style.display = "none";
-		// Update the display for ME vs USER
 		const vsElement = document.createElement("div");
 		vsElement.classList.add("vs-container", "d-flex", "align-items-center", "justify-content-center", "gap-3");
-
 		const player1Element = document.createElement("div");
 		player1Element.classList.add("player-container", "d-flex");
 		player1Element.innerHTML = `
@@ -59,136 +48,101 @@ export class RemoteGamePage extends Component {
 			<span class="username">You</span>
 		`;
 
-		// Player 2 (Opponent's avatar and username)
 		const player2Element = document.createElement("div");
 		player2Element.classList.add("player-container");
 		player2Element.innerHTML = `
 		<img src="${backendURL}${data["avatar"]}/" alt="Player 2 Avatar" class="avatar" />
-		<span class="username">${data["player"]}</span>
-		`;
-
-		// Append the player elements to the VS container
+		<span class="username">${data["player"]}</span>`;
 		vsElement.appendChild(player1Element);
-		vsElement.innerHTML += `<span class="vs fs-3 fw-bold" style="z-index:2">VS</span>`; // Add "VS" text in between
+		vsElement.innerHTML += `<span class="vs fs-3 fw-bold" style="z-index:2">VS</span>`;
 		vsElement.appendChild(player2Element);
-
-
-
-		// Append the VS container to the searchBox
 		searchBox.appendChild(vsElement);
 		document.querySelector(".loader").classList.remove("loader")
 		if(data["position"] == "left")
-			{
-				this.playerSide = "right"
-				this.playerNames.push(data["player"] || "Player 2");
-				this.playerNames.push(getUserSessionData().username || "player 1");
-			}
-			else
-			{
-				this.playerSide = "left"
-				this.playerNames.push(getUserSessionData().username || "player 1");
-				this.playerNames.push(data["player"] || "Player 2");
-			}
-			// console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-		// this.blockWait(20000);
-	}
-
-	onWebSocketOpen(socket) {
-	   console.log('WebSocket connected');
-	   this.waitForOpponent();
-   }
-
-	onWebSocketMessage(data) {
-		// console.log(Date.now())
-	//    console.log('Received data:', data);
-	   if (data["message"] === "Match found!" && !this.playerSet) {
-			this.playerSide = data["position"]
-			this.gameID=data["game_session_id"]
-		   this.playerSet = true;
-		   this.updateLoaders(data);
-			// console.log(this.playerSide)
-			this.timeoutID = this.setTrackedTimeout( () => {
-		   if (WebGL.isWebGLAvailable()) {
-			// if(!this.playerLeft)
-			// {
-				document.getElementById("searchdiv").classList.remove("d-flex");
-				document.getElementById("searchdiv").classList.add("d-none");
-				this.container.style.display = "block";
-				if(!this.playerLeft)
-				{
-				sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
-				this.createOverlay();
-			}
-			// }
-
-		   } else {
-			   console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
-		   }
-		},3000);
-	   }
-	   else if(data["message"] == "Move slab")
-	   {
-		const event = {"key":data["key"]}
-
-				if(data["keytype"] == "keydown")
-					this.engine.keyHookHandler.handleKeyPress(event)
-				else if(data["keytype"] == "keyup")
-					this.engine.keyHookHandler.handleKeyRelease(event)
-	   }
-	   else if(data["message"] == "Move ball")
-	   {
-		this.engine.scene.match.ball.setMovement(data["position"])
-	   }
-	   else if(data["message"] == "Update positions")
-	   {
-			// if(data["right"] == true && this.engine.scene.match.players[1].paddle.getPosition()!=data["position"])
-			// {
-				// console.log(data)
-				if(this.playerSide=="right")
-				{
-				this.engine.scene.match.ball.setPosition(data["ball"])
-				this.engine.scene.match.players[0].paddle.setPosition(data["leftpaddle"])
-				this.engine.scene.match.players[1].paddle.setPosition(data["rightpaddle"])
-				}
-				// }
-			// 	else if(data["right"] == false &&  this.engine.scene.match.players[0].paddle.getPosition()!=data["position"]){
-			// this.engine.scene.match.players[0].paddle.setPosition(data["position"])
-	// }
-			// this.engine.scene.match.ball.setMovement(data["position"])
-	   }
-	   else if(data["message"] == "startRound")
-	   {
-		// console.log(data);
-		if(data["round"] == 1)
 		{
-			const countdownStart = Date.now() / 1000 + 3;
-			console.log(this.overlay)
-
-				this.startCountdown(countdownStart);
-			// console.log("here")
+			this.playerSide = "right"
+			this.playerNames.push(data["player"] || "Player 2");
+			this.playerNames.push(getUserSessionData().username || "player 1");
 		}
 		else
 		{
-			// console.log("here",data["index"])
-			this.engine.scene.match.onPlayerReady(data["index"]);
-		// this.startGame()
-	   }
-   }
-   else if(data["message"] == "endgame")
-   {
-	// let index;
-	console.log("LETS END IT HERE")
-	if(!this.engine.scene.match.isHost)
-		this.engine.scene.match.playerMarkedPoint(data["index"])
-	// 	index = 1;
-	// else
-	// 	index = 0;
-   }
-   else if(data["message"] == "opponent_left")
-   {
-	this.player_left()
+			this.playerSide = "left"
+			this.playerNames.push(getUserSessionData().username || "player 1");
+			this.playerNames.push(data["player"] || "Player 2");
+		}
 	}
 
+	onWebSocketOpen(socket) {
+	   this.waitForOpponent();
+   }
+   match_found(data)
+   {
+		this.playerSide = data["position"]
+				this.gameID=data["game_session_id"]
+			this.playerSet = true;
+			this.updateLoaders(data);
+			this.timeoutID = this.setTrackedTimeout( () => {
+				if (WebGL.isWebGLAvailable()) {
+					document.getElementById("searchdiv").classList.remove("d-flex");
+					document.getElementById("searchdiv").classList.add("d-none");
+					this.container.style.display = "block";
+					if(!this.playerLeft)
+					{
+						sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
+						this.createOverlay();
+					}
+				} else {
+					console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
+				}
+			},3000);
+   }
+
+	onWebSocketMessage(data) {
+	   if (data["message"] === "Match found!" && !this.playerSet)
+			this.match_found(data);
+	   else if(data["message"] == "Move slab")
+	   {
+		const event = {"key":data["key"]}
+		if(data["keytype"] == "keydown")
+			this.engine.keyHookHandler.handleKeyPress(event)
+		else if(data["keytype"] == "keyup")
+			this.engine.keyHookHandler.handleKeyRelease(event)
+	   }
+	   else if(data["message"] == "Move ball")
+			this.engine.scene.match.ball.setMovement(data["position"])
+	   else if(data["message"] == "Update positions")
+	   {
+			if(this.playerSide=="right")
+			{
+			this.engine.scene.match.ball.setPosition(data["ball"])
+			this.engine.scene.match.players[0].paddle.setPosition(data["leftpaddle"])
+			this.engine.scene.match.players[1].paddle.setPosition(data["rightpaddle"])
+			}
+	   }
+	   else if(data["message"] == "startRound")
+		{
+			this.start_round(data);
+		}
+		else if(data["message"] == "endgame")
+		{
+			if(!this.engine.scene.match.isHost)
+				this.engine.scene.match.playerMarkedPoint(data["index"]);
+		}
+		else if(data["message"] == "opponent_left")
+			this.player_left()
+}
+
+start_round(data)
+{
+	if(data["round"] == 1)
+	{
+		const countdownStart = Date.now() / 1000 + 3;
+		this.startCountdown(countdownStart);
+	}
+	else
+	{
+		this.engine.scene.match.onPlayerReady(data["index"]);
+	}
 }
 
 player_left()
@@ -409,9 +363,7 @@ this.postRender();
 		window.addEventListener("beforeunload", (event) => {
 			if(!this.engine || !this.engine.scene.match.matchIsOver)
 				sendWebSocketMessage({action: "leavingMatch" , gameSession:this.gameID})
-			// console.log("Page is being refreshed or navigated away!");
-			// Optionally, show a confirmation dialog (not recommended for modern browsers)
-			event.returnValue = ""; // Needed for the confirmation dialog to appear
+			event.returnValue = "";
 		});
 
 
@@ -430,10 +382,7 @@ this.postRender();
 					stat.innerHTML = "No opponent found. Please try again later!";
 					searchBox.querySelector(".circle").style.display = "none";
 					this.removeFromMatchmaking();
-					// return;
-				}, 180000); // 3 minutes in milliseconds
-				// if(flag == 0)
-				// {
+				}, 180000);
 				const {status, success, data } = await matchMaker();
 				if(status == 400)
 				{

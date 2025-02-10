@@ -94,7 +94,7 @@ class Goal extends PhysicalObject {
   }
 
    handleCollision(_travel, _ball, _collisionHandler, match) {
-      if(match.gameType=="local" || match.isHost)//(_ball.movement.x < 0 && match.engine.playerSide =="left" )|| (_ball.movement.x > 0 && match.engine.playerSide =="right"))
+      if(match.gameType=="local" || match.isHost)
       {
         if(match.gameType =="remote")
         {
