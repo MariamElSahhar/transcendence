@@ -11,6 +11,8 @@ from gamelog.models import TicTacToeLog
 
 from ..models import Game
 from django.db import models
+from datetime import timedelta
+from django.utils import timezone 
 
 # Tells you if you are subscribed to matchmaking or playing a game
 # If you are in a game, returns the game information
@@ -311,3 +313,33 @@ def finished_game_view(request):
     ]
 
     return Response({"finished_games": games_data}, status=200)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def timeout_game_view(request):
+    user = request.user
+    game_id = request.data.get("game_id")
+
+    game = (
+        Game.objects.filter(
+            models.Q(id=game_id)
+        )
+        .first()
+    )
+
+    if not game:
+        return Response({"error": "No active game found"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if game.status != "PLAYING":
+        return Response({"error": "Incorrect stage"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if game.last_play_time + timedelta(seconds=180) < timezone.now():
+        if game.next_to_play == game.player_1.username:
+            game.game_winner = game.player_2
+        else:
+            game.game_winner = game.player_1
+        game.status = "FINISHED"
+        game.save()
+        return Response({"timeout"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Not a timeout"}, status=status.HTTP_400_BAD_REQUEST)
