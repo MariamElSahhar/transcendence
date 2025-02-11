@@ -6,7 +6,7 @@ import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";
 import { initializeWebSocket, sendWebSocketMessage, closeWebSocket } from '../../scripts/utils/websocket-manager.js';
 // import { KeyHandler } from "../game-utils/KeyHandler.js";
-const backendURL = "http://127.0.0.1:8000";
+const backendUrl = "http://127.0.0.1:8000";
 export class RemoteGamePage extends Component {
 	constructor() {
 		super();
@@ -51,7 +51,7 @@ export class RemoteGamePage extends Component {
 		const player2Element = document.createElement("div");
 		player2Element.classList.add("player-container");
 		player2Element.innerHTML = `
-		<img src="${backendURL}${data["avatar"]}/" alt="Player 2 Avatar" class="avatar" />
+		<img src="${window.APP_CONFIG.backendUrl}${data["avatar"]}/" alt="Player 2 Avatar" class="avatar" />
 		<span class="username">${data["player"]}</span>`;
 		vsElement.appendChild(player1Element);
 		vsElement.innerHTML += `<span class="vs fs-3 fw-bold" style="z-index:2">VS</span>`;

@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000/api";
+const BASE_URL = "http://192.168.1.52:8000/api";
 import { post, get } from "../utils/http-requests.js";
 import { storeUserSession, isAuth } from "../utils/session-manager.js";
 

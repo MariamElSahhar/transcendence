@@ -14,7 +14,25 @@ import environ, os
 from pathlib import Path
 from datetime import timedelta
 
-# Read environment variables
+import requests
+
+import socket
+
+
+import socket
+
+try:
+    # Connect to a non-routable address to determine the local IP
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))  # Google's public DNS
+    IPAddr = s.getsockname()[0]
+    s.close()
+    print(f"Local IP Address: {IPAddr}")
+except Exception as e:
+    print(f"Error fetching local IP: {e}")
+    IPAddr = "127.0.0.1"  # Fallback to localhost
+    print(f"Using default IP: {IPAddr}")
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -30,7 +48,7 @@ SECRET_KEY = "django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]# "xxxxxxxx"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", IPAddr]# "xxxxxxxx"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -76,8 +94,10 @@ CORS_ALLOWED_ORIGINS = [
     "https://127.0.0.1",
     "http://localhost",
     "https://localhost",
-	# "http://xxxxxxxxxxxx",
-	# "https://xxxxxxxxxx",
+    f"http://{IPAddr}",
+    f"https://{IPAddr}",
+    f"http://{IPAddr}:80",
+    f"https://{IPAddr}:80",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

@@ -3,10 +3,9 @@ import { fetchUserById } from "./clients/users-client.js";
 import { removeMatchMaking } from "./clients/gamelog-client.js";
 import {closeWebSocket} from "./utils/websocket-manager.js";
 window.APP_CONFIG = {
-	backendUrl: "http://127.0.0.1:8000",
+	backendUrl: "http://192.168.1.52:8000",
 	pointsToWinPongMatch: 5,
 };
-
 const routes = {
 	// PUBLIC SCREENS
 	"/": {

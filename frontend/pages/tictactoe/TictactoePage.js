@@ -2,7 +2,7 @@ import { Component } from "../Component.js";
 import { get, post } from "../../scripts/utils/http-requests.js";
 import { getUserSessionData } from "../../../scripts/utils/session-manager.js";
 
-const BASE_URL = "http://127.0.0.1:8000/api/tictactoe";
+const BASE_URL = `${window.APP_CONFIG.backendUrl}/api/tictactoe`;
 
 class TicTacToePage extends Component {
 	constructor() {

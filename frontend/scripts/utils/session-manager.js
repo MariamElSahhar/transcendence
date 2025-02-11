@@ -1,12 +1,12 @@
 import { refresh, tokenStatus, logout } from "../clients/token-client.js";
 
-const backendURL = "http://127.0.0.1:8000";
+// const backendUrl = "http://127.0.0.1:8000";
 
 export const storeUserSession = ({ username, id, email, avatar, otp }) => {
 	sessionStorage.setItem("username", username);
 	sessionStorage.setItem("id", id);
 	sessionStorage.setItem("email", email);
-	sessionStorage.setItem("avatar", `${backendURL}${avatar}`);
+	sessionStorage.setItem("avatar", `${window.APP_CONFIG.backendUrl}${avatar}`);
 	sessionStorage.setItem("otp", otp);
 };
 
