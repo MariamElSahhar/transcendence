@@ -22,17 +22,18 @@ export class LocalGamePage extends Component {
 	disconnectedCallback() {
 		console.log("LocalGamePage is being disconnected. Cleaning up...");
 		if (this.engine) {
-		  this.engine.stopAnimationLoop();
-		  this.engine.cleanUp();
+			this.engine.stopAnimationLoop();
+			this.engine.cleanUp();
 		}
 		if (this.countDownIntervalId) {
-		  clearInterval(this.countDownIntervalId);
-		  this.countDownIntervalId = null;
+			clearInterval(this.countDownIntervalId);
+			this.countDownIntervalId = null;
 		}
-	  }
+	}
 
 	render() {
 		return `
+			<div class="d-flex justify-content-center align-items-center w-100 h-100">
 				<div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light" style="max-width: 400px;">
 					<div class="text-center p-3 rounded mb-4 bg-danger text-warning border-while">
 						<h3 class="fw-bold  m-0">Setup Players</h3>
@@ -52,7 +53,8 @@ export class LocalGamePage extends Component {
 					</form>
 				</div>
 
-            <div id="container" class="m-2 position-relative" style="display:none;"></div>
+				<div id="container" class="m-2 position-relative" style="display:none;"></div>
+			</div>
         `;
 	}
 
@@ -141,18 +143,18 @@ export class LocalGamePage extends Component {
 	startCountdown(startDateInSeconds) {
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 		this.updateOverlayCountdown(secondsLeft);
-	
+
 		this.countDownIntervalId = setInterval(() => {
-		  secondsLeft -= 1;
-		  this.updateOverlayCountdown(secondsLeft);
-	
-		  if (secondsLeft <= 0) {
-			clearInterval(this.countDownIntervalId);
-			this.countDownIntervalId = null;
-			this.startGame();
-		  }
+			secondsLeft -= 1;
+			this.updateOverlayCountdown(secondsLeft);
+
+			if (secondsLeft <= 0) {
+				clearInterval(this.countDownIntervalId);
+				this.countDownIntervalId = null;
+				this.startGame();
+			}
 		}, 1000);
-	  }
+	}
 
 	createOverlay() {
 		this.overlay = document.createElement("div");

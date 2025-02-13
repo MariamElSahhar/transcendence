@@ -1,4 +1,3 @@
-/* General resets */
 html,
 body {
 	height: 100%;
@@ -7,6 +6,14 @@ body {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
+}
+
+.navbar {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 9999;
+	box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
 }
 
 /* Button default width */
@@ -30,7 +37,15 @@ input.form-control {
 	border-radius: 15px; /* Add rounded corners */
 	overflow: hidden; /* Prevent content from overflowing the card */
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-	transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+
+	.btn {
+		background-color: white;
+		color: #333;
+		border: none;
+		font-weight: bold;
+		margin-top: auto;
+		transition: background-color 0.3s ease, transform 0.3s ease;
+	}
 }
 
 .card-body {
@@ -42,98 +57,52 @@ input.form-control {
 	position: relative;
 	background: #da7b27;
 	color: white;
-}
 
-/* Title styles */
-.card-body h2 {
-	font-weight: bold;
-	margin-bottom: 10px;
-	text-align: center; /* Center-align text */
-	color: #fff;
-}
-
-/* Text styles */
-.card-body p {
-	font-size: 20px;
-	margin-bottom: 15px;
-	color: #ddd; /* Slightly lighter shade for better readability */
-	text-align: center;
-}
-
-/* Button styles */
-.card-body button {
-	padding: 10px 20px;
-	font-size: 16px;
-	font-weight: bold;
-	color: white !important; /* Gradient button matching the card */
-	background: #964b00 !important; /* Gradient button matching the card */
-	border: none;
-	border-radius: 5px; /* Rounded corners for a polished look */
-	cursor: pointer;
-	transition: background 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
-}
-
-.card-body button:hover {
-	background: linear-gradient(
-		135deg,
-		rgba(245, 165, 97, 0.4),
-		rgba(245, 165, 97, 0.4)
-	) !important; /* Reverse gradient on hover */
-	transform: scale(1.05); /* Slight zoom effect */
-}
-
-/* Centered image */
-.card-body .card-image {
-	width: 150px; /* Set the size of the image */
-	height: auto; /* Maintain the aspect ratio */
-	margin: 10px auto; /* Center the image vertically and horizontally */
-	display: block;
-	object-fit: contain; /* Ensure the image fits well */
-	border-radius: 10px; /* Optional: Add rounded corners */
-}
-
-/* If you want the image at the bottom */
-.card-body .card-image.bottom {
-	margin-top: auto; /* Push the image to the bottom */
-}
-
-/* Button styling inside the cards */
-.card .btn {
-	background-color: white;
-	color: #333;
-	border: none;
-	font-weight: bold;
-	margin-top: auto;
-	transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Add specific styling for the canvas containers to ensure they show up */
-.game-canvas {
-	width: 70%; /* Canvas will take up 70% of the section */
-	height: 250px; /* Set a fixed height for the canvas */
-	background-color: #000;
-	border-radius: 10px;
-	position: relative;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-	.game-canvas {
-		width: 100%;
-		height: 200px;
+	h2 {
+		font-weight: bold;
+		margin-bottom: 10px;
+		text-align: center; /* Center-align text */
+		color: #fff;
 	}
 
-	.game-section {
-		flex-direction: column;
-		align-items: center;
-		padding: 15px;
+	p {
+		font-size: 20px;
+		margin-bottom: 15px;
+		color: #ddd; /* Slightly lighter shade for better readability */
+		text-align: center;
 	}
 
-	.btn-container {
-		width: 100%;
+	button {
+		padding: 10px 20px;
+		font-size: 16px;
+		font-weight: bold;
+		color: white !important; /* Gradient button matching the card */
+		background: #964b00 !important; /* Gradient button matching the card */
+		border: none;
+		border-radius: 5px; /* Rounded corners for a polished look */
+		cursor: pointer;
+		transition: background 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+
+		&:hover {
+			background: linear-gradient(
+				135deg,
+				rgba(245, 165, 97, 0.4),
+				rgba(245, 165, 97, 0.4)
+			) !important; /* Reverse gradient on hover */
+			transform: scale(1.05); /* Slight zoom effect */
+		}
 	}
 
-	.game-title {
-		font-size: 1.25rem;
+	.card-image {
+		width: 150px; /* Set the size of the image */
+		height: auto; /* Maintain the aspect ratio */
+		margin: 10px auto; /* Center the image vertically and horizontally */
+		display: block;
+		object-fit: contain; /* Ensure the image fits well */
+		border-radius: 10px; /* Optional: Add rounded corners */
+
+		&.bottom {
+			margin-top: auto; /* Push the image to the bottom */
+		}
 	}
 }
