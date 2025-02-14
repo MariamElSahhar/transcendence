@@ -1,6 +1,8 @@
 services:
     backend:
         build: backend/.
+        environment:
+            - HOST_IP=${HOST_IP}
         ports:
             - 8000:8000
         networks:

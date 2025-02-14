@@ -6,7 +6,6 @@ import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";
 import { initializeWebSocket, sendWebSocketMessage, closeWebSocket } from '../../scripts/utils/websocket-manager.js';
 // import { KeyHandler } from "../game-utils/KeyHandler.js";
-const backendUrl = "http://127.0.0.1:8000";
 export class RemoteGamePage extends Component {
 	constructor() {
 		super();

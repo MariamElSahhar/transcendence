@@ -227,7 +227,7 @@ export class SettingsPage extends Component {
 		return `
 		<style>
 		body {
-			background-image: url("http://127.0.0.1:8000/media/images/bg.gif");
+			background-image: url("${window.APP_CONFIG.backendUrl}/media/images/bg.gif");
 		}
 
 		.icon-glow {
@@ -465,7 +465,7 @@ export class SettingsPage extends Component {
 		event.preventDefault();
 		this.avatarDiff = true;
 		this.avatar.src =
-			"http://127.0.0.1:8000/media//default_avatar/default_avatar.jpg";
+			window.APP_CONFIG.backendUrl + "/media//default_avatar/default_avatar.jpg";
 		this.#saveEnabler();
 	}
 	async #changeAvatar() {

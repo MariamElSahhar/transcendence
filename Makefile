@@ -1,8 +1,11 @@
 PYTHON_ENV := python3
 
+HOST_IP := $(shell ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $$2}' | head -n 1)
+
+
 # DOCKER
 docker-up:
-	docker compose up --build
+	HOST_IP=$(HOST_IP) docker compose up --build
 	docker-compose watch
 
 docker-down:

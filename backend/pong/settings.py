@@ -21,20 +21,18 @@ import socket
 
 import socket
 
-try:
-    # Connect to a non-routable address to determine the local IP
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))  # Google's public DNS
-    IPAddr = s.getsockname()[0]
-    s.close()
-    print(f"Local IP Address: {IPAddr}")
-except Exception as e:
-    print(f"Error fetching local IP: {e}")
-    IPAddr = "127.0.0.1"  # Fallback to localhost
-    print(f"Using default IP: {IPAddr}")
-
 env = environ.Env()
 environ.Env.read_env()
+if(env("ENV") == "production" ):
+    IPAddr = os.getenv("HOST_IP")
+else:
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))  #Google's DNS
+        IPAddr = s.getsockname()[0]
+        s.close()
+    except Exception as e:
+        IPAddr = "127.0.0.1"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,18 +86,13 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:80",
-    "https://127.0.0.1:80",
     "http://127.0.0.1",
     "https://127.0.0.1",
     "http://localhost",
     "https://localhost",
     f"http://{IPAddr}",
     f"https://{IPAddr}",
-    f"http://{IPAddr}:80",
-    f"https://{IPAddr}:80",
 ]
-
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "pong.urls"
@@ -205,10 +198,10 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
     "AUTH_COOKIE": "access_token",
     "AUTH_COOKIE_DOMAIN": None,
-    "AUTH_COOKIE_SECURE": True,
+    "AUTH_COOKIE_SECURE": True if env("ENV") == "production" else False, # enabled False for access through another device when running locally
     "AUTH_COOKIE_HTTP_ONLY": True,
     "AUTH_COOKIE_PATH": "/",
-    "AUTH_COOKIE_SAMESITE": "Lax",
+    "AUTH_COOKIE_SAMESITE": "None" if env("ENV") == "production" else "Lax",
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -224,7 +217,12 @@ DEFAULT_FROM_EMAIL = '42AD Transcendence <transcendence.42ad@gmail.com>'   # Opt
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-#peer to peer/ group communication
+if(env("ENV") == "production"):
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = "None"  # Allow cross-site CSRF cookies
+    CSRF_COOKIE_SECURE = True  #
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",  # Correct import path

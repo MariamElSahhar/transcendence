@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.1.52:8000/api/users";
+const BASE_URL = `https://127.0.0.1:8000/api/users`;
 import { get, post, patch, del } from "../utils/http-requests.js";
 
 const URIs = {
