@@ -6,6 +6,7 @@ body {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
+	background-color: var(--sky-400);
 }
 
 .navbar {
@@ -16,11 +17,12 @@ body {
 	box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
 }
 
-/* Button default width */
+/* Button default width
 button {
 	max-width: 400px;
-	background-color: var(--mario-brick);
-}
+	padding: 2px;
+	background-color: var(--brick-500);
+} */
 
 /* Smaller input boxes */
 input.form-control {
@@ -32,18 +34,12 @@ input.form-control {
 /* Card styling - make the cards smaller and rectangular */
 .card {
 	width: 100%;
-	max-width: 400px; /* Limit the card width */
-	margin: 20px auto; /* Center the card horizontally */
+	max-width: 500px; /* Limit the card width */
 	border-radius: 15px; /* Add rounded corners */
 	overflow: hidden; /* Prevent content from overflowing the card */
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
 
 	.btn {
-		background-color: white;
-		color: #333;
-		border: none;
-		font-weight: bold;
-		margin-top: auto;
 		transition: background-color 0.3s ease, transform 0.3s ease;
 	}
 }
@@ -76,8 +72,6 @@ input.form-control {
 		padding: 10px 20px;
 		font-size: 16px;
 		font-weight: bold;
-		color: white !important; /* Gradient button matching the card */
-		background: #964b00 !important; /* Gradient button matching the card */
 		border: none;
 		border-radius: 5px; /* Rounded corners for a polished look */
 		cursor: pointer;

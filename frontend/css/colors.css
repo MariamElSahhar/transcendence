@@ -7,5 +7,64 @@
 	--mario-brown-color: #742607;
 	--mario-pink-color: #f096be;
 	--mario-orange-color: #ee830a;
-	--mario-brick: #ffb020;
+
+	--black: #000;
+
+	--brick-100: #fffefc;
+	--brick-200: #ffebc5;
+	--brick-300: #ffd88e;
+	--brick-400: #ffc457;
+	--brick-500: #ffb020;
+	--brick-600: #ea9803;
+	--brick-700: #b67704;
+	--brick-800: #835605;
+	--brick-900: #513604;
+
+	--sky-100: #d5ecf7;
+	--sky-200: #c3e4f3;
+	--sky-300: #a5d8ee;
+	--sky-400: #87ceeb;
+	--sky-500: #66bfe4;
+	--sky-600: #46b0db;
+	--sky-700: #2b9fce;
+	--sky-800: #2684ab;
+	--sky-900: #206a88;
+
+	--success-100: #eaf5ed;
+	--success-200: #43b047;
+	--success-300: #0d1c0e;
+
+	--error-100: #fdf7f5;
+	--error-200: #e52521;
+	--error-300: #330a09;
+}
+
+:root,
+[data-bs-theme="light"] {
+	--bs-primary: var(--sky-400);
+	--bs-primary-rgb: 135, 206, 235;
+	--bs-secondary: var(--brick-500);
+	--bs-secondary-rgb: 255, 196, 87;
+	--bs-success: var(--success-200);
+	--bs-success-rgb: 67, 176, 71;
+	--bs-danger: var(--error-200);
+	--bs-danger-rgb: 229, 37, 33;
+	--bs-light: var(--sky-100);
+	--bs-light-rgb: 213, 236, 247;
+
+	--bs-body-bg: var(--sky-400);
+	--bs-body-color: var(--black);
+	/* --bs-link-color: var(--sky-700);
+	--bs-link-hover-color: var(--sky-900); */
+
+	.form-control {
+		background-color: var(--brick-100);
+	}
+
+	.btn {
+		--bs-btn-bg: var(--brick-500);
+		--bs-btn-hover-bg: var(--brick-400);
+		--bs-btn-disabled-bg: var(--brick-400);
+		--bs-btn-border-color: var(--brick-900);
+	}
 }

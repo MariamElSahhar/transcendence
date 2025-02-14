@@ -19,44 +19,47 @@ export class LoginPage extends Component {
 		return `
 			<div
 				id="container"
-				class="d-flex flex-column w-100 vh-100"
-				style="background-color: rgb(135, 206, 235); position: relative; overflow: hidden;">
-				<div class="sky" style="z-index:-0"></div>
+				class="d-flex flex-column w-100 vh-100 overflow-hidden position-relative">
+				<div class="sky"></div>
 				<h3 class="w-100 py-2">
 					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
 				</h3>
 				<main class="d-flex justify-content-center align-items-center flex-grow-1">
-					<div class="login-card card shadow p-5 mx-auto border-warning" style="max-width: 400px;">
-						<div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-white">
-							<h2 class="fw-bold  m-0">Log In</h2>
-						</div>
-						<form id="login-form" class="needs-validation bg-light p-4 rounded">
-							<div class="form-group mb-4">
+					<div class="login-card card shadow p-5 mx-auto bg-light">
+						<h2 class="m-0 w-100 text-center mb-3">Welcome Back</h2>
+
+						<!-- Form -->
+						<form id="login-form" class="needs-validation rounded">
+
+							<!-- Error -->
+							<div id="error-alert" class="alert alert-danger d-none" role="alert">${this.state.errorMessage}</div>
+
+							<!-- Username -->
+							<div class="form-group mb-1">
 								<div class="input-group">
-									<span class="input-group-text bg-light border-secondary">
-										<i class="bi bi-person-fill"></i>
-									</span>
-									<input type="text" class="form-control border-secondary" id="login" placeholder="Enter your username">
+									<input type="text" class="form-control" id="login" placeholder="Username">
 									<div id="login-feedback" class="invalid-feedback">Please enter a valid username.</div>
 								</div>
 							</div>
-							<div class="form-group mb-4">
+
+							<!-- Password -->
+							<div class="form-group mb-1">
 								<div class="input-group">
-									<span class="input-group-text bg-light border-secondary">
-										<i class="bi bi-lock-fill"></i>
-									</span>
-									<input type="password" class="form-control border-secondary" id="password" placeholder="Enter your password">
-									<span id="toggle-password" class="input-group-text bg-light border-secondary">
+									<input type="password" class="form-control" id="password" placeholder="Password">
+									<span id="toggle-password" class="input-group-text">
 										<i class="bi bi-eye"></i>
 									</span>
 								</div>
 							</div>
-							<div id="error-alert" class="alert alert-danger d-none" role="alert">${this.state.errorMessage}</div>
-							<div class="text-center mb-4">
-								<small role="button" id="register-link" class="text-warning fw-bold" style="cursor: pointer;">Don't have an account? Sign up</small>
-							</div>
+
+							<!-- Submit -->
 							<div>
-								<button id="login-btn" class="btn btn-warning w-100 fw-bold border border-primary text-dark" type="submit" disabled>Log In</button>
+								<button id="login-btn" class="btn w-100 fw-bold border border-secondary text-dark mt-1" type="submit" disabled>Log In</button>
+							</div>
+
+							<!-- Sign Up -->
+							<div class="text-center mt-2">
+								<small role="button" id="register-link">Don't have an account? <span class="font-italic">Sign up</span></small>
 							</div>
 						</form>
 					</div>
@@ -184,7 +187,7 @@ export class LoginPage extends Component {
 	async initializeTwoFactorAuth(username) {
 		await import("./TwoFactorAuth.js");
 		const container = this.querySelector("#container");
-		container.innerHTML = '<div class="sky" style="z-index:0"></div>';
+		container.innerHTML = '<div class="sky z-0"></div>';
 		container.style.justifyContent = "center";
 		container.style.alignItems = "center";
 		const twoFactorComponent = document.createElement("tfa-component");
