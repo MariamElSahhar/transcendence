@@ -55,6 +55,18 @@ export class HomePage extends Component {
     `;
 	}
 
+	style() {
+		return `
+		<style>
+			@media (max-width: 768px) {
+				.btn-container {
+					width: 100%;
+					}
+			}
+		</style>
+		`;
+	}
+
 	postRender() {
 		window.addEventListener("resize", this.onWindowResize.bind(this));
 

@@ -1,6 +1,9 @@
 import { Component } from "../Component.js";
 import { get, post } from "../../scripts/utils/http-requests.js";
-import { getUserSessionData } from "../../../scripts/utils/session-manager.js";
+import {
+	isAuth,
+	getUserSessionData,
+} from "../../../scripts/utils/session-manager.js";
 
 const BASE_URL = `${window.APP_CONFIG.backendUrl}/api/tictactoe`;
 
@@ -31,6 +34,10 @@ class TicTacToePage extends Component {
 		this.scoreA = 0;
 		this.scoreB = 0;
 		this.winner = null; // Winner status
+
+		this.checkAuthInterval = setInterval(async() => {
+			if (!(await isAuth())) window.redirect("/");
+		}, 30000);
 	}
 
 	applyGameInfo(gameInfo) {
@@ -43,10 +50,7 @@ class TicTacToePage extends Component {
 			: "NONE";
 		const previousLastPlay = this.lastPlayTime;
 
-		if (
-			(gameInfo && gameInfo.status === "PLAYING") ||
-			gameInfo.status === "FINISHED"
-		) {
+		if (gameInfo && (gameInfo.status === "PLAYING" || gameInfo.status === "FINISHED")) {
 			this.gameId = gameInfo.id;
 			this.status = gameInfo.status;
 			this.player1 = gameInfo.player1;
@@ -60,6 +64,11 @@ class TicTacToePage extends Component {
 			this.winnerRound1 = gameInfo.winnerRound1;
 			this.winnerRound2 = gameInfo.winnerRound2;
 			this.winnerRound3 = gameInfo.winnerRound3;
+
+			if (previousLastPlay != this.lastPlayTime) {
+				console.log('>>> lastPlayTime', Date.now(), this.lastPlayTime, Date.now() - this.lastPlayTime)
+				this.startTimer(180 - ((Date.now() - this.lastPlayTime) / 1000)); // the time management
+			}
 
 			this.scoreA = (() => {
 				let score = 0;
@@ -105,8 +114,6 @@ class TicTacToePage extends Component {
 					this.changePlayBtnText("Play again?");
 				}
 			}
-
-			// TODO: handle winner
 			return;
 		}
 
@@ -137,12 +144,12 @@ class TicTacToePage extends Component {
 			return;
 		}
 
-		// if (lastStatus !== "NONE") {
-		// 	this.menuActivation(true);
-		// 	this.changePlayBtnText("Play");
-		// 	this.refreshScoresHtml();
-		// 	this.refreshBoardWrapperHtml();
-		// }
+		if (lastStatus !== "NONE") {
+			this.menuActivation(true);
+			this.changePlayBtnText("Play");
+			this.refreshScoresHtml();
+			this.refreshBoardWrapperHtml();
+		}
 
 		console.log(gameInfo);
 
@@ -287,6 +294,7 @@ class TicTacToePage extends Component {
 				<div class="scores">
 					${this.getScoresHtml()}
 				</div>
+				<div id="timer" class="fs-1" style="z-index: 4;">03:00</div>
 			</div>
 		`;
 	}
@@ -489,6 +497,37 @@ class TicTacToePage extends Component {
 		);
 	}
 
+	startTimer(remainingTimeInSec) {
+		const timerElement = document.getElementById("timer");
+		let timeLeft = remainingTimeInSec;
+
+		console.log('REMAINING TIME', remainingTimeInSec)
+
+		clearInterval(this.timerInterval); // Clear previous timers
+
+		if (this.status != 'PLAYING') {
+			timerElement.innerHTML = "";
+			return;
+		}
+
+		const updateTimer = () => {
+			const minutes = Math.floor(timeLeft / 60);
+			const seconds = Math.floor(timeLeft % 60);
+
+			timerElement.innerHTML = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+			if (timeLeft <= 0) {
+				clearInterval(this.timerInterval);
+				timerElement.innerHTML = "00:00";
+				this.timeOutManager();
+			} else {
+				timeLeft--;
+			}
+		};
+
+		updateTimer(); // Initial update
+		this.timerInterval = setInterval(updateTimer, 1000); // Start the countdown
+	}
+
 	async subscribeToGameInfo() {
 		// Already subscribed
 		if (this.gameInfoGetIntervalFd !== null) {
@@ -497,6 +536,8 @@ class TicTacToePage extends Component {
 
 		this.gameInfoGetIntervalFd = setInterval(async () => {
 			const game = await this.getGameInfo();
+
+			if (game === false) return;
 
 			this.applyGameInfo(game);
 
@@ -512,6 +553,7 @@ class TicTacToePage extends Component {
 	}
 
 	disconnectedCallback() {
+		clearInterval(this.checkAuthInterval);
 		this.unsubscribeToGameInfo();
 		super.disconnectedCallback();
 	}
@@ -535,6 +577,14 @@ class TicTacToePage extends Component {
 
 		return this.joinMatchmaking();
 	}
+
+	handleBeforeUnload(event) {
+        // Check if the user is currently in a game
+        if (this.inGame || this.inMatchmaking) {
+            // Optionally, you can send data to the server before unloading (e.g., cancel matchmaking)
+            this.cancelMatchmaking();
+        }
+    }
 
 	async cancelMatchmaking() {
 		try {
@@ -568,7 +618,7 @@ class TicTacToePage extends Component {
 					mapRound3: (g.map_round_3 ?? "").split(""),
 					currentRound: g.current_round,
 					nextToPlay: g.next_to_play,
-					lastPlayTime: g.last_play_time,
+					lastPlayTime: new Date(g.last_play_time).getTime(),
 					winnerRound1: g.winner_round_1,
 					winnerRound2: g.winner_round_2,
 					winnerRound3: g.winner_round_3,
@@ -583,8 +633,8 @@ class TicTacToePage extends Component {
 			return null;
 		} catch (error) {
 			console.error("Error fetching game info:", error);
-			// Return null or handle the error as appropriate
-			return null;
+			// Return false or handle the error as appropriate
+			return false;
 		}
 	}
 
@@ -622,6 +672,16 @@ class TicTacToePage extends Component {
 			}
 		} catch (error) {
 			console.error("Error making move:", error);
+		}
+	}
+
+	async timeOutManager()
+	{
+		try {
+			const response = await post(`${BASE_URL}/timeout_game/`, { 
+			game_id: this.gameId, 
+		});	
+		} catch (error) {
 		}
 	}
 

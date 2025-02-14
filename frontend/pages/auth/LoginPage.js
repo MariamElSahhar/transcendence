@@ -69,11 +69,6 @@ export class LoginPage extends Component {
 	style() {
 		return `
 		<style>
-			/* Mario font */
-			body, h1, h2, h3, .form-label, .btn, .input-group-text {
-				font-family: 'New Super Mario Font U', sans-serif !important;
-			}
-
 			/* Sky animation */
 			.sky {
 				display: flex;

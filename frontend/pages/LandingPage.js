@@ -17,8 +17,8 @@ export class LandingPage extends Component {
 					<div class="d-flex flex-column justify-content-center align-items-center gap-3">
 						<img class="title-img z-1" src="/assets/titlepage.png" alt="Welcome to Pong!"/>
 						<div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
-							<button id="login-button" class="w-40 p-1 rounded" onclick="window.redirect('/login')" class="z-3">Log In</button>
-							<button id="sign-up-button" class="w-40 p-1 rounded" onclick="window.redirect('/sign-up')" class="z-3">Sign Up</button>
+							<button id="login-button" class="p-1 rounded" onclick="window.redirect('/login')" class="z-3">Log In</button>
+							<button id="sign-up-button" class="p-1 rounded" onclick="window.redirect('/sign-up')" class="z-3">Sign Up</button>
 						</div>
 					</div>
 
@@ -43,11 +43,14 @@ export class LandingPage extends Component {
 	style() {
 		return `
 			<style>
+				#login-button, #sign-up-button {
+					width: 40%;
+				}
+
 				.landing-page {
 					background-color: rgb(135, 206, 235);
 				}
 
-				/* Sky Animation */
 				.sky {
 					display: flex;
 					background: url(/assets/sky.png);
@@ -57,7 +60,6 @@ export class LandingPage extends Component {
 					height: 10em;
 					animation: move-sky 500s linear infinite;
 					z-index: 1;
-					opacity: 0.2;
 				}
 
 				@keyframes move-sky {
@@ -108,13 +110,13 @@ export class LandingPage extends Component {
 		const shroom = document.querySelector("#shroom");
 
 		super.addComponentEventListener(loginButton, "mouseenter", () => {
-			plant.style.bottom = "20em";
+			plant.style.bottom = "12em";
 		});
 		super.addComponentEventListener(loginButton, "mouseleave", () => {
 			plant.style.bottom = "6em";
 		});
 		super.addComponentEventListener(signupButton, "mouseenter", () => {
-			shroom.style.bottom = "20em";
+			shroom.style.bottom = "12em";
 		});
 		super.addComponentEventListener(signupButton, "mouseleave", () => {
 			shroom.style.bottom = "6em";

@@ -5,6 +5,7 @@ from .views.play_views import (
     join_matchmaking_view,
     cancel_matchmaking_view,
     finished_game_view,
+    timeout_game_view,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path("join_matchmaking/", join_matchmaking_view, name="join_matchmaking"),
     path("cancel_matchmaking/", cancel_matchmaking_view, name="cancel_matchmaking"),
     path("finished_game/", finished_game_view, name="finished_game"),
+    path("timeout_game/", timeout_game_view, name="timeout_game"),
 ]

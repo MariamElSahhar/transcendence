@@ -72,13 +72,18 @@ export class FriendsPage extends Component {
 				max-width: 44px;
 				max-height: auto;
 			}
+			.friend-card {
+				min-width: 200px;
+				width: 400px;
+				height: 60px;
+			}
 		</style>
 		`;
 	}
 
 	renderFriendCard({ id, username, avatar, is_online }) {
 		return `
-		<div class="p-2 d-flex flex-row w-400px minw-200 h-60px p-auto justify-content-between bg-light rounded">
+		<div class="friend-card p-2 d-flex flex-row h-60px p-auto justify-content-between bg-light rounded">
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
 				<img src="${
 					window.APP_CONFIG.backendUrl

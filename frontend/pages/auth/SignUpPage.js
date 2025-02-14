@@ -103,11 +103,6 @@ export class SignUpPage extends Component {
 
 	style() {
 		return `<style>
-			/* Mario font */
-			body, h1, h2, h3, .form-label, .btn, .input-group-text {
-				font-family: 'New Super Mario Font U', sans-serif !important;
-			}
-
 			/* Sky animation */
 			.sky {
 				display: flex;
@@ -120,7 +115,6 @@ export class SignUpPage extends Component {
 				width: 500%;
 				height: 20em;
 				animation: move-sky 500s linear infinite;
-				opacity: 0.2;
 				z-index: 0;
 				pointer-events: none; /* Allow interactions with elements above */
 			}
