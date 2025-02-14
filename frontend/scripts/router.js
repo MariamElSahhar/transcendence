@@ -3,7 +3,7 @@ import { fetchUserById } from "./clients/users-client.js";
 import { removeMatchMaking } from "./clients/gamelog-client.js";
 import {closeWebSocket} from "./utils/websocket-manager.js";
 window.APP_CONFIG = {
-	backendUrl: window.location.protocol=="https" ? "": `http://${window.location.host}:8000`,
+	backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
 	pointsToWinPongMatch: 5,
 };
 const routes = {
