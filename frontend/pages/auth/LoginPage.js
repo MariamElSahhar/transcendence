@@ -29,7 +29,7 @@ export class LoginPage extends Component {
 						<h2 class="m-0 w-100 text-center mb-3">Welcome Back</h2>
 
 						<!-- Form -->
-						<form id="login-form" class="needs-validation rounded">
+						<form id="login-form" class="needs-validation">
 
 							<!-- Error -->
 							<div id="error-alert" class="alert alert-danger d-none" role="alert">${this.state.errorMessage}</div>
@@ -54,12 +54,12 @@ export class LoginPage extends Component {
 
 							<!-- Submit -->
 							<div>
-								<button id="login-btn" class="btn w-100 fw-bold border border-secondary text-dark mt-1" type="submit" disabled>Log In</button>
+								<button id="login-btn" class="btn w-100 mt-1" type="submit" disabled>Log In</button>
 							</div>
 
 							<!-- Sign Up -->
 							<div class="text-center mt-2">
-								<small role="button" id="register-link">Don't have an account? <span class="font-italic">Sign up</span></small>
+								<small role="button" id="register-link">Don't have an account? <span class="text-decoration-underline">Sign up</span></small>
 							</div>
 						</form>
 					</div>

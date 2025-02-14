@@ -37,61 +37,65 @@ export class SignUpPage extends Component {
 					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
 				</h3>
                 <main class="d-flex justify-content-center align-items-center flex-grow-1">
-                    <div class="register-card card shadow p-5 mx-auto border-info border-warning" style="max-width: 400px;">
-                        <div class="text-center p-3 rounded mb-4 bg-danger text-warning border border-white">
-                            <h2 class="fw-bold m-0">Sign Up</h2>
-                        </div>
-                        <form id="registration-form" class="needs-validation bg-light p-4 rounded" novalidate>
-                            <div class="form-group mb-4">
+                    <div class="login-card card shadow p-5 mx-auto bg-light">
+
+						<!-- Header -->
+						<h2 class="m-0 w-100 text-center mb-3">Create an Account</h2>
+
+						<!-- Form -->
+                        <form id="registration-form" class="needs-validation" novalidate>
+
+							<!-- Error -->
+							<div id="error-banner" class="alert alert-danger d-none" role="alert"></div>
+
+							<!-- Username -->
+                            <div class="form-group mb-1">
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-secondary">
-                                        <i class="bi bi-person-fill"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-secondary" id="username" placeholder="Enter your username" required>
+                                    <input type="text" class="form-control" id="username" placeholder="Username" required>
                                     <div id="username-error" class="invalid-feedback">Invalid username.</div>
                                 </div>
                             </div>
-                            <div class="form-group mb-4">
+
+							<!-- Email -->
+                            <div class="form-group mb-1">
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-secondary">
-                                        <i class="bi bi-envelope-fill"></i>
-                                    </span>
-                                    <input type="email" class="form-control border-secondary" id="email" placeholder="Enter your email" required>
+                                    <input type="email" class="form-control" id="email" placeholder="Email" required>
                                     <div id="email-error" class="invalid-feedback">Invalid email address.</div>
                                 </div>
                             </div>
-                            <div class="form-group mb-4">
+
+							<!-- Password -->
+                            <div class="form-group mb-1">
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-secondary">
-                                        <i class="bi bi-lock-fill"></i>
-                                    </span>
-                                    <input type="password" class="form-control border-secondary" id="password" placeholder="Enter your password" required>
-                                    <span id="toggle-password-visibility" class="input-group-text bg-light border-secondary">
+                                    <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                    <span id="toggle-password-visibility" class="input-group-text">
                                         <i class="bi bi-eye"></i>
                                     </span>
                                     <div id="password-error" class="invalid-feedback">Invalid password.</div>
                                 </div>
                             </div>
-                            <div class="form-group mb-4">
+
+							<!-- Confirm Password -->
+                            <div class="form-group mb-1">
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-secondary">
-                                        <i class="bi bi-lock-fill"></i>
-                                    </span>
-                                    <input type="password" class="form-control border-secondary" id="confirm-password" placeholder="Confirm your password" required>
-                                    <span id="toggle-confirm-password-visibility" class="input-group-text bg-light border-secondary">
+                                    <input type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
+                                    <span id="toggle-confirm-password-visibility" class="input-group-text">
                                         <i class="bi bi-eye"></i>
                                     </span>
                                     <div id="confirm-password-error" class="invalid-feedback">Passwords do not match.</div>
                                 </div>
                             </div>
-                            <div id="error-banner" class="alert alert-danger d-none" role="alert"></div>
-                            <div>
-                                <button id="register-btn" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark" disabled>Sign Up</button>
-                            </div>
+
+							<!-- Submit -->
+							<div>
+								<button id="register-btn" type="submit" class="btn w-100 mt-1" disabled>Sign Up</button>
+							</div>
                         </form>
-                        <div class="mt-3 text-center">
-                            <small role="button" id="login-link" class="text-warning fw-bold" style="cursor: pointer;">
-                                Already have an account? Log In
+
+						<!-- Log In -->
+                        <div class="text-center mt-2">
+                            <small role="button" id="login-link">
+                                Already have an account? <span class="text-decoration-underline">Log In</span></small>
                             </small>
                         </div>
                     </div>

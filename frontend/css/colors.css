@@ -62,9 +62,12 @@
 	}
 
 	.btn {
+		--bs-btn-color: var(--brick-900);
+		--bs-btn-hover-color: var(--brick-800);
+		--bs-btn-disabled-color: var(--brick-800);
 		--bs-btn-bg: var(--brick-500);
 		--bs-btn-hover-bg: var(--brick-400);
 		--bs-btn-disabled-bg: var(--brick-400);
-		--bs-btn-border-color: var(--brick-900);
+		--bs-btn-border-color: var(--brick-800);
 	}
 }
