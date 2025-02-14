@@ -5,7 +5,7 @@ import {
 	getUserSessionData,
 } from "../../../scripts/utils/session-manager.js";
 
-const BASE_URL = "http://127.0.0.1:8000/api/tictactoe";
+const BASE_URL = `${window.APP_CONFIG.backendUrl}/api/tictactoe`;
 
 class TicTacToePage extends Component {
 	constructor() {

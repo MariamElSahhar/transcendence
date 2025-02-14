@@ -1,11 +1,11 @@
 import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
-
+import { removeMatchMaking } from "./clients/gamelog-client.js";
+import {closeWebSocket} from "./utils/websocket-manager.js";
 window.APP_CONFIG = {
-	backendUrl: "http://127.0.0.1:8000",
-	pointsToWinPongMatch: 1,
+	backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
+	pointsToWinPongMatch: 5,
 };
-
 const routes = {
 	// PUBLIC SCREENS
 	"/": {
@@ -57,7 +57,7 @@ const routes = {
 	"/play/remote": {
 		layout: "main",
 		component: "remote-game-page",
-		path: "../pages/local/RemoteGamePage.js",
+		path: "../pages/local-game/RemoteGamePage.js",
 		protected: true,
 		title: "Pong | Remote Game",
 	},
@@ -91,6 +91,8 @@ const routes = {
 	},
 };
 
+let previouspath;
+
 const layouts = {
 	main: {
 		component: "main-layout",
@@ -123,33 +125,52 @@ const handleLocation = async () => {
 	} else if (!isProtected && authenticated && route != routes[404]) {
 		route = routes["/home"];
 	}
+	// else if (previouspath && previouspath.startsWith("/play/remote")) {
+	// 	try {
+	// 		const { status, success, data } = await removeMatchMaking();
+	// 		closeWebSocket();
+	// 		if (success) {
+	// 			console.log("Successfully removed from matchmaking queue:", data);
+	// 		} else {
+	// 			console.warn("Failed to remove from matchmaking queue. Status:", status);
+	// 		}
+	// 		if (window.timeoutID) {
+	// 			console.log("CLEARED TIMEOUT")
+	// 			clearTimeout(window.timeoutID);
+	// 			window.timeoutID = null; // Reset the global variable
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Error while removing from matchmaking queue:", error);
+	// 	}
+	// }
+	// previouspath=path;
 	const layout = layouts[route.layout];
 	loadRoute(route, layout);
 };
 
 const loadRoute = async (route, layout) => {
 	try {
-		const root = document.getElementById("root");
-		const routeComponent = document.createElement(route.component);
-		await import(route.path);
-		if (layout) {
-			let layoutComponent = document.querySelector(layout.component);
-			// load layout if it isn't already there
-			if (!layoutComponent) {
-				root.innerHTML = "";
-				await import(layout.path);
-				layoutComponent = document.createElement(layout.component);
-				root.appendChild(layoutComponent);
-			}
-			await layoutComponent.renderSlot(routeComponent.outerHTML);
-		} else {
+
+	const root = document.getElementById("root");
+	const routeComponent = document.createElement(route.component);
+	await import(route.path);
+	if (layout) {
+		let layoutComponent = document.querySelector(layout.component);
+		// load layout if it isn't already there
+		if (!layoutComponent) {
 			root.innerHTML = "";
-			root.appendChild(routeComponent);
+			await import(layout.path);
+			layoutComponent = document.createElement(layout.component);
+			root.appendChild(layoutComponent);
 		}
-		document.title = route.title || "Pong";
-	} catch (e) {
-		console.log("ERROR", e);
+		await layoutComponent.renderSlot(routeComponent.outerHTML);
+	} else {
+		root.innerHTML = "";
+		root.appendChild(routeComponent);
 	}
+} catch (e) {
+	console.log('ERROR', e)
+}
 };
 
 const validDashboardPath = async (path) => {

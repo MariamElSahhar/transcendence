@@ -1,6 +1,7 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { HandlePaddleEdge } from "../HandlePaddleEdge.js";
 
+
 export class Paddle {
     #threeJSGroup = new THREE.Group();
     #moveSpeed = 15;
@@ -25,7 +26,6 @@ export class Paddle {
     constructor(paddleIsOnTheRight, playerPosition, isAIControlled = false) {
         this.#paddleIsOnTheRight = paddleIsOnTheRight;
         this.#isAIControlled = isAIControlled;
-
         this.#threeJSGroup.position.set(paddleIsOnTheRight ? 8 : -8, 0, 1); // Lift paddle above the board.
 
         const color = this.#getColor();
@@ -126,12 +126,14 @@ export class Paddle {
     }
 
     setDirection(direction) {
+
         this.#movement.y =
             direction === "up"
                 ? this.#moveSpeed
                 : direction === "down"
                 ? -this.#moveSpeed
                 : 0;
+
     }
 
     setPosition(positionJson) {

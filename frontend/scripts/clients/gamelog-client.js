@@ -1,11 +1,27 @@
-const BASE_URL = "http://127.0.0.1:8000/api";
-import { post, get } from "../utils/http-requests.js";
+const BASE_URL = `http://127.0.0.1:8000/api`;
+import { post, get,del } from "../utils/http-requests.js";
 
 const URIs = {
 	gamelog: (user_id) => `${BASE_URL}/users/${user_id}/gamelog/`,
 	gamelogRemote: `${BASE_URL}/gamelog/remote/`,
 	gamelogTTT: `${BASE_URL}/gamelog/ttt/`,
 	gamelogLocal: `${BASE_URL}/gamelog/local/`,
+	matchmaker: `${BASE_URL}/remote-pong/matchmaking/`,
+};
+
+
+export const matchMaker = async () => {
+	const url = URIs.matchmaker;
+	const { status, body, error } = await post(url);
+	if (error) return {status:status, success: false, data: error };
+	return { status:status, success: true, data: body };
+};
+
+export const removeMatchMaking = async () => {
+	const url = URIs.matchmaker;
+	const { status, body, error } = await del(url);
+	if (error) return {status:status, success: false, data: error };
+	return { status:status, success: true, data: body };
 };
 
 // Fetch game log
@@ -13,13 +29,23 @@ export const fetchUserGameLog = async (user_id) => {
 	const url = URIs.gamelog(user_id);
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
+	console.log(body)
 	return { success: true, data: body };
 };
 
 // Add remote game to gamelog
-export const addRemoteGame = async (gameData) => {
+export const addRemoteGame = async ({	opponent_score,
+	my_score,
+	opponent_username,
+	gameSession}) => {
 	const url = URIs.gamelogRemote;
-	const requestBody = { gameData };
+	const requestBody = {
+		opponent_score,
+		my_score,
+		opponent_username,
+		gameSession,
+	};
+	console.log(requestBody )
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };
 	return { success: true };

@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000/api/users";
+const BASE_URL = `http://127.0.0.1:8000/api/users`;
 import { get, post, patch, del } from "../utils/http-requests.js";
 
 const URIs = {
@@ -64,6 +64,8 @@ export const uploadAvatar = async ({ avatar, user_id }) => {
 	if (error) return { success: false, error: error };
 	return { success: true, data: body };
 };
+
+
 
 /* export const usernameExist = async (username) => {
 	// console.log(username.username)

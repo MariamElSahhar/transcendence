@@ -34,6 +34,7 @@ urlpatterns = [
     # GameLog app
     path("api/", include("gamelog.urls")),
     # Users app
+    path("api/remote-pong/", include("remote_pong.urls")),
     path("api/", include("users.urls")),
 
     # API Schema and AutoDocs

@@ -14,9 +14,25 @@ import environ, os
 from pathlib import Path
 from datetime import timedelta
 
-# Read environment variables
+import requests
+
+import socket
+
+
+import socket
+
 env = environ.Env()
 environ.Env.read_env()
+if(env("ENV") == "production" ):
+    IPAddr = os.getenv("HOST_IP")
+else:
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))  #Google's DNS
+        IPAddr = s.getsockname()[0]
+        s.close()
+    except Exception as e:
+        IPAddr = "127.0.0.1"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,10 +46,11 @@ SECRET_KEY = "django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", IPAddr]# "xxxxxxxx"]
 
 # Application definition
 INSTALLED_APPS = [
+    "daphne",
     "rest_framework",
     "rest_framework_simplejwt",
     "django.contrib.admin",
@@ -47,8 +64,10 @@ INSTALLED_APPS = [
     "tictactoe",
     "corsheaders",
     "drf_spectacular",
+    "remote_pong",
 ]
 
+ASGI_APPLICATION = "pong.asgi.application"
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": ("users.authentication.CustomJWTAuthentication",),
@@ -67,14 +86,13 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:80",
-    "https://127.0.0.1:80",
     "http://127.0.0.1",
     "https://127.0.0.1",
     "http://localhost",
     "https://localhost",
+    f"http://{IPAddr}",
+    f"https://{IPAddr}",
 ]
-
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "pong.urls"
@@ -95,7 +113,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "pong.wsgi.application"
+# WSGI_APPLICATION = "pong.wsgi.application"
 
 
 # Database
@@ -154,10 +172,10 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
+# CORS_ALLOW_PRIVATE_NETWORK = True
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -180,10 +198,10 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
     "AUTH_COOKIE": "access_token",
     "AUTH_COOKIE_DOMAIN": None,
-    "AUTH_COOKIE_SECURE": True,
+    "AUTH_COOKIE_SECURE": True if env("ENV") == "production" else False, # enabled False for access through another device when running locally
     "AUTH_COOKIE_HTTP_ONLY": True,
     "AUTH_COOKIE_PATH": "/",
-    "AUTH_COOKIE_SAMESITE": "Lax",
+    "AUTH_COOKIE_SAMESITE": "None" if env("ENV") == "production" else "Lax",
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -198,3 +216,18 @@ DEFAULT_FROM_EMAIL = '42AD Transcendence <transcendence.42ad@gmail.com>'   # Opt
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+if(env("ENV") == "production"):
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_COOKIE_SAMESITE = "None"  # Allow cross-site CSRF cookies
+    CSRF_COOKIE_SECURE = True  #
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",  # Correct import path
+        "CONFIG": {
+            "hosts": [('127.0.0.1', 6379)],  # Make sure Redis is running locally
+        },
+    },
+}
