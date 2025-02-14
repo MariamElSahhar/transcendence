@@ -600,9 +600,10 @@ class TicTacToePage extends Component {
 
 	async getGameInfo() {
 		try {
+			console.log(`${BASE_URL}/play/`)
 			const response = await get(`${BASE_URL}/play/`);
 
-			if (response.body.game) {
+			if (response.body?.game) {
 				const g = response.body.game;
 
 				console.log("Game info received:", g);
@@ -678,9 +679,9 @@ class TicTacToePage extends Component {
 	async timeOutManager()
 	{
 		try {
-			const response = await post(`${BASE_URL}/timeout_game/`, { 
-			game_id: this.gameId, 
-		});	
+			const response = await post(`${BASE_URL}/timeout_game/`, {
+			game_id: this.gameId,
+		});
 		} catch (error) {
 		}
 	}
