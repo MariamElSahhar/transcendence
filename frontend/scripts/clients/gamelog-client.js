@@ -29,7 +29,6 @@ export const fetchUserGameLog = async (user_id) => {
 	const url = URIs.gamelog(user_id);
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
-	console.log(body)
 	return { success: true, data: body };
 };
 

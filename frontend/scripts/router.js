@@ -1,10 +1,11 @@
 import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
 import { removeMatchMaking } from "./clients/gamelog-client.js";
-import {closeWebSocket} from "./utils/websocket-manager.js";
+import { closeWebSocket } from "./utils/websocket-manager.js";
 window.APP_CONFIG = {
 	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
-	backendUrl:`https://${window.location.host}`,
+	mediaUrl: `http://${window.location.host}:8000`,
+	backendUrl: `https://${window.location.host}`,
 	pointsToWinPongMatch: 5,
 };
 const routes = {
@@ -151,27 +152,26 @@ const handleLocation = async () => {
 
 const loadRoute = async (route, layout) => {
 	try {
-
-	const root = document.getElementById("root");
-	const routeComponent = document.createElement(route.component);
-	await import(route.path);
-	if (layout) {
-		let layoutComponent = document.querySelector(layout.component);
-		// load layout if it isn't already there
-		if (!layoutComponent) {
+		const root = document.getElementById("root");
+		const routeComponent = document.createElement(route.component);
+		await import(route.path);
+		if (layout) {
+			let layoutComponent = document.querySelector(layout.component);
+			// load layout if it isn't already there
+			if (!layoutComponent) {
+				root.innerHTML = "";
+				await import(layout.path);
+				layoutComponent = document.createElement(layout.component);
+				root.appendChild(layoutComponent);
+			}
+			await layoutComponent.renderSlot(routeComponent.outerHTML);
+		} else {
 			root.innerHTML = "";
-			await import(layout.path);
-			layoutComponent = document.createElement(layout.component);
-			root.appendChild(layoutComponent);
+			root.appendChild(routeComponent);
 		}
-		await layoutComponent.renderSlot(routeComponent.outerHTML);
-	} else {
-		root.innerHTML = "";
-		root.appendChild(routeComponent);
+	} catch (e) {
+		console.log("ERROR", e);
 	}
-} catch (e) {
-	console.log('ERROR', e)
-}
 };
 
 const validDashboardPath = async (path) => {

@@ -135,6 +135,24 @@ def verify_otp_view(request):
             error_messages.extend(errors)
         return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
+# RETRIEVE SESSION
+@api_view(["GET"])
+def get_user_info_view(request):
+    user = request.user
+    response = Response(
+                {
+                    "message": "OTP verified successfully. Login successful.",
+                    "data": {
+                        "username": user.username,
+                        "user_id": user.id,
+                        "user_email": user.email,
+                        "otp": user.enable_otp,
+                        "avatar": user.avatar.url if user.avatar else None,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+    return response
 
 # LOGOUT
 @api_view(["POST"])

@@ -14,6 +14,7 @@ from .views.auth_views import (
     logout_view,
     register_view,
     verify_otp_view,
+	get_user_info_view
 )
 from .views.friends_views import (
     get_add_friends_view,
@@ -30,6 +31,7 @@ urlpatterns = [
     ),
     path('default-avatars/', get_default_avatars, name='default_avatars'),
     path("users/<int:user_id>/avatar/", avatar_view, name="avatar"),
+    path("users/me/", get_user_info_view, name="info"),
 
     # Friends
     path("users/<int:user_id>/friends/", get_add_friends_view, name="add-get-friends"),

@@ -465,7 +465,8 @@ export class SettingsPage extends Component {
 		event.preventDefault();
 		this.avatarDiff = true;
 		this.avatar.src =
-			window.APP_CONFIG.backendUrl + "/media//default_avatar/default_avatar.jpg";
+			window.APP_CONFIG.mediaUrl +
+			"/media/default_avatar/default_avatar.jpg";
 		this.#saveEnabler();
 	}
 	async #changeAvatar() {

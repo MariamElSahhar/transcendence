@@ -5,7 +5,7 @@ const request = async (url, options) => {
 		url = window.location.protocol === "https:"
 				? new URL(url).pathname
 				: url;
-		console.log(window.location.protocol, url)
+		// console.log(window.location.protocol, url)
 		// (new URL(url).pathname)
 		const response = await fetch(url, options);
 		const body = response.status != 204 ? await response.json() : null;

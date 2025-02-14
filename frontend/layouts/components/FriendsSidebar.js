@@ -57,7 +57,7 @@ export class FriendsSidebar extends Component {
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
 				<div class="position-relative">
 					<img src="${
-						window.APP_CONFIG.backendUrl + avatar
+						window.APP_CONFIG.mediaUrl + avatar
 					}" class="friend-avatar h-100 rounded-circle" />
 					${
 						is_online

@@ -21,9 +21,7 @@ from .serializers.ttt import (
 
 @api_view(["POST"])
 def create_gamelog_remote(request):
-    print(request.data)
     gamedata = GameSession.objects.get(id=request.data["gameSession"])
-    # print(gamedata.player1)
     user1 = request.user.id
     user2 = CustomUser.objects.get(username=request.data["opponent_username"]).id
     if(request.data["my_score"] > request.data["opponent_score"]):
@@ -37,7 +35,6 @@ def create_gamelog_remote(request):
         loserID=user1
         loser_score=request.data["my_score"]
     data={"winnerID":winnerID,"loserID":loserID,"winner_score":winner_score,"loser_score":loser_score}
-    print(data)
 
     serializer = CreateRemoteGameSerializer(data=data)
     if serializer.is_valid():
@@ -73,7 +70,6 @@ def create_gamelog_local(request):
 
 @api_view(["POST"])
 def create_gamelog_ttt(request):
-    print(request.data)
     serializer = CreateTTTGameSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -97,8 +93,6 @@ def gamelog(request, user_id):
     remote_games = target_user.remote_games.all().order_by("-date")
     local_games = target_user.local_games.all().order_by("-date")
     ttt_games = target_user.ttt_games.all().order_by("-date")
-
-    print(target_user.local_games.all())
 
     response_data = {
         "local": LocalGameSerializer(
