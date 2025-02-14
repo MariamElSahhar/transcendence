@@ -52,14 +52,10 @@
 	--bs-light: var(--sky-100);
 	--bs-light-rgb: 213, 236, 247;
 
-	--bs-body-bg: var(--sky-400);
+	--bs-body-bg: var(--brick-100);
 	--bs-body-color: var(--black);
 	/* --bs-link-color: var(--sky-700);
 	--bs-link-hover-color: var(--sky-900); */
-
-	.form-control {
-		background-color: var(--brick-100);
-	}
 
 	.btn {
 		--bs-btn-color: var(--brick-900);
