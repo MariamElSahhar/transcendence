@@ -187,9 +187,7 @@ export class LoginPage extends Component {
 	async renderTwoFactorAuth(username) {
 		await import("./TwoFactorAuth.js");
 		const container = this.querySelector("main");
-		container.innerHTML = '<div class="sky z-0"></div>';
-		container.style.justifyContent = "center";
-		container.style.alignItems = "center";
+		container.innerHTML = "";
 		const twoFactorComponent = document.createElement("tfa-component");
 		twoFactorComponent.login = username;
 		container.appendChild(twoFactorComponent);

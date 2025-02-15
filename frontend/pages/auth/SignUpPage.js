@@ -301,7 +301,7 @@ export class SignUpPage extends Component {
 			});
 
 			if (success) {
-				this.#initializeTwoFactorAuth();
+				this.#renderTwoFactorAuth();
 			} else {
 				this.elements.registerButton.innerHTML = "Sign Up";
 				this.elements.registerButton.disabled = false;
@@ -315,28 +315,13 @@ export class SignUpPage extends Component {
 		}
 	}
 
-	async #initializeTwoFactorAuth() {
-		try {
-			await import("./TwoFactorAuth.js");
-			const container = this.querySelector("#container");
-			if (!container) {
-				console.error(
-					"Container not found. Unable to load 2FA component."
-				);
-				return;
-			}
-			container.innerHTML = "";
-			container.style.justifyContent = "center";
-			container.style.alignItems = "center";
-			const twoFactorComponent = document.createElement("tfa-component");
-			twoFactorComponent.login = this.elements.username.value;
-			container.appendChild(twoFactorComponent);
-		} catch (err) {
-			console.error("Error loading TwoFactorAuth component:", err);
-			this.#showErrorBanner(
-				"Failed to initialize Two-Factor Authentication."
-			);
-		}
+	async #renderTwoFactorAuth() {
+		await import("./TwoFactorAuth.js");
+		const container = this.querySelector("main");
+		container.innerHTML = "";
+		const twoFactorComponent = document.createElement("tfa-component");
+		twoFactorComponent.login = this.elements.username.value;
+		container.appendChild(twoFactorComponent);
 	}
 
 	#showErrorBanner(message) {
