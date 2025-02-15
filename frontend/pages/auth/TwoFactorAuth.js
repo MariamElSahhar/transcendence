@@ -11,51 +11,36 @@ export class TwoFactorAuth extends Component {
 
 	render() {
 		return `
-        <div
-          	<div
-            id="container"
-             class="d-flex flex-column w-100 vh-100" bg-light">
-               <main class="d-flex justify-content-center align-items-center flex-grow-1">
-                <div
-                    class="card shadow-lg mx-auto border-3 border-warning bg-primary bg-light rounded text-light"
-                    style="max-width: 400px;">
-                    <div class="text-center p-5">
-                        <div class="text-center p-3 rounded mb-4  bg-danger text-warning border border-white">
-                            <h2 class="fw-bold m-0">Verify Your OTP</h2>
-                        </div>
-                        <p class="text-center text-dark mb-4">Ready to play? Enter the 6-digit code from your email and let’s-a go!</p>
-                        <div class="icon-container d-flex justify-content-center mb-4">
-                            <div class="d-flex align-items-center">
+			<main class="d-flex justify-content-center align-items-center flex-grow-1">
+			<div class="card shadow p-5 mx-auto rounded bg-light">
+				<h2 class="m-0 w-100 text-center mb-3">Verify Your OTP</h2>
+				<p class="text-center mb-2">Enter the 6-digit code from your email and let’s-a go!</p>
 
-                                <i class="bi bi-lock-fill text-black" style="font-size: 7rem; margin-left: 1rem;"></i>
-                            </div>
-                        </div>
-                        <!-- Form -->
-                        <form>
-                          <!-- OTP Input Fields -->
-                          <div class="input-fields form-group mb-4 w-100 d-flex justify-content-between">
-                              ${this.#renderOtpInputs()}
-                          </div>
-                          <!-- Error Alert -->
-                          <div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
+				<!-- Form -->
+				<form>
+					<!-- Error Alert -->
+					<div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
 
-                          <!-- Submit Button -->
-                          <button id="submit-button" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark" disabled>
-                            Verify Code
-                          </button>
-                        </form>
-                    </div>
-                </div>
-            </main>
-        </div>
+					<!-- OTP Input Fields -->
+					<div class="input-fields form-group mb-2 w-100 d-flex justify-content-between">
+						${this.#renderOtpInputs()}
+					</div>
+
+					<!-- Submit Button -->
+					<button id="submit-button" type="submit" class="btn btn-warning w-100 fw-bold" disabled>
+					Confirm
+					</button>
+				</form>
+			</div>
+		</main>
     `;
 	}
 
 	style() {
-		return `<style>
-			/* Mario font */
-			body, h1, h2, h3, .form-label, .btn, .input-group-text {
-				font-family: 'New Super Mario Font U', sans-serif !important;
+		return `
+		<style>
+			.form-control {
+				line-height: 2;
 			}
 		</style>`;
 	}
@@ -65,22 +50,6 @@ export class TwoFactorAuth extends Component {
 		this.submitButton = this.querySelector("#submit-button");
 		this.errorNotification = this.querySelector("#error-alert");
 
-		this.#bindEvents();
-	}
-
-	#renderOtpInputs() {
-		return Array.from(
-			{ length: 6 },
-			(_, i) => `
-      <input class="otp-input form-control text-center col" type="tel" name="otp-${
-			i + 1
-		}" maxlength="1"
-             pattern="[\\d]*" tabindex="${i + 1}" autocomplete="off">
-    `
-		).join("");
-	}
-
-	#bindEvents() {
 		this.otpInputs.forEach((input) => {
 			super.addComponentEventListener(
 				input,
@@ -94,6 +63,18 @@ export class TwoFactorAuth extends Component {
 			"click",
 			this.#onSubmitOtp
 		);
+	}
+
+	#renderOtpInputs() {
+		return Array.from(
+			{ length: 6 },
+			(_, i) => `
+      <input class="otp-input form-control text-center col mx-1" type="tel" name="otp-${
+			i + 1
+		}" maxlength="1"
+             pattern="[\\d]*" tabindex="${i + 1}" autocomplete="off">
+    `
+		).join("");
 	}
 
 	#onOtpChange = (event) => {

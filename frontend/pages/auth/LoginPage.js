@@ -135,6 +135,8 @@ export class LoginPage extends Component {
 		registerLink.addEventListener("click", () => {
 			window.location.href = "/sign-up";
 		});
+
+		this.renderTwoFactorAuth("");
 	}
 
 	handleUsernameInput(input, loginButton) {
@@ -174,7 +176,7 @@ export class LoginPage extends Component {
 		const { success, error, otp } = await login({ username, password });
 		if (success) {
 			errorAlert.classList.add("d-none");
-			if (otp) this.initializeTwoFactorAuth(username);
+			if (otp) this.renderTwoFactorAuth(username);
 			else window.redirect("/home");
 		} else {
 			errorAlert.classList.remove("d-none");
@@ -184,9 +186,9 @@ export class LoginPage extends Component {
 		loginButton.disabled = false;
 	}
 
-	async initializeTwoFactorAuth(username) {
+	async renderTwoFactorAuth(username) {
 		await import("./TwoFactorAuth.js");
-		const container = this.querySelector("#container");
+		const container = this.querySelector("main");
 		container.innerHTML = '<div class="sky z-0"></div>';
 		container.style.justifyContent = "center";
 		container.style.alignItems = "center";
