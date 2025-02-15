@@ -135,8 +135,6 @@ export class LoginPage extends Component {
 		registerLink.addEventListener("click", () => {
 			window.location.href = "/sign-up";
 		});
-
-		this.renderTwoFactorAuth("");
 	}
 
 	handleUsernameInput(input, loginButton) {
