@@ -32,54 +32,57 @@ export class LocalGamePage extends Component {
 
 	render() {
 		return `
-			<div id="page-contents" class="d-flex justify-content-center align-items-center w-100 h-100">
-				<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
-					<h2 class="w-100 text-center">Setup Players</h2>
-					<form id="player-form"  class="d-flex flex-column gap-2">
-						<input type="text" class="form-control w-100 text-dark" placeholder="${
-							getUserSessionData().username
-						}" disabled/>
-						<input type="text" id="player2-name" name="player2-name" class="form-control w-100 text-dark" placeholder="Player 2 display name"/>
-						<button id="submit-players" type="submit" class="btn w-100"  disabled>Start Game</button>
-					</form>
-				</div>
-
-				<div id="container" class="m-2 position-relative" style="display:none;"></div>
+			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
+				${
+					this.isAIEnabled
+						? `<div class="p-3 card shadow p-5 mx-auto rounded bg-light">
+							<h2 class="w-100 text-center">${getUserSessionData().username} vs. Computer</h2>
+							<button id="start-game" type="submit" class="btn w-100">Go!</button>
+						</div>`
+						: `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
+							<h2 class="w-100 text-center">Setup Players</h2>
+							<form id="player-form"  class="d-flex flex-column gap-2">
+								<input type="text" class="form-control w-100 text-dark" placeholder="${
+									getUserSessionData().username
+								}" disabled/>
+								<input type="text" id="player2-name" name="player2-name" class="form-control w-100 text-dark" placeholder="Player 2 display name"/>
+								<button id="start-game" type="submit" class="btn w-100"  disabled>Start Game</button>
+							</form>
+						</div>`
+				}
 			</div>
         `;
 	}
 
 	postRender() {
+		const startGame = this.querySelector("#start-game");
 		this.container = this.querySelector("#container");
-		const form = this.querySelector("#player-form");
-		const submit = this.querySelector("#submit-players");
-		const player2NameInput = this.querySelector("#player2-name");
+		let player2NameInput;
+		if (!this.isAIEnabled) {
+			player2NameInput = this.querySelector("#player2-name");
 
-		player2NameInput.addEventListener("input", () => {
-			if (player2NameInput.value) {
-				submit.removeAttribute("disabled");
-			} else {
-				submit.setAttribute("disabled", "");
-			}
-		});
-
-		form.addEventListener("submit", (event) => {
+			player2NameInput.addEventListener("input", () => {
+				if (player2NameInput.value) {
+					startGame.removeAttribute("disabled");
+				} else {
+					startGame.setAttribute("disabled", "");
+				}
+			});
+		}
+		startGame.addEventListener("click", (event) => {
 			event.preventDefault();
 
 			this.playerNames = [this.playerNames[0]];
-
 			const player2Name = this.isAIEnabled
 				? "Computer"
 				: player2NameInput.value;
 			this.playerNames.push(player2Name || "Player 2");
 
-			this.querySelector("#player-setup").style.display = "none";
-			this.container.style.display = "block";
+			this.querySelector("#container").innerHTML = "";
 
 			if (WebGL.isWebGLAvailable()) {
 				this.createOverlay();
-				const countdownStart = Date.now() / 1000 + 3;
-				this.startCountdown(countdownStart);
+				this.startCountdown();
 			} else {
 				console.error(
 					"WebGL not supported:",
@@ -99,7 +102,8 @@ export class LocalGamePage extends Component {
 		if (playerIndex < this.scores.length) this.scores[playerIndex] += 1;
 	}
 
-	startCountdown(startDateInSeconds) {
+	startCountdown() {
+		const startDateInSeconds = Date.now() / 1000 + 3;
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 		this.updateOverlayCountdown(secondsLeft);
 

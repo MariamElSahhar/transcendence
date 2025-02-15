@@ -31,11 +31,11 @@ export class HomePage extends Component {
 		return `
             <div class="d-flex flex-column align-items-center p-3">
                 <div class="w-100">
-                    <!-- Pong Game Section -->
+                    <!-- Pong Section -->
                     <div class="game-section">
                         <div id="top-canvas" class="game-canvas"></div>
                         <div class="btn-container">
-                            <h3 class="game-title">Pong Game</h3>
+                            <h3 class="game-title">Pong</h3>
                             <button id="play-single-player-game" class="btn btn-primary">Single Player</button>
                             <button id="play-two-player-game" class="btn btn-primary">Two Player</button>
                             <button id="play-remote-game" class="btn btn-primary">Online Two Player</button>
