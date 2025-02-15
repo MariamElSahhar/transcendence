@@ -6,7 +6,7 @@ window.APP_CONFIG = {
 	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
 	mediaUrl: `http://${window.location.host}:8000`,
 	backendUrl: `https://${window.location.host}`,
-	pointsToWinPongMatch: 5,
+	pointsToWinPongMatch: 1,
 };
 const routes = {
 	// PUBLIC SCREENS
@@ -49,12 +49,19 @@ const routes = {
 		protected: true,
 		title: "Pong | My Dashboard",
 	},
-	"/play/local": {
+	"/play/single-player": {
 		layout: "main",
 		component: "local-game-page",
 		path: "../pages/local-game/LocalGamePage.js",
 		protected: true,
-		title: "Pong | Local Game",
+		title: "Pong | Single Player Game",
+	},
+	"/play/two-player": {
+		layout: "main",
+		component: "local-game-page",
+		path: "../pages/local-game/LocalGamePage.js",
+		protected: true,
+		title: "Pong | Local Two Player Game",
 	},
 	"/play/remote": {
 		layout: "main",

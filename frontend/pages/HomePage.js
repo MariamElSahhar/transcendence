@@ -36,9 +36,10 @@ export class HomePage extends Component {
                         <div id="top-canvas" class="game-canvas"></div>
                         <div class="btn-container">
                             <h3 class="game-title">Pong Game</h3>
-                            <button id="btnPlayLocalGame" class="btn btn-primary">Play Local Game</button>
-                            <button id="btnPlayRemotely" class="btn btn-primary">Play Remote Game</button>
-                            <button id="btnPlayTournament" class="btn btn-primary">Join Tournament Game</button>
+                            <button id="play-single-player-game" class="btn btn-primary">Single Player</button>
+                            <button id="play-two-player-game" class="btn btn-primary">Two Player</button>
+                            <button id="play-remote-game" class="btn btn-primary">Online Two Player</button>
+                            <button id="play-tournament" class="btn btn-primary">Tournament</button>
                         </div>
                     </div>
 
@@ -47,7 +48,7 @@ export class HomePage extends Component {
                         <div id="bottom-canvas" class="game-canvas"></div>
                         <div class="btn-container">
                             <h3 class="game-title">Tic Tac Toe</h3>
-                            <button id="btnRemotePlay" class="btn btn-success">Play Remotely</button>
+                            <button id="play-ttt" class="btn btn-success">Tic Tac Toe</button>
                         </div>
                     </div>
                 </div>
@@ -72,16 +73,23 @@ export class HomePage extends Component {
 
 		// Play Local Game Button
 		super.addComponentEventListener(
-			this.querySelector("#btnPlayLocalGame"),
+			this.querySelector("#play-single-player-game"),
 			"click",
 			() => {
-				window.redirect("/play/local");
+				window.redirect("/play/single-player");
+			}
+		);
+		super.addComponentEventListener(
+			this.querySelector("#play-two-player-game"),
+			"click",
+			() => {
+				window.redirect("/play/two-player");
 			}
 		);
 
 		// Play Remote Game Button
 		super.addComponentEventListener(
-			this.querySelector("#btnPlayRemotely"),
+			this.querySelector("#play-remote-game"),
 			"click",
 			() => {
 				window.redirect("/play/remote");
@@ -90,7 +98,7 @@ export class HomePage extends Component {
 
 		// Join Tournament Button
 		super.addComponentEventListener(
-			this.querySelector("#btnPlayTournament"),
+			this.querySelector("#play-ttt"),
 			"click",
 			() => {
 				window.redirect("/play/tournament");

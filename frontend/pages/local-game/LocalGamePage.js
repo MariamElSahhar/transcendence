@@ -11,7 +11,7 @@ export class LocalGamePage extends Component {
 		this.overlay = null;
 		this.playerNames = []; // Stores player names
 		this.scores = [0, 0]; // Tracks scores for both players
-		this.isAIEnabled = false;
+		this.isAIEnabled = window.location.pathname.endsWith("/single-player");
 	}
 
 	connectedCallback() {
@@ -20,7 +20,6 @@ export class LocalGamePage extends Component {
 	}
 
 	disconnectedCallback() {
-		console.log("LocalGamePage is being disconnected. Cleaning up...");
 		if (this.engine) {
 			this.engine.stopAnimationLoop();
 			this.engine.cleanUp();
@@ -33,23 +32,15 @@ export class LocalGamePage extends Component {
 
 	render() {
 		return `
-			<div class="d-flex justify-content-center align-items-center w-100 h-100">
-				<div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light" style="max-width: 400px;">
-					<div class="text-center p-3 rounded mb-4 bg-danger text-warning border-while">
-						<h3 class="fw-bold  m-0">Setup Players</h3>
-					</div>
-					<form id="player-form">
-						<div id="player-names">
-							<div class="mb-3" >
-								<label for="player2-name" class="form-label d-block"></label>
-								<input type="text" id="player2-name" name="player2-name" class="form-control mx-0 w-100 border border-secondary text-dark" placeholder="Player 2 display name"/>
-							</div>
-						</div>
-						<div class="form-check mb-3">
-							<input type="checkbox" class="form-check-input border border-secondary" id="play-against-ai" >
-							<label class="form-check-label" for="play-against-ai"> <i class="bi bi-robot fs-4 text-primary"></i> Play against computer </label>
-						</div>
-						<button id="submit-players" type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark"  disabled>Start Game</button>
+			<div id="page-contents" class="d-flex justify-content-center align-items-center w-100 h-100">
+				<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
+					<h2 class="w-100 text-center">Setup Players</h2>
+					<form id="player-form"  class="d-flex flex-column gap-2">
+						<input type="text" class="form-control w-100 text-dark" placeholder="${
+							getUserSessionData().username
+						}" disabled/>
+						<input type="text" id="player2-name" name="player2-name" class="form-control w-100 text-dark" placeholder="Player 2 display name"/>
+						<button id="submit-players" type="submit" class="btn w-100"  disabled>Start Game</button>
 					</form>
 				</div>
 
@@ -62,20 +53,7 @@ export class LocalGamePage extends Component {
 		this.container = this.querySelector("#container");
 		const form = this.querySelector("#player-form");
 		const submit = this.querySelector("#submit-players");
-		const AICheckbox = this.querySelector("#play-against-ai");
 		const player2NameInput = this.querySelector("#player2-name");
-
-		AICheckbox.addEventListener("change", () => {
-			if (AICheckbox.checked) {
-				player2NameInput.setAttribute("disabled", "");
-				player2NameInput.value = "Computer";
-				submit.removeAttribute("disabled");
-			} else {
-				player2NameInput.removeAttribute("disabled");
-				submit.setAttribute("disabled", "");
-				player2NameInput.value = "";
-			}
-		});
 
 		player2NameInput.addEventListener("input", () => {
 			if (player2NameInput.value) {
@@ -88,24 +66,12 @@ export class LocalGamePage extends Component {
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
 
-			// const userData = getUserSessionData();
-			// console.log("User data:", userData);
-
-			// const firstPlayerName = userData.username || "Player 1";
-			// this.playerNames = [firstPlayerName];
-
-			// const player2Name = AICheckbox.checked ? "Computer" : player2NameInput.value.trim();
-			// this.playerNames.push(player2Name || "Player 2");
 			this.playerNames = [this.playerNames[0]];
 
-			const player2Name = AICheckbox.checked
+			const player2Name = this.isAIEnabled
 				? "Computer"
 				: player2NameInput.value;
 			this.playerNames.push(player2Name || "Player 2");
-
-			// console.log("Players after form submission:", this.playerNames);
-
-			this.isAIEnabled = AICheckbox.checked;
 
 			this.querySelector("#player-setup").style.display = "none";
 			this.container.style.display = "block";
@@ -130,14 +96,7 @@ export class LocalGamePage extends Component {
 	}
 
 	updateScore(playerIndex) {
-		if (playerIndex < this.scores.length) {
-			this.scores[playerIndex] += 1;
-			// console.log(
-			// 	`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
-			// );
-		} else {
-			console.error("Invalid player index:", playerIndex);
-		}
+		if (playerIndex < this.scores.length) this.scores[playerIndex] += 1;
 	}
 
 	startCountdown(startDateInSeconds) {
