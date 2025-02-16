@@ -28,6 +28,7 @@ export class LocalGamePage extends Component {
 			clearInterval(this.countDownIntervalId);
 			this.countDownIntervalId = null;
 		}
+		super.disconnectedCallback();
 	}
 
 	render() {
@@ -37,7 +38,7 @@ export class LocalGamePage extends Component {
 					this.isAIEnabled
 						? `<div class="p-3 card shadow p-5 mx-auto rounded bg-light">
 							<h2 class="w-100 text-center">${getUserSessionData().username} vs. Computer</h2>
-							<button id="start-game" type="submit" class="btn w-100">Go!</button>
+							<button id="submit-players" type="submit" class="btn w-100">Go!</button>
 						</div>`
 						: `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
 							<h2 class="w-100 text-center">Setup Players</h2>
@@ -46,7 +47,7 @@ export class LocalGamePage extends Component {
 									getUserSessionData().username
 								}" disabled/>
 								<input type="text" id="player2-name" name="player2-name" class="form-control w-100 text-dark" placeholder="Player 2 display name"/>
-								<button id="start-game" type="submit" class="btn w-100"  disabled>Start Game</button>
+								<button id="submit-players" type="submit" class="btn w-100"  disabled>Start Game</button>
 							</form>
 						</div>`
 				}
@@ -55,7 +56,7 @@ export class LocalGamePage extends Component {
 	}
 
 	postRender() {
-		const startGameButton = this.querySelector("#start-game");
+		const startGameButton = this.querySelector("#submit-players");
 		this.container = this.querySelector("#container");
 		let player2NameInput;
 		if (!this.isAIEnabled) {
@@ -87,8 +88,7 @@ export class LocalGamePage extends Component {
 					this.playerNames
 				);
 				this.engine.createScene();
-				this.renderCountdownCard();
-				this.startCountdown();
+				this.renderGameInfoCard();
 			} else {
 				console.error(
 					"WebGL not supported:",
@@ -120,16 +120,32 @@ export class LocalGamePage extends Component {
 		}, 1000);
 	}
 
-	renderCountdownCard() {
+	renderGameInfoCard() {
 		this.renderOverlay();
 		this.overlay.innerHTML = `
-          <div class="card text-center text-dark bg-light" style="width: 30rem;">
+          <div class="card text-center">
             <div class="card-body">
-              <h1 id="countdown" class="display-1 fw-bold">5</h1>
-			  <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
+				<h2>${this.playerNames[0]} vs ${this.playerNames[1]}</h2>
+				<button id="start-game" class="btn w-100">Go!</button>
             </div>
           </div>
         `;
+		super.addComponentEventListener(
+			this.querySelector("#start-game"),
+			"click",
+			() => {
+				this.removeOverlay();
+				this.renderCountdownCard();
+			}
+		);
+	}
+
+	renderCountdownCard() {
+		this.renderOverlay();
+		this.overlay.innerHTML = `
+			<h1 id="countdown" class="display-1 fw-bold">5</h1>
+        `;
+		this.startCountdown();
 	}
 
 	renderEndGameCard(playerScore, opponentScore) {
