@@ -98,7 +98,7 @@ export class HomePage extends Component {
 
 		// Join Tournament Button
 		super.addComponentEventListener(
-			this.querySelector("#play-ttt"),
+			this.querySelector("#play-tournament"),
 			"click",
 			() => {
 				window.redirect("/play/tournament");
@@ -107,7 +107,7 @@ export class HomePage extends Component {
 
 		// Play Tic Tac Toe Remotely Button
 		super.addComponentEventListener(
-			this.querySelector("#btnRemotePlay"),
+			this.querySelector("#play-ttt"),
 			"click",
 			() => {
 				window.redirect("/play/tictactoe");

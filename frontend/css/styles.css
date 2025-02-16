@@ -52,36 +52,10 @@ input.form-control {
 	padding: 15px;
 	position: relative;
 
-	h2 {
-		font-weight: bold;
-		margin-bottom: 10px;
-		text-align: center; /* Center-align text */
-		color: #fff;
-	}
-
-	p {
-		font-size: 20px;
-		margin-bottom: 15px;
-		color: #ddd; /* Slightly lighter shade for better readability */
-		text-align: center;
-	}
-
-	button {
-		padding: 10px 20px;
-		font-size: 16px;
-		font-weight: bold;
-		border: none;
-		border-radius: 5px; /* Rounded corners for a polished look */
-		cursor: pointer;
-		transition: background 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
-
-		&:hover {
-			background: linear-gradient(
-				135deg,
-				rgba(245, 165, 97, 0.4),
-				rgba(245, 165, 97, 0.4)
-			) !important; /* Reverse gradient on hover */
-			transform: scale(1.05); /* Slight zoom effect */
+		p {
+			font-size: 20px;
+			margin-bottom: 15px;
+			text-align: center;
 		}
 	}
 
