@@ -35,12 +35,8 @@ export class LocalGamePage extends Component {
 		return `
 			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
 				${
-					this.isAIEnabled
-						? `<div class="p-3 card shadow p-5 mx-auto rounded bg-light">
-							<h2 class="w-100 text-center">${getUserSessionData().username} vs. Computer</h2>
-							<button id="submit-players" type="submit" class="btn w-100">Go!</button>
-						</div>`
-						: `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
+					!this.isAIEnabled
+						? `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
 							<h2 class="w-100 text-center">Setup Players</h2>
 							<form id="player-form"  class="d-flex flex-column gap-2">
 								<input type="text" class="form-control w-100 text-dark" placeholder="${
@@ -50,17 +46,17 @@ export class LocalGamePage extends Component {
 								<button id="submit-players" type="submit" class="btn w-100"  disabled>Start Game</button>
 							</form>
 						</div>`
+						: ""
 				}
 			</div>
         `;
 	}
 
 	postRender() {
-		const startGameButton = this.querySelector("#submit-players");
 		this.container = this.querySelector("#container");
-		let player2NameInput;
 		if (!this.isAIEnabled) {
-			player2NameInput = this.querySelector("#player2-name");
+			const startGameButton = this.querySelector("#submit-players");
+			const player2NameInput = this.querySelector("#player2-name");
 
 			player2NameInput.addEventListener("input", () => {
 				if (player2NameInput.value) {
@@ -69,17 +65,33 @@ export class LocalGamePage extends Component {
 					startGameButton.setAttribute("disabled", "");
 				}
 			});
-		}
 
-		startGameButton.addEventListener("click", (event) => {
-			event.preventDefault();
-			this.playerNames = [this.playerNames[0]];
-			const player2Name = this.isAIEnabled
-				? "Computer"
-				: player2NameInput.value;
-			this.playerNames.push(player2Name || "Player 2");
+			startGameButton.addEventListener("click", (event) => {
+				event.preventDefault();
+				const player2Name = player2NameInput.value;
+				this.playerNames.push(player2Name || "Player 2");
 
-			this.querySelector("#container").innerHTML = "";
+				this.container.innerHTML = "";
+
+				if (WebGL.isWebGLAvailable()) {
+					this.engine = new Engine(
+						this,
+						this.isAIEnabled,
+						this.playerNames
+					);
+					this.engine.createScene();
+					this.renderGameInfoCard();
+				} else {
+					console.error(
+						"WebGL not supported:",
+						WebGL.getWebGLErrorMessage()
+					);
+				}
+			});
+		} else {
+			this.playerNames.push("Computer");
+
+			this.container.innerHTML = "";
 
 			if (WebGL.isWebGLAvailable()) {
 				this.engine = new Engine(
@@ -95,7 +107,7 @@ export class LocalGamePage extends Component {
 					WebGL.getWebGLErrorMessage()
 				);
 			}
-		});
+		}
 	}
 
 	updateScore(playerIndex) {
