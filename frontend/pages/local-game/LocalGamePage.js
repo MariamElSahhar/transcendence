@@ -55,7 +55,7 @@ export class LocalGamePage extends Component {
 	}
 
 	postRender() {
-		const startGame = this.querySelector("#start-game");
+		const startGameButton = this.querySelector("#start-game");
 		this.container = this.querySelector("#container");
 		let player2NameInput;
 		if (!this.isAIEnabled) {
@@ -63,15 +63,15 @@ export class LocalGamePage extends Component {
 
 			player2NameInput.addEventListener("input", () => {
 				if (player2NameInput.value) {
-					startGame.removeAttribute("disabled");
+					startGameButton.removeAttribute("disabled");
 				} else {
-					startGame.setAttribute("disabled", "");
+					startGameButton.setAttribute("disabled", "");
 				}
 			});
 		}
-		startGame.addEventListener("click", (event) => {
-			event.preventDefault();
 
+		startGameButton.addEventListener("click", (event) => {
+			event.preventDefault();
 			this.playerNames = [this.playerNames[0]];
 			const player2Name = this.isAIEnabled
 				? "Computer"
@@ -81,7 +81,13 @@ export class LocalGamePage extends Component {
 			this.querySelector("#container").innerHTML = "";
 
 			if (WebGL.isWebGLAvailable()) {
-				this.createOverlay();
+				this.engine = new Engine(
+					this,
+					this.isAIEnabled,
+					this.playerNames
+				);
+				this.engine.createScene();
+				this.renderCountdownCard();
 				this.startCountdown();
 			} else {
 				console.error(
@@ -92,12 +98,6 @@ export class LocalGamePage extends Component {
 		});
 	}
 
-	startGame() {
-		this.engine = new Engine(this, this.isAIEnabled, this.playerNames);
-		this.engine.startGame();
-		this.removeOverlay();
-	}
-
 	updateScore(playerIndex) {
 		if (playerIndex < this.scores.length) this.scores[playerIndex] += 1;
 	}
@@ -105,69 +105,38 @@ export class LocalGamePage extends Component {
 	startCountdown() {
 		const startDateInSeconds = Date.now() / 1000 + 3;
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
-		this.updateOverlayCountdown(secondsLeft);
+		this.overlay.querySelector("#countdown").textContent = secondsLeft;
 
 		this.countDownIntervalId = setInterval(() => {
 			secondsLeft -= 1;
-			this.updateOverlayCountdown(secondsLeft);
+			this.overlay.querySelector("#countdown").textContent = secondsLeft;
 
 			if (secondsLeft <= 0) {
 				clearInterval(this.countDownIntervalId);
 				this.countDownIntervalId = null;
-				this.startGame();
+				this.engine.startGame();
+				this.removeOverlay();
 			}
 		}, 1000);
 	}
 
-	createOverlay() {
-		this.overlay = document.createElement("div");
-		this.overlay.id = "game-overlay";
-		this.overlay.classList.add(
-			"position-fixed",
-			"top-0",
-			"start-0",
-			"w-100",
-			"h-100",
-			"d-flex",
-			"justify-content-center",
-			"align-items-center",
-			"bg-dark",
-			"bg-opacity-75",
-			"text-white"
-		);
-		this.overlay.style.zIndex = "9999";
+	renderCountdownCard() {
+		this.renderOverlay();
 		this.overlay.innerHTML = `
           <div class="card text-center text-dark bg-light" style="width: 30rem;">
             <div class="card-body">
               <h1 id="countdown" class="display-1 fw-bold">5</h1>
 			  <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-
-              <p class="carxd-text">Get ready! The game will start soon.</p>
             </div>
           </div>
         `;
-		this.container.appendChild(this.overlay);
 	}
 
-	updateOverlayCountdown(secondsLeft) {
-		const countdownElement = this.overlay.querySelector("#countdown");
-		if (countdownElement) {
-			countdownElement.textContent = secondsLeft;
-		}
-	}
-
-	removeOverlay() {
-		if (this.overlay) {
-			this.overlay.remove();
-			this.overlay = null;
-		}
-	}
-
-	addEndGameCard(playerScore, opponentScore) {
+	renderEndGameCard(playerScore, opponentScore) {
 		const playerName = this.playerNames[0];
 		const opponentName = this.playerNames[1];
 
-		this.createOverlay();
+		this.renderOverlay();
 		this.overlay.innerHTML = `
         <div id="end-game-card" class="card text-center border-warning text-dark bg-light" style="max-width: 30rem;">
 
@@ -190,6 +159,33 @@ export class LocalGamePage extends Component {
           </div>
         </div>
       `;
+	}
+
+	renderOverlay() {
+		this.overlay = document.createElement("div");
+		this.overlay.id = "game-overlay";
+		this.overlay.classList.add(
+			"position-fixed",
+			"top-0",
+			"start-0",
+			"w-100",
+			"h-100",
+			"d-flex",
+			"justify-content-center",
+			"align-items-center",
+			"bg-dark",
+			"bg-opacity-75",
+			"text-white"
+		);
+		this.overlay.style.zIndex = "9999";
+		this.container.appendChild(this.overlay);
+	}
+
+	removeOverlay() {
+		if (this.overlay) {
+			this.overlay.remove();
+			this.overlay = null;
+		}
 	}
 }
 

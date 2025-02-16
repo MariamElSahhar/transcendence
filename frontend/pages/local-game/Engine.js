@@ -22,7 +22,7 @@ export class Engine {
     this.scene = new Scene();
   }
 
-  async startGame() {
+  async createScene() {
     if (!this.#component.container) {
       console.error("Container not found in component; delaying initialization.");
       return;
@@ -43,11 +43,14 @@ export class Engine {
 
     if (this.scene) {
       this.scene.updateCamera();
-      this.startListeningForKeyHooks();
       this.displayGameScene();
     } else {
       console.error("Scene initialization failed");
     }
+  }
+
+  async startGame() {
+    this.startListeningForKeyHooks();
   }
 
   cleanUp() {

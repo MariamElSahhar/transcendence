@@ -51,8 +51,6 @@ input.form-control {
 	align-items: center; /* Center-align content */
 	padding: 15px;
 	position: relative;
-	background: #da7b27;
-	color: white;
 
 	h2 {
 		font-weight: bold;
