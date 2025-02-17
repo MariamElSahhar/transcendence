@@ -55,7 +55,7 @@ export class Engine {
 
 		if (this.scene) {
 			this.scene.updateCamera();
-			this.displayGameScene(); //this shouldn't start the game!
+			this.displayGameScene();
 		} else {
 			console.error("Scene initialization failed");
 		}
@@ -64,8 +64,8 @@ export class Engine {
 	startGame() {
 		console.log("starting game!");
 		this.startListeningForKeyHooks();
-    this.gameSession = true;
-    this.scene.startGame()
+		this.gameSession = true;
+		this.scene.startGame();
 	}
 
 	cleanUp() {
@@ -120,7 +120,7 @@ export class Engine {
 			const delta = clock.getDelta();
 			this.scene.updateFrame(currentTime, delta);
 
-      this.renderFrame();
+			this.renderFrame();
 			this.#threeJS.updateControls();
 		});
 	}

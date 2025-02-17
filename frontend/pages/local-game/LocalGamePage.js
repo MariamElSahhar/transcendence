@@ -35,8 +35,9 @@ export class LocalGamePage extends Component {
 		return `
 			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
 				${
-					!this.isAIEnabled
-						? `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
+					this.isAIEnabled
+						? `<p>hey</p>`
+						: `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
 							<h2 class="w-100 text-center">Setup Players</h2>
 							<form id="player-form"  class="d-flex flex-column gap-2">
 								<input type="text" class="form-control w-100 text-dark" placeholder="${
@@ -46,7 +47,6 @@ export class LocalGamePage extends Component {
 								<button id="submit-players" type="submit" class="btn w-100"  disabled>Start Game</button>
 							</form>
 						</div>`
-						: ""
 				}
 			</div>
         `;
@@ -93,20 +93,22 @@ export class LocalGamePage extends Component {
 
 			this.container.innerHTML = "";
 
-			if (WebGL.isWebGLAvailable()) {
-				this.engine = new Engine(
-					this,
-					this.isAIEnabled,
-					this.playerNames
-				);
-				this.engine.createScene();
-				this.renderGameInfoCard();
-			} else {
-				console.error(
-					"WebGL not supported:",
-					WebGL.getWebGLErrorMessage()
-				);
-			}
+			setTimeout(() => {
+				if (WebGL.isWebGLAvailable()) {
+					this.engine = new Engine(
+						this,
+						this.isAIEnabled,
+						this.playerNames
+					);
+					this.renderGameInfoCard();
+					this.engine.createScene();
+				} else {
+					console.error(
+						"WebGL not supported:",
+						WebGL.getWebGLErrorMessage()
+					);
+				}
+			}, 5);
 		}
 	}
 

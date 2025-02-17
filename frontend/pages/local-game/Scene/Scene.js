@@ -61,7 +61,6 @@ export class Scene {
 
 			if (this.#engine.threeJS.controls) {
 				this.#engine.threeJS.controls.target.set(30, 25, 0);
-				// console.log("Camera controls set.");
 			} else {
 				throw new Error("threeJS controls are not defined on engine.");
 			}
