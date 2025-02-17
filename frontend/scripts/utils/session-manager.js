@@ -13,11 +13,6 @@ export const storeUserSession = ({ username, id, email, avatar, otp }) => {
 
 export const fetchUserSessionData = async () => {
 	if (
-		!sessionStorage.getItem("username") ||
-		!sessionStorage.getItem("id") ||
-		!sessionStorage.getItem("email") ||
-		!sessionStorage.getItem("avatar") ||
-		!sessionStorage.getItem("otp") ||
 		sessionStorage.getItem("username") ==
 			`${window.APP_CONFIG.backendUrl}undefined` ||
 		sessionStorage.getItem("id") == "undefined" ||
