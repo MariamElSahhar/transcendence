@@ -21,19 +21,6 @@ export class Scene {
 			await this.match.init(engine);
 			this.#threeJSScene.add(this.match.threeJSGroup);
 
-			// Load background image
-			const textureLoader = new THREE.TextureLoader();
-			const backgroundTexture = textureLoader.load(
-				"/assets/textures/newmario.jpg",
-				undefined,
-				undefined,
-				(error) =>
-					console.error("Error loading background image:", error)
-			);
-
-			// Set the background of the scene
-			this.#threeJSScene.background = backgroundTexture;
-
 			// Set the camera position
 			const camera = engine.threeJS.getCamera();
 			camera.position.set(0, 50, 100);

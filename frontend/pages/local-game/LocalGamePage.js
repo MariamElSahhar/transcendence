@@ -100,8 +100,8 @@ export class LocalGamePage extends Component {
 						this.isAIEnabled,
 						this.playerNames
 					);
-					this.renderGameInfoCard();
 					this.engine.createScene();
+					// this.renderGameInfoCard();
 				} else {
 					console.error(
 						"WebGL not supported:",

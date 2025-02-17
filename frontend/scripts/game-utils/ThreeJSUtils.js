@@ -45,6 +45,7 @@ export class ThreeJSUtils {
 
 	#initRenderer() {
 		this.#renderer = new THREE.WebGLRenderer({
+			alpha: true,
 			antialias: true,
 			powerPreference: "high-performance",
 		});
@@ -52,7 +53,6 @@ export class ThreeJSUtils {
 		this.#renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 		this.#renderer.setPixelRatio(window.devicePixelRatio * 0.8);
 		this.#renderer.setSize(this.width, this.height);
-		this.#renderer.domElement.classList.add("rounded");
 
 		const container = this.#engine.component?.container;
 		if (container) {

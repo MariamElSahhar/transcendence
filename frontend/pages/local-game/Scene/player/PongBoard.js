@@ -1,18 +1,15 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-
+const BOARD_COLOR = 0xffd88e;
+const LINE_COLOR = 0xfffefc;
 export class PongBoard {
 	#threeJSBoard;
 	#score = 0;
 	#side;
-	#pointColor;
 	#board;
 	#goal;
 	#size;
 	#scoreSprite;
 	#playerNameSprite;
-
-	static #leftSideColor = 0xff0000; // Red for left player
-	static #rightSideColor = 0x0000ff; // Blue for right player
 
 	constructor() {}
 
@@ -22,10 +19,6 @@ export class PongBoard {
 		}
 
 		this.#side = side;
-		this.#pointColor = this.#side
-			? PongBoard.#rightSideColor
-			: PongBoard.#leftSideColor;
-
 		this.#threeJSBoard = new THREE.Group();
 		this.#size = new THREE.Vector3(20, 27.5, 1);
 
@@ -39,7 +32,7 @@ export class PongBoard {
 	initBoard(boardSize) {
 		this.#board = new THREE.Mesh(
 			new THREE.BoxGeometry(boardSize.x, boardSize.y, boardSize.z),
-			new THREE.MeshStandardMaterial({ color: 0x808080 }) // Grey board
+			new THREE.MeshStandardMaterial({ color: BOARD_COLOR }) // Grey board
 		);
 
 		if (this.#side === 1) {
@@ -54,7 +47,7 @@ export class PongBoard {
 
 		const connectingStrap = new THREE.Mesh(
 			new THREE.BoxGeometry(strapThickness, strapHeight, strapDepth),
-			new THREE.MeshStandardMaterial({ color: 0xffffff })
+			new THREE.MeshStandardMaterial({ color: LINE_COLOR })
 		);
 
 		const strapXPosition =
@@ -71,20 +64,40 @@ export class PongBoard {
 		const wallHeight = boardSize.y + 2 * wallWidth;
 		const wallDepth = boardSize.z * 2;
 
-		const wallMaterial = new THREE.MeshStandardMaterial({
-			color: 0x000033,
+		// const wallMaterial = new THREE.MeshStandardMaterial({
+		// 	color: 0x000033,
+		// });
+		const textureLoader = new THREE.TextureLoader();
+		const wallTextureHorizontal = textureLoader.load(
+			"/assets/textures/floor.png",
+			(texture) => {
+				texture.wrapS = THREE.RepeatWrapping;
+				texture.wrapT = THREE.RepeatWrapping;
+
+				const textureSize = 1;
+				const wallWidth = wallGeometry.parameters.width;
+				const wallHeight = wallGeometry.parameters.height;
+				texture.repeat.set(
+					wallWidth / textureSize,
+					wallHeight / textureSize
+				);
+			}
+		);
+		const wallMaterialHorizontal = new THREE.MeshStandardMaterial({
+			map: wallTextureHorizontal,
 		});
+
 		const wallGeometry = new THREE.BoxGeometry(
 			boardSize.x,
 			wallWidth,
 			wallDepth
 		);
 
-		const topWall = new THREE.Mesh(wallGeometry, wallMaterial);
+		const topWall = new THREE.Mesh(wallGeometry, wallMaterialHorizontal);
 		topWall.position.set(0, boardSize.y / 2 + wallWidth / 2, 0);
 		this.#threeJSBoard.add(topWall);
 
-		const bottomWall = new THREE.Mesh(wallGeometry, wallMaterial);
+		const bottomWall = new THREE.Mesh(wallGeometry, wallMaterialHorizontal);
 		bottomWall.position.set(0, -boardSize.y / 2 - wallWidth / 2, 0);
 		this.#threeJSBoard.add(bottomWall);
 
@@ -93,14 +106,32 @@ export class PongBoard {
 			wallHeight,
 			wallDepth
 		);
-		this.#goal = new THREE.Mesh(goalGeometry, wallMaterial);
+
+		const goalTexture = textureLoader.load(
+			"/assets/textures/floor.png",
+			(texture) => {
+				texture.wrapS = THREE.RepeatWrapping;
+				texture.wrapT = THREE.RepeatWrapping;
+				const textureSize = 1;
+				const goalHeight = goalGeometry.parameters.height;
+				const goalWidth = goalGeometry.parameters.width;
+				texture.repeat.set(
+					goalWidth / textureSize,
+					goalHeight / textureSize
+				);
+			}
+		);
+		const goalMaterial = new THREE.MeshStandardMaterial({
+			map: goalTexture,
+		});
+		this.#goal = new THREE.Mesh(goalGeometry, goalMaterial);
 		let sign = this.#side === 0 ? -1 : 1;
 		this.#goal.position.set(sign * (boardSize.x / 2 + wallWidth / 2), 0, 0);
 		this.#threeJSBoard.add(this.#goal);
 	}
 
 	initLight() {
-		const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 		this.#threeJSBoard.add(ambientLight);
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
