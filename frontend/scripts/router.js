@@ -6,7 +6,7 @@ window.APP_CONFIG = {
 	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
 	mediaUrl: `http://${window.location.host}:8000`,
 	backendUrl: `https://${window.location.host}`,
-	pointsToWinPongMatch: 5,
+	pointsToWinPongMatch: 3,
 };
 const routes = {
 	// PUBLIC SCREENS
@@ -49,12 +49,19 @@ const routes = {
 		protected: true,
 		title: "Pong | My Dashboard",
 	},
-	"/play/local": {
+	"/play/single-player": {
 		layout: "main",
 		component: "local-game-page",
 		path: "../pages/local-game/LocalGamePage.js",
 		protected: true,
-		title: "Pong | Local Game",
+		title: "Pong | Single Player Game",
+	},
+	"/play/two-player": {
+		layout: "main",
+		component: "local-game-page",
+		path: "../pages/local-game/LocalGamePage.js",
+		protected: true,
+		title: "Pong | Local Two Player Game",
 	},
 	"/play/remote": {
 		layout: "main",
@@ -93,8 +100,6 @@ const routes = {
 	},
 };
 
-let previouspath;
-
 const layouts = {
 	main: {
 		component: "main-layout",
@@ -127,25 +132,6 @@ const handleLocation = async () => {
 	} else if (!isProtected && authenticated && route != routes[404]) {
 		route = routes["/home"];
 	}
-	// else if (previouspath && previouspath.startsWith("/play/remote")) {
-	// 	try {
-	// 		const { status, success, data } = await removeMatchMaking();
-	// 		closeWebSocket();
-	// 		if (success) {
-	// 			console.log("Successfully removed from matchmaking queue:", data);
-	// 		} else {
-	// 			console.warn("Failed to remove from matchmaking queue. Status:", status);
-	// 		}
-	// 		if (window.timeoutID) {
-	// 			console.log("CLEARED TIMEOUT")
-	// 			clearTimeout(window.timeoutID);
-	// 			window.timeoutID = null; // Reset the global variable
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Error while removing from matchmaking queue:", error);
-	// 	}
-	// }
-	// previouspath=path;
 	const layout = layouts[route.layout];
 	loadRoute(route, layout);
 };
