@@ -45,3 +45,6 @@ createsuperuser:
 
 shell:
 	ENV=dev $(PYTHON_ENV) backend/manage.py shell
+
+restart: docker-down
+	HOST_IP=$(HOST_IP) docker compose up

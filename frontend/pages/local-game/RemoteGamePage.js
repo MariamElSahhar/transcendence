@@ -107,7 +107,7 @@ export class RemoteGamePage extends Component {
 		else if(data["keytype"] == "keyup")
 			this.engine.keyHookHandler.handleKeyRelease(event)
 	   }
-	   else if(data["message"] == "Move ball")
+	   else if(data["message"] == "Move ball" )
 			this.engine.scene.match.ball.setMovement(data["position"])
 	   else if(data["message"] == "Update positions")
 	   {
@@ -193,7 +193,7 @@ player_left()
 
 
 		initializeWebSocket(
-			`ws://${window.location.host}:8000/ws/game/`,
+			`/ws/game/`,
 			this.onWebSocketOpen.bind(this),
 			this.onWebSocketMessage.bind(this),
 			this.onWebSocketClose.bind(this),
@@ -374,6 +374,15 @@ this.postRender();
 		}
 
 			async waitForOpponent() {
+				// try {
+				// 	let response = await fetch("https://api.ipify.org?format=json");
+				// 	let data = await response.json();
+				// 	console.log("Client IP:", data);
+				// 	// return data.ip;
+				// } catch (error) {
+				// 	console.error("Error getting client IP:", error);
+				// 	// return null;
+				// }
 				this.timeoutID = this.setTrackedTimeout(() => {
 					const stat = document.getElementById("statusmsg");
 					const searchBox = document.getElementById("searchBox");

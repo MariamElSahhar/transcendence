@@ -181,18 +181,20 @@ class Paddle extends PhysicalObject {
       const normalizedMovement = this.intersection.clone()
         .sub(movementReference)
         .normalize();
-
-      ball.movement = normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration);
+        // console.log()
+        if(_match.gameType == "remote" && _match.isHost)
+        {
+          sendWebSocketMessage({ type: "ballPosition", position:normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration), gameSession: _match.engine.gameSession });
+        }
+        ball.movement.x=0;
+        ball.movement.y=0;
+      // ball.movement = normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration);
       newTravelVector = normalizedMovement.multiplyScalar(newTravelVector.length());
       }
       else {
-        ball.setMovementY(ball.movement.y * -1);
+        // ball.setMovementY(ball.movement.y * -1);
         newTravelVector.y *= -1;
       }
-    if(_match.gameType == "remote" && _match.isHost)
-    {
-      sendWebSocketMessage({ type: "ballPosition", position:ball.movement, gameSession: _match.engine.gameSession });
-    }
 
     return new HandlePaddleEdge(
       this.intersection,
