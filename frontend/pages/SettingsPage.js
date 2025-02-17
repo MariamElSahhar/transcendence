@@ -42,12 +42,12 @@ export class SettingsPage extends Component {
 		const { success, data } = await getDefaultAvatars();
 		if (success) {
 			this.avatars = [
-				window.APP_CONFIG.backendUrl + data.default_avatars[0] + "/",
-				window.APP_CONFIG.backendUrl + data.default_avatars[1] + "/",
-				window.APP_CONFIG.backendUrl + data.default_avatars[2] + "/",
-				window.APP_CONFIG.backendUrl + data.default_avatars[3] + "/",
-				window.APP_CONFIG.backendUrl + data.default_avatars[4] + "/",
-				window.APP_CONFIG.backendUrl + data.default_avatars[5] + "/",
+				window.APP_CONFIG.mediaUrl + data.default_avatars[0] + "/",
+				window.APP_CONFIG.mediaUrl + data.default_avatars[1] + "/",
+				window.APP_CONFIG.mediaUrl + data.default_avatars[2] + "/",
+				window.APP_CONFIG.mediaUrl + data.default_avatars[3] + "/",
+				window.APP_CONFIG.mediaUrl + data.default_avatars[4] + "/",
+				window.APP_CONFIG.mediaUrl + data.default_avatars[5] + "/",
 			];
 		}
 		this.render();
@@ -57,19 +57,19 @@ export class SettingsPage extends Component {
 		return `
 	<div id="settings" class="d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
 		<!-- Title -->
-		<div class="form-wrapper">
+		<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
 		<!-- Profile Image and Form -->
-			<div class="position-relative m-5" style="width: 250px; height: 300px;">
-				<div id="avatar-div" class="position-relative">
+			<div id="avatar-div" class="position-relative m-5">
+				<div id="profile-div" class="position-relative">
 				<!-- Main Profile Image -->
-				<img id="avatar" src="${getUserSessionData().avatar}" alt="Unavailable"
-     			class="rounded-circle m-4" style="width: 200px; height: 200px;margin-left: 2rem !important;">
-				<label for="photoUpload" id="camera-icon" class="position-absolute top-50 start-50 translate-middle">
-					<div class="camera-icon-circle">
-						<i class="bi bi-camera"></i>
-					</div>
-				</label>
-				<input type="file" id="photoUpload" style="display: none;" accept="image/*">
+					<img id="avatar" src="${getUserSessionData().avatar}" alt="Unavailable"
+					class="rounded-circle m-4">
+					<label for="photoUpload" id="camera-icon" class="position-absolute top-50 start-50 translate-middle">
+						<div class="camera-icon-circle">
+							<i class="bi bi-camera"></i>
+						</div>
+					</label>
+					<input type="file" id="photoUpload" accept="image/*">
 				</div>
 
 				<!-- Avatar Options -->
@@ -116,7 +116,7 @@ export class SettingsPage extends Component {
 				<!-- Email Section -->
 				<div class="form-group mb-4 ">
 					<div class="input-group has-validation">
-						<span class=" input-group-text fw-bold text-secondary"><i class="bi bi-envelope-open-heart icon-glow" style="font-size: 2rem;"></i></span>
+						<span class=" input-group-text fw-bold text-secondary"><i class="bi bi-envelope-open-heart icon-glow"></i></span>
 						<input type="email" class="textbox form-control form-control-sm" id="email"
 						placeholder="New email" value="${getUserSessionData().email}"
 						autocomplete="email">
@@ -128,7 +128,7 @@ export class SettingsPage extends Component {
 				<div class="form-group mb-4 ">
 					<div class="input-group has-validation">
 						<span class=" input-group-text fw-bold text-secondary">
-						<i class="bi bi-coin icon-glow" style="font-size: 2rem;"></i></span>
+						<i class="bi bi-coin icon-glow" ></i></span>
 						<input type="text" class="textbox form-control" id="username"
 							placeholder="New username" value="${getUserSessionData().username}"
 							autocomplete="username">
@@ -145,7 +145,7 @@ export class SettingsPage extends Component {
 				<div class="form-group mb-4 ">
 					<div class="input-group has-validation">
 					<span class=" input-group-text fw-bold text-secondary">NEW PASSWORD</span>
-						<input type="password" class="textbox form-control" id="password" placeholder="******">
+						<input type="password" class="textbox form-control" id="currentPassword" autocomplete="new-password" placeholder="******">
 
 						<div id="password-feedback" class="invalid-feedback">
 						</div>
@@ -226,15 +226,22 @@ export class SettingsPage extends Component {
 	style() {
 		return `
 		<style>
-		body {
-			background-image: url("${window.APP_CONFIG.backendUrl}/media/images/bg.gif");
+
+		#photoUpload
+		{
+			display: none;
+		}
+
+		#avatar-div{
+			width: 250px; height: 300px;
 		}
 
 		.icon-glow {
+		font-size: 2rem;
 		text-shadow: 0 0 8px skyblue
 		}
 
-		#avatar-div
+		#profile-div
 		{
 		position:relative;
 		z-index:10;
@@ -252,9 +259,11 @@ export class SettingsPage extends Component {
 			top: 100%;
 		}
 
-
-		#settings {
-		background-color: rgba(255, 255, 255, 0.8);
+		#avatar
+		{
+			width: 200px;
+			height: 200px;
+			margin-left: 2rem !important;
 		}
 
 		.textbox
@@ -357,7 +366,7 @@ export class SettingsPage extends Component {
 			this.#emailHandler
 		);
 
-		this.password = this.querySelector("#password");
+		this.password = this.querySelector("#currentPassword");
 		this.passwordFeeback = this.querySelector("#password-feedback");
 		super.addComponentEventListener(
 			this.password,
@@ -506,6 +515,10 @@ export class SettingsPage extends Component {
 		if (this.username.value === this.initialUser) {
 			this.username.classList.remove("is-invalid", "is-valid");
 			this.usernameFeedback.innerHTML = "";
+			if(this.vars.username)
+			{
+				delete this.vars.username
+			}
 			this.usernameDiff = false;
 			this.validUsername = true;
 			this.#saveEnabler();
@@ -533,6 +546,10 @@ export class SettingsPage extends Component {
 		clearTimeout(this.emailTimeout);
 		if (this.email.value === this.initialEmail) {
 			this.email.classList.remove("is-invalid", "is-valid");
+			if(this.vars.email)
+			{
+				delete this.vars.email
+			}
 			this.emailDiff = false;
 			this.validEmail = true;
 			this.#saveEnabler();
@@ -544,6 +561,7 @@ export class SettingsPage extends Component {
 				this.validEmail = true;
 				this.email.classList.remove("is-invalid");
 				this.email.classList.add("is-valid");
+
 				this.emailDiff = true;
 				this.validEmail = true;
 				this.#saveEnabler();
@@ -739,7 +757,7 @@ export class SettingsPage extends Component {
 				getUserSessionData().userid,
 				this.vars
 			);
-
+			console.log(this.vars)
 			if (!success) {
 				if (error.username) {
 					this.username.classList.remove("is-valid");
