@@ -152,10 +152,14 @@ export class PongBoard {
 		this.#playerNameSprite = this.createTextSprite(
 			playerName,
 			nameColor,
-			90
+			70
 		);
 
-		this.#playerNameSprite.position.set(0, boardSize.y / 2 + 3, 1.0);
+		this.#playerNameSprite.position.set(
+			-boardSize.x / 2,
+			boardSize.y / 2 + 3,
+			1.0
+		);
 		this.#threeJSBoard.add(this.#playerNameSprite);
 	}
 
@@ -179,7 +183,7 @@ export class PongBoard {
 
 		context.fillStyle = color;
 		context.font = `bold ${adjustedFontSize}px Verdana`;
-		context.textAlign = "center";
+		context.textAlign = "left";
 		context.textBaseline = "middle";
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
