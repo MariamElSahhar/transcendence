@@ -36,5 +36,5 @@ types-PyYAML==6.0.12.20240917
 typing_extensions==4.12.2
 uritemplate==4.1.1
 django-oauth-toolkit==3.0.1
-channels-redis==4.2.1
-redis==5.2.1
+# channels-redis==4.2.1
+# redis==5.2.1
