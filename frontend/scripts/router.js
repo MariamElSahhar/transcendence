@@ -6,7 +6,7 @@ window.APP_CONFIG = {
 	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
 	mediaUrl: `http://${window.location.host}:8000`,
 	backendUrl: `https://${window.location.host}`,
-	pointsToWinPongMatch: 3,
+	pointsToWinPongMatch: 1,
 };
 const routes = {
 	// PUBLIC SCREENS

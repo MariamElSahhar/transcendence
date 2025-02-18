@@ -101,8 +101,7 @@ export class LocalGamePage extends Component {
 						this.playerNames
 					);
 					this.engine.createScene();
-					this.renderEndGameCard();
-					// this.renderGameInfoCard();
+					this.renderGameInfoCard();
 				} else {
 					console.error(
 						"WebGL not supported:",
@@ -179,11 +178,11 @@ export class LocalGamePage extends Component {
             <h3 class="card-subtitle mb-2">${winnerName} Wins!</h3>
             <div class="d-flex w-100 gap-3">
               <div class="w-100">
-                <h4 class="text-truncate text-end">${playerName}</h4>
+                <p class="text-truncate text-end mb-0">${playerName}</p>
                 <p class="display-6 text-end">${playerScore}</p>
               </div>
               <div class="w-100">
-                <h4 class="text-truncate text-start">${opponentName}</h4>
+                <p class="text-truncate text-start mb-0">${opponentName}</p>
                 <p class="display-6 text-start">${opponentScore}</p>
               </div>
             </div>

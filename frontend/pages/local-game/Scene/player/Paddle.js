@@ -1,8 +1,8 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { HandlePaddleEdge } from "../HandlePaddleEdge.js";
 
-const RIGHT_PADDLE_COLOR = 0xe52521;
-const LEFT_PADDLE_COLOR = 0x43b047;
+const LEFT_PADDLE_COLOR = 0xe52521;
+const RIGHT_PADDLE_COLOR = 0x43b047;
 
 export class Paddle {
 	#threeJSGroup = new THREE.Group();
