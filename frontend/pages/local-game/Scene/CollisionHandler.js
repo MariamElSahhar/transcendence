@@ -192,6 +192,12 @@ class Paddle extends PhysicalObject {
       newTravelVector = normalizedMovement.multiplyScalar(newTravelVector.length());
       }
       else {
+        let move= ball.movement;
+        move.y=ball.movement.y * -1
+        if(_match.gameType == "remote" && _match.isHost)
+        {
+          sendWebSocketMessage({ type: "ballPosition", position:move, gameSession: _match.engine.gameSession });
+        }
         // ball.setMovementY(ball.movement.y * -1);
         newTravelVector.y *= -1;
       }
