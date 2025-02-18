@@ -101,6 +101,7 @@ export class LocalGamePage extends Component {
 						this.playerNames
 					);
 					this.engine.createScene();
+					this.renderEndGameCard();
 					// this.renderGameInfoCard();
 				} else {
 					console.error(
@@ -165,30 +166,45 @@ export class LocalGamePage extends Component {
 	renderEndGameCard(playerScore, opponentScore) {
 		const playerName = this.playerNames[0];
 		const opponentName = this.playerNames[1];
+		const winnerIsPlayer = playerScore > opponentScore;
+		const winnerName = winnerIsPlayer ? playerName : opponentName;
 
 		this.renderOverlay();
 		this.overlay.innerHTML = `
-        <div id="end-game-card" class="card text-center border-warning text-dark bg-light" style="max-width: 30rem;">
-
+        <div id="end-game-card" class="card">
           <div class="card-body">
-		  <h1 class="card-title text-success">Game Over</h1>
-            <h5 class="card-subtitle mb-3 text-muted">Final Score</h5>
-			<img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-
-            <div class="d-flex justify-content-center align-items-center mb-4">
-              <div class="text-center me-3" style="width:120px">
-                <h4 class="fw-bold text-truncate text-primary text-center" style="max-width: 150px;">${playerName}</h4>
-                <p class="display-6 fw-bold text-center" style="max-width: 150px;">${playerScore}</p>
+		  	<img class="my-2" id="winner-sprite" src="/assets/sprites/${
+				winnerIsPlayer ? "mario" : "luigi"
+			}.png"/>
+            <h3 class="card-subtitle mb-2">${winnerName} Wins!</h3>
+            <div class="d-flex w-100 gap-3">
+              <div class="w-100">
+                <h4 class="text-truncate text-end">${playerName}</h4>
+                <p class="display-6 text-end">${playerScore}</p>
               </div>
-              <div class="text-center ms-3" style="width:120px">
-                <h4 class="fw-bold text-truncate text-danger text-center" style="max-width: 150px;">${opponentName}</h4>
-                <p class="display-6 fw-bold text-center" style="max-width: 150px;">${opponentScore}</p>
+              <div class="w-100">
+                <h4 class="text-truncate text-start">${opponentName}</h4>
+                <p class="display-6 text-start">${opponentScore}</p>
               </div>
             </div>
-            <button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+			<!-- CTAs -->
+			<div class="d-flex w-100 gap-2">
+            	<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
+            	<button class="btn btn-primary w-100" onclick="window.redirect('/play/single-player')">Play Again</button>
+          	</div>
           </div>
         </div>
       `;
+	}
+
+	style() {
+		return `
+		<style>
+			#winner-sprite {
+				height: 56px;
+			}
+		</style>
+		`;
 	}
 
 	renderOverlay() {

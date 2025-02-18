@@ -17,13 +17,6 @@ body {
 	box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
 }
 
-/* Button default width
-button {
-	max-width: 400px;
-	padding: 2px;
-	background-color: var(--brick-500);
-} */
-
 /* Smaller input boxes */
 input.form-control {
 	margin: 0 auto;
@@ -55,7 +48,6 @@ input.form-control {
 		p {
 			font-size: 20px;
 			margin-bottom: 15px;
-			text-align: center;
 		}
 	}
 
