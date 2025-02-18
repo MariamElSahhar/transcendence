@@ -182,7 +182,7 @@ class Paddle extends PhysicalObject {
         .sub(movementReference)
         .normalize();
         // console.log()
-        if(_match.gameType == "remote" && _match.isHost)
+        if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0 && _match.isHost)
         {
           sendWebSocketMessage({ type: "ballPosition", position:normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration), gameSession: _match.engine.gameSession });
         }
@@ -194,9 +194,12 @@ class Paddle extends PhysicalObject {
       else {
         let move= ball.movement;
         move.y=ball.movement.y * -1
-        if(_match.gameType == "remote" && _match.isHost)
+        if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0 && _match.isHost)
         {
           sendWebSocketMessage({ type: "ballPosition", position:move, gameSession: _match.engine.gameSession });
+        }
+        else if(_match.gameType == "remote" && ball.movement.x < 0 && _match.isHost){
+        sendWebSocketMessage({ type: "ballPosition", position:move, gameSession: _match.engine.gameSession });
         }
         // ball.setMovementY(ball.movement.y * -1);
         newTravelVector.y *= -1;
