@@ -3,6 +3,11 @@ import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 import { addLocalGame } from "../../scripts/clients/gamelog-client.js";
 import { isAuth } from "../../scripts/utils/session-manager.js";
+import {
+	renderEndGameCard,
+	renderGameInfoCard,
+	renderCountdownCard,
+} from "../local-game/Overlays.js";
 
 export class TournamentPage extends Component {
 	constructor() {
@@ -31,7 +36,6 @@ export class TournamentPage extends Component {
 	}
 
 	disconnectedCallback() {
-		console.log("TournamentPage is being disconnected. Cleaning up...");
 		if (this.engine) {
 			this.engine.cleanUp();
 			this.engine = null;
@@ -52,8 +56,8 @@ export class TournamentPage extends Component {
 						<input type="text" id="player2-name" name="player2-name" class="form-control" required placeholder="Player 2"/>
 						<input type="text" id="player3-name" name="player3-name" class="form-control" required placeholder="Player 3"/>
 						<input type="text" id="player4-name" name="player4-name" class="form-control" required placeholder="Player 4"/>
-						<div id="error-message" class="text-danger mt-2"></div>
-						<button type="submit" class="btn w-100" disabled>Start Tournament</button>
+						<div id="error-message" class="alert alert-danger d-none" role="alert"></div>
+						<button id="submit-players" type="submit" class="btn w-100" disabled>Start Tournament</button>
 					</form>
 				</div>
             </div>
@@ -63,7 +67,7 @@ export class TournamentPage extends Component {
 	postRender() {
 		this.container = this.querySelector("#container");
 		const form = this.querySelector("#player-form");
-		const submitButton = form.querySelector('button[type="submit"]');
+		const submitButton = this.querySelector("#submit-players");
 		const errorMessage = this.querySelector("#error-message");
 
 		// Enable/disable the submit button dynamically
@@ -83,7 +87,7 @@ export class TournamentPage extends Component {
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
 			errorMessage.textContent = ""; // Clear previous errors
-			errorMessage.style.display = "none";
+			errorMessage.classList.add("d-none");
 
 			// Clear previous players to avoid duplicates
 			this.players = [];
@@ -101,7 +105,7 @@ export class TournamentPage extends Component {
 
 			// Validate player names
 			if (!this.areValidNames(this.players)) {
-				errorMessage.style.display = "block";
+				errorMessage.classList.remove("d-none");
 				return; // Stop if validation fails
 			}
 
@@ -122,7 +126,7 @@ export class TournamentPage extends Component {
 		const uniquePlayers = new Set(players);
 		if (uniquePlayers.size !== players.length) {
 			errorMessage.textContent = "Player names must be unique.";
-			errorMessage.style.display = "block";
+			errorMessage.classList.remove("d-none");
 			return false;
 		}
 
@@ -142,7 +146,6 @@ export class TournamentPage extends Component {
 		];
 
 		this.querySelector("#player-setup").style.display = "none";
-		this.container.style.display = "block";
 		this.startNextMatch();
 	}
 
@@ -157,59 +160,61 @@ export class TournamentPage extends Component {
 		// console.log("Shuffled players:", this.players);
 	}
 
+	// TODO improve
 	startNextMatch() {
 		if (this.currentMatchIndex < 2) {
 			const [player1, player2] = this.matches[this.currentMatchIndex];
-			this.createStartGameCard(player1, player2);
+			this.engine = new Engine(
+				this,
+				[player1, player2],
+				(winner, score1, score2) =>
+					this.endMatch(winner, player1, player2, score1, score2)
+			);
+			const { overlay, countDownIntervalId } = renderGameInfoCard(
+				this,
+				this.container,
+				player1,
+				player2,
+				this.engine,
+				this.currentMatchIndex
+			);
+			this.overlay = overlay;
+			this.countDownIntervalId = countDownIntervalId;
 		} else if (this.currentMatchIndex === 2 && this.winners.length === 2) {
 			this.matches[2] = [this.winners[0], this.winners[1]];
 			const [finalist1, finalist2] = this.matches[2];
-			this.createStartGameCard(finalist1, finalist2);
+			this.engine = new Engine(
+				this,
+				[finalist1, finalist2],
+				(winner, score1, score2) =>
+					this.endMatch(winner, player1, player2, score1, score2)
+			);
+			const { overlay, countDownIntervalId } = renderGameInfoCard(
+				this,
+				this.container,
+				finalist1,
+				finalist1,
+				this.engine,
+				this.currentMatchIndex
+			);
+			this.overlay = overlay;
+			this.countDownIntervalId = countDownIntervalId;
 		} else {
 			this.showTournamentWinner();
 		}
-	}
-
-	createStartGameCard(player1, player2) {
-		this.createOverlay(
-			`
-            <div class="card text-center text-dark bg-light" style="width: 30rem;">
-                <div class="card-body">
-                    <h2 class="card-text mb-3">Match Start Between</h2>
-                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-                    <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
-                        <div>
-                            <h5 class="text-primary" style="font-weight:bold">Left Player</h5>
-                            <p>${player1}</p>
-                        </div>
-                        <div>
-                            <h5 class="text-danger" style="font-weight:bold">Right Player</h5>
-                            <p>${player2}</p>
-                        </div>
-                    </div>
-                    <button id="start-match-button" class="btn btn-primary">Start Match</button>
-                </div>
-            </div>
-        `,
-			() => {
-				this.startCountdown(player1, player2);
-			}
-		);
 	}
 
 	startCountdown(player1, player2) {
 		this.createOverlay(`
             <div class="card text-center text-dark bg-light" style="width: 30rem;">
                 <div class="card-body">
-
                     <h1 id="countdown-display" class="display-1 fw-bold">3</h1>
-                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
 					<p class="card-text">Get ready! The game will start soon.</p>
                 </div>
             </div>
         `);
 
-		let countdown = 3;
+		let countdown = window.APP_CONFIG.gameCountdown;
 		this.updateCountdownDisplay(countdown);
 
 		this.countDownIntervalId = setInterval(() => {
@@ -245,8 +250,6 @@ export class TournamentPage extends Component {
 		}
 
 		this.container.innerHTML = "";
-		this.container.style.display = "block";
-
 		this.engine = new Engine(this, (winner, score1, score2) =>
 			this.endMatch(winner, player1, player2, score1, score2)
 		);
@@ -277,8 +280,8 @@ export class TournamentPage extends Component {
                 <div class="card text-center bg-light text-dark" style="width: 30rem;">
                     <div class="card-body">
                         <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-                        <h3 class="fw-bold text-light"> ${winner} wins! 🏆  </h3>
-						<h3 class="fw-bold text-light"> ${loser} is eliminated! ❌ </h3>
+                        <h3> ${winner} wins! 🏆  </h3>
+						<h3> ${loser} is eliminated! ❌ </h3>
                         <button class="btn btn-primary mt-3">Next Match</button>
                     </div>
                 </div>

@@ -2,12 +2,7 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
-import {
-	renderOverlay,
-	renderEndGameCard,
-	removeOverlay,
-	renderGameInfoCard,
-} from "./Overlays.js";
+import { renderEndGameCard, renderGameInfoCard } from "./Overlays.js";
 
 export class LocalGamePage extends Component {
 	constructor() {
@@ -88,57 +83,35 @@ export class LocalGamePage extends Component {
 				const player2Name = player2NameInput.value;
 				this.playerNames.push(player2Name || "Player 2");
 
-				this.container.innerHTML = "";
-
-				if (WebGL.isWebGLAvailable()) {
-					this.engine = new Engine(
-						this,
-						this.isAIEnabled,
-						this.playerNames
-					);
-					await this.engine.createScene();
-					({ overlay, countDownIntervalId } = renderGameInfoCard(
-						this,
-						this.container,
-						this.playerNames,
-						this.engine
-					));
-				} else {
-					console.error(
-						"WebGL not supported:",
-						WebGL.getWebGLErrorMessage()
-					);
-				}
+				// TODO put in start game function
+				this.startGame();
 			});
 		} else {
 			this.playerNames.push("Computer");
-
-			this.container.innerHTML = "";
-
 			setTimeout(async () => {
-				if (WebGL.isWebGLAvailable()) {
-					this.engine = new Engine(
-						this,
-						this.isAIEnabled,
-						this.playerNames
-					);
-					await this.engine.createScene();
-					({ overlay, countDownIntervalId } = renderGameInfoCard(
-						this,
-						this.container,
-						this.playerNames,
-						this.engine
-					));
-				} else {
-					console.error(
-						"WebGL not supported:",
-						WebGL.getWebGLErrorMessage()
-					);
-				}
+				this.startGame();
 			}, 5);
 		}
-		this.overlay = overlay;
-		this.countDownIntervalId = countDownIntervalId;
+	}
+
+	async startGame() {
+		this.container.innerHTML = "";
+
+		if (WebGL.isWebGLAvailable()) {
+			this.engine = new Engine(this, this.isAIEnabled, this.playerNames);
+			await this.engine.createScene();
+			const { overlay, countDownIntervalId } = renderGameInfoCard(
+				this,
+				this.container,
+				this.playerNames[0],
+				this.playerNames[1],
+				this.engine
+			);
+			this.overlay = overlay;
+			this.countDownIntervalId = countDownIntervalId;
+		} else {
+			console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
+		}
 	}
 
 	updateScore(playerIndex) {

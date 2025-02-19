@@ -14,6 +14,7 @@ window.APP_CONFIG = {
 			? ""
 			: `https://${window.location.host}`,
 	pointsToWinPongMatch: 1,
+	gameCountdown: 3,
 };
 const routes = {
 	// PUBLIC SCREENS

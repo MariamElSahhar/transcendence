@@ -26,13 +26,29 @@ export function removeOverlay(overlay) {
 	return null;
 }
 
-export function renderGameInfoCard(component, container, playerNames, engine) {
+export function renderGameInfoCard(
+	component,
+	container,
+	player1,
+	player2,
+	engine,
+	match = undefined
+) {
 	const overlay = renderOverlay(container);
 	let countDownOverlay, countDownIntervalId;
 	overlay.innerHTML = `
 	  <div class="card text-center">
 		<div class="card-body">
-			<h2>${playerNames[0]} vs ${playerNames[1]}</h2>
+			${
+				match
+					? `<p>${
+							match < 2
+								? `Round 1 - Match ${match}`
+								: `Final Round`
+					  }</p>`
+					: ""
+			}
+			<h2>${player1} vs ${player2}</h2>
 			<button id="start-game" class="btn w-100">Go!</button>
 		</div>
 	  </div>

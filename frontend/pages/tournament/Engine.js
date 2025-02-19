@@ -9,19 +9,21 @@ export class Engine {
 	#scene;
 	#component;
 	#onMatchEndCallback;
+	playerNames;
 
-	constructor(component, onMatchEndCallback) {
-		this.gameSession=-1;
+	constructor(component, playerNames, onMatchEndCallback) {
+		this.gameSession = -1;
 		this.#component = component;
+		this.playerNames = playerNames;
 		this.#threeJS = new ThreeJSUtils(this);
 		this.#keyHookHandler = new KeyHandler(this);
 		this.#scene = new Scene();
 		this.#onMatchEndCallback = onMatchEndCallback;
 	}
 
-	async startGame(playerNames) {
-		if (!Array.isArray(playerNames) || playerNames.length < 2) {
-			console.error("Invalid player names:", playerNames);
+	async startGame() {
+		if (!Array.isArray(this.playerNames) || this.playerNames.length < 2) {
+			console.error("Invalid player names:", this.playerNames);
 			return;
 		}
 
@@ -53,7 +55,11 @@ export class Engine {
 
 		this.#scene = new Scene();
 		try {
-			await this.#scene.init(this, playerNames, this.#onMatchEndCallback);
+			await this.#scene.init(
+				this,
+				this.playerNames,
+				this.#onMatchEndCallback
+			);
 			// console.log("Scene initialized successfully.");
 
 			this.#scene.updateCamera();
