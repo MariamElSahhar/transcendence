@@ -62,7 +62,6 @@ export class Engine {
 	}
 
 	startGame() {
-		console.log("starting game!");
 		this.startListeningForKeyHooks();
 		this.gameSession = true;
 		this.scene.startGame();

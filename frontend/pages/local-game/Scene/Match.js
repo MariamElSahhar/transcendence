@@ -176,9 +176,11 @@ export class Match {
 	async endGame() {
 		this.matchIsOver = true;
 		this.ball.removeBall();
-		this.engine.renderEndGameCard(this.#points[0], this.#points[1]);
+		this.engine.component.renderEndGameCard(
+			this.#points[0],
+			this.#points[1]
+		);
 		if (!(await isAuth())) window.redirect("/");
-		console.log("sending to api");
 		if (this.gameType == "local") {
 			const { error } = await addLocalGame({
 				my_score: this.#points[0],

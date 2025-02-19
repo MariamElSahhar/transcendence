@@ -24,7 +24,6 @@ export class Engine {
 			console.error("Invalid player names:", playerNames);
 			return;
 		}
-		console.log(`Starting game with players: ${playerNames.join(" vs ")}`);
 
 		if (!this.#component || !this.#component.container) {
 			console.error("Invalid component or container.");

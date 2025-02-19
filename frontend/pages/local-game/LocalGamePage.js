@@ -2,7 +2,12 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
-import { renderOverlay, renderEndGameCard } from "./Overlays.js";
+import {
+	renderOverlay,
+	renderEndGameCard,
+	removeOverlay,
+	renderGameInfoCard,
+} from "./Overlays.js";
 
 export class LocalGamePage extends Component {
 	constructor() {
@@ -18,10 +23,6 @@ export class LocalGamePage extends Component {
 	connectedCallback() {
 		this.playerNames.push(getUserSessionData().username || "player 1");
 		super.connectedCallback();
-	}
-
-	renderEndGameCard(playerScore, opponentScore) {
-		renderEndGameCard(this.overlay, playerScore, opponentScore);
 	}
 
 	disconnectedCallback() {
@@ -57,8 +58,19 @@ export class LocalGamePage extends Component {
         `;
 	}
 
+	style() {
+		return `
+		<style>
+			#winner-sprite {
+				height: 56px;
+			}
+		</style>
+		`;
+	}
+
 	postRender() {
 		this.container = this.querySelector("#container");
+		let overlay, countDownIntervalId;
 		if (!this.isAIEnabled) {
 			const startGameButton = this.querySelector("#submit-players");
 			const player2NameInput = this.querySelector("#player2-name");
@@ -85,7 +97,12 @@ export class LocalGamePage extends Component {
 						this.playerNames
 					);
 					this.engine.createScene();
-					this.renderGameInfoCard();
+					({ overlay, countDownIntervalId } = renderGameInfoCard(
+						this,
+						this.container,
+						this.playerNames,
+						this.engine
+					));
 				} else {
 					console.error(
 						"WebGL not supported:",
@@ -106,7 +123,12 @@ export class LocalGamePage extends Component {
 						this.playerNames
 					);
 					this.engine.createScene();
-					this.renderGameInfoCard();
+					({ overlay, countDownIntervalId } = renderGameInfoCard(
+						this,
+						this.container,
+						this.playerNames,
+						this.engine
+					));
 				} else {
 					console.error(
 						"WebGL not supported:",
@@ -115,73 +137,21 @@ export class LocalGamePage extends Component {
 				}
 			}, 5);
 		}
+		this.overlay = overlay;
+		this.countDownIntervalId = countDownIntervalId;
 	}
 
 	updateScore(playerIndex) {
 		if (playerIndex < this.scores.length) this.scores[playerIndex] += 1;
 	}
 
-	startCountdown() {
-		const startDateInSeconds = Date.now() / 1000 + 3;
-		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
-		this.overlay.querySelector("#countdown").textContent = secondsLeft;
-
-		this.countDownIntervalId = setInterval(() => {
-			secondsLeft -= 1;
-			this.overlay.querySelector("#countdown").textContent = secondsLeft;
-
-			if (secondsLeft <= 0) {
-				clearInterval(this.countDownIntervalId);
-				this.countDownIntervalId = null;
-				this.engine.startGame();
-				this.removeOverlay();
-			}
-		}, 1000);
-	}
-
-	renderGameInfoCard() {
-		this.overlay = renderOverlay(this.container);
-		this.overlay.innerHTML = `
-          <div class="card text-center">
-            <div class="card-body">
-				<h2>${this.playerNames[0]} vs ${this.playerNames[1]}</h2>
-				<button id="start-game" class="btn w-100">Go!</button>
-            </div>
-          </div>
-        `;
-		super.addComponentEventListener(
-			this.querySelector("#start-game"),
-			"click",
-			() => {
-				this.removeOverlay();
-				this.renderCountdownCard();
-			}
+	renderEndGameCard(playerScore, opponentScore) {
+		this.overlay = renderEndGameCard(
+			this.container,
+			this.playerNames,
+			playerScore,
+			opponentScore
 		);
-	}
-
-	renderCountdownCard() {
-		this.overlay = renderOverlay(this.container);
-		this.overlay.innerHTML = `
-			<h1 id="countdown" class="display-1 fw-bold">5</h1>
-        `;
-		this.startCountdown();
-	}
-
-	style() {
-		return `
-		<style>
-			#winner-sprite {
-				height: 56px;
-			}
-		</style>
-		`;
-	}
-
-	removeOverlay() {
-		if (this.overlay) {
-			this.overlay.remove();
-			this.overlay = null;
-		}
 	}
 }
 
