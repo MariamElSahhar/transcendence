@@ -1,5 +1,6 @@
 from uuid import uuid4
 import os
+from urllib.parse import urlparse
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
@@ -80,7 +81,11 @@ def avatar_view(request, user_id):
             if avatar_data.find(";base64,") == -1:
                 if not  user.avatar.name.startswith("default_avatar/"):
                     user.avatar.delete()
-                user.avatar.name =  avatar_data.replace('http://127.0.0.1:8000/media/', '').replace('', '')
+                print(avatar_data)
+                parsed_url = urlparse(avatar_data)
+                relative_path = parsed_url.path.lstrip('/')
+                print(relative_path)
+                user.avatar.name = relative_path.replace("media/","")
             else:
                 file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]
                 ext = file_format.split("/")[-1]
