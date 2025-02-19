@@ -444,7 +444,7 @@ export class RemoteGamePage extends Component {
 			this.playerSide,
 			this.gameID
 		);
-		this.engine.createScene();
+		await this.engine.createScene();
 		this.engine.startGame();
 		this.removeOverlay();
 	}

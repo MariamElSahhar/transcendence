@@ -44,44 +44,24 @@ export class TournamentPage extends Component {
 
 	render() {
 		return `
-            <div id="player-setup" class="p-3 card shadow p-5 mx-auto border-warning rounded bg-light " style="max-width: 400px; margin: 100px auto 0;">
-                <div class="text-center p-3 rounded mb-4 bg-danger text-warning  border-white">
-					<h3 class="fw-bold  m-0">Setup Tournament</h3>
+			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
+				<div id="player-setup" class="p-3 card shadow p-5 bg-light">
+					<h3 class="w-100 text-center">Setup Tournament</h3>
+					<form id="player-form" class="d-flex w-100 flex-column gap-2">
+						<input type="text" id="player1-name" name="player1-name" class="form-control" value="${this.me.username}" disabled />
+						<input type="text" id="player2-name" name="player2-name" class="form-control" required placeholder="Player 2"/>
+						<input type="text" id="player3-name" name="player3-name" class="form-control" required placeholder="Player 3"/>
+						<input type="text" id="player4-name" name="player4-name" class="form-control" required placeholder="Player 4"/>
+						<div id="error-message" class="text-danger mt-2"></div>
+						<button type="submit" class="btn w-100" disabled>Start Tournament</button>
+					</form>
 				</div>
-                <form id="player-form">
-                    <div class="mb-3">
-                        <label for="player1-name" class="form-label">Registered Player:</label>
-                        <input type="text" id="player1-name" name="player1-name" class="form-control border border-secondary text-dark" value="${
-							this.me.username
-						}" disabled />
-                    </div>
-                    ${this.renderPlayerInputs()}
-                    <div id="error-message" class="text-danger mt-2"></div>
-                    <button type="submit" class="btn btn-warning w-100 fw-bold border border-primary text-dark" disabled>Start Tournament</button>
-                </form>
             </div>
-            <div id="container" class="m-2 position-relative" style="display:none;"></div>
         `;
 	}
 
 	postRender() {
 		this.container = this.querySelector("#container");
-		this.setupPlayerForm();
-	}
-
-	renderPlayerInputs() {
-		let inputs = "";
-		for (let i = 2; i <= 4; i++) {
-			inputs += `
-                <div class="mb-3">
-                    <label for="player${i}-name" class="form-label">Player ${i} Name:</label>
-                    <input type="text" id="player${i}-name" name="player${i}-name" class="form-control border border-secondary text-dark" required />
-                </div>`;
-		}
-		return inputs;
-	}
-
-	setupPlayerForm() {
 		const form = this.querySelector("#player-form");
 		const submitButton = form.querySelector('button[type="submit"]');
 		const errorMessage = this.querySelector("#error-message");
@@ -94,12 +74,8 @@ export class TournamentPage extends Component {
 
 			if (allFilled) {
 				submitButton.removeAttribute("disabled");
-				errorMessage.textContent = "";
-				errorMessage.style.display = "none";
 			} else {
 				submitButton.setAttribute("disabled", "");
-				errorMessage.textContent = "All player names must be filled.";
-				errorMessage.style.display = "block";
 			}
 		});
 
@@ -141,13 +117,6 @@ export class TournamentPage extends Component {
 
 	areValidNames(players) {
 		const errorMessage = this.querySelector("#error-message");
-
-		// Check for empty names
-		if (players.some((player) => !player)) {
-			errorMessage.textContent = "All player names must be filled.";
-			errorMessage.style.display = "block";
-			return false;
-		}
 
 		// Check for duplicate names
 		const uniquePlayers = new Set(players);

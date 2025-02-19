@@ -42,15 +42,15 @@ export class LocalGamePage extends Component {
 			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
 				${
 					this.isAIEnabled
-						? `<p>hey</p>`
+						? ""
 						: `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
 							<h2 class="w-100 text-center">Setup Players</h2>
-							<form id="player-form"  class="d-flex flex-column gap-2">
+							<form id="player-form" class="d-flex flex-column gap-2">
 								<input type="text" class="form-control w-100 text-dark" placeholder="${
 									getUserSessionData().username
 								}" disabled/>
 								<input type="text" id="player2-name" name="player2-name" class="form-control w-100 text-dark" placeholder="Player 2 display name"/>
-								<button id="submit-players" type="submit" class="btn w-100"  disabled>Start Game</button>
+								<button id="submit-players" type="submit" class="btn w-100" disabled>Start Game</button>
 							</form>
 						</div>`
 				}
@@ -83,7 +83,7 @@ export class LocalGamePage extends Component {
 				}
 			});
 
-			startGameButton.addEventListener("click", (event) => {
+			startGameButton.addEventListener("click", async (event) => {
 				event.preventDefault();
 				const player2Name = player2NameInput.value;
 				this.playerNames.push(player2Name || "Player 2");
@@ -96,7 +96,7 @@ export class LocalGamePage extends Component {
 						this.isAIEnabled,
 						this.playerNames
 					);
-					this.engine.createScene();
+					await this.engine.createScene();
 					({ overlay, countDownIntervalId } = renderGameInfoCard(
 						this,
 						this.container,
@@ -115,14 +115,14 @@ export class LocalGamePage extends Component {
 
 			this.container.innerHTML = "";
 
-			setTimeout(() => {
+			setTimeout(async () => {
 				if (WebGL.isWebGLAvailable()) {
 					this.engine = new Engine(
 						this,
 						this.isAIEnabled,
 						this.playerNames
 					);
-					this.engine.createScene();
+					await this.engine.createScene();
 					({ overlay, countDownIntervalId } = renderGameInfoCard(
 						this,
 						this.container,
