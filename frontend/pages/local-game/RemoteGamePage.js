@@ -2,7 +2,6 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
-// import { matchMaker } from "../../scripts/clients/user-clients.js";
 import {
 	matchMaker,
 	removeMatchMaking,
@@ -12,7 +11,13 @@ import {
 	sendWebSocketMessage,
 	closeWebSocket,
 } from "../../scripts/utils/websocket-manager.js";
-// import { KeyHandler } from "../game-utils/KeyHandler.js";
+import {
+	renderOverlay,
+	renderEndGameCard,
+	removeOverlay,
+	renderGameInfoCard,
+} from "./Overlays.js";
+
 export class RemoteGamePage extends Component {
 	constructor() {
 		super();
@@ -35,7 +40,7 @@ export class RemoteGamePage extends Component {
 		this.activeTimeouts.add(timeoutID); // Add timeout ID to the set
 		return timeoutID;
 	}
-	
+
 	updateLoaders(data) {
 		clearTimeout(this.timeoutID);
 		const status = document.getElementById("statusmsg");
@@ -439,7 +444,8 @@ export class RemoteGamePage extends Component {
 			this.playerSide,
 			this.gameID
 		);
-		await this.engine.startGame();
+		this.engine.createScene();
+		this.engine.startGame();
 		this.removeOverlay();
 	}
 
@@ -496,7 +502,6 @@ export class RemoteGamePage extends Component {
 					</div>
 					`;
 		this.container.appendChild(this.overlay);
-		console.log(this.overlay);
 	}
 
 	updateOverlayCountdown(secondsLeft) {
@@ -511,6 +516,15 @@ export class RemoteGamePage extends Component {
 			this.overlay.remove();
 			this.overlay = null;
 		}
+	}
+
+	renderEndGameCard(playerScore, opponentScore) {
+		this.overlay = renderEndGameCard(
+			this.container,
+			this.playerNames,
+			playerScore,
+			opponentScore
+		);
 	}
 
 	addEndGameCard(playerScore, opponentScore) {
