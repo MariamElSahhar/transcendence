@@ -2,10 +2,8 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
-// import { matchMaker } from "../../scripts/clients/user-clients.js";
 import { matchMaker, removeMatchMaking } from "../../scripts/clients/gamelog-client.js";
 import { initializeWebSocket, sendWebSocketMessage, closeWebSocket } from '../../scripts/utils/websocket-manager.js';
-// import { KeyHandler } from "../game-utils/KeyHandler.js";
 export class RemoteGamePage extends Component {
 	constructor() {
 		super();
@@ -77,23 +75,25 @@ export class RemoteGamePage extends Component {
    match_found(data)
    {
 		this.playerSide = data["position"]
-				this.gameID=data["game_session_id"]
-			this.playerSet = true;
-			this.updateLoaders(data);
-			this.timeoutID = this.setTrackedTimeout( () => {
-				if (WebGL.isWebGLAvailable()) {
-					document.getElementById("searchdiv").classList.remove("d-flex");
-					document.getElementById("searchdiv").classList.add("d-none");
-					this.container.style.display = "block";
-					if(!this.playerLeft)
-					{
-						sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
-						this.createOverlay();
-					}
-				} else {
-					console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
+		this.gameID=data["game_session_id"]
+		this.playerSide = data["position"]
+		this.playerSet = true;
+		this.sameSystem= data["sameSystem"];
+		this.updateLoaders(data);
+		this.timeoutID = this.setTrackedTimeout( () => {
+			if (WebGL.isWebGLAvailable()) {
+				document.getElementById("searchdiv").classList.remove("d-flex");
+				document.getElementById("searchdiv").classList.add("d-none");
+				this.container.style.display = "block";
+				if(!this.playerLeft)
+				{
+					sendWebSocketMessage({ action: "ready" , gameSession:this.gameID});
+					this.createOverlay();
 				}
-			},3000);
+			} else {
+				console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
+			}
+		},3000);
    }
 
 	onWebSocketMessage(data) {
@@ -290,7 +290,6 @@ player_left()
 			}
 			}
 		</style>
-
 <div class="d-flex justify-content-center align-items-center" id="searchdiv" style="height: 75vh;">
 	<div id="searchBox" class="p-4 border rounded bg-light text-center shadow position-relative d-flex flex-column justify-content-center" style="width: 500px; height: 250px;">
 		<!-- Close button -->
@@ -313,7 +312,7 @@ player_left()
 `;
 this.container = this.querySelector("#container");
 this.postRender();
-	}
+}
 
 	async disconnectedCallback()
 	{
@@ -374,15 +373,6 @@ this.postRender();
 		}
 
 			async waitForOpponent() {
-				// try {
-				// 	let response = await fetch("https://api.ipify.org?format=json");
-				// 	let data = await response.json();
-				// 	console.log("Client IP:", data);
-				// 	// return data.ip;
-				// } catch (error) {
-				// 	console.error("Error getting client IP:", error);
-				// 	// return null;
-				// }
 				this.timeoutID = this.setTrackedTimeout(() => {
 					const stat = document.getElementById("statusmsg");
 					const searchBox = document.getElementById("searchBox");
@@ -391,7 +381,9 @@ this.postRender();
 					searchBox.querySelector(".circle").style.display = "none";
 					this.removeFromMatchmaking();
 				}, 180000);
-				const {status, success, data } = await matchMaker();
+				const {status, success, data } = await matchMaker(
+					this.getCanvasFingerprint(),
+				);
 				if(status == 400)
 				{
 					const status = document.getElementById("statusmsg");
@@ -403,7 +395,7 @@ this.postRender();
 			}
 
 			async startGame() {
-				this.engine = new Engine(this, this.isAIEnabled, this.playerNames, this.playerSide,this.gameID);
+				this.engine = new Engine(this, this.isAIEnabled, this.playerNames, this.playerSide,this.gameID, this.sameSystem);
 				await this.engine.startGame();
 				this.removeOverlay();
 			}
@@ -507,6 +499,16 @@ this.postRender();
 					`;
 				}
 
+				getCanvasFingerprint() {
+					const canvas = document.createElement("canvas");
+					const ctx = canvas.getContext("2d");
+					ctx.textBaseline = "top";
+					ctx.font = "14px Arial";
+					ctx.fillText("Unique Canvas Fingerprint", 2, 2);
+					return canvas.toDataURL();
+				}
 		}
+
+
 
 customElements.define("remote-game-page", RemoteGamePage);
