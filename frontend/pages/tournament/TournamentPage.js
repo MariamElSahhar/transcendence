@@ -44,6 +44,7 @@ export class TournamentPage extends Component {
 			clearInterval(this.countDownIntervalId);
 			this.countDownIntervalId = null;
 		}
+		super.disconnectedCallback();
 	}
 
 	render() {
@@ -157,12 +158,14 @@ export class TournamentPage extends Component {
 				this.players[i],
 			];
 		}
-		// console.log("Shuffled players:", this.players);
 	}
 
 	// TODO improve
 	startNextMatch() {
-		if (this.currentMatchIndex < 2) {
+		if (this.currentMatchIndex <= 2) {
+			if (this.currentMatchIndex === 2 && this.winners.length === 2) {
+				this.matches[2] = [this.winners[0], this.winners[1]];
+			}
 			const [player1, player2] = this.matches[this.currentMatchIndex];
 			this.engine = new Engine(
 				this,
@@ -180,70 +183,12 @@ export class TournamentPage extends Component {
 			);
 			this.overlay = overlay;
 			this.countDownIntervalId = countDownIntervalId;
-		} else if (this.currentMatchIndex === 2 && this.winners.length === 2) {
-			this.matches[2] = [this.winners[0], this.winners[1]];
-			const [finalist1, finalist2] = this.matches[2];
-			this.engine = new Engine(
-				this,
-				[finalist1, finalist2],
-				(winner, score1, score2) =>
-					this.endMatch(winner, player1, player2, score1, score2)
-			);
-			const { overlay, countDownIntervalId } = renderGameInfoCard(
-				this,
-				this.container,
-				finalist1,
-				finalist1,
-				this.engine,
-				this.currentMatchIndex
-			);
-			this.overlay = overlay;
-			this.countDownIntervalId = countDownIntervalId;
 		} else {
 			this.showTournamentWinner();
 		}
 	}
 
-	startCountdown(player1, player2) {
-		this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 30rem;">
-                <div class="card-body">
-                    <h1 id="countdown-display" class="display-1 fw-bold">3</h1>
-					<p class="card-text">Get ready! The game will start soon.</p>
-                </div>
-            </div>
-        `);
-
-		let countdown = window.APP_CONFIG.gameCountdown;
-		this.updateCountdownDisplay(countdown);
-
-		this.countDownIntervalId = setInterval(() => {
-			countdown -= 1;
-			this.updateCountdownDisplay(countdown);
-
-			if (countdown <= 0) {
-				clearInterval(this.countDownIntervalId);
-				this.countDownIntervalId = null;
-				this.removeOverlay();
-				this.startGame(player1, player2);
-			}
-		}, 1000);
-	}
-
-	updateCountdownDisplay(secondsLeft) {
-		const countdownElement =
-			this.overlay.querySelector("#countdown-display");
-		if (countdownElement) {
-			countdownElement.textContent = secondsLeft;
-		}
-	}
-
 	startGame(player1, player2) {
-		if (!player1 || !player2) {
-			console.error("Invalid player names for the match.");
-			return;
-		}
-
 		if (this.engine) {
 			this.engine.cleanUp();
 			this.engine = null;
@@ -355,19 +300,8 @@ export class TournamentPage extends Component {
 		const sortedPlayers = Object.entries(this.playerWins).sort(
 			(a, b) => b[1] - a[1]
 		);
-		const rankHtml = sortedPlayers
-			.map(
-				([player, wins], index) => `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${player}</td>
-                <td>${wins}</td>
-            </tr>`
-			)
-			.join("");
-
 		this.createOverlay(`
-            <div class="card text-center text-dark bg-light" style="width: 30rem;">
+            <div class="card text-center">
                 <div class="card-body">
                 <h2 class="card-title">Tournament Ranks</h2>
                     <table class="table">
@@ -379,10 +313,19 @@ export class TournamentPage extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            ${rankHtml}
+                            ${sortedPlayers
+								.map(
+									([player, wins], index) => `
+								<tr>
+									<td>${index + 1}</td>
+									<td>${player}</td>
+									<td>${wins}</td>
+								</tr>`
+								)
+								.join("")}
                         </tbody>
                     </table>
-                    <button class="btn btn-primary mt-3" onclick="window.redirect('/play/tournament')">Restart Tournament</button>
+                    <button class="btn btn-primary mt-3" onclick="window.redirect('/play/tournament')">New Tournament</button>
 					<button class="btn btn-secondary mt-3" onclick="window.location.href='/home'">Go Home</button>
                 </div>
             </div>

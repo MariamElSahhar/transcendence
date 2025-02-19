@@ -72,17 +72,14 @@ export class Engine {
 	}
 
 	cleanUp() {
-		// console.log("Starting engine cleanup...");
 		try {
 			this.stopAnimationLoop();
-			// console.log("Animation loop stopped.");
 		} catch (err) {
 			console.error("Error stopping animation loop:", err);
 		}
 		try {
 			if (this.#keyHookHandler) {
 				this.#keyHookHandler.stopListeningForKeys();
-				// console.log("Key hook handler stopped.");
 			}
 		} catch (err) {
 			console.error("Error stopping key hook handler:", err);
@@ -99,13 +96,10 @@ export class Engine {
 		try {
 			if (this.#threeJS) {
 				this.#threeJS.clearRenderer();
-				// console.log("Renderer cleared.");
 			}
 		} catch (err) {
 			console.error("Error clearing the renderer:", err);
 		}
-
-		// console.log("Engine cleaned up successfully.");
 	}
 
 	renderFrame() {
