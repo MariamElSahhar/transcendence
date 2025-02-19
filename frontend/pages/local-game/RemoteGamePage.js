@@ -13,7 +13,6 @@ import {
 	closeWebSocket,
 } from "../../scripts/utils/websocket-manager.js";
 // import { KeyHandler } from "../game-utils/KeyHandler.js";
-
 export class RemoteGamePage extends Component {
 	constructor() {
 		super();
@@ -36,7 +35,6 @@ export class RemoteGamePage extends Component {
 		this.activeTimeouts.add(timeoutID); // Add timeout ID to the set
 		return timeoutID;
 	}
-
 	updateLoaders(data) {
 		clearTimeout(this.timeoutID);
 		const status = document.getElementById("statusmsg");
@@ -89,7 +87,6 @@ export class RemoteGamePage extends Component {
 	onWebSocketOpen(socket) {
 		this.waitForOpponent();
 	}
-
 	match_found(data) {
 		this.playerSide = data["position"];
 		this.gameID = data["game_session_id"];
@@ -138,22 +135,23 @@ export class RemoteGamePage extends Component {
 				);
 			}
 		} else if (data["message"] == "startRound") {
-			this.startRound(data);
+			this.start_round(data);
 		} else if (data["message"] == "endgame") {
 			if (!this.engine.scene.match.isHost)
 				this.engine.scene.match.playerMarkedPoint(data["index"]);
-		} else if (data["message"] == "opponent_left") this.playerLeft();
+		} else if (data["message"] == "opponent_left") this.player_left();
 	}
 
-	startRound(data) {
+	start_round(data) {
 		if (data["round"] == 1) {
-			this.renderCountdownCard();
+			const countdownStart = Date.now() / 1000 + 3;
+			this.startCountdown(countdownStart);
 		} else {
 			this.engine.scene.match.onPlayerReady(data["index"]);
 		}
 	}
 
-	playerLeft() {
+	player_left() {
 		this.playerLeft = true;
 		if (this.engine) {
 			this.engine.stopAnimationLoop();
@@ -193,13 +191,12 @@ export class RemoteGamePage extends Component {
 	onWebSocketError(error) {
 		console.error("WebSocket error:", error);
 	}
-
 	connectedCallback() {
 		// this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
 		// this.keyHandler = new KeyHandler(this);
 
 		initializeWebSocket(
-			`ws://${window.location.host}:8000/ws/game/`,
+			`/ws/game/`,
 			this.onWebSocketOpen.bind(this),
 			this.onWebSocketMessage.bind(this),
 			this.onWebSocketClose.bind(this),
@@ -252,34 +249,36 @@ export class RemoteGamePage extends Component {
 			clearInterval(this.countDownIntervalId);
 			this.countDownIntervalId = null;
 		}
+		super.disconnectedCallback();
 	}
 
 	render() {
 		return `
-		<div id="container" class="m-2 position-relative">
-			<div class="d-flex justify-content-center align-items-center" id="searchdiv" style="height: 75vh;">
-				<div id="searchBox" class="p-3 pt-0 rounded text-center shadow position-relative d-flex flex-column justify-content-center card bg-light">
-					<!-- Close button -->
-					<p class="p-1 m-0 w-100 text-end" id="closebtn" role="button">
-						&times;
-					</p>
+		<div class="d-flex justify-content-center align-items-center" id="searchdiv" style="height: 75vh;">
+			<div id="searchBox" class="p-4 border rounded bg-light text-center shadow position-relative d-flex flex-column justify-content-center" style="width: 500px; height: 250px;">
+				<!-- Close button -->
+				<p class="position-absolute top-0 end-0 p-2 text-decoration-none text-dark m-3" id="closebtn" style="font-size: 1.5rem;cursor: pointer;">
+					&times;
+				</p>
 
-					<h4 class="mb-3 heading">Searching for an opponent</h4>
-					<div class="loader position-relative d-inline-block mx-auto mb-3">
-						<div class="circle position-absolute top-0 left-0 rounded-circle"></div>
-						<div class="emoji position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-							<i class="bi bi-person"></i>
-						</div>
+				<h4 class="mb-3 heading" style="z-index:3">Searching for your opponent!</h4>
+				<div class="loader position-relative d-inline-block mx-auto mb-3">
+					<div class="circle position-absolute top-0 left-0 rounded-circle"></div>
+					<div class="emoji position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+						<i class="bi bi-person"></i>
 					</div>
-					<p class="mb-0" id="statusmsg">First to 5 points wins the game!</p>
 				</div>
+				<p class="mb-0" id="statusmsg">First to 5 points wins the game!</p>
 			</div>
 		</div>
+
+		<div id="container" class="m-2 position-relative" style="display:none;"></div>
 		`;
 	}
 
 	style() {
-		return `<style>
+		return `
+		<style>
 			.loader {
 				width: 80px; /* Increase loader size */
 				height: 80px;
@@ -351,9 +350,9 @@ export class RemoteGamePage extends Component {
 					transform: translate(-50%, -50%) scale(0);
 				}
 				60%,
-					100% {
-						transform: translate(-50%, -50%) scale(1);
-					}
+				100% {
+					transform: translate(-50%, -50%) scale(1);
+				}
 			}
 
 			@keyframes pulse {
@@ -387,13 +386,21 @@ export class RemoteGamePage extends Component {
 			event.returnValue = "";
 		});
 	}
-
 	async removeFromMatchmaking() {
 		const { status, success, data } = await removeMatchMaking();
 		console.log(status, success, data);
 	}
 
 	async waitForOpponent() {
+		// try {
+		// 	let response = await fetch("https://api.ipify.org?format=json");
+		// 	let data = await response.json();
+		// 	console.log("Client IP:", data);
+		// 	// return data.ip;
+		// } catch (error) {
+		// 	console.error("Error getting client IP:", error);
+		// 	// return null;
+		// }
 		this.timeoutID = this.setTrackedTimeout(() => {
 			const stat = document.getElementById("statusmsg");
 			const searchBox = document.getElementById("searchBox");
@@ -436,33 +443,23 @@ export class RemoteGamePage extends Component {
 		}
 	}
 
-	startCountdown() {
-		const startDateInSeconds = Date.now() / 1000 + 3;
+	startCountdown(startDateInSeconds) {
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
-		this.overlay.querySelector("#countdown").textContent = secondsLeft;
+		this.updateOverlayCountdown(secondsLeft);
 
 		this.countDownIntervalId = setInterval(() => {
 			secondsLeft -= 1;
-			this.overlay.querySelector("#countdown").textContent = secondsLeft;
+			this.updateOverlayCountdown(secondsLeft);
 
 			if (secondsLeft <= 0) {
 				clearInterval(this.countDownIntervalId);
 				this.countDownIntervalId = null;
-				this.engine.startGame();
-				this.removeOverlay();
+				this.startGame();
 			}
 		}, 1000);
 	}
 
-	renderCountdownCard() {
-		this.renderOverlay();
-		this.overlay.innerHTML = `
-			<h1 id="countdown" class="display-1 fw-bold">5</h1>
-        `;
-		this.startCountdown();
-	}
-
-	renderOverlay() {
+	createOverlay() {
 		this.overlay = document.createElement("div");
 		this.overlay.id = "game-overlay";
 		this.overlay.classList.add(
@@ -479,7 +476,23 @@ export class RemoteGamePage extends Component {
 			"text-white"
 		);
 		this.overlay.style.zIndex = "9999";
+		this.overlay.innerHTML = `
+				  <div class="card text-center text-dark bg-light" style="width: 18rem;">
+					<div class="card-body">
+					<h1 id="countdown" class="display-1 fw-bold">5</h1>
+					<p class="card-text">Get ready! The game will start soon.</p>
+					</div>
+					</div>
+					`;
 		this.container.appendChild(this.overlay);
+		console.log(this.overlay);
+	}
+
+	updateOverlayCountdown(secondsLeft) {
+		const countdownElement = this.overlay.querySelector("#countdown");
+		if (countdownElement) {
+			countdownElement.textContent = secondsLeft;
+		}
 	}
 
 	removeOverlay() {
@@ -489,33 +502,33 @@ export class RemoteGamePage extends Component {
 		}
 	}
 
-	renderEndGameCard(playerScore, opponentScore) {
+	addEndGameCard(playerScore, opponentScore) {
 		const playerName = this.playerNames[0];
 		const opponentName = this.playerNames[1];
 
-		this.renderOverlay();
+		this.createOverlay();
 		this.overlay.innerHTML = `
-        <div id="end-game-card" class="card text-center border-warning text-dark bg-light" style="max-width: 30rem;">
-
-          <div class="card-body">
-		  <h1 class="card-title text-success">Game Over</h1>
-            <h5 class="card-subtitle mb-3 text-muted">Final Score</h5>
-			<img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-
-            <div class="d-flex justify-content-center align-items-center mb-4">
-              <div class="text-center me-3" style="width:120px">
-                <h4 class="fw-bold text-truncate text-primary text-center" style="max-width: 150px;">${playerName}</h4>
-                <p class="display-6 fw-bold text-center" style="max-width: 150px;">${playerScore}</p>
-              </div>
-              <div class="text-center ms-3" style="width:120px">
-                <h4 class="fw-bold text-truncate text-danger text-center" style="max-width: 150px;">${opponentName}</h4>
-                <p class="display-6 fw-bold text-center" style="max-width: 150px;">${opponentScore}</p>
-              </div>
-            </div>
-            <button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
-          </div>
-        </div>
-      `;
+				<div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
+				  <div class="card-header">
+					<h1 class="card-title text-success">Game Over</h1>
+				  </div>
+				  <div class="card-body">
+					<h5 class="card-subtitle mb-3 text-muted">Final Score</h5>
+					<div class="d-flex justify-content-center align-items-center mb-4">
+					  <div class="text-center me-3">
+						<h6 class="fw-bold text-truncate" style="max-width: 100px;">${playerName}</h6>
+						<p class="display-6 fw-bold">${playerScore}</p>
+						</div>
+						<div class="px-3 display-6 fw-bold align-self-center">:</div>
+					  <div class="text-center ms-3">
+					  <h6 class="fw-bold text-truncate" style="max-width: 100px;">${opponentName}</h6>
+					  <p class="display-6 fw-bold">${opponentScore}</p>
+					  </div>
+					  </div>
+					<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+					</div>
+					</div>
+					`;
 	}
 }
 
