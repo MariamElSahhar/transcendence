@@ -39,14 +39,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
+# USE_X_FORWARDED_HOST = True
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", IPAddr]# "xxxxxxxx"]
+ALLOWED_HOSTS = ["*"]# "xxxxxxxx"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -93,6 +94,16 @@ CORS_ALLOWED_ORIGINS = [
     f"http://{IPAddr}",
     f"https://{IPAddr}",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1",
+    "https://127.0.0.1",
+    "http://localhost",
+    "https://localhost",
+    f"http://{IPAddr}",
+    f"https://{IPAddr}",
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "pong.urls"
@@ -227,7 +238,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",  # Correct import path
         "CONFIG": {
-            "hosts": [('127.0.0.1', 6379)],  # Make sure Redis is running locally
+            "hosts": [("redis", 6379)],  # Make sure Redis is running locally
         },
     },
 }

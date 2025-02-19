@@ -35,6 +35,7 @@ export class RemoteGamePage extends Component {
 		this.activeTimeouts.add(timeoutID); // Add timeout ID to the set
 		return timeoutID;
 	}
+	
 	updateLoaders(data) {
 		clearTimeout(this.timeoutID);
 		const status = document.getElementById("statusmsg");
@@ -87,6 +88,7 @@ export class RemoteGamePage extends Component {
 	onWebSocketOpen(socket) {
 		this.waitForOpponent();
 	}
+
 	match_found(data) {
 		this.playerSide = data["position"];
 		this.gameID = data["game_session_id"];
@@ -173,15 +175,15 @@ export class RemoteGamePage extends Component {
 		this.createOverlay();
 		this.overlay.innerHTML = `
 		<div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
-		<div class="card-header">
-			<h1 class="card-title text-warning">Oh no!</h1>
+			<div class="card-header">
+				<h1 class="card-title text-warning">Oh no!</h1>
+			</div>
+			<div class="card-body">
+				<h5 class="card-subtitle mb-3 text-muted">Your opponent has disconnected</h5>
+				<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+			</div>
 		</div>
-		<div class="card-body">
-			<h5 class="card-subtitle mb-3 text-muted">Your opponent has disconnected /left the game :(</h5>
-			<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
-			</div>
-			</div>
-			`;
+		`;
 	}
 
 	onWebSocketClose() {
@@ -392,6 +394,15 @@ export class RemoteGamePage extends Component {
 	}
 
 	async waitForOpponent() {
+		// try {
+		// 	let response = await fetch("https://api.ipify.org?format=json");
+		// 	let data = await response.json();
+		// 	console.log("Client IP:", data);
+		// 	// return data.ip;
+		// } catch (error) {
+		// 	console.error("Error getting client IP:", error);
+		// 	// return null;
+		// }
 		// try {
 		// 	let response = await fetch("https://api.ipify.org?format=json");
 		// 	let data = await response.json();

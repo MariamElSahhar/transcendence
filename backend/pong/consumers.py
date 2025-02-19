@@ -12,13 +12,7 @@ from users.models import CustomUser
 class PongConsumer(AsyncJsonWebsocketConsumer):
     active_games = {}
     async def connect(self):
-        clientIP=self.scope["client"][0]
-        # self.redis = await aioredis.from_url("redis://localhost")
-        # self.channel_name = self.channel_name
-        # if clientIP == '127.0.0.1':
-        #     self.is_same_system = True  # Same system
-        # else:
-        #     self.is_same_system = False
+
         access_token=AccessToken(self.scope['cookies']['access_token'])
         self.username = await sync_to_async(CustomUser.objects.get)(id=access_token['user_id'])
         self.room_group_name = f"user_{self.username}"
