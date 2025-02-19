@@ -236,9 +236,6 @@ if(env("ENV") == "production"):
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",  # Correct import path
-        "CONFIG": {
-            "hosts": [("redis", 6379)],  # Make sure Redis is running locally
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
