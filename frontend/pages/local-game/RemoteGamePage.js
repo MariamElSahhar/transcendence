@@ -105,6 +105,15 @@ export class RemoteGamePage extends Component {
 				document.getElementById("searchdiv").classList.remove("d-flex");
 				document.getElementById("searchdiv").classList.add("d-none");
 				this.container.style.display = "block";
+				this.engine = new Engine(
+					this,
+					this.isAIEnabled,
+					this.playerNames,
+					this.playerSide,
+					this.gameID,
+					this.sameSystem
+				);
+				this.engine.createScene();
 				if (!this.playerLeft) {
 					sendWebSocketMessage({
 						action: "ready",
@@ -400,24 +409,6 @@ export class RemoteGamePage extends Component {
 	}
 
 	async waitForOpponent() {
-		// try {
-		// 	let response = await fetch("https://api.ipify.org?format=json");
-		// 	let data = await response.json();
-		// 	console.log("Client IP:", data);
-		// 	// return data.ip;
-		// } catch (error) {
-		// 	console.error("Error getting client IP:", error);
-		// 	// return null;
-		// }
-		// try {
-		// 	let response = await fetch("https://api.ipify.org?format=json");
-		// 	let data = await response.json();
-		// 	console.log("Client IP:", data);
-		// 	// return data.ip;
-		// } catch (error) {
-		// 	console.error("Error getting client IP:", error);
-		// 	// return null;
-		// }
 		this.timeoutID = this.setTrackedTimeout(() => {
 			const stat = document.getElementById("statusmsg");
 			const searchBox = document.getElementById("searchBox");
@@ -438,14 +429,6 @@ export class RemoteGamePage extends Component {
 	}
 
 	async startGame() {
-		this.engine = new Engine(
-			this,
-			this.isAIEnabled,
-			this.playerNames,
-			this.playerSide,
-			this.gameID
-		);
-
 		this.engine.startGame();
 		this.removeOverlay();
 	}
@@ -464,7 +447,6 @@ export class RemoteGamePage extends Component {
 	startCountdown(startDateInSeconds) {
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 		this.updateOverlayCountdown(secondsLeft);
-		
 		this.countDownIntervalId = setInterval(() => {
 			secondsLeft -= 1;
 			this.updateOverlayCountdown(secondsLeft);
