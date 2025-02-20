@@ -195,7 +195,7 @@ export class RemoteGamePage extends Component {
 			</div>
 			<div class="card-body">
 				<h5 class="card-subtitle mb-3 text-muted">Your opponent has disconnected</h5>
-				<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+				<button class="btn btn-primary mt-3" onclick="window.redirect("/home")">Go Home</button>
 			</div>
 		</div>
 		`;
@@ -533,7 +533,7 @@ export class RemoteGamePage extends Component {
 					  <p class="display-6 fw-bold">${opponentScore}</p>
 					  </div>
 					  </div>
-					<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+					<button class="btn btn-primary mt-3" onclick="window.redirect("/home")">Go Home</button>
 					</div>
 					</div>
 					`;
