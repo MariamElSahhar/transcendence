@@ -15,7 +15,7 @@ import {
 	renderOverlay,
 	renderEndGameCard,
 	removeOverlay,
-	renderGameInfoCard,
+	renderPreGameCard,
 } from "./Overlays.js";
 
 export class RemoteGamePage extends Component {

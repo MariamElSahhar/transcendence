@@ -2,7 +2,7 @@ import { Component } from "../Component.js";
 import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capabilities/WebGL.js";
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
-import { renderEndGameCard, renderGameInfoCard } from "./Overlays.js";
+import { renderEndGameCard, renderPreGameCard } from "./Overlays.js";
 
 export class LocalGamePage extends Component {
 	constructor() {
@@ -100,7 +100,7 @@ export class LocalGamePage extends Component {
 		if (WebGL.isWebGLAvailable()) {
 			this.engine = new Engine(this, this.isAIEnabled, this.playerNames);
 			await this.engine.createScene();
-			const { overlay, countDownIntervalId } = renderGameInfoCard(
+			const { overlay, countDownIntervalId } = renderPreGameCard(
 				this,
 				this.container,
 				this.playerNames[0],

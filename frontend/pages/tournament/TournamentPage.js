@@ -5,7 +5,7 @@ import { addLocalGame } from "../../scripts/clients/gamelog-client.js";
 import { isAuth } from "../../scripts/utils/session-manager.js";
 import {
 	renderEndGameCard,
-	renderGameInfoCard,
+	renderPreGameCard,
 	renderCountdownCard,
 } from "../local-game/Overlays.js";
 
@@ -173,7 +173,7 @@ export class TournamentPage extends Component {
 				(winner, score1, score2) =>
 					this.endMatch(winner, player1, player2, score1, score2)
 			);
-			const { overlay, countDownIntervalId } = renderGameInfoCard(
+			const { overlay, countDownIntervalId } = renderPreGameCard(
 				this,
 				this.container,
 				player1,
@@ -250,7 +250,6 @@ export class TournamentPage extends Component {
                     <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
                     <h1 class="display-4 fw-bold">${champion} </h1>
                     <h1 class="display-4 fw-bold"> is the Tournament Champion! </h1>
-                    <h1 class="display-4 fw-bold"> 🏆 </h1>
                     <button class="btn btn-primary mt-3">Finish</button>
                 </div>
             </div>
@@ -288,9 +287,6 @@ export class TournamentPage extends Component {
 					callback();
 				});
 			} else {
-				console.warn(
-					"No button found in overlay content, proceeding without button."
-				);
 				callback();
 			}
 		}

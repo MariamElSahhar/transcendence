@@ -26,7 +26,7 @@ export function removeOverlay(overlay) {
 	return null;
 }
 
-export function renderGameInfoCard(
+export function renderPreGameCard(
 	component,
 	container,
 	player1,
@@ -68,19 +68,13 @@ export function renderGameInfoCard(
 }
 
 export function renderCountdownCard(container, engine) {
+	const startDateInSeconds = Date.now() / 1000 + 3;
+	let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 	const overlay = renderOverlay(container);
 	overlay.innerHTML = `
 		<h1 id="countdown" class="display-1 fw-bold">5</h1>
 	`;
-	const countDownIntervalId = startCountdown(overlay, engine);
-	return { overlay, countDownIntervalId };
-}
-
-export function startCountdown(overlay, engine) {
-	const startDateInSeconds = Date.now() / 1000 + 3;
-	let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 	overlay.querySelector("#countdown").textContent = secondsLeft;
-
 	const countDownIntervalId = setInterval(() => {
 		secondsLeft -= 1;
 		overlay.querySelector("#countdown").textContent = secondsLeft;
@@ -91,15 +85,14 @@ export function startCountdown(overlay, engine) {
 			removeOverlay(overlay);
 		}
 	}, 1000);
-	return countDownIntervalId;
+	return { overlay, countDownIntervalId };
 }
 
 export function renderEndGameCard(
 	container,
 	playerNames,
 	playerScore,
-	opponentScore,
-	path
+	opponentScore
 ) {
 	const overlay = renderOverlay(container);
 
@@ -110,29 +103,29 @@ export function renderEndGameCard(
 
 	overlay.innerHTML = `
 		<div id="end-game-card" class="card">
-		<div class="card-body">
-			<img class="my-2" id="winner-sprite" src="/assets/sprites/${
-				winnerIsPlayer ? "mario" : "luigi"
-			}.png"/>
-			<h3 class="card-subtitle mb-2">${winnerName} Wins!</h3>
-			<div class="d-flex w-100 gap-3">
-			<div class="w-100">
-				<p class="text-truncate text-end mb-0">${playerName}</p>
-				<p class="display-6 text-end">${playerScore}</p>
+			<div class="card-body">
+				<img class="my-2" id="winner-sprite" src="/assets/sprites/${
+					winnerIsPlayer ? "mario" : "luigi"
+				}.png"/>
+				<h3 class="card-subtitle mb-2">${winnerName} Wins!</h3>
+				<div class="d-flex w-100 gap-3">
+					<div class="w-100">
+						<p class="text-truncate text-end mb-0">${playerName}</p>
+						<p class="display-6 text-end">${playerScore}</p>
+					</div>
+					<div class="w-100">
+						<p class="text-truncate text-start mb-0">${opponentName}</p>
+						<p class="display-6 text-start">${opponentScore}</p>
+					</div>
+				</div>
+				<!-- CTAs -->
+				<div class="d-flex w-100 gap-2">
+					<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
+					<button class="btn btn-primary w-100" onclick="window.redirect('${
+						window.location.pathname
+					}')">Play Again</button>
+				</div>
 			</div>
-			<div class="w-100">
-				<p class="text-truncate text-start mb-0">${opponentName}</p>
-				<p class="display-6 text-start">${opponentScore}</p>
-			</div>
-			</div>
-			<!-- CTAs -->
-			<div class="d-flex w-100 gap-2">
-				<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
-				<button class="btn btn-primary w-100" onclick="window.redirect('${
-					window.location.pathname
-				}')">Play Again</button>
-			</div>
-		</div>
 		</div>
 	`;
 	return overlay;
