@@ -10,9 +10,13 @@ const URIs = {
 };
 
 
-export const matchMaker = async () => {
+export const matchMaker = async (systemID) => {
 	const url = URIs.matchmaker;
-	const { status, body, error } = await post(url);
+	console.log(systemID)
+	const requestBody = {
+		systemID
+	};
+	const { status, body, error } = await post(url,requestBody);
 	if (error) return {status:status, success: false, data: error };
 	return { status:status, success: true, data: body };
 };

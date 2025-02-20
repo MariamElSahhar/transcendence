@@ -14,7 +14,6 @@ import environ, os
 from pathlib import Path
 from datetime import timedelta
 
-import requests
 
 import socket
 
@@ -39,15 +38,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-# USE_X_FORWARDED_HOST = True
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]# "xxxxxxxx"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", IPAddr]
 
 # Application definition
 INSTALLED_APPS = [

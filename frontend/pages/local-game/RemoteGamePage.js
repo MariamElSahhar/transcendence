@@ -91,15 +91,16 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketOpen(socket) {
-		this.waitForOpponent();
-	}
-
-	match_found(data) {
-		this.playerSide = data["position"];
-		this.gameID = data["game_session_id"];
+	   this.waitForOpponent();
+   }
+   match_found(data)
+   {
+		this.playerSide = data["position"]
+		this.gameID=data["game_session_id"]
 		this.playerSet = true;
+		this.sameSystem= data["sameSystem"];
 		this.updateLoaders(data);
-		this.timeoutID = this.setTrackedTimeout(() => {
+		this.timeoutID = this.setTrackedTimeout( () => {
 			if (WebGL.isWebGLAvailable()) {
 				document.getElementById("searchdiv").classList.remove("d-flex");
 				document.getElementById("searchdiv").classList.add("d-none");
@@ -425,7 +426,7 @@ export class RemoteGamePage extends Component {
 			searchBox.querySelector(".circle").style.display = "none";
 			this.removeFromMatchmaking();
 		}, 180000);
-		const { status, success, data } = await matchMaker();
+		const { status, success, data } = await matchMaker(this.getCanvasFingerprint());
 		if (status == 400) {
 			const status = document.getElementById("statusmsg");
 			const searchBox = document.getElementById("searchBox");
@@ -444,7 +445,7 @@ export class RemoteGamePage extends Component {
 			this.playerSide,
 			this.gameID
 		);
-		await this.engine.createScene();
+
 		this.engine.startGame();
 		this.removeOverlay();
 	}
@@ -463,7 +464,7 @@ export class RemoteGamePage extends Component {
 	startCountdown(startDateInSeconds) {
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 		this.updateOverlayCountdown(secondsLeft);
-
+		
 		this.countDownIntervalId = setInterval(() => {
 			secondsLeft -= 1;
 			this.updateOverlayCountdown(secondsLeft);
@@ -554,7 +555,18 @@ export class RemoteGamePage extends Component {
 					</div>
 					</div>
 					`;
-	}
-}
+				}
+
+				getCanvasFingerprint() {
+					const canvas = document.createElement("canvas");
+					const ctx = canvas.getContext("2d");
+					ctx.textBaseline = "top";
+					ctx.font = "14px Arial";
+					ctx.fillText("Unique Canvas Fingerprint", 2, 2);
+					return canvas.toDataURL();
+				}
+		}
+
+
 
 customElements.define("remote-game-page", RemoteGamePage);

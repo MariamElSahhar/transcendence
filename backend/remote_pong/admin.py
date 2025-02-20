@@ -7,6 +7,7 @@ class MatchmakingQueue(admin.ModelAdmin):
     list_display = (
         "player",
         "joined_at",
+        "systemID"
     )
 @admin.register(GameSession)
 class GameSession(admin.ModelAdmin):
