@@ -13,7 +13,7 @@ window.APP_CONFIG = {
 		window.location.protocol == "https:"
 			? ""
 			: `https://${window.location.host}`,
-	pointsToWinPongMatch: 1,
+	pointsToWinPongMatch: 5,
 	gameCountdown: 3,
 };
 const routes = {

@@ -6,10 +6,12 @@ export class PongBoard {
 	#score = 0;
 	#side;
 	#board;
+	#lifelines;
 	#goal;
 	#size;
 	#scoreSprite;
 	#playerNameSprite;
+	#remainingLives;
 
 	constructor() {}
 
@@ -21,7 +23,8 @@ export class PongBoard {
 		this.#side = side;
 		this.#threeJSBoard = new THREE.Group();
 		this.#size = new THREE.Vector3(20, 27.5, 1);
-
+		this.#lifelines = [];
+		this.#remainingLives=5;
 		this.initBoard(this.#size);
 		this.initWalls(this.#size);
 		this.initScore(this.#size);
@@ -148,19 +151,53 @@ export class PongBoard {
 	}
 
 	initPlayerName(boardSize, playerName) {
-		const nameColor = "#ffffff";
+		const nameColor = "#000000";
 		this.#playerNameSprite = this.createTextSprite(
 			playerName,
 			nameColor,
 			70
 		);
-
 		this.#playerNameSprite.position.set(
-			-boardSize.x / 2,
-			boardSize.y / 2 + 3,
+			-boardSize.x / 2 + 1,
+			boardSize.y / 2 + 4.5,
 			1.0
 		);
 		this.#threeJSBoard.add(this.#playerNameSprite);
+		this.initLifelines(boardSize);
+	}
+
+	initLifelines(boardSize) {
+
+		const lifelineCount = 5;
+		const spacing = 2.5;
+		const startX = -((lifelineCount -2) * spacing);
+
+		const textureLoader = new THREE.TextureLoader();
+		const heartMaterial = new THREE.SpriteMaterial({ map: textureLoader.load("/assets/sprites/pixel-heart.png")});
+		for (let i = 0; i < lifelineCount; i++) {
+			const lifeline = new THREE.Sprite(heartMaterial);
+			lifeline.scale.set(2, 2, 2);
+			lifeline.position.set(startX + i * spacing, boardSize.y / 2 + 2, 2);
+
+			this.#threeJSBoard.add(lifeline);
+			this.#lifelines.push(lifeline);
+		}
+	}
+
+	removeLife() {
+		this.#remainingLives--;
+		const indexToReplace = this.#remainingLives;
+		const textureLoader = new THREE.TextureLoader();
+		const emptyHeart = new THREE.SpriteMaterial({ map: textureLoader.load("/assets/sprites/nocolor-heart.png") });
+		const newLifeline = new THREE.Sprite(emptyHeart);
+
+		newLifeline.position.copy(this.#lifelines[indexToReplace].position);
+		newLifeline.scale.set(2, 2, 2);
+
+		this.#threeJSBoard.remove(this.#lifelines[indexToReplace]);
+		this.#threeJSBoard.add(newLifeline);
+
+		this.#lifelines.push(newLifeline);
 	}
 
 	createTextSprite(message, color = "#ffffff", fontSize = 128) {
