@@ -20,10 +20,10 @@ export class Player {
             this.#threeJSGroup.position.set(10, 0, 0); // Right player
         }
 
+        this.#board = new PongBoard();
         this.paddle = new Paddle(index === 1, this.#threeJSGroup.position, this.#isAIControlled);
         this.#threeJSGroup.add(this.paddle.threeJSGroup);
 
-        this.#board = new PongBoard();
         await this.#board.init(index, pointsToWinMatch, playerName);
         this.#threeJSGroup.add(this.#board.threeJSBoard);
     }

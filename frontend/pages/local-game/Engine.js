@@ -17,13 +17,15 @@ export class Engine {
 		isAIGame = false,
 		players,
 		playerSide = "NA",
-		gameSession = -1
+		gameSession = -1,
+    sameSystem="NA"
 	) {
 		this.#component = component;
 		this.#isAIGame = isAIGame;
 		this.playerSide = playerSide;
 		this.gameSession = gameSession;
 		this.players = players;
+    this.sameSystem=sameSystem;
 		this.#threeJS = new ThreeJSUtils(this);
 		this.keyHookHandler = new KeyHandler(this, this.#isAIGame);
 		this.scene = new Scene();
@@ -154,7 +156,8 @@ export class Engine {
 				"remote",
 				this.playerSide,
 				this.players,
-				this.gameSession
+				this.gameSession,
+        this.sameSystem
 			);
 		else this.keyHookHandler.startListeningForKeys();
 	}

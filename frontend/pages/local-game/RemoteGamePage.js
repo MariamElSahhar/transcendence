@@ -91,19 +91,29 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketOpen(socket) {
-		this.waitForOpponent();
-	}
-
-	match_found(data) {
-		this.playerSide = data["position"];
-		this.gameID = data["game_session_id"];
+	   this.waitForOpponent();
+   }
+   match_found(data)
+   {
+		this.playerSide = data["position"]
+		this.gameID=data["game_session_id"]
 		this.playerSet = true;
+		this.sameSystem= data["sameSystem"];
 		this.updateLoaders(data);
-		this.timeoutID = this.setTrackedTimeout(() => {
+		this.timeoutID = this.setTrackedTimeout( () => {
 			if (WebGL.isWebGLAvailable()) {
 				document.getElementById("searchdiv").classList.remove("d-flex");
 				document.getElementById("searchdiv").classList.add("d-none");
 				this.container.style.display = "block";
+				this.engine = new Engine(
+					this,
+					this.isAIEnabled,
+					this.playerNames,
+					this.playerSide,
+					this.gameID,
+					this.sameSystem
+				);
+				this.engine.createScene();
 				if (!this.playerLeft) {
 					sendWebSocketMessage({
 						action: "ready",
@@ -185,7 +195,7 @@ export class RemoteGamePage extends Component {
 			</div>
 			<div class="card-body">
 				<h5 class="card-subtitle mb-3 text-muted">Your opponent has disconnected</h5>
-				<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+				<button class="btn btn-primary mt-3" onclick="window.redirect("/home")">Go Home</button>
 			</div>
 		</div>
 		`;
@@ -399,24 +409,6 @@ export class RemoteGamePage extends Component {
 	}
 
 	async waitForOpponent() {
-		// try {
-		// 	let response = await fetch("https://api.ipify.org?format=json");
-		// 	let data = await response.json();
-		// 	console.log("Client IP:", data);
-		// 	// return data.ip;
-		// } catch (error) {
-		// 	console.error("Error getting client IP:", error);
-		// 	// return null;
-		// }
-		// try {
-		// 	let response = await fetch("https://api.ipify.org?format=json");
-		// 	let data = await response.json();
-		// 	console.log("Client IP:", data);
-		// 	// return data.ip;
-		// } catch (error) {
-		// 	console.error("Error getting client IP:", error);
-		// 	// return null;
-		// }
 		this.timeoutID = this.setTrackedTimeout(() => {
 			const stat = document.getElementById("statusmsg");
 			const searchBox = document.getElementById("searchBox");
@@ -425,7 +417,7 @@ export class RemoteGamePage extends Component {
 			searchBox.querySelector(".circle").style.display = "none";
 			this.removeFromMatchmaking();
 		}, 180000);
-		const { status, success, data } = await matchMaker();
+		const { status, success, data } = await matchMaker(this.getCanvasFingerprint());
 		if (status == 400) {
 			const status = document.getElementById("statusmsg");
 			const searchBox = document.getElementById("searchBox");
@@ -437,14 +429,6 @@ export class RemoteGamePage extends Component {
 	}
 
 	async startGame() {
-		this.engine = new Engine(
-			this,
-			this.isAIEnabled,
-			this.playerNames,
-			this.playerSide,
-			this.gameID
-		);
-		await this.engine.createScene();
 		this.engine.startGame();
 		this.removeOverlay();
 	}
@@ -463,7 +447,6 @@ export class RemoteGamePage extends Component {
 	startCountdown(startDateInSeconds) {
 		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
 		this.updateOverlayCountdown(secondsLeft);
-
 		this.countDownIntervalId = setInterval(() => {
 			secondsLeft -= 1;
 			this.updateOverlayCountdown(secondsLeft);
@@ -550,11 +533,22 @@ export class RemoteGamePage extends Component {
 					  <p class="display-6 fw-bold">${opponentScore}</p>
 					  </div>
 					  </div>
-					<button class="btn btn-primary mt-3" onclick="window.location.href='/home'">Go Home</button>
+					<button class="btn btn-primary mt-3" onclick="window.redirect("/home")">Go Home</button>
 					</div>
 					</div>
 					`;
-	}
-}
+				}
+
+				getCanvasFingerprint() {
+					const canvas = document.createElement("canvas");
+					const ctx = canvas.getContext("2d");
+					ctx.textBaseline = "top";
+					ctx.font = "14px Arial";
+					ctx.fillText("Unique Canvas Fingerprint", 2, 2);
+					return canvas.toDataURL();
+				}
+		}
+
+
 
 customElements.define("remote-game-page", RemoteGamePage);

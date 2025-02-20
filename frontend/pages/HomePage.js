@@ -29,28 +29,56 @@ export class HomePage extends Component {
 
 	render() {
 		return `
-            <div class="d-flex flex-column align-items-center p-3">
+            <div class="d-flex flex-column align-items-center p-3 ">
                 <div class="w-100">
                     <!-- Pong Section -->
-                    <div class="game-section">
+                    <div class="game-section ">
                         <div id="top-canvas" class="game-canvas"></div>
-                        <div class="btn-container">
-                            <h3 class="game-title">Pong</h3>
-                            <button id="play-single-player-game" class="btn btn-primary">Single Player</button>
-                            <button id="play-two-player-game" class="btn btn-primary">Two Player</button>
-                            <button id="play-remote-game" class="btn btn-primary">Online Two Player</button>
-                            <button id="play-tournament" class="btn btn-primary">Tournament</button>
+                        <div class="row mb-3  align-items-center justify-content-center">
+							<div class="col-5">
+                            	<button id="play-single-player-game" class="d-flex align-items-center justify-content-between brick-border btn btn-primary w-100 p-3 fw-bold">
+									<img src="/assets/sprites/mario.png" class="ms-4 btn-icon" alt="Left Icon">
+										Single Player
+									<img src="/assets/sprites/mario.png" class="btn-icon me-4" alt="Right Icon">
+								</button>
+							</div>
+							<div class="col-5">
+                            	<button id="play-two-player-game" class="d-flex align-items-center justify-content-between brick-border btn btn-primary w-100 p-3 fw-bold">
+									<img src="/assets/sprites/mario.png" class="ms-4 btn-icon" alt="Left Icon">
+										Two Player
+									<img src="/assets/sprites/mario.png" class="btn-icon me-4" alt="Right Icon">
+								</button>
+							</div>
+						</div>
+						<div class="row mb-3 align-items-center justify-content-center">
+							<div class="col-5">
+                            	<button id="play-remote-game" class="d-flex align-items-center justify-content-between brick-border btn btn-primary w-100 p-3 fw-bold">
+									<img src="/assets/sprites/mario.png" class="ms-4 btn-icon" alt="Left Icon">
+										Online Two Player
+									<img src="/assets/sprites/mario.png" class="btn-icon me-4" alt="Right Icon">
+								</button>
+							</div>
+							<div class="col-5">
+                            	<button id="play-tournament" class="d-flex align-items-center justify-content-between brick-border btn btn-primary w-100 p-3 fw-bold">
+									<img src="/assets/sprites/mario.png" class="ms-4 btn-icon" alt="Left Icon">
+										Tournament
+									<img src="/assets/sprites/mario.png" class="btn-icon me-4" alt="Right Icon">
+								</button>
+							</div>
                         </div>
                     </div>
 
                     <!-- Tic Tac Toe Section -->
-                    <div class="game-section">
-                        <div id="bottom-canvas" class="game-canvas"></div>
-                        <div class="btn-container">
-                            <h3 class="game-title">Tic Tac Toe</h3>
-                            <button id="play-ttt" class="btn btn-success">Tic Tac Toe</button>
-                        </div>
-                    </div>
+                    <div class="game-section d-flex flex-column align-items-center justify-content-center">
+    					<div id="bottom-canvas" class="game-canvas"></div>
+   						<div class="btn-container  w-50 d-flex justify-content-center">
+        					<button id="play-ttt" class="d-flex align-items-center justify-content-between brick-border btn btn-success w-100 p-3 fw-bold">
+								<img src="/assets/sprites/mario.png" class="ms-4 btn-icon" alt="Left Icon">
+									Tic Tac Toe
+								<img src="/assets/sprites/mario.png" class="btn-icon me-4" alt="Right Icon">
+							</button>
+    					</div>
+					</div>
                 </div>
             </div>
     `;
@@ -59,11 +87,16 @@ export class HomePage extends Component {
 	style() {
 		return `
 		<style>
-			@media (max-width: 768px) {
-				.btn-container {
-					width: 100%;
-					}
-			}
+		.brick-border {
+			border: none !important;
+			border-radius: 0 !important;
+			border-bottom: 1px solid #513604 !important;
+			border-right: 1px solid #513604 !important;
+		}
+		.btn-icon {
+			width: 30px;
+			height: 30px;
+		}
 		</style>
 		`;
 	}
