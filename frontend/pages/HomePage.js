@@ -39,14 +39,14 @@ export class HomePage extends Component {
                             	<button id="play-single-player-game" class="d-flex align-items-center justify-content-between brick-border btn btn-primary w-100 p-3 fw-bold">
 									<img src="/assets/sprites/mario.png" class="ms-4 btn-icon" alt="Left Icon">
 										Single Player
-									<img src="/assets/sprites/mario.png" class="btn-icon me-4" alt="Right Icon">
+									<img src="/assets/sprites/luigi.png" class="btn-icon me-4" alt="Right Icon">
 								</button>
 							</div>
 							<div class="col-5">
                             	<button id="play-two-player-game" class="d-flex align-items-center justify-content-between brick-border btn btn-primary w-100 p-3 fw-bold">
 									<img src="/assets/sprites/mario.png" class="ms-4 btn-icon" alt="Left Icon">
 										Two Player
-									<img src="/assets/sprites/mario.png" class="btn-icon me-4" alt="Right Icon">
+									<img src="/assets/sprites/robot.png" class="btn-icon me-4" alt="Right Icon">
 								</button>
 							</div>
 						</div>

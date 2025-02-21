@@ -16,6 +16,7 @@ export class LocalGamePage extends Component {
 	}
 
 	connectedCallback() {
+		console.log("here")
 		this.playerNames.push(getUserSessionData().username || "player 1");
 		super.connectedCallback();
 	}

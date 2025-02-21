@@ -25,7 +25,7 @@ export class Engine {
 		this.playerSide = playerSide;
 		this.gameSession = gameSession;
 		this.players = players;
-    this.sameSystem=sameSystem;
+    	this.sameSystem=sameSystem;
 		this.#threeJS = new ThreeJSUtils(this);
 		this.keyHookHandler = new KeyHandler(this, this.#isAIGame);
 		this.scene = new Scene();
@@ -65,7 +65,6 @@ export class Engine {
 
 	startGame() {
 		this.startListeningForKeyHooks();
-		this.gameSession = true;
 		this.scene.startGame();
 	}
 
