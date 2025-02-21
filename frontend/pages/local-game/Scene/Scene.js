@@ -9,7 +9,7 @@ export class Scene {
 	#pongGameBox;
 	#matchHalfWidth = 20;
 	#matchHalfHeight = 13.75;
-	#cameraPadding = 10;
+	#cameraPadding = 20;
 	#boardSize;
 
 	constructor() {}
