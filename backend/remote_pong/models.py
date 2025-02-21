@@ -19,7 +19,7 @@ class GameSession(models.Model):
         ("completed", "Completed"),
         ("abandoned", "Abandoned"),
     ]
-    same_system= models.BooleanField(default=True)
+    # same_system= models.BooleanField(default=True)
     player1 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="player1_games", on_delete=models.CASCADE)
     player2 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="player2_games", on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="ongoing")
