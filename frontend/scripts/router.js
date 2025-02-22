@@ -44,7 +44,7 @@ const routes = {
 	},
 	// PROTECTED SCREENS
 	"/home": {
-		layout: "sidebar",
+		layout: "main",
 		component: "home-page",
 		path: "../pages/HomePage.js",
 		protected: true,
