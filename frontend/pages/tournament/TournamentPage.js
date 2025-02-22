@@ -173,6 +173,7 @@ export class TournamentPage extends Component {
 				(winner, score1, score2) =>
 					this.endMatch(winner, player1, player2, score1, score2)
 			);
+			this.engine.renderScene();
 			const { overlay, countDownIntervalId } = renderPreGameCard(
 				this,
 				this.container,

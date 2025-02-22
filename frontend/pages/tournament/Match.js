@@ -9,6 +9,7 @@ export class Match {
 	#ball;
 	#ballIsWaiting;
 	#ballStartTime;
+	gameStarted = false;
 	#pointsToWinMatch;
 	#matchIsOver = false;
 	#points = [0, 0];
@@ -22,13 +23,11 @@ export class Match {
 		pointsToWinMatch = window.APP_CONFIG.pointsToWinPongMatch,
 		onMatchEndCallback = null
 	) {
-		this.gameType="local"
+		this.gameType = "local";
 		this.#matchID = matchID;
 		this.#playerNames = playerNames || ["Player 1", "Player 2"];
 		this.#pointsToWinMatch = pointsToWinMatch;
 		this.#onMatchEndCallback = onMatchEndCallback;
-
-		console.log("Initializing Match with players:", this.#playerNames);
 	}
 
 	async init(engine) {
@@ -68,7 +67,11 @@ export class Match {
 		});
 
 		if (!this.#matchIsOver) {
-			if (this.#ballIsWaiting && currentTime >= this.#ballStartTime) {
+			if (
+				this.gameStarted &&
+				this.#ballIsWaiting &&
+				currentTime >= this.#ballStartTime
+			) {
 				this.#ballIsWaiting = false;
 				this.startGame(); // Start the game when the ball is ready
 			}

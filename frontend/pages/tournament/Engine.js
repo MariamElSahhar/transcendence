@@ -15,13 +15,10 @@ export class Engine {
 		this.gameSession = -1;
 		this.#component = component;
 		this.playerNames = playerNames;
-		this.#keyHookHandler = new KeyHandler(this);
-		this.#scene = new Scene();
 		this.#onMatchEndCallback = onMatchEndCallback;
 	}
 
-	async startGame() {
-		console.log("engine starting game");
+	async renderScene() {
 		if (!Array.isArray(this.playerNames) || this.playerNames.length < 2) {
 			console.error("Invalid player names:", this.playerNames);
 			return;
@@ -51,19 +48,22 @@ export class Engine {
 		this.#keyHookHandler = new KeyHandler(this);
 
 		this.#scene = new Scene();
-		try {
-			await this.#scene.init(
-				this,
-				this.playerNames,
-				this.#onMatchEndCallback
-			);
+		await this.#scene.init(
+			this,
+			this.playerNames,
+			this.#onMatchEndCallback
+		);
+		if (this.#scene) {
 			this.#scene.updateCamera();
-			this.startListeningForKeyHooks();
 			this.displayGameScene();
-		} catch (error) {
-			console.error("Error initializing scene:", error);
-			this.#scene = null;
+		} else {
+			console.error("Scene initialization failed");
 		}
+	}
+
+	startGame() {
+		this.startListeningForKeyHooks();
+		this.#scene.startGame();
 	}
 
 	cleanUp() {
