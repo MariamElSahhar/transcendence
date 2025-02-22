@@ -15,13 +15,13 @@ export class Engine {
 		this.gameSession = -1;
 		this.#component = component;
 		this.playerNames = playerNames;
-		this.#threeJS = new ThreeJSUtils(this);
 		this.#keyHookHandler = new KeyHandler(this);
 		this.#scene = new Scene();
 		this.#onMatchEndCallback = onMatchEndCallback;
 	}
 
 	async startGame() {
+		console.log("engine starting game");
 		if (!Array.isArray(this.playerNames) || this.playerNames.length < 2) {
 			console.error("Invalid player names:", this.playerNames);
 			return;
@@ -35,19 +35,16 @@ export class Engine {
 			this.stopAnimationLoop();
 			this.#threeJS.clearRenderer();
 			this.#threeJS = null;
-			// console.log("Previous renderer cleared.");
 		}
 
 		if (this.#scene) {
 			this.clearScene(this.#scene.threeJSScene);
 			this.#scene = null;
-			// console.log("Previous scene cleared.");
 		}
 		const container = this.#component.container;
 		const canvas = container.querySelector("canvas");
 		if (canvas) {
 			container.removeChild(canvas);
-			// console.log("Previous canvas removed from container.");
 		}
 
 		this.#threeJS = new ThreeJSUtils(this);
@@ -60,8 +57,6 @@ export class Engine {
 				this.playerNames,
 				this.#onMatchEndCallback
 			);
-			// console.log("Scene initialized successfully.");
-
 			this.#scene.updateCamera();
 			this.startListeningForKeyHooks();
 			this.displayGameScene();

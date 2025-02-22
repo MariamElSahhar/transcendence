@@ -146,7 +146,7 @@ export class TournamentPage extends Component {
 			[null, null], // Placeholder for the Final Match
 		];
 
-		this.querySelector("#player-setup").style.display = "none";
+		this.container.innerHTML = "";
 		this.startNextMatch();
 	}
 
@@ -188,19 +188,6 @@ export class TournamentPage extends Component {
 		}
 	}
 
-	startGame(player1, player2) {
-		if (this.engine) {
-			this.engine.cleanUp();
-			this.engine = null;
-		}
-
-		this.container.innerHTML = "";
-		this.engine = new Engine(this, (winner, score1, score2) =>
-			this.endMatch(winner, player1, player2, score1, score2)
-		);
-		this.engine.startGame([player1, player2]);
-	}
-
 	async endMatch(winner, player1, player2, score1, score2) {
 		this.playerWins[winner] += 1;
 		this.winners.push(winner);
@@ -224,9 +211,8 @@ export class TournamentPage extends Component {
 				`
                 <div class="card text-center bg-light text-dark" style="width: 30rem;">
                     <div class="card-body">
-                        <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-                        <h3> ${winner} wins! 🏆  </h3>
-						<h3> ${loser} is eliminated! ❌ </h3>
+                        <h5> ${winner} wins! 🏆</h5>
+						<h5> ${loser} is eliminated! ❌</h5>
                         <button class="btn btn-primary mt-3">Next Match</button>
                     </div>
                 </div>
