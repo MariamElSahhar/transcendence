@@ -82,8 +82,6 @@ export class LocalGamePage extends Component {
 				event.preventDefault();
 				const player2Name = player2NameInput.value;
 				this.playerNames.push(player2Name || "Player 2");
-
-				// TODO put in start game function
 				this.startGame();
 			});
 		} else {

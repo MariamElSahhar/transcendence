@@ -9,7 +9,7 @@ export class Scene {
 	#pongGameBox;
 	#matchHalfWidth = 20.0;
 	#matchHalfHeight = 13.75;
-	#cameraPadding = 10.0;
+	#cameraPadding = 20.0;
 	#boardSize;
 
 	constructor() {}
@@ -42,17 +42,6 @@ export class Scene {
 			} else {
 				throw new Error("PongGameBox is not defined.");
 			}
-
-			const textureLoader = new THREE.TextureLoader();
-			const backgroundTexture = textureLoader.load(
-				"/assets/textures/newmario.jpg",
-				undefined,
-				undefined,
-				(error) =>
-					console.error("Error loading background image:", error)
-			);
-
-			this.#threeJSScene.background = backgroundTexture;
 
 			// Add lights
 			const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
