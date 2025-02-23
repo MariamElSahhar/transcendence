@@ -142,37 +142,17 @@ export function renderEndGameCard(
 	return overlay;
 }
 
-export function renderTournamentResults(component, champion, sortedPlayers) {
+export function renderTournamentResults(component, rankedPlayers) {
 	const overlay = renderOverlay(component.container);
 	overlay.innerHTML = `
             <div class="card text-center bg-light">
                 <div class="card-body">
                     <img src="/assets/crown.png" alt="Game Icon" class="card-image">
-                    <h1 class="">${sortedPlayers[0]} wins</h1>
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Rank</th>
-								<th>Player</th>
-							</tr>
-						</thead>
-						<tbody>
-							${sortedPlayers
-								.map(
-									([player], index) => `
-								<tr>
-									<td>${index + 1}</td>
-									<td>${player}</td>
-								</tr>`
-								)
-								.join("")}
-						</tbody>
-					</table>
+                    <h1 class="">${rankedPlayers[0]} wins</h1>
+					<p>🥈${rankedPlayers[1]} 🥉${rankedPlayers[2]} 🥲${rankedPlayers[3]}</p>
 					<div class="d-flex w-100 gap-2">
 							<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
-							<button class="btn btn-primary w-100" onclick="window.redirect('${
-								window.location.pathname
-							}')">Play Again</button>
+							<button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
 					</div>
 				</div>
             </div>
