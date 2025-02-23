@@ -83,7 +83,6 @@ export class Match {
 	}
 
 	startGame() {
-		console.log("Starting the match...");
 		this.#players.forEach((player) => {
 			if (player) {
 				player.startGame(); // Enable paddle movement
@@ -92,7 +91,6 @@ export class Match {
 	}
 
 	stopGame() {
-		console.log("Stopping the match...");
 		this.#players.forEach((player) => {
 			if (player) {
 				player.stopGame(); // Disable paddle movement
@@ -104,8 +102,6 @@ export class Match {
 		this.#ballIsWaiting = true;
 		this.#ballStartTime = Date.now() + 3000; // 3-second delay before the ball starts moving
 		this.#ball.prepareForMatch();
-
-		console.log("Preparing ball and resetting players...");
 		this.#players.forEach((player) => {
 			if (player) {
 				player.resetPaddle(); // Reset paddle position and size

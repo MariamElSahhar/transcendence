@@ -117,12 +117,10 @@ export class LocalGamePage extends Component {
 	}
 
 	renderEndGameCard(playerScore, opponentScore) {
-		this.overlay = renderEndGameCard(
-			this.container,
-			this.playerNames,
+		this.overlay = renderEndGameCard(this, this.playerNames, [
 			playerScore,
-			opponentScore
-		);
+			opponentScore,
+		]);
 	}
 }
 

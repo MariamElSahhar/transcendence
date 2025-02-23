@@ -4,9 +4,9 @@ import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 import { addLocalGame } from "../../scripts/clients/gamelog-client.js";
 import { isAuth } from "../../scripts/utils/session-manager.js";
 import {
-	renderEndGameCard,
 	renderPreGameCard,
-	renderCountdownCard,
+	renderTournamentResults,
+	renderEndGameCard,
 } from "../local-game/Overlays.js";
 
 export class TournamentPage extends Component {
@@ -160,7 +160,6 @@ export class TournamentPage extends Component {
 		}
 	}
 
-	// TODO improve
 	startNextMatch() {
 		if (this.currentMatchIndex <= 2) {
 			if (this.currentMatchIndex === 2 && this.winners.length === 2) {
@@ -208,117 +207,14 @@ export class TournamentPage extends Component {
 		}
 
 		if (this.currentMatchIndex < 2) {
-			this.createOverlay(
-				`
-                <div class="card text-center bg-light text-dark" style="width: 30rem;">
-                    <div class="card-body">
-                        <h5> ${winner} wins! 🏆</h5>
-						<h5> ${loser} is eliminated! ❌</h5>
-                        <button class="btn btn-primary mt-3">Next Match</button>
-                    </div>
-                </div>
-            `,
-				() => {
-					this.currentMatchIndex++;
-					this.startNextMatch();
-				}
-			);
+			this.currentMatchIndex++;
+			renderEndGameCard(this, [player1, player2], [score1, score2], true);
 		} else {
-			this.showTournamentWinner();
-		}
-	}
-
-	showTournamentWinner() {
-		const champion = this.winners[this.winners.length - 1];
-		this.createOverlay(
-			`
-            <div class="card text-center bg-light text-dark" style="width: 30rem;">
-                <div class="card-body">
-                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-                    <h1 class="display-4 fw-bold">${champion} </h1>
-                    <h1 class="display-4 fw-bold"> is the Tournament Champion! </h1>
-                    <button class="btn btn-primary mt-3">Finish</button>
-                </div>
-            </div>
-        `,
-			() => {
-				this.displayRanks();
-			}
-		);
-	}
-
-	createOverlay(contentHTML, callback = null) {
-		this.overlay = document.createElement("div");
-		this.overlay.classList.add(
-			"position-fixed",
-			"top-0",
-			"start-0",
-			"w-100",
-			"h-100",
-			"d-flex",
-			"justify-content-center",
-			"align-items-center",
-			"bg-dark",
-			"bg-opacity-75",
-			"text-white"
-		);
-		this.overlay.style.zIndex = "9999";
-		this.overlay.innerHTML = contentHTML;
-		this.container.appendChild(this.overlay);
-
-		if (callback) {
-			const button = this.overlay.querySelector("button");
-			if (button) {
-				button.addEventListener("click", () => {
-					this.removeOverlay();
-					callback();
-				});
-			} else {
-				callback();
-			}
-		}
-	}
-
-	displayRanks() {
-		const sortedPlayers = Object.entries(this.playerWins).sort(
-			(a, b) => b[1] - a[1]
-		);
-		this.createOverlay(`
-            <div class="card text-center">
-                <div class="card-body">
-                <h2 class="card-title">Tournament Ranks</h2>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Player</th>
-                                <th>Wins</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${sortedPlayers
-								.map(
-									([player, wins], index) => `
-								<tr>
-									<td>${index + 1}</td>
-									<td>${player}</td>
-									<td>${wins}</td>
-								</tr>`
-								)
-								.join("")}
-                        </tbody>
-                    </table>
-                    <button class="btn btn-primary mt-3" onclick="window.redirect('/play/tournament')">New Tournament</button>
-					<button class="btn btn-secondary mt-3" onclick="window.location.href='/home'">Go Home</button>
-                </div>
-            </div>
-        `);
-	}
-
-	removeOverlay() {
-		if (this.overlay) {
-			this.overlay.remove();
-			this.overlay = null;
+			renderTournamentResults(
+				this,
+				this.winners[this.winners.length - 1],
+				Object.entries(this.playerWins).sort((a, b) => b[1] - a[1])
+			);
 		}
 	}
 }

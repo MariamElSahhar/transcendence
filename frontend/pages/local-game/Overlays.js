@@ -89,17 +89,15 @@ export function renderCountdownCard(container, engine) {
 }
 
 export function renderEndGameCard(
-	container,
+	component,
 	playerNames,
-	playerScore,
-	opponentScore
+	playerScores,
+	tournament = false
 ) {
-	const overlay = renderOverlay(container);
+	const overlay = renderOverlay(component.container);
 
-	const playerName = playerNames[0];
-	const opponentName = playerNames[1];
-	const winnerIsPlayer = playerScore > opponentScore;
-	const winnerName = winnerIsPlayer ? playerName : opponentName;
+	const winnerIsPlayer = playerScores[0] > playerScores[1];
+	const winnerName = winnerIsPlayer ? playerNames[0] : playerNames[1];
 
 	overlay.innerHTML = `
 		<div id="end-game-card" class="card">
@@ -110,23 +108,82 @@ export function renderEndGameCard(
 				<h3 class="card-subtitle mb-2">${winnerName} Wins!</h3>
 				<div class="d-flex w-100 gap-3">
 					<div class="w-100">
-						<p class="text-truncate text-end mb-0">${playerName}</p>
-						<p class="display-6 text-end">${playerScore}</p>
+						<p class="text-truncate text-end mb-0">${playerNames[0]}</p>
+						<p class="display-6 text-end">${playerScores[0]}</p>
 					</div>
 					<div class="w-100">
-						<p class="text-truncate text-start mb-0">${opponentName}</p>
-						<p class="display-6 text-start">${opponentScore}</p>
+						<p class="text-truncate text-start mb-0">${playerNames[1]}</p>
+						<p class="display-6 text-start">${playerScores[1]}</p>
 					</div>
 				</div>
 				<!-- CTAs -->
-				<div class="d-flex w-100 gap-2">
+				${
+					tournament
+						? `<button id="next-match" class="btn btn-primary mt-3">Next Match</button>`
+						: `<div class="d-flex w-100 gap-2">
+					<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
+					<button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
+				</div>`
+				}
+			</div>
+		</div>
+	`;
+
+	if (tournament) {
+		component.addComponentEventListener(
+			document.querySelector("#next-match"),
+			"click",
+			() => {
+				removeOverlay(overlay);
+				component.startNextMatch();
+			}
+		);
+	}
+	return overlay;
+}
+
+export function renderTournamentResults(component, champion, sortedPlayers) {
+	const overlay = renderOverlay(component.container);
+	overlay.innerHTML = `
+            <div class="card text-center bg-light text-dark" style="width: 30rem;">
+                <div class="card-body">
+                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
+                    <h1 class="display-4 fw-bold">${champion} </h1>
+                    <h1 class="display-4 fw-bold"> is the Tournament Champion! </h1>
+                    <button class="btn btn-primary mt-3">Finish</button>
+                </div>
+            </div>
+			<div class="card text-center">
+                <div class="card-body">
+                <h2 class="card-title">Tournament Ranks</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                <th>Wins</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sortedPlayers
+								.map(
+									([player, wins], index) => `
+								<tr>
+									<td>${index + 1}</td>
+									<td>${player}</td>
+									<td>${wins}</td>
+								</tr>`
+								)
+								.join("")}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+			<div class="d-flex w-100 gap-2">
 					<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
 					<button class="btn btn-primary w-100" onclick="window.redirect('${
 						window.location.pathname
 					}')">Play Again</button>
-				</div>
 			</div>
-		</div>
-	`;
-	return overlay;
+        `;
 }
