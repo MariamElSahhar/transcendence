@@ -213,7 +213,9 @@ export class TournamentPage extends Component {
 			renderTournamentResults(
 				this,
 				this.winners[this.winners.length - 1],
-				Object.entries(this.playerWins).sort((a, b) => b[1] - a[1])
+				Object.entries(this.playerWins)
+					.sort((a, b) => b[1] - a[1])
+					.map((entry) => entry[0])
 			);
 		}
 	}

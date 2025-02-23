@@ -40,10 +40,10 @@ export function renderPreGameCard(
 	  <div class="card text-center">
 		<div class="card-body">
 			${
-				match
+				match != undefined
 					? `<p>${
 							match < 2
-								? `Round 1 - Match ${match}`
+								? `Round 1 - Match ${match + 1}`
 								: `Final Round`
 					  }</p>`
 					: ""
@@ -145,45 +145,36 @@ export function renderEndGameCard(
 export function renderTournamentResults(component, champion, sortedPlayers) {
 	const overlay = renderOverlay(component.container);
 	overlay.innerHTML = `
-            <div class="card text-center bg-light text-dark" style="width: 30rem;">
+            <div class="card text-center bg-light">
                 <div class="card-body">
-                    <img src="/pages/tictactoe/shroom.png" alt="Game Icon" class="card-image">
-                    <h1 class="display-4 fw-bold">${champion} </h1>
-                    <h1 class="display-4 fw-bold"> is the Tournament Champion! </h1>
-                    <button class="btn btn-primary mt-3">Finish</button>
-                </div>
-            </div>
-			<div class="card text-center">
-                <div class="card-body">
-                <h2 class="card-title">Tournament Ranks</h2>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Player</th>
-                                <th>Wins</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${sortedPlayers
+                    <img src="/assets/crown.png" alt="Game Icon" class="card-image">
+                    <h1 class="">${sortedPlayers[0]} wins</h1>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Rank</th>
+								<th>Player</th>
+							</tr>
+						</thead>
+						<tbody>
+							${sortedPlayers
 								.map(
-									([player, wins], index) => `
+									([player], index) => `
 								<tr>
 									<td>${index + 1}</td>
 									<td>${player}</td>
-									<td>${wins}</td>
 								</tr>`
 								)
 								.join("")}
-                        </tbody>
-                    </table>
-                </div>
+						</tbody>
+					</table>
+					<div class="d-flex w-100 gap-2">
+							<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
+							<button class="btn btn-primary w-100" onclick="window.redirect('${
+								window.location.pathname
+							}')">Play Again</button>
+					</div>
+				</div>
             </div>
-			<div class="d-flex w-100 gap-2">
-					<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
-					<button class="btn btn-primary w-100" onclick="window.redirect('${
-						window.location.pathname
-					}')">Play Again</button>
-			</div>
         `;
 }
