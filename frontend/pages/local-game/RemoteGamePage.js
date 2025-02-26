@@ -11,12 +11,17 @@ import {
 	sendWebSocketMessage,
 	closeWebSocket,
 } from "../../scripts/utils/websocket-manager.js";
-import { renderEndGameCard, renderOpponentFoundCard } from "./Overlays.js";
+import {
+	renderEndGameCard,
+	renderOpponentFoundCard,
+	renderPlayerDisconnectedCard,
+} from "./Overlays.js";
 
 export class RemoteGamePage extends Component {
 	constructor() {
 		super();
-		this.container = null;
+		this.container;
+		this.data;
 		this.engine = null;
 		this.overlay = null;
 		this.playerNames = []; // Stores player names
@@ -46,8 +51,9 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketMessage(data) {
+		this.data = data;
 		if (data["message"] === "Match found!" && !this.playerSet)
-			this.match_found(data);
+			this.matchFound();
 		else if (data["message"] == "Move slab") {
 			const event = { key: data["key"] };
 			if (data["keytype"] == "keydown")
@@ -67,7 +73,7 @@ export class RemoteGamePage extends Component {
 				);
 			}
 		} else if (data["message"] == "startRound") {
-			this.start_round(data);
+			this.startRound();
 		} else if (data["message"] == "endgame") {
 			if (!this.engine.scene.match.isHost)
 				this.engine.scene.match.playerMarkedPoint(data["index"]);
@@ -88,7 +94,7 @@ export class RemoteGamePage extends Component {
 			<div id="searchdiv" class="d-flex justify-content-center align-items-center h-100">
 				<div id="searchBox" class="card p-4 bg-light d-flex flex-column justify-content-center align-items-center gap-3">
 					<img id="search-icon" src="/assets/question.png" class="h-auto"/>
-					<h4 class="mb-3 heading">Waiting for an opponent</h4>
+					<h4 id="status">Waiting for an opponent</h4>
 				</div>
 			</div>
 		</div>
@@ -98,26 +104,6 @@ export class RemoteGamePage extends Component {
 	style() {
 		return `
 		<style>
-			.match-container {
-				display: flex;
-				align-items: center; /* Vertically aligns the items */
-				justify-content: center; /* Centers the content horizontally */
-			}
-
-			.avatar-container {
-				display: flex;
-				flex-direction: column; /* Arranges the avatar and username vertically */
-				align-items: center; /* Centers the avatar and username */
-				margin: 10px; /* Adds space between avatars */
-			}
-
-			.avatar {
-				width: 50px; /* Set the size of the avatar */
-				height: 50px; /* Ensure it's circular */
-				border-radius: 50%; /* Makes the avatar a circle */
-				object-fit: cover; /* Ensures the image covers the circle */
-			}
-
 			#search-icon {
 				width: 50px;
 				animation: rotateCube 2s linear infinite;
@@ -131,21 +117,6 @@ export class RemoteGamePage extends Component {
 				100% {
 					transform: rotateY(360deg);
 				}
-			}
-
-			.player-container {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				height: 100%; /* Ensure equal height */
-			}
-
-			.username {
-				margin-top: 5px; /* Adds space between avatar and username */
-				font-size: 14px;
-				text-align: center;
-				min-width: 100px; /* Set a minimum width for the username */
 			}
 		</style>`;
 	}
@@ -170,17 +141,18 @@ export class RemoteGamePage extends Component {
 		return timeoutID;
 	}
 
-	match_found(data) {
-		this.gameID = data["game_session_id"];
+	matchFound() {
+		this.gameID = this.data["game_session_id"];
 		this.playerSet = true;
-		this.sameSystem = data["sameSystem"];
-		this.playerSide = data.position == "left" ? "right" : "left";
+		this.sameSystem = this.data["sameSystem"];
+		this.playerSide = this.data.position == "left" ? "right" : "left";
 		this.playerNames =
-			data.position == "left"
-				? [data.player, getUserSessionData().username]
-				: [getUserSessionData().username, data.player];
+			this.data.position == "left"
+				? [this.data.player, getUserSessionData().username]
+				: [getUserSessionData().username, this.data.player];
 		clearTimeout(this.timeoutID);
-		renderOpponentFoundCard(this);
+		this.container.innerHTML = "";
+		renderOpponentFoundCard(this, this.playerNames[0], this.playerNames[1]);
 		this.timeoutID = this.setTrackedTimeout(() => {
 			if (WebGL.isWebGLAvailable()) {
 				this.container.innerHTML = "";
@@ -206,16 +178,16 @@ export class RemoteGamePage extends Component {
 					WebGL.getWebGLErrorMessage()
 				);
 			}
-		}, window.APP_CONFIG.gameCountdown * 1000);
+		}, 3000);
 	}
 
-	start_round(data) {
-		if (data["round"] == 1) {
+	startRound() {
+		if (this.data.round == 1) {
 			const countdownStart =
 				Date.now() / 1000 + window.APP_CONFIG.gameCountdown;
 			this.startCountdown(countdownStart);
 		} else {
-			this.engine.scene.match.onPlayerReady(data["index"]);
+			this.engine.scene.match.onPlayerReady(this.data.index);
 		}
 	}
 
@@ -234,7 +206,7 @@ export class RemoteGamePage extends Component {
 			if (this.engine.scene.match.ball)
 				this.engine.scene.match.ball.removeBall();
 		}
-		this.addPlayerLeftCard();
+		renderPlayerDisconnectedCard(this);
 	}
 
 	async disconnectedCallback() {
@@ -285,22 +257,14 @@ export class RemoteGamePage extends Component {
 
 	async waitForOpponent() {
 		this.timeoutID = this.setTrackedTimeout(() => {
-			const stat = document.getElementById("statusmsg");
-			const searchBox = document.getElementById("searchBox");
-			searchBox.querySelector(".heading").innerHTML = "We're sorry! :(";
-			stat.innerHTML = "No opponent found. Please try again later!";
+			document.getElementById("status").innerHTML =
+				"No opponent found. Please try again later!";
 			this.removeFromMatchmaking();
 		}, 180000);
-		const { status, success, data } = await matchMaker(
-			this.getCanvasFingerprint()
-		);
+		const { status } = await matchMaker(this.getCanvasFingerprint());
 		if (status == 400) {
-			const status = document.getElementById("statusmsg");
-			const searchBox = document.getElementById("searchBox");
-			searchBox.querySelector(".heading").innerHTML =
+			document.getElementById("status").innerHTML =
 				"You're already in the queue!";
-			status.innerHTML = "";
-			return;
 		}
 	}
 

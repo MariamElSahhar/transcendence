@@ -173,22 +173,12 @@ export function renderPlayerDisconnectedCard(component) {
 		</div>`;
 }
 
-export function renderOpponentFoundCard(component) {
+export function renderOpponentFoundCard(component, player1, player2) {
 	const overlay = renderOverlay(component.container);
 	overlay.innerHTML = `
-		<div class="vs-container d-flex align-items-cente justify-content-center gap-3">
-			<div class="player-container d-flex">
-				<img src="${sessionStorage.getItem(
-					"avatar"
-				)}/" alt="Player 1 Avatar" class="avatar" />
-				<span class="username">You</span>
-			</div>
-			<span class="vs fs-3 fw-bold" style="z-index:2">VS</span>
-			<div class="player-container">
-				<img src="${window.APP_CONFIG.backendUrl}${
-		data["avatar"]
-	}/" alt="Player 2 Avatar" class="avatar" />
-			<span class="username">${data["player"]}</span>
-			</div>
-		</div>`;
+		<div class="card text-center">
+		<div class="card-body">
+			<h2>${player1} vs ${player2}</h2>
+		</div>
+	  </div>`;
 }
