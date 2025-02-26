@@ -5,7 +5,7 @@ HOST_IP := $(shell ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $$2
 
 # DOCKER
 docker-up:
-	HOST_IP=$(HOST_IP) docker compose up --build
+	HOST_IP=$(HOST_IP) docker compose up
 	docker-compose watch
 
 docker-down:

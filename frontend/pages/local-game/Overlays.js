@@ -151,10 +151,44 @@ export function renderTournamentResults(component, rankedPlayers) {
                     <h1 class="">${rankedPlayers[0]} wins</h1>
 					<p>🥈${rankedPlayers[1]} 🥉${rankedPlayers[2]} 🥲${rankedPlayers[3]}</p>
 					<div class="d-flex w-100 gap-2">
-							<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
-							<button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
+						<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
+						<button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
 					</div>
 				</div>
             </div>
         `;
+}
+
+export function renderPlayerDisconnectedCard(component) {
+	const overlay = renderOverlay(component.container);
+	overlay.innerHTML = `
+		<div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
+			<div class="card-header">
+				<h1 class="card-title text-warning">Oh no!</h1>
+			</div>
+			<div class="card-body">
+				<h5 class="card-subtitle mb-3 text-muted">Your opponent has disconnected</h5>
+				<button class="btn btn-primary mt-3" onclick="window.redirect('/home')">Go Home</button>
+			</div>
+		</div>`;
+}
+
+export function renderOpponentFoundCard(component) {
+	const overlay = renderOverlay(component.container);
+	overlay.innerHTML = `
+		<div class="vs-container d-flex align-items-cente justify-content-center gap-3">
+			<div class="player-container d-flex">
+				<img src="${sessionStorage.getItem(
+					"avatar"
+				)}/" alt="Player 1 Avatar" class="avatar" />
+				<span class="username">You</span>
+			</div>
+			<span class="vs fs-3 fw-bold" style="z-index:2">VS</span>
+			<div class="player-container">
+				<img src="${window.APP_CONFIG.backendUrl}${
+		data["avatar"]
+	}/" alt="Player 2 Avatar" class="avatar" />
+			<span class="username">${data["player"]}</span>
+			</div>
+		</div>`;
 }

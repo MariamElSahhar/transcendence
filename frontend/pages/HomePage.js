@@ -100,7 +100,7 @@ export class HomePage extends Component {
 			}
 
 			.btn-icon {
-				width: 30px;
+				width: auto;
 				height: 30px;
 			}
 		</style>
