@@ -12,6 +12,7 @@ import {
 	closeWebSocket,
 } from "../../scripts/utils/websocket-manager.js";
 import {
+	renderCountdownCard,
 	renderEndGameCard,
 	renderOpponentFoundCard,
 	renderPlayerDisconnectedCard,
@@ -142,9 +143,9 @@ export class RemoteGamePage extends Component {
 	}
 
 	matchFound() {
-		this.gameID = this.data["game_session_id"];
+		this.gameID = this.data.game_session_id;
 		this.playerSet = true;
-		this.sameSystem = this.data["sameSystem"];
+		this.sameSystem = this.data.sameSystem;
 		this.playerSide = this.data.position == "left" ? "right" : "left";
 		this.playerNames =
 			this.data.position == "left"
@@ -170,7 +171,6 @@ export class RemoteGamePage extends Component {
 						action: "ready",
 						gameSession: this.gameID,
 					});
-					this.createOverlay();
 				}
 			} else {
 				console.error(
@@ -183,9 +183,7 @@ export class RemoteGamePage extends Component {
 
 	startRound() {
 		if (this.data.round == 1) {
-			const countdownStart =
-				Date.now() / 1000 + window.APP_CONFIG.gameCountdown;
-			this.startCountdown(countdownStart);
+			renderCountdownCard(this.container, this.engine);
 		} else {
 			this.engine.scene.match.onPlayerReady(this.data.index);
 		}
@@ -251,8 +249,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	async removeFromMatchmaking() {
-		const { status, success, data } = await removeMatchMaking();
-		console.log(status, success, data);
+		await removeMatchMaking();
 	}
 
 	async waitForOpponent() {
@@ -284,94 +281,8 @@ export class RemoteGamePage extends Component {
 		}
 	}
 
-	startCountdown(startDateInSeconds) {
-		let secondsLeft = Math.round(startDateInSeconds - Date.now() / 1000);
-		this.updateOverlayCountdown(secondsLeft);
-		this.countDownIntervalId = setInterval(() => {
-			secondsLeft -= 1;
-			this.updateOverlayCountdown(secondsLeft);
-
-			if (secondsLeft <= 0) {
-				clearInterval(this.countDownIntervalId);
-				this.countDownIntervalId = null;
-				this.startGame();
-			}
-		}, 1000);
-	}
-
-	createOverlay() {
-		this.overlay = document.createElement("div");
-		this.overlay.id = "game-overlay";
-		this.overlay.classList.add(
-			"position-fixed",
-			"top-0",
-			"start-0",
-			"w-100",
-			"h-100",
-			"d-flex",
-			"justify-content-center",
-			"align-items-center",
-			"bg-dark",
-			"bg-opacity-75",
-			"text-white"
-		);
-		this.overlay.style.zIndex = "9999";
-		this.overlay.innerHTML = `
-				  <div class="card text-center text-dark bg-light" style="width: 18rem;">
-					<div class="card-body">
-					<h1 id="countdown" class="display-1 fw-bold">5</h1>
-					<p class="card-text">Get ready! The game will start soon.</p>
-					</div>
-					</div>
-					`;
-		this.container.appendChild(this.overlay);
-	}
-
-	updateOverlayCountdown(secondsLeft) {
-		const countdownElement = this.overlay.querySelector("#countdown");
-		if (countdownElement) {
-			countdownElement.textContent = secondsLeft;
-		}
-	}
-
-	removeOverlay() {
-		if (this.overlay) {
-			this.overlay.remove();
-			this.overlay = null;
-		}
-	}
-
 	renderEndGameCard(playerScore, opponentScore) {
 		renderEndGameCard(this, this.playerNames, [playerScore, opponentScore]);
-	}
-
-	addEndGameCard(playerScore, opponentScore) {
-		const playerName = this.playerNames[0];
-		const opponentName = this.playerNames[1];
-
-		this.createOverlay();
-		this.overlay.innerHTML = `
-				<div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
-				  <div class="card-header">
-					<h1 class="card-title text-success">Game Over</h1>
-				  </div>
-				  <div class="card-body">
-					<h5 class="card-subtitle mb-3 text-muted">Final Score</h5>
-					<div class="d-flex justify-content-center align-items-center mb-4">
-					  <div class="text-center me-3">
-						<h6 class="fw-bold text-truncate" style="max-width: 100px;">${playerName}</h6>
-						<p class="display-6 fw-bold">${playerScore}</p>
-						</div>
-						<div class="px-3 display-6 fw-bold align-self-center">:</div>
-					  <div class="text-center ms-3">
-					  <h6 class="fw-bold text-truncate" style="max-width: 100px;">${opponentName}</h6>
-					  <p class="display-6 fw-bold">${opponentScore}</p>
-					  </div>
-					  </div>
-					<button class="btn btn-primary mt-3" onclick="window.redirect('/home')">Go Home</button>
-					</div>
-					</div>
-					`;
 	}
 
 	getCanvasFingerprint() {
