@@ -162,13 +162,14 @@ export function renderTournamentResults(component, rankedPlayers) {
 export function renderPlayerDisconnectedCard(component) {
 	const overlay = renderOverlay(component.container);
 	overlay.innerHTML = `
-		<div id="end-game-card" class="card text-center text-dark bg-light" style="max-width: 24rem;">
-			<div class="card-header">
-				<h1 class="card-title text-warning">Oh no!</h1>
-			</div>
+		<div id="end-game-card" class="card text-center bg-light">
 			<div class="card-body">
-				<h5 class="card-subtitle mb-3 text-muted">Your opponent has disconnected</h5>
-				<button class="btn btn-primary mt-3" onclick="window.redirect('/home')">Go Home</button>
+				<h1 class="card-title">Oh no!</h1>
+				<h5 class="card-subtitle mb-3">Your opponent has disconnected</h5>
+				<div class="d-flex w-100 gap-2">
+					<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
+					<button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
+				</div>
 			</div>
 		</div>`;
 }

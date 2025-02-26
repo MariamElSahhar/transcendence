@@ -5,7 +5,7 @@ import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 import {
 	matchMaker,
 	removeMatchMaking,
-} from "../../scripts/clients/gamelog-client.js";
+} from "../../scripts/clients/matchmaking-client.js";
 import {
 	initializeWebSocket,
 	sendWebSocketMessage,
@@ -208,6 +208,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	async disconnectedCallback() {
+		console.log("disconnected callback");
 		try {
 			if (!this.engine || !this.engine.scene.match.matchIsOver)
 				sendWebSocketMessage({
