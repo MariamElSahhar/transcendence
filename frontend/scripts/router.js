@@ -49,7 +49,7 @@ const routes = {
 		title: "Pong | Homepage",
 	},
 	"/dashboard": {
-		layout: "sidebar",
+		layout: "main",
 		component: "dashboard-page",
 		path: "../pages/dashboard/DashboardPage.js",
 		protected: true,

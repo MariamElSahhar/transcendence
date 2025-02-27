@@ -27,54 +27,53 @@ export class GameStatsCard extends Component {
 		return (
 			this.stats &&
 			`
-            <div class="game-stats d-flex h-100 w-100 justify-content-between align-items-center p-4">
-                <div class="circle d-flex justify-content-center align-items-center">
-                    <div class="stats-text d-flex flex-column justify-content-center align-items-center">
-                        <h4 class="position-absolute stats-fraction d-flex flex-column">
-                            <span>
-                                ${this.stats.totalWon}/${this.stats.totalPlayed}
-                            </span>
-                            <span class="fs-5">Wins</span>
-                        </h4>
-                        <h4 class="position-absolute stats-percent d-flex flex-column">
-                            <span>
-                                ${Math.round(
-									(this.stats.totalWon * 100) /
-										this.stats.totalPlayed
-								)}%
-                            </span>
-                            <span class="fs-5">Win Rate</span>
-                        </h4>
+            <div class="game-stats d-flex h-100 w-100 justify-content-center align-items-center p-4 position-relative">
+                <div class="circle d-flex justify-content-center align-items-center position-relative">
+                    <div class="stats-text d-flex flex-column justify-content-center align-items-center position-relative">
+                    <img src="/assets/crown.png" alt="Game Icon" class="crown-icon position-relative">
+                        <div class="position-relative d-flex flex-column align-items-center">
+                            <h4 class=" stats-fraction d-flex flex-column">
+                                <span>
+                                    ${this.stats.totalWon}/${this.stats.totalPlayed}
+                                </span>
+                                <span class="fs-5">Wins</span>
+                            </h4>
+                            <h4 class="position-absolute stats-percent d-flex flex-column">
+                                <span>
+                                    ${Math.round(
+                                        (this.stats.totalWon * 100) /
+                                            this.stats.totalPlayed
+                                    )}%
+                                </span>
+                                <span class="fs-5">Win Rate</span>
+                            </h4>
+                        </div>
                     </div>
                 </div>
                 <div class="breakdown d-flex flex-column">
                     <p class="d-flex align-items-baseline my-1">
-                        <span>
-                            <i class="bi bi-joystick"></i>
-                            Local Pong
-                        </span>
-                        <span class="ms-auto">
-                            ${this.stats.localWon}/${this.stats.localPlayed}
-                        </span>
+                        <span><i class="bi bi-joystick"></i> Local Pong</span>
+                        <span class="ms-auto">${this.stats.localWon}/${this.stats.localPlayed}</span>
                     </p>
+                    <div class="progress local">
+                        <div class="progress-bar" style="width: ${this.stats.localWon / this.stats.localPlayed * 100}%;"></div>
+                    </div>
+
                     <p class="d-flex align-items-baseline my-1">
-                        <span>
-                        <i class="bi bi-people-fill"></i>
-                        Remote Pong
-                        </span>
-                        <span class="ms-auto">
-                            ${this.stats.remoteWon}/${this.stats.remotePlayed}
-                        </span>
+                        <span><i class="bi bi-people-fill"></i> Remote Pong</span>
+                        <span class="ms-auto">${this.stats.remoteWon}/${this.stats.remotePlayed}</span>
                     </p>
+                    <div class="progress remote">
+                        <div class="progress-bar" style="width: ${this.stats.remoteWon / this.stats.remotePlayed * 100}%;"></div>
+                    </div>
+
                     <p class="d-flex align-items-baseline my-1">
-                        <span>
-                            <i class="bi bi-grid-3x3-gap-fill"></i>
-                            Tic Tac Toe
-                        </span>
-                        <span class="ms-auto">
-                            ${this.stats.tttWon}/${this.stats.tttPlayed}
-                        </span>
+                        <span><i class="bi bi-grid-3x3-gap-fill"></i> Tic Tac Toe</span>
+                        <span class="ms-auto">${this.stats.tttWon}/${this.stats.tttPlayed}</span>
                     </p>
+                    <div class="progress ttt">
+                        <div class="progress-bar" style="width: ${this.stats.tttWon / this.stats.tttPlayed * 100}%;"></div>
+                    </div>
                 </div>
             </div>
         `
@@ -84,8 +83,48 @@ export class GameStatsCard extends Component {
 	style() {
 		return `
         <style>
+            .crown-icon {
+                transform: translateY(50%);
+                top: -15px;
+                width: 40px;
+                height: auto;
+            }
+
+            .progress {
+                border-radius:0 !important;
+                height:12px!important;
+                margin-bottom: 8px;
+            }
+
+            .progress-bar {
+                height: 100%;
+                transition: width 0.5s ease-in-out;
+            }
+
+            .local .progress {
+                background-color: aliceblue;
+            }
+
+            .local .progress-bar {
+                background-color: cornflowerblue;
+            }
+
+            .remote .progress {
+                background-color: lavender;
+            }
+
+            .remote .progress-bar {
+                background-color: indigo;
+            }
+
+            .ttt .progress {
+                background-color: lavenderblush;
+            }
+
+            .ttt .progress-bar {
+                background-color: pink;
+            }
             .game-stats {
-                position: relative;
                 width: 150px;
                 height: 150px;
                 flex-direction: column;
@@ -93,7 +132,6 @@ export class GameStatsCard extends Component {
             }
 
             .circle {
-                position: relative;
                 width: 120px;
                 height: 120px;
                 border-radius: 50%;
@@ -109,6 +147,7 @@ export class GameStatsCard extends Component {
                 height: 100px;
                 background: white;
                 border-radius: 50%;
+                background-color:#87ceeb;
             }
             .breakdown {
                 width: 100%
@@ -136,7 +175,6 @@ export class GameStatsCard extends Component {
             }
 
             .stats-text {
-                position: absolute;
                 font-size: 1.25rem;
                 font-weight: bold;
                 text-align: center;
@@ -144,6 +182,7 @@ export class GameStatsCard extends Component {
             }
 
             .stats-percent {
+
                 opacity: 0;
                 visibility: hidden;
                 transition: opacity 0.3s ease, visibility 0.3s ease;

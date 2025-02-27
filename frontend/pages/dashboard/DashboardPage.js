@@ -40,7 +40,7 @@ export class DashboardPage extends Component {
                 <div class="d-flex w-100 row-gap-5">
                     <div class="d-flex flex-column w-100 gap-3">
 						<div class="graphs d-flex w-100 column-gap-2">
-							<game-stats class="flex-fill h-100 rounded"></game-stats>
+							<game-stats class=" w-100 flex-fill h-100 rounded"></game-stats>
 							<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
 						</div>
                         <gamelog-table class=""></gamelog-table>
