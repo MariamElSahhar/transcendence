@@ -164,43 +164,63 @@ export class SignUpPage extends Component {
 	}
 
 	#setupEventListeners() {
-		this.elements.username.addEventListener(
+		super.addComponentEventListener(
+			this.elements.username,
 			"input",
 			this.#handleUsernameInput.bind(this)
 		);
-		this.elements.email.addEventListener(
+
+		super.addComponentEventListener(
+			this.elements.email,
 			"input",
 			this.#handleEmailInput.bind(this)
 		);
-		this.elements.password.addEventListener(
+
+		super.addComponentEventListener(
+			this.elements.password,
 			"input",
 			this.#handlePasswordInput.bind(this)
 		);
-		this.elements.confirmPassword.addEventListener(
+
+		super.addComponentEventListener(
+			this.elements.confirmPassword,
 			"input",
 			this.#handleConfirmPasswordInput.bind(this)
 		);
 
-		this.elements.togglePassword.addEventListener("click", () =>
-			this.switchPasswordVisibility(
-				this.elements.password,
-				this.elements.togglePassword
-			)
-		);
-		this.elements.toggleConfirmPassword.addEventListener("click", () =>
-			this.switchPasswordVisibility(
-				this.elements.confirmPassword,
-				this.elements.toggleConfirmPassword
-			)
+		super.addComponentEventListener(
+			this.elements.togglePassword,
+			"click",
+			() =>
+				this.switchPasswordVisibility(
+					this.elements.password,
+					this.elements.togglePassword
+				)
 		);
 
-		this.elements.form.addEventListener(
+		super.addComponentEventListener(
+			this.elements.toggleConfirmPassword,
+			"click",
+			() =>
+				this.switchPasswordVisibility(
+					this.elements.confirmPassword,
+					this.elements.toggleConfirmPassword
+				)
+		);
+
+		super.addComponentEventListener(
+			this.elements.form,
 			"submit",
 			this.#submitForm.bind(this)
 		);
-		this.elements.loginLink.addEventListener("click", () => {
-			window.location.href = "/login";
-		});
+
+		super.addComponentEventListener(
+			this.elements.loginLink,
+			"click",
+			() => {
+				window.location.href = "/login";
+			}
+		);
 	}
 
 	switchPasswordVisibility(input, toggleButton) {

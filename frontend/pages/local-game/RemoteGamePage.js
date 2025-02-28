@@ -52,7 +52,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketMessage(data) {
-		console.log("??????????", data)
+		console.log("??????????", data);
 		this.data = data;
 		if (data["message"] === "Match found!" && !this.playerSet)
 			this.matchFound();
@@ -125,7 +125,7 @@ export class RemoteGamePage extends Component {
 
 	postRender() {
 		this.container = this.querySelector("#container");
-		window.addEventListener("beforeunload", (event) => {
+		super.addComponentEventListener(window, "beforeunload", (event) => {
 			if (!this.engine || !this.engine.scene.match.matchIsOver)
 				sendWebSocketMessage({
 					action: "leavingMatch",
@@ -169,7 +169,7 @@ export class RemoteGamePage extends Component {
 						this.sameSystem
 					);
 					this.engine.createScene();
-					console.log("why are we here")
+					console.log("why are we here");
 					sendWebSocketMessage({
 						action: "ready",
 						gameSession: this.gameID,
@@ -185,7 +185,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	startRound() {
-		console.log("??????????")
+		console.log("??????????");
 		if (this.data.round == 1) {
 			renderCountdownCard(this.container, this.engine);
 		} else {

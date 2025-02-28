@@ -110,19 +110,19 @@ export class LoginPage extends Component {
 		const errorAlert = this.querySelector("#error-alert");
 		const registerLink = this.querySelector("#register-link");
 
-		usernameInput.addEventListener("input", () => {
+		super.addComponentEventListener(usernameInput, "input", () => {
 			this.handleUsernameInput(usernameInput, loginButton);
 		});
 
-		passwordInput.addEventListener("input", () => {
+		super.addComponentEventListener(passwordInput, "input", () => {
 			this.handlePasswordInput(passwordInput, loginButton);
 		});
 
-		togglePasswordButton.addEventListener("click", () =>
-			this.switchPasswordVisibility(passwordInput, togglePasswordButton)
-		);
+		super.addComponentEventListener(togglePasswordButton, "click", () => {
+			this.switchPasswordVisibility(passwordInput, togglePasswordButton);
+		});
 
-		loginForm.addEventListener("submit", (event) => {
+		super.addComponentEventListener(loginForm, "submit", (event) => {
 			event.preventDefault();
 			this.submitLogin(
 				usernameInput.value,
@@ -132,7 +132,7 @@ export class LoginPage extends Component {
 			);
 		});
 
-		registerLink.addEventListener("click", () => {
+		super.addComponentEventListener(registerLink, "click", () => {
 			window.location.href = "/sign-up";
 		});
 	}

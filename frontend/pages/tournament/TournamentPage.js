@@ -72,7 +72,7 @@ export class TournamentPage extends Component {
 		const errorMessage = this.querySelector("#error-message");
 
 		// Enable/disable the submit button dynamically
-		form.addEventListener("input", () => {
+		super.addComponentEventListener(form, "input", () => {
 			const allFilled = [
 				...form.querySelectorAll("input:not([disabled])"),
 			].every((input) => input.value.trim() !== "");
@@ -85,7 +85,7 @@ export class TournamentPage extends Component {
 		});
 
 		// Handle form submission
-		form.addEventListener("submit", (event) => {
+		super.addComponentEventListener(form, "submit", (event) => {
 			event.preventDefault();
 			errorMessage.textContent = ""; // Clear previous errors
 			errorMessage.classList.add("d-none");

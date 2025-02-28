@@ -70,7 +70,7 @@ export class LocalGamePage extends Component {
 			const startGameButton = this.querySelector("#submit-players");
 			const player2NameInput = this.querySelector("#player2-name");
 
-			player2NameInput.addEventListener("input", () => {
+			super.addComponentEventListener(player2NameInput, "input", () => {
 				if (player2NameInput.value) {
 					startGameButton.removeAttribute("disabled");
 				} else {
@@ -78,12 +78,16 @@ export class LocalGamePage extends Component {
 				}
 			});
 
-			startGameButton.addEventListener("click", async (event) => {
-				event.preventDefault();
-				const player2Name = player2NameInput.value;
-				this.playerNames.push(player2Name || "Player 2");
-				this.startGame();
-			});
+			super.addComponentEventListener(
+				startGameButton,
+				"click",
+				async (event) => {
+					event.preventDefault();
+					const player2Name = player2NameInput.value;
+					this.playerNames.push(player2Name || "Player 2");
+					this.startGame();
+				}
+			);
 		} else {
 			this.playerNames.push("Computer");
 			setTimeout(async () => {
