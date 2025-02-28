@@ -17,18 +17,21 @@ window.APP_CONFIG = {
 const routes = {
 	// PUBLIC SCREENS
 	"/": {
+		layout: "auth",
 		component: "landing-page",
 		path: "../pages/LandingPage.js",
 		protected: false,
 		title: "Pong | Landing Page",
 	},
 	"/login": {
+		layout: "auth",
 		component: "login-page",
 		path: "../pages/auth/LoginPage.js",
 		protected: false,
 		title: "Pong | Log In",
 	},
 	"/sign-up": {
+		layout: "auth",
 		component: "sign-up-page",
 		path: "../pages/auth/SignUpPage.js",
 		protected: false,
@@ -107,6 +110,10 @@ const routes = {
 };
 
 const layouts = {
+	auth: {
+		component: "auth-layout",
+		path: "../layouts/AuthLayout.js",
+	},
 	main: {
 		component: "main-layout",
 		path: "../layouts/MainLayout.js",

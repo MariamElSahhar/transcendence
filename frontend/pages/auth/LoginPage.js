@@ -17,14 +17,7 @@ export class LoginPage extends Component {
 
 	render() {
 		return `
-			<div
-				id="container"
-				class="d-flex flex-column w-100 vh-100 overflow-hidden position-relative">
-				<div class="sky"></div>
-				<h3 class="w-100 py-2">
-					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
-				</h3>
-				<main class="d-flex justify-content-center align-items-center flex-grow-1">
+				<main class="d-flex justify-content-center align-items-center h-100 w-100 flex-grow-1">
 					<div class="login-card card shadow p-5 mx-auto bg-light">
 						<h2 class="m-0 w-100 text-center mb-3">Welcome Back</h2>
 
@@ -64,41 +57,7 @@ export class LoginPage extends Component {
 						</form>
 					</div>
 				</main>
-				<footer-component class="mt-auto"></footer-component>
-			</div>
 		`;
-	}
-
-	style() {
-		return `
-		<style>
-			/* Sky animation */
-			.sky {
-				display: flex;
-				background: url(/assets/sky.png);
-				background-size: contain;
-				background-repeat: repeat-x;
-				position: absolute;
-				top: 0;
-				left: -400%;
-				width: 500%;
-				height: 20em;
-				animation: move-sky 500s linear infinite;
-				opacity: 0.2;
-				z-index: 0;
-				pointer-events: none; /* Allow interactions with elements above */
-			}
-
-			@keyframes move-sky {
-				from {
-					transform: translateX(0%);
-				}
-				to {
-					transform: translateX(60%);
-				}
-			}
-
-		</style>`;
 	}
 
 	postRender() {
@@ -133,7 +92,7 @@ export class LoginPage extends Component {
 		});
 
 		super.addComponentEventListener(registerLink, "click", () => {
-			window.location.href = "/sign-up";
+			window.redirect("/sign-up");
 		});
 	}
 

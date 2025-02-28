@@ -28,110 +28,69 @@ export class SignUpPage extends Component {
 
 	render() {
 		return `
-            <div
-           id="container"
-				class="d-flex flex-column w-100 vh-100"
-				style="background-color: rgb(135, 206, 235); position: relative; overflow: hidden;">
-				<div class="sky" style="z-index:0"></div>
-				<h3 class="w-100 py-2">
-					<i role="button" class="bi bi-arrow-left p-2 mx-2" onclick="window.redirect('/')"></i>
-				</h3>
-                <main class="d-flex justify-content-center align-items-center flex-grow-1">
-                    <div class="login-card card shadow p-5 mx-auto bg-light">
+			<main class="d-flex justify-content-center align-items-center flex-grow-1">
+				<div class="login-card card shadow p-5 mx-auto bg-light">
+					<!-- Header -->
+					<h2 class="m-0 w-100 text-center mb-3">Create an Account</h2>
 
-						<!-- Header -->
-						<h2 class="m-0 w-100 text-center mb-3">Create an Account</h2>
+					<!-- Form -->
+					<form id="registration-form" class="needs-validation" novalidate>
 
-						<!-- Form -->
-                        <form id="registration-form" class="needs-validation" novalidate>
+						<!-- Error -->
+						<div id="error-banner" class="alert alert-danger d-none" role="alert"></div>
 
-							<!-- Error -->
-							<div id="error-banner" class="alert alert-danger d-none" role="alert"></div>
-
-							<!-- Username -->
-                            <div class="form-group mb-1">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="username" placeholder="Username" required>
-                                    <div id="username-error" class="invalid-feedback">Invalid username.</div>
-                                </div>
-                            </div>
-
-							<!-- Email -->
-                            <div class="form-group mb-1">
-                                <div class="input-group">
-                                    <input type="email" class="form-control" id="email" placeholder="Email" required>
-                                    <div id="email-error" class="invalid-feedback">Invalid email address.</div>
-                                </div>
-                            </div>
-
-							<!-- Password -->
-                            <div class="form-group mb-1">
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="password" placeholder="Password" required>
-                                    <span id="toggle-password-visibility" class="input-group-text">
-                                        <i class="bi bi-eye"></i>
-                                    </span>
-                                    <div id="password-error" class="invalid-feedback">Invalid password.</div>
-                                </div>
-                            </div>
-
-							<!-- Confirm Password -->
-                            <div class="form-group mb-1">
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
-                                    <span id="toggle-confirm-password-visibility" class="input-group-text">
-                                        <i class="bi bi-eye"></i>
-                                    </span>
-                                    <div id="confirm-password-error" class="invalid-feedback">Passwords do not match.</div>
-                                </div>
-                            </div>
-
-							<!-- Submit -->
-							<div>
-								<button id="register-btn" type="submit" class="btn w-100 mt-1" disabled>Sign Up</button>
+						<!-- Username -->
+						<div class="form-group mb-1">
+							<div class="input-group">
+								<input type="text" class="form-control" id="username" placeholder="Username" required>
+								<div id="username-error" class="invalid-feedback">Invalid username.</div>
 							</div>
-                        </form>
+						</div>
 
-						<!-- Log In -->
-                        <div class="text-center mt-2">
-                            <small role="button" id="login-link">
-                                Already have an account? <span class="text-decoration-underline">Log In</span></small>
-                            </small>
-                        </div>
-                    </div>
-					</main>
-				<footer-component class="mt-auto"></footer-component>
-            </div>
-        `;
-	}
+						<!-- Email -->
+						<div class="form-group mb-1">
+							<div class="input-group">
+								<input type="email" class="form-control" id="email" placeholder="Email" required>
+								<div id="email-error" class="invalid-feedback">Invalid email address.</div>
+							</div>
+						</div>
 
-	style() {
-		return `<style>
-			/* Sky animation */
-			.sky {
-				display: flex;
-				background: url(/assets/sky.png);
-				background-size: contain;
-				background-repeat: repeat-x;
-				position: absolute;
-				top: 0;
-				left: -400%;
-				width: 500%;
-				height: 20em;
-				animation: move-sky 500s linear infinite;
-				z-index: 0;
-				pointer-events: none; /* Allow interactions with elements above */
-			}
+						<!-- Password -->
+						<div class="form-group mb-1">
+							<div class="input-group">
+								<input type="password" class="form-control" id="password" placeholder="Password" required>
+								<span id="toggle-password-visibility" class="input-group-text">
+									<i class="bi bi-eye"></i>
+								</span>
+								<div id="password-error" class="invalid-feedback">Invalid password.</div>
+							</div>
+						</div>
 
-			@keyframes move-sky {
-					from {
-						transform: translateX(0%);
-					}
-					to {
-						transform: translateX(60%);
-					}
-				}
-		</style>
+						<!-- Confirm Password -->
+						<div class="form-group mb-1">
+							<div class="input-group">
+								<input type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
+								<span id="toggle-confirm-password-visibility" class="input-group-text">
+									<i class="bi bi-eye"></i>
+								</span>
+								<div id="confirm-password-error" class="invalid-feedback">Passwords do not match.</div>
+							</div>
+						</div>
+
+						<!-- Submit -->
+						<div>
+							<button id="register-btn" type="submit" class="btn w-100 mt-1" disabled>Sign Up</button>
+						</div>
+					</form>
+
+					<!-- Log In -->
+					<div class="text-center mt-2">
+						<small role="button" id="login-link">
+							Already have an account? <span class="text-decoration-underline">Log In</span></small>
+						</small>
+					</div>
+				</div>
+			</main>
         `;
 	}
 
@@ -218,7 +177,7 @@ export class SignUpPage extends Component {
 			this.elements.loginLink,
 			"click",
 			() => {
-				window.location.href = "/login";
+				window.redirect("/login");
 			}
 		);
 	}
