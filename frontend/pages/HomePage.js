@@ -1,4 +1,3 @@
-import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Component } from "./Component.js";
 
 export class HomePage extends Component {
@@ -28,33 +27,58 @@ export class HomePage extends Component {
 	render() {
 		const buttonClasses =
 			"btn btn-primary brick-border d-flex align-items-center justify-content-between w-100 p-3 fw-bold";
+		const icons = {
+			mario: (flip) =>
+				`<img src="/assets/sprites/mario.png" class="btn-icon ${
+					flip ? `flip-h` : ``
+				}" alt="Mario">`,
+			luigi: (flip) =>
+				`<img src="/assets/sprites/luigi.png" class="btn-icon ${
+					flip ? `flip-h` : ``
+				}" alt="Luigi">`,
+			robot: (flip) =>
+				`<img src="/assets/sprites/robot.png" class="btn-icon ${
+					flip ? `flip-h` : ``
+				}" alt="Luigi">`,
+			shroom: (flip) =>
+				`<img src="/assets/sprites/shroom.png" class="btn-icon ${
+					flip ? `flip-h` : ``
+				}" alt="Luigi">`,
+			plant: (flip) =>
+				`<img src="/assets/sprites/plant.png" class="btn-icon ${
+					flip ? `flip-h` : ``
+				}" alt="Luigi">`,
+		};
+
 		return `
             <div class="d-flex w-100 h-100 justify-content-between align-items-center">
 				<div class="container w-100">
 					<button id="play-single-player-game" class="${buttonClasses}">
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Left Icon">
+						${icons.mario()}
 						Single Player
-						<img src="/assets/sprites/robot.png" class="btn-icon" alt="Right Icon">
+						${icons.robot(true)}
 					</button>
 					<button id="play-two-player-game" class="${buttonClasses}">
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Left Icon">
+						${icons.mario()}
 						Two Player
-						<img src="/assets/sprites/luigi.png" class="btn-icon" alt="Right Icon">
+						${icons.luigi(true)}
 					</button>
 					<button id="play-remote-game" class="${buttonClasses}">
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Left Icon">
+						${icons.mario()}
 						Online Two Player
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Right Icon">
+						${icons.mario(true)}
 					</button>
 					<button id="play-tournament" class="${buttonClasses}">
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Left Icon">
+						${icons.mario()}
+						${icons.mario()}
 						Tournament
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Right Icon">
+						${icons.luigi(true)}
+						${icons.luigi(true)}
 					</button>
 					<button id="play-ttt" class="${buttonClasses}">
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Left Icon">
+						${icons.shroom()}
 						Tic Tac Toe
-						<img src="/assets/sprites/mario.png" class="btn-icon" alt="Right Icon">
+						${icons.plant(true)}
 					</button>
 				</div>
 			</div>
@@ -64,6 +88,10 @@ export class HomePage extends Component {
 	style() {
 		return `
 		<style>
+			.flip-h {
+				transform: scaleX(-1)
+			}
+
 			button {
 				max-width: 300px;
 				max-height: 60px;
