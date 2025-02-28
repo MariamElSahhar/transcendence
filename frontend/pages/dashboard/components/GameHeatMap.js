@@ -16,33 +16,42 @@ export class GameHeatMap extends Component {
 
 	render() {
 		return `
-            <div class="h-100 w-100 p-3 flex-column d-flex justify-content-center align-items-start">
-                <small class="my-0">${this.stats.totalPlayed} games played in 2025</small>
-                <div class="heatmap-grid d-grid justify-content-start overflow-scroll w-100"></div>
-            </div>
-        `;
+			<div class="h-100 w-100 p-3 flex-column d-flex justify-content-center align-items-start">
+				<small class="my-0 mb-3">Game logs</small>
+				<div class="heatmap-grid d-grid justify-content-start w-100"></div>
+			</div>
+		`;
 	}
 
 	style() {
 		return `
-            <style>
-                .heatmap-grid {
-                    grid-template-rows: repeat(7, 12px);
-                    grid-auto-flow: column;
-                    gap: 2px;
-                }
-                .day {
-                    width: 12px;
-                    height: 12px;
-                    background-color: #ebedf0;
-                    border-radius: 2px;
-                }
-                .day.level-1 { background-color: #c6e48b; }
-                .day.level-2 { background-color: #7bc96f; }
-                .day.level-3 { background-color: #239a3b; }
-                .day.level-4 { background-color: #196127; }
-            </style>
-        `;
+			<style>
+
+				.heatmap-grid {
+					grid-template-rows: repeat(7, 14px);
+					grid-auto-flow: column;
+					gap: 3px;
+				}
+
+				.day {
+					width: 14px;
+					height: 14px;
+					background-color: #ffebc5;
+					border-radius: 3px;
+					border: 1px solid #b5651d;
+					transition: transform 0.2s ease-in-out;
+				}
+
+				.day:hover {
+					transform: scale(1.2);
+				}
+
+				.day.level-1 { background-color: #6185f8; }
+				.day.level-2 { background-color: #43b047; }
+				.day.level-3 { background-color: #ee830a; }
+				.day.level-4 { background-color: #e52521; }
+			</style>
+		`;
 	}
 
 	postRender() {

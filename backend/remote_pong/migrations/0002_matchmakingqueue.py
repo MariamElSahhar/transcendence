@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
+                ("systemID", models.TextField(null=True, blank=True)),
             ],
         ),
     ]

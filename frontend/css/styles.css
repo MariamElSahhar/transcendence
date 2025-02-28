@@ -17,13 +17,6 @@ body {
 	box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
 }
 
-/* Button default width
-button {
-	max-width: 400px;
-	padding: 2px;
-	background-color: var(--brick-500);
-} */
-
 /* Smaller input boxes */
 input.form-control {
 	margin: 0 auto;
@@ -51,40 +44,10 @@ input.form-control {
 	align-items: center; /* Center-align content */
 	padding: 15px;
 	position: relative;
-	background: #da7b27;
-	color: white;
-
-	h2 {
-		font-weight: bold;
-		margin-bottom: 10px;
-		text-align: center; /* Center-align text */
-		color: #fff;
-	}
 
 	p {
 		font-size: 20px;
 		margin-bottom: 15px;
-		color: #ddd; /* Slightly lighter shade for better readability */
-		text-align: center;
-	}
-
-	button {
-		padding: 10px 20px;
-		font-size: 16px;
-		font-weight: bold;
-		border: none;
-		border-radius: 5px; /* Rounded corners for a polished look */
-		cursor: pointer;
-		transition: background 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
-
-		&:hover {
-			background: linear-gradient(
-				135deg,
-				rgba(245, 165, 97, 0.4),
-				rgba(245, 165, 97, 0.4)
-			) !important; /* Reverse gradient on hover */
-			transform: scale(1.05); /* Slight zoom effect */
-		}
 	}
 
 	.card-image {

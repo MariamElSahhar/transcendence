@@ -22,32 +22,33 @@ def test_view(request):
 def match_maker(request):
 	systemID=request.data.get("systemID")
 	if request.method == "POST":
-		player = request.user
-		user1 =  CustomUser.objects.get(username=player)
-		other_player = MatchmakingQueue.objects.exclude(player=player).order_by('joined_at').first()
-		if MatchmakingQueue.objects.filter(player=player).exists() and not other_player:
-			return Response({"message": "You are already in the queue"}, status=400)
-		if not MatchmakingQueue.objects.filter(player=player).exists():
-			MatchmakingQueue.objects.create(player=player, systemID=systemID)
-		if other_player:
-			if(other_player.systemID == systemID):
-				same_system = True
-			else:
-				same_system = False
-			game_session = GameSession.objects.create(
-				player1=other_player.player, player2=player
-			)
-			user2 = CustomUser.objects.get(username = other_player.player)
-			MatchmakingQueue.objects.filter(player__in=[player, other_player.player]).delete()
-			notify_match(user1, user2,game_session.id, same_system)
-			return Response(
-				{
-					"message": "Match found!",
-					"game_session_id": game_session.id
-				}
-			)
+		with transaction.atomic():
+			player = request.user
+			user1 =  CustomUser.objects.get(username=player)
+			other_player = MatchmakingQueue.objects.exclude(player=player).select_for_update().order_by('joined_at').first()
+			if MatchmakingQueue.objects.filter(player=player).exists() and not other_player:
+				return Response({"message": "You are already in the queue"}, status=400)
+			if not MatchmakingQueue.objects.filter(player=player).exists():
+				MatchmakingQueue.objects.create(player=player, systemID=systemID)
+			if other_player:
+				if(other_player.systemID == systemID):
+					same_system = True
+				else:
+					same_system = False
+				game_session = GameSession.objects.create(
+					player1=other_player.player, player2=player
+				)
+				user2 = CustomUser.objects.get(username = other_player.player)
+				MatchmakingQueue.objects.filter(player__in=[player, other_player.player]).delete()
+				notify_match(user1, user2,game_session.id, same_system)
+				return Response(
+					{
+						"message": "Match found!",
+						"game_session_id": game_session.id
+					}
+				)
 
-		return Response({"message": "Waiting for a match..."})
+			return Response({"message": "Waiting for a match..."})
 	elif request.method=="DELETE":
 		MatchmakingQueue.objects.filter(player=request.user).delete()
 		return Response(

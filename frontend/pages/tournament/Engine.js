@@ -9,22 +9,20 @@ export class Engine {
 	#scene;
 	#component;
 	#onMatchEndCallback;
+	playerNames;
 
-	constructor(component, onMatchEndCallback) {
-		this.gameSession=-1;
+	constructor(component, playerNames, onMatchEndCallback) {
+		this.gameSession = -1;
 		this.#component = component;
-		this.#threeJS = new ThreeJSUtils(this);
-		this.#keyHookHandler = new KeyHandler(this);
-		this.#scene = new Scene();
+		this.playerNames = playerNames;
 		this.#onMatchEndCallback = onMatchEndCallback;
 	}
 
-	async startGame(playerNames) {
-		if (!Array.isArray(playerNames) || playerNames.length < 2) {
-			console.error("Invalid player names:", playerNames);
+	async renderScene() {
+		if (!Array.isArray(this.playerNames) || this.playerNames.length < 2) {
+			console.error("Invalid player names:", this.playerNames);
 			return;
 		}
-		console.log(`Starting game with players: ${playerNames.join(" vs ")}`);
 
 		if (!this.#component || !this.#component.container) {
 			console.error("Invalid component or container.");
@@ -34,50 +32,49 @@ export class Engine {
 			this.stopAnimationLoop();
 			this.#threeJS.clearRenderer();
 			this.#threeJS = null;
-			// console.log("Previous renderer cleared.");
 		}
 
 		if (this.#scene) {
 			this.clearScene(this.#scene.threeJSScene);
 			this.#scene = null;
-			// console.log("Previous scene cleared.");
 		}
 		const container = this.#component.container;
 		const canvas = container.querySelector("canvas");
 		if (canvas) {
 			container.removeChild(canvas);
-			// console.log("Previous canvas removed from container.");
 		}
 
 		this.#threeJS = new ThreeJSUtils(this);
 		this.#keyHookHandler = new KeyHandler(this);
 
 		this.#scene = new Scene();
-		try {
-			await this.#scene.init(this, playerNames, this.#onMatchEndCallback);
-			// console.log("Scene initialized successfully.");
-
+		await this.#scene.init(
+			this,
+			this.playerNames,
+			this.#onMatchEndCallback
+		);
+		if (this.#scene) {
 			this.#scene.updateCamera();
-			this.startListeningForKeyHooks();
 			this.displayGameScene();
-		} catch (error) {
-			console.error("Error initializing scene:", error);
-			this.#scene = null;
+		} else {
+			console.error("Scene initialization failed");
 		}
 	}
 
+	startGame() {
+		this.startListeningForKeyHooks();
+		this.#scene.startGame();
+	}
+
 	cleanUp() {
-		// console.log("Starting engine cleanup...");
 		try {
 			this.stopAnimationLoop();
-			// console.log("Animation loop stopped.");
 		} catch (err) {
 			console.error("Error stopping animation loop:", err);
 		}
 		try {
 			if (this.#keyHookHandler) {
 				this.#keyHookHandler.stopListeningForKeys();
-				// console.log("Key hook handler stopped.");
 			}
 		} catch (err) {
 			console.error("Error stopping key hook handler:", err);
@@ -94,13 +91,10 @@ export class Engine {
 		try {
 			if (this.#threeJS) {
 				this.#threeJS.clearRenderer();
-				// console.log("Renderer cleared.");
 			}
 		} catch (err) {
 			console.error("Error clearing the renderer:", err);
 		}
-
-		// console.log("Engine cleaned up successfully.");
 	}
 
 	renderFrame() {

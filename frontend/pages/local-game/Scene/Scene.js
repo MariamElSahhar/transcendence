@@ -3,14 +3,14 @@ import { Match } from "./Match.js";
 import { PongGameBox } from "./PongGameBox.js";
 
 export class Scene {
-  #engine;
-  #threeJSScene = new THREE.Scene();
-  match = new Match();
-  #pongGameBox;
-  #matchHalfWidth = 20;
-  #matchHalfHeight = 13.75;
-  #cameraPadding = 10;
-  #boardSize;
+	#engine;
+	#threeJSScene = new THREE.Scene();
+	match = new Match();
+	#pongGameBox;
+	#matchHalfWidth = 20;
+	#matchHalfHeight = 13.75;
+	#cameraPadding = 20;
+	#boardSize;
 
 	constructor() {}
 
@@ -20,19 +20,6 @@ export class Scene {
 		try {
 			await this.match.init(engine);
 			this.#threeJSScene.add(this.match.threeJSGroup);
-
-			// Load background image
-			const textureLoader = new THREE.TextureLoader();
-			const backgroundTexture = textureLoader.load(
-				"/assets/textures/newmario.jpg",
-				undefined,
-				undefined,
-				(error) =>
-					console.error("Error loading background image:", error)
-			);
-
-			// Set the background of the scene
-			this.#threeJSScene.background = backgroundTexture;
 
 			// Set the camera position
 			const camera = engine.threeJS.getCamera();
@@ -46,9 +33,9 @@ export class Scene {
 			directionalLight.position.set(50, 100, 50);
 			this.#threeJSScene.add(directionalLight);
 
-      const player = this.match.players[0];
-      if (!player) throw new Error("Player not initialized in match.");
-      this.#boardSize = player.board.size;
+			const player = this.match.players[0];
+			if (!player) throw new Error("Player not initialized in match.");
+			this.#boardSize = player.board.size;
 
 			if (typeof PongGameBox === "function") {
 				this.#pongGameBox = new PongGameBox(
@@ -61,7 +48,6 @@ export class Scene {
 
 			if (this.#engine.threeJS.controls) {
 				this.#engine.threeJS.controls.target.set(30, 25, 0);
-				// console.log("Camera controls set.");
 			} else {
 				throw new Error("threeJS controls are not defined on engine.");
 			}
@@ -71,28 +57,32 @@ export class Scene {
 		}
 	}
 
-  updateFrame(currentTime, timeDelta) {
-    this.match.updateFrame(
-      timeDelta,
-      currentTime,
-      this.#pongGameBox,
-      this.#boardSize
-    );
-  }
+	updateFrame(currentTime, timeDelta) {
+		this.match.updateFrame(
+			timeDelta,
+			currentTime,
+			this.#pongGameBox,
+			this.#boardSize
+		);
+	}
 
-  setPlayerPaddleDirection(direction, index) {
-    this.match.players[index].paddle.setDirection(direction);
-  }
+	startGame() {
+		this.match.gameStarted = true;
+	}
 
-  updateCamera(animation = false) {
-    const matchPosition = this.match.threeJSGroup.position;
-    const xHeight =
-      (this.#matchHalfWidth + this.#cameraPadding * 0.5) /
-      Math.tan(this.#engine.threeJS.getCameraHorizontalFOVRadian() * 0.5);// Calculate height based on field of view
-    const yHeight =
-      (this.#matchHalfHeight + this.#cameraPadding * 0.5) /
-      Math.tan(this.#engine.threeJS.getCameraVerticalFOVRadian() * 0.5);
-    const cameraHeight = Math.max(xHeight, yHeight);
+	setPlayerPaddleDirection(direction, index) {
+		this.match.players[index].paddle.setDirection(direction);
+	}
+
+	updateCamera(animation = false) {
+		const matchPosition = this.match.threeJSGroup.position;
+		const xHeight =
+			(this.#matchHalfWidth + this.#cameraPadding * 0.5) /
+			Math.tan(this.#engine.threeJS.getCameraHorizontalFOVRadian() * 0.5); // Calculate height based on field of view
+		const yHeight =
+			(this.#matchHalfHeight + this.#cameraPadding * 0.5) /
+			Math.tan(this.#engine.threeJS.getCameraVerticalFOVRadian() * 0.5);
+		const cameraHeight = Math.max(xHeight, yHeight);
 
 		const cameraPosition = new THREE.Vector3(
 			matchPosition.x,
@@ -103,9 +93,9 @@ export class Scene {
 		this.#engine.updateCamera(cameraPosition, cameraLookAt);
 	}
 
-  get match() {
-    return this.match;
-  }
+	get match() {
+		return this.match;
+	}
 
 	get threeJSScene() {
 		return this.#threeJSScene;

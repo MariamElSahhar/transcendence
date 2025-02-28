@@ -20,7 +20,7 @@ export class MainLayout extends Component {
 		return `
 			<div id="main-layout" class="min-vh-100 d-flex flex-column">
 				<navbar-component></navbar-component>
-				<div id="slot" slot="page-content" class="flex-grow-1 d-flex w-100 h-100">${this.slot}</div>
+				<div id="slot" slot="page-content" class="flex-grow-1 flex-1 d-flex w-100 h-100">${this.slot}</div>
 				<footer-component class="mt-auto"></footer-component>
 			</div>
         `;

@@ -1,13 +1,18 @@
 import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
-import { removeMatchMaking } from "./clients/gamelog-client.js";
-import { closeWebSocket } from "./utils/websocket-manager.js";
 window.APP_CONFIG = {
 	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
 	// backendUrl: window.location.protocol=="https:" ? `https://${window.location.host}` : `http://${window.location.host}:8000`,
-	mediaUrl: window.location.protocol=="https:" ? "":`http://${window.location.host}:8000`,
-	backendUrl:  window.location.protocol=="https:" ? "" : `https://${window.location.host}`,
-	pointsToWinPongMatch: 5,
+	mediaUrl:
+		window.location.protocol == "https:"
+			? ""
+			: `http://${window.location.host}:8000`,
+	backendUrl:
+		window.location.protocol == "https:"
+			? ""
+			: `https://${window.location.host}`,
+	pointsToWinPongMatch: 1,
+	gameCountdown: 3,
 };
 const routes = {
 	// PUBLIC SCREENS
@@ -37,25 +42,32 @@ const routes = {
 	},
 	// PROTECTED SCREENS
 	"/home": {
-		layout: "sidebar",
+		layout: "main",
 		component: "home-page",
 		path: "../pages/HomePage.js",
 		protected: true,
 		title: "Pong | Homepage",
 	},
 	"/dashboard": {
-		layout: "sidebar",
+		layout: "main",
 		component: "dashboard-page",
 		path: "../pages/dashboard/DashboardPage.js",
 		protected: true,
 		title: "Pong | My Dashboard",
 	},
-	"/play/local": {
+	"/play/single-player": {
 		layout: "main",
 		component: "local-game-page",
 		path: "../pages/local-game/LocalGamePage.js",
 		protected: true,
-		title: "Pong | Local Game",
+		title: "Pong | Single Player Game",
+	},
+	"/play/two-player": {
+		layout: "main",
+		component: "local-game-page",
+		path: "../pages/local-game/LocalGamePage.js",
+		protected: true,
+		title: "Pong | Local Two Player Game",
 	},
 	"/play/remote": {
 		layout: "main",
@@ -94,8 +106,6 @@ const routes = {
 	},
 };
 
-let previouspath;
-
 const layouts = {
 	main: {
 		component: "main-layout",
@@ -128,25 +138,6 @@ const handleLocation = async () => {
 	} else if (!isProtected && authenticated && route != routes[404]) {
 		route = routes["/home"];
 	}
-	// else if (previouspath && previouspath.startsWith("/play/remote")) {
-	// 	try {
-	// 		const { status, success, data } = await removeMatchMaking();
-	// 		closeWebSocket();
-	// 		if (success) {
-	// 			console.log("Successfully removed from matchmaking queue:", data);
-	// 		} else {
-	// 			console.warn("Failed to remove from matchmaking queue. Status:", status);
-	// 		}
-	// 		if (window.timeoutID) {
-	// 			console.log("CLEARED TIMEOUT")
-	// 			clearTimeout(window.timeoutID);
-	// 			window.timeoutID = null; // Reset the global variable
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Error while removing from matchmaking queue:", error);
-	// 	}
-	// }
-	// previouspath=path;
 	const layout = layouts[route.layout];
 	loadRoute(route, layout);
 };

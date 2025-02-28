@@ -9,14 +9,45 @@ export class GameLogTable extends Component {
 	style() {
 		return `
             <style>
+
+                .table {
+                    background-color: transparent !important;
+                }
+
+                .result
+                {
+                    font-family: 'New Super Mario Font U', sans-serif;
+                    font-size: 27px;
+                    text-shadow:
+                                -1px -1px 0 black,
+                                1px -1px 0 black,
+                                -1px 1px 0 black,
+                                1px 1px 0 black;
+                }
+
+                .page-link
+                {
+                    border:0;
+                    background-color: transparent !important;
+                    color:black;
+                    cursor:pointer;
+                }
+
+                .table tbody, td, tfoot, th, thead, tr{
+
+                    background-color: transparent !important;
+                }
+
                 .hide-placeholder-text {
                     color: var(--bs-secondary-bg)!important;
                     background-color: var(--bs-secondary-bg)!important;
                 }
+
                 .avatar-sm {
                     width: 2.25rem;
                     height: 2.25rem;
                 }
+
                 .badge-dot i {
                     width: .375rem;
                     height: .375rem;
@@ -24,6 +55,7 @@ export class GameLogTable extends Component {
                     margin-right: .5rem;
                     display: inline-block;
                 }
+
                 .progress {
                     height: .5rem;
                     font-size: .85rem;
@@ -32,10 +64,53 @@ export class GameLogTable extends Component {
                     display: flex;
                     overflow: hidden;
                 }
+
+                .icon-black {
+                    color: black !important;
+                }
+
                 tbody {
                     font-size: .85rem;
                     font-weight: 400;
                 }
+
+                .nav-link
+                {
+                    transition: all 0.3s ease;
+                }
+
+                .nav-link.active {
+                    color: black !important;
+                    background-color: #ffc457 !important;
+                }
+
+                .nav-link:focus{
+                    color: black !important;
+                    background-color: #ffc457 !important;
+                }
+                .nav-link:hover{
+                    color: black !important;
+                    background-color: #ffc457 !important;
+                }
+
+                .log-border {
+                    border-collapse:separate;
+                    border-top: 10px solid transparent !important;
+                    border-image: url('assets/wall.png') 90 round !important;
+                }
+
+                .btn-icon {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 5%;
+                }
+
+                .arrows:hover
+                {
+                    cursor:pointer;
+                    size:large;
+                }
+
             </style>
         `;
 	}
@@ -50,13 +125,13 @@ export class GameLogTable extends Component {
             <div class="mb-3 mt-3">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-local-tab" data-bs-toggle="pill" data-bs-target="#pills-local" type="button" role="tab" aria-controls="pills-local" aria-selected="true">Local Pong</button>
+                        <button class="nav-link active text-dark me-2" id="pills-local-tab" data-bs-toggle="pill" data-bs-target="#pills-local" type="button" role="tab" aria-controls="pills-local" aria-selected="true"><i class="bi icon-black bi-joystick"></i> Local Pong</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-remote-tab" data-bs-toggle="pill" data-bs-target="#pills-remote" type="button" role="tab" aria-controls="pills-remote" aria-selected="false">Online Pong</button>
+                        <button class="nav-link text-dark me-2" id="pills-remote-tab" data-bs-toggle="pill" data-bs-target="#pills-remote" type="button" role="tab" aria-controls="pills-remote" aria-selected="false"><i class="bi icon-black bi-people-fill"></i> Online Pong</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-ttt-tab" data-bs-toggle="pill" data-bs-target="#pills-ttt" type="button" role="tab" aria-controls="pills-ttt" aria-selected="false">Tic Tac Toe</button>
+                        <button class="nav-link text-dark me-2" id="pills-ttt-tab" data-bs-toggle="pill" data-bs-target="#pills-ttt" type="button" role="tab" aria-controls="pills-ttt" aria-selected="false"><i class="bi icon-black bi-grid-3x3-gap-fill"></i> Tic Tac Toe</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
@@ -75,6 +150,7 @@ export class GameLogTable extends Component {
 	}
 
 	renderMatches(gamelog, gametype) {
+
 		if (!gamelog || gamelog.length === 0) {
 			return `
                 <div class="d-flex flex-column justify-content-start align-items-center w-100">
@@ -87,19 +163,12 @@ export class GameLogTable extends Component {
 			.map(
 				(game) => `
                     <tr>
-                        <td>
-                            ${
-								game.tournament_round == 3 && game.is_win
-									? `<i class="bi bi-award-fill text-success ms-1 me-2"></i>`
-									: `<span class="badge badge-dot mx-0"><i class="${
-											game.is_win
-												? "bg-success"
-												: "bg-danger"
-									  }"></i></span>`
-							}
-                            ${game.is_win ? "Win" : "Loss"}
-                        </td>
-                        <td>${game.opponent_username}</td>
+                    <td>${game.opponent_username}</td>
+                    <td class="result ${ game.is_win
+                        ? "text-success"
+                        : "text-danger"}">
+                        ${game.is_win ? "WIN" : "LOSS"}
+                    </td>
                         <td>${game.my_score} - ${game.opponent_score} </td>
                         <td>${game.date.split("T")[0]}</td>
                         ${
@@ -107,8 +176,8 @@ export class GameLogTable extends Component {
 								? `<td>${
 										game.tournament_round
 											? game.tournament_round < 3
-												? "First Round"
-												: `Final Round`
+												? `<img src="/assets/letter-t.png" class="mr-2 btn-icon" alt="Left Icon">First Round`
+												: `<img src="/assets/letter-t.png" class="mr-2 btn-icon" alt="Left Icon">Final Round`
 											: "-"
 								  }</td>`
 								: ""
@@ -120,11 +189,11 @@ export class GameLogTable extends Component {
 
 		return `
             <div class="table-responsive">
-                <table class="table table-hover table-nowrap mb-1">
-                    <thead>
+                <table class="table log-border table-hover table-nowrap mb-1">
+                    <thead class>
                         <tr>
+                        <th scope="col">Opponent</th>
                             <th scope="col">Result</th>
-                            <th scope="col">Opponent</th>
                             <th scope="col">Score</th>
                             <th scope="col">Date</th>
                             ${
@@ -144,7 +213,9 @@ export class GameLogTable extends Component {
                     <li class="
                         page-item ${this.pagenumber === 0 ? "disabled" : ""}
                     ">
-                        <a class="page-link" data-page="previous">Previous</a>
+                        <a class="page-link mt-1" data-page="previous">
+                            <i class="arrows bi bi-arrow-left-circle-fill"></i>
+                        </a>
                     </li>
                     ${Array.from({
 						length: Math.ceil(gamelog.length / 5) || 1,
@@ -164,7 +235,9 @@ export class GameLogTable extends Component {
 							? "disabled"
 							: ""
 					}">
-                        <a class="page-link" data-page="next">Next</a>
+                        <a class="page-link mt-1" data-page="next">
+                            <i class="arrows bi bi-arrow-right-circle-fill"></i>
+                        </a>
                     </li>
                 </ul>
             </nav>`;

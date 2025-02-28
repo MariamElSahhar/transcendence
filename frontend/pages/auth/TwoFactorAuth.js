@@ -58,6 +58,7 @@ export class TwoFactorAuth extends Component {
 			);
 			super.addComponentEventListener(input, "paste", this.#onOtpPaste);
 		});
+
 		super.addComponentEventListener(
 			this.submitButton,
 			"click",
@@ -129,12 +130,12 @@ export class TwoFactorAuth extends Component {
 			.map((input) => input.value)
 			.join("");
 
-		if (!otp || otp.length !== 6) {
-			this.#stopLoading();
-			this.errorNotification.innerHTML = "Invalid OTP.";
-			this.errorNotification.classList.remove("d-none");
-			return;
-		}
+			if (!otp || otp.length !== 6) {
+				this.#stopLoading();
+				this.errorNotification.innerHTML = "Invalid OTP.";
+				this.errorNotification.classList.remove("d-none");
+				return;
+			}
 
 		const { success, error } = await verifyOTP({
 			username: this.login,
