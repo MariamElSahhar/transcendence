@@ -35,12 +35,12 @@ export class AuthLayout extends Component {
 				}
 
 				<!-- Slot -->
-				<div id="slot" slot="page-content" class="d-flex flex-column align-items-center justify-content-center flex-grow-1 flex-1 d-flex w-100 h-100">${
+				<div id="slot" slot="page-content" class="position-relative z-1 d-flex flex-column align-items-center justify-content-center flex-grow-1 flex-1 d-flex w-100 h-100">${
 					this.slot
 				}</div>
 
 				<!-- Pipes -->
-				<div id="pipes-container" class="d-flex w-100 justify-content-center position-absolute">
+				<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
 					<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
 						<img class="pipe left-pipe z-3" src="/assets/pipe.png" alt="X"/>
 						<img  id="plant" class="pipe-content z-2" src="/pages/tictactoe/plant.png" alt="X"/>
@@ -50,7 +50,7 @@ export class AuthLayout extends Component {
 						<img id="shroom" class="pipe-content z-2" src="/pages/tictactoe/shroom.png" alt="X"/>
 					</div>
 				</div>
-				<footer-component class="mt-auto"></footer-component>
+				<footer-component class="position-relative mt-auto"></footer-component>
 			</div>
         `;
 	}
