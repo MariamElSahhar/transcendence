@@ -59,6 +59,10 @@ export class LocalGamePage extends Component {
 			#winner-sprite {
 				height: 56px;
 			}
+			.icon {
+				width: auto;
+				height: 30px;
+			}
 		</style>
 		`;
 	}

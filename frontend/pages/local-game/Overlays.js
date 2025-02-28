@@ -48,7 +48,11 @@ export function renderPreGameCard(
 					  }</p>`
 					: ""
 			}
-			<h2>${player1} vs ${player2}</h2>
+			<div class="d-flex justify-content-between align-items-center w-75">
+			${window.icons.mario()} <h2>${player1} vs ${player2}</h2> ${window.icons.luigi(
+		true
+	)}
+			</div>
 			<button id="start-game" class="btn w-100">Go!</button>
 		</div>
 	  </div>

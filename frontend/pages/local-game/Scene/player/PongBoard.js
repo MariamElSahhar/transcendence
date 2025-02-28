@@ -27,7 +27,6 @@ export class PongBoard {
 		this.#remainingLives = window.APP_CONFIG.pointsToWinPongMatch;
 		this.initBoard(this.#size);
 		this.initWalls(this.#size);
-		this.initScore(this.#size);
 		this.initPlayerName(this.#size, playerName);
 		this.initLight(this.#size);
 	}
@@ -67,9 +66,6 @@ export class PongBoard {
 		const wallHeight = boardSize.y + 2 * wallWidth;
 		const wallDepth = boardSize.z * 2;
 
-		// const wallMaterial = new THREE.MeshStandardMaterial({
-		// 	color: 0x000033,
-		// });
 		const textureLoader = new THREE.TextureLoader();
 		const wallTextureHorizontal = textureLoader.load(
 			"/assets/textures/floor.png",
@@ -143,13 +139,6 @@ export class PongBoard {
 		this.#threeJSBoard.add(directionalLight);
 	}
 
-	initScore(boardSize) {
-		const scoreColor = "#87CEEB";
-		this.#scoreSprite = this.createTextSprite(`0`, scoreColor, 128);
-		this.#scoreSprite.position.set(0, 0, 1.2);
-		this.#threeJSBoard.add(this.#scoreSprite);
-	}
-
 	initPlayerName(boardSize, playerName) {
 		const nameColor = NAME_COLOR;
 		const playerNameSprite = this.createTextSprite(
@@ -161,7 +150,7 @@ export class PongBoard {
 		playerNameSprite.position.set(
 			this.#side ? boardSize.x / 2 - 1 : -boardSize.x / 2 + 1,
 			boardSize.y / 2 + 4.5,
-			1.0
+			1
 		);
 		this.#threeJSBoard.add(playerNameSprite);
 		this.initLifelines(boardSize);
@@ -254,16 +243,6 @@ export class PongBoard {
 
 	addPoint() {
 		this.#score++;
-		const scoreColor = 0x000033;
-
-		this.#threeJSBoard.remove(this.#scoreSprite);
-		this.#scoreSprite = this.createTextSprite(
-			`${this.#score}`,
-			scoreColor,
-			128
-		);
-		this.#scoreSprite.position.set(0, 0, 1.6);
-		this.#threeJSBoard.add(this.#scoreSprite);
 	}
 
 	resetPoints() {

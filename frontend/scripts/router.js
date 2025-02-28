@@ -124,6 +124,29 @@ const layouts = {
 	},
 };
 
+window.icons = {
+	mario: (flip) =>
+		`<img src="/assets/sprites/mario.png" class="icon ${
+			flip ? `flip-h` : ``
+		}" alt="Mario">`,
+	luigi: (flip) =>
+		`<img src="/assets/sprites/luigi.png" class="icon ${
+			flip ? `flip-h` : ``
+		}" alt="Luigi">`,
+	robot: (flip) =>
+		`<img src="/assets/sprites/robot.png" class="icon ${
+			flip ? `flip-h` : ``
+		}" alt="Luigi">`,
+	shroom: (flip) =>
+		`<img src="/assets/sprites/shroom.png" class="icon ${
+			flip ? `flip-h` : ``
+		}" alt="Luigi">`,
+	plant: (flip) =>
+		`<img src="/assets/sprites/plant.png" class="icon ${
+			flip ? `flip-h` : ``
+		}" alt="Luigi">`,
+};
+
 export const redirect = (path) => {
 	window.history.pushState({}, "", path);
 	handleLocation();

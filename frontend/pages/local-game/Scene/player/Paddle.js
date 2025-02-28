@@ -34,7 +34,7 @@ export class Paddle {
 			? RIGHT_PADDLE_COLOR
 			: LEFT_PADDLE_COLOR;
 		this.#addPaddleToGroup(color);
-		this.#addLightToGroup(color);
+		this.#addLightToGroup();
 
 		this.#playerPosition = playerPosition;
 
@@ -172,10 +172,10 @@ export class Paddle {
 		this.#threeJSGroup.add(this.#paddleObject);
 	}
 
-	#addLightToGroup(color) {
+	#addLightToGroup() {
 		this.#light = this.paddleIsOnTheRight
-			? new THREE.PointLight(0xff30ff, 10, 50)
-			: new THREE.PointLight(0x00ffff, 4, 50); // Increased intensity for better visibility.
+			? new THREE.PointLight(0x00ffff, 4, 50)
+			: new THREE.PointLight(0xff30ff, 10, 50);
 		this.#light.position.z += this.#paddleSize.z * 1.5;
 		this.#threeJSGroup.add(this.#light);
 	}
