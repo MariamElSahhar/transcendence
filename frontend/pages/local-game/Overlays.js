@@ -149,9 +149,9 @@ export function renderEndGameCard(
 export function renderTournamentResults(component, rankedPlayers) {
 	const overlay = renderOverlay(component.container);
 	overlay.innerHTML = `
-            <div class="card text-center bg-light">
+            <div class="card text-center bg-brick-100">
                 <div class="card-body">
-                    <img src="/assets/crown.png" alt="Game Icon" class="card-image">
+                    <img src="/assets/crown.png" alt="Game Icon" class="icon">
                     <h1 class="">${rankedPlayers[0]} wins</h1>
 					<p>🥈${rankedPlayers[1]} 🥉${rankedPlayers[2]} 🥲${rankedPlayers[3]}</p>
 					<div class="d-flex w-100 gap-2">

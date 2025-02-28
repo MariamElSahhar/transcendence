@@ -38,14 +38,14 @@ export class LocalGamePage extends Component {
 				${
 					this.isAIEnabled
 						? ""
-						: `<div id="player-setup" class="p-3 card shadow p-5 mx-auto rounded bg-light">
+						: `<div id="player-setup" class="p-3 card shadow p-5 bg-brick-100">
 							<h2 class="w-100 text-center">Setup Players</h2>
 							<form id="player-form" class="d-flex flex-column gap-2">
-								<input type="text" class="form-control w-100 text-dark" placeholder="${
+								<input type="text" class="form-control w-100 text-dark bg-brick-100" placeholder="${
 									getUserSessionData().username
 								}" disabled/>
-								<input type="text" id="player2-name" name="player2-name" class="form-control w-100 text-dark" placeholder="Player 2 display name"/>
-								<button id="submit-players" type="submit" class="btn w-100" disabled>Start Game</button>
+								<input type="text" id="player2-name" name="player2-name" class="form-control w-100 text-dark bg-brick-200" placeholder="Player 2 display name"/>
+								<button id="submit-players" type="submit" class="btn w-100" disabled>Continue</button>
 							</form>
 						</div>`
 				}

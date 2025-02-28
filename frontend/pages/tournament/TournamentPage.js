@@ -50,19 +50,33 @@ export class TournamentPage extends Component {
 	render() {
 		return `
 			<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
-				<div id="player-setup" class="p-3 card shadow p-5 bg-light">
+				<div id="player-setup" class="p-3 card shadow p-5 bg-brick-100">
 					<h3 class="w-100 text-center">Setup Tournament</h3>
 					<form id="player-form" class="d-flex w-100 flex-column gap-2">
-						<input type="text" id="player1-name" name="player1-name" class="form-control" value="${this.me.username}" disabled />
-						<input type="text" id="player2-name" name="player2-name" class="form-control" required placeholder="Player 2"/>
-						<input type="text" id="player3-name" name="player3-name" class="form-control" required placeholder="Player 3"/>
-						<input type="text" id="player4-name" name="player4-name" class="form-control" required placeholder="Player 4"/>
+						<input type="text" id="player1-name" name="player1-name" class="form-control bg-brick-100" value="${this.me.username}" disabled />
+						<input type="text" id="player2-name" name="player2-name" class="form-control bg-brick-200" required placeholder="Player 2"/>
+						<input type="text" id="player3-name" name="player3-name" class="form-control bg-brick-200" required placeholder="Player 3"/>
+						<input type="text" id="player4-name" name="player4-name" class="form-control bg-brick-200" required placeholder="Player 4"/>
 						<div id="error-message" class="alert alert-danger d-none" role="alert"></div>
 						<button id="submit-players" type="submit" class="btn w-100" disabled>Start Tournament</button>
 					</form>
 				</div>
             </div>
         `;
+	}
+
+	style() {
+		return `
+		<style>
+			#winner-sprite {
+				height: 56px;
+			}
+			.icon {
+				width: auto;
+				height: 30px;
+			}
+		</style>
+		`;
 	}
 
 	postRender() {

@@ -44,24 +44,6 @@ input.form-control {
 	align-items: center; /* Center-align content */
 	padding: 15px;
 	position: relative;
-
-	p {
-		font-size: 20px;
-		margin-bottom: 15px;
-	}
-
-	.card-image {
-		width: 150px; /* Set the size of the image */
-		height: auto; /* Maintain the aspect ratio */
-		margin: 10px auto; /* Center the image vertically and horizontally */
-		display: block;
-		object-fit: contain; /* Ensure the image fits well */
-		border-radius: 10px; /* Optional: Add rounded corners */
-
-		&.bottom {
-			margin-top: auto; /* Push the image to the bottom */
-		}
-	}
 }
 
 .flip-h {

@@ -52,10 +52,25 @@
 	--bs-light: var(--sky-100);
 	--bs-light-rgb: 213, 236, 247;
 
+	--bs-brick-100: var(--brick-100);
+	--bs-brick-100-rgb: 255, 254, 252;
+	--bs-brick-300: var(--brick-300);
+	--bs-brick-300-rgb: 255, 216, 142;
+
 	--bs-body-bg: var(--brick-100);
 	--bs-body-color: var(--black);
 	/* --bs-link-color: var(--sky-700);
 	--bs-link-hover-color: var(--sky-900); */
+
+	.bg-brick-100 {
+		background-color: var(--brick-100) !important;
+	}
+	.bg-brick-200 {
+		background-color: var(--brick-200) !important;
+	}
+	.bg-brick-300 {
+		background-color: var(--brick-300) !important;
+	}
 
 	.btn,
 	.btn-primary {
