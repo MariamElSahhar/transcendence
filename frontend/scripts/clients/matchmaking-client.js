@@ -2,7 +2,7 @@ const BASE_URL = `http://127.0.0.1:8000/api`;
 const URIs = {
 	matchmaker: `${BASE_URL}/remote-pong/matchmaking/`,
 };
-import { post } from "../utils/http-requests.js";
+import { post, del } from "../utils/http-requests.js";
 
 export const matchMaker = async (systemID) => {
 	const url = URIs.matchmaker;

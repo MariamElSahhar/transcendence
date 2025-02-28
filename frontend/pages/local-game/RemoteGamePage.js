@@ -52,6 +52,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketMessage(data) {
+		console.log("??????????", data)
 		this.data = data;
 		if (data["message"] === "Match found!" && !this.playerSet)
 			this.matchFound();
@@ -142,7 +143,7 @@ export class RemoteGamePage extends Component {
 		return timeoutID;
 	}
 
-	matchFound() {
+	async matchFound() {
 		this.gameID = this.data.game_session_id;
 		this.playerSet = true;
 		this.sameSystem = this.data.sameSystem;
@@ -157,16 +158,18 @@ export class RemoteGamePage extends Component {
 		this.timeoutID = this.setTrackedTimeout(() => {
 			if (WebGL.isWebGLAvailable()) {
 				this.container.innerHTML = "";
-				this.engine = new Engine(
-					this,
-					this.isAIEnabled,
-					this.playerNames,
-					this.playerSide,
-					this.gameID,
-					this.sameSystem
-				);
-				this.engine.createScene();
+				console.log("playerLeft:", this.playerLeft); // Debugging line
 				if (!this.playerLeft) {
+					this.engine = new Engine(
+						this,
+						this.isAIEnabled,
+						this.playerNames,
+						this.playerSide,
+						this.gameID,
+						this.sameSystem
+					);
+					this.engine.createScene();
+					console.log("why are we here")
 					sendWebSocketMessage({
 						action: "ready",
 						gameSession: this.gameID,
@@ -182,6 +185,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	startRound() {
+		console.log("??????????")
 		if (this.data.round == 1) {
 			renderCountdownCard(this.container, this.engine);
 		} else {
@@ -194,15 +198,13 @@ export class RemoteGamePage extends Component {
 		if (this.engine) {
 			this.engine.stopAnimationLoop();
 			this.engine.cleanUp();
+			this.engine.scene.match.matchIsOver = true;
+			if (this.engine.scene.match.ball)
+				this.engine.scene.match.ball.removeBall();
 		}
 		if (this.countDownIntervalId) {
 			clearInterval(this.countDownIntervalId);
 			this.countDownIntervalId = null;
-		}
-		if (this.engine) {
-			this.engine.scene.match.matchIsOver = true;
-			if (this.engine.scene.match.ball)
-				this.engine.scene.match.ball.removeBall();
 		}
 		renderPlayerDisconnectedCard(this);
 	}
