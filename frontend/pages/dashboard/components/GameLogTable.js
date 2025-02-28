@@ -9,11 +9,6 @@ export class GameLogTable extends Component {
 	style() {
 		return `
             <style>
-
-                .table {
-                    background-color: transparent !important;
-                }
-
                 .result
                 {
                     font-family: 'New Super Mario Font U', sans-serif;
@@ -33,9 +28,8 @@ export class GameLogTable extends Component {
                     cursor:pointer;
                 }
 
-                .table tbody, td, tfoot, th, thead, tr{
-
-                    background-color: transparent !important;
+                .table tbody, td, tfoot, th, thead, tr {
+                    background-color: rgba(255, 255, 255, 0.3) !important; /* Adjust the last value (0.1) for opacity */
                 }
 
                 .hide-placeholder-text {
@@ -197,10 +191,10 @@ export class GameLogTable extends Component {
                             <th scope="col">Score</th>
                             <th scope="col">Date</th>
                             ${
-								gametype == "local"
-									? `<th scope="col">Tournament</th>`
-									: ""
-							}
+                                gametype == "local"
+                                    ? `<th scope="col">Tournament</th>`
+                                    : ""
+                            }
                         </tr>
                     </thead>
                     <tbody>

@@ -55,7 +55,7 @@ export class SettingsPage extends Component {
 
 	renderWithSettings() {
 		return `
-	<div id="settings" class="d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
+	<div id="settings" class="position-relative d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
 		<!-- Title -->
 		<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
 		<!-- Profile Image and Form -->
