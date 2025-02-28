@@ -1,6 +1,7 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 const BOARD_COLOR = 0xffd88e;
 const LINE_COLOR = 0xfffefc;
+const NAME_COLOR = 0x000000;
 export class PongBoard {
 	#threeJSBoard;
 	#score = 0;
@@ -10,7 +11,6 @@ export class PongBoard {
 	#goal;
 	#size;
 	#scoreSprite;
-	#playerNameSprite;
 	#remainingLives;
 
 	constructor() {}
@@ -24,7 +24,7 @@ export class PongBoard {
 		this.#threeJSBoard = new THREE.Group();
 		this.#size = new THREE.Vector3(20, 27.5, 1);
 		this.#lifelines = [];
-		this.#remainingLives=5;
+		this.#remainingLives = window.APP_CONFIG.pointsToWinPongMatch;
 		this.initBoard(this.#size);
 		this.initWalls(this.#size);
 		this.initScore(this.#size);
@@ -151,36 +151,47 @@ export class PongBoard {
 	}
 
 	initPlayerName(boardSize, playerName) {
-		const nameColor = "#000000";
-		this.#playerNameSprite = this.createTextSprite(
+		const nameColor = NAME_COLOR;
+		const playerNameSprite = this.createTextSprite(
 			playerName,
 			nameColor,
-			70
+			70,
+			this.#side ? "right" : "left"
 		);
-		this.#playerNameSprite.position.set(
-			-boardSize.x / 2 + 1,
+		playerNameSprite.position.set(
+			this.#side ? boardSize.x / 2 - 1 : -boardSize.x / 2 + 1,
 			boardSize.y / 2 + 4.5,
 			1.0
 		);
-		this.#threeJSBoard.add(this.#playerNameSprite);
+		this.#threeJSBoard.add(playerNameSprite);
 		this.initLifelines(boardSize);
 	}
 
 	initLifelines(boardSize) {
-
-		const lifelineCount = 5;
-		const spacing = 2.5;
-		const startX = -((lifelineCount -2) * spacing);
-
+		const lifelineCount = window.APP_CONFIG.pointsToWinPongMatch;
+		const spacing = 2;
+		const padding = 2.3;
 		const textureLoader = new THREE.TextureLoader();
-		const heartMaterial = new THREE.SpriteMaterial({ map: textureLoader.load("/assets/sprites/pixel-heart.png")});
+		const heartMaterial = new THREE.SpriteMaterial({
+			map: textureLoader.load("/assets/sprites/pixel-heart.png"),
+		});
+
+		const startX = this.#side
+			? boardSize.x / 2 - padding - (lifelineCount - 1) * spacing
+			: -this.#size.x / 2 + padding;
+
 		for (let i = 0; i < lifelineCount; i++) {
 			const lifeline = new THREE.Sprite(heartMaterial);
 			lifeline.scale.set(2, 2, 2);
-			lifeline.position.set(startX + i * spacing, boardSize.y / 2 + 2, 2);
+			lifeline.position.set(
+				startX + (this.#side ? i * spacing : i * spacing),
+				boardSize.y / 2 + 2,
+				2
+			);
 
 			this.#threeJSBoard.add(lifeline);
-			this.#lifelines.push(lifeline);
+			if (this.#side) this.#lifelines.unshift(lifeline);
+			else this.#lifelines.push(lifeline);
 		}
 	}
 
@@ -188,7 +199,9 @@ export class PongBoard {
 		this.#remainingLives--;
 		const indexToReplace = this.#remainingLives;
 		const textureLoader = new THREE.TextureLoader();
-		const emptyHeart = new THREE.SpriteMaterial({ map: textureLoader.load("/assets/sprites/nocolor-heart.png") });
+		const emptyHeart = new THREE.SpriteMaterial({
+			map: textureLoader.load("/assets/sprites/nocolor-heart.png"),
+		});
 		const newLifeline = new THREE.Sprite(emptyHeart);
 
 		newLifeline.position.copy(this.#lifelines[indexToReplace].position);
@@ -200,7 +213,7 @@ export class PongBoard {
 		this.#lifelines.push(newLifeline);
 	}
 
-	createTextSprite(message, color = "#ffffff", fontSize = 128) {
+	createTextSprite(message, color, fontSize = 128, align) {
 		const canvas = document.createElement("canvas");
 		const context = canvas.getContext("2d");
 
@@ -220,7 +233,7 @@ export class PongBoard {
 
 		context.fillStyle = color;
 		context.font = `bold ${adjustedFontSize}px Verdana`;
-		context.textAlign = "left";
+		context.textAlign = align;
 		context.textBaseline = "middle";
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
