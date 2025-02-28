@@ -35,8 +35,8 @@ export class FriendsPage extends Component {
 		if (this.friends.length == 0) {
 			friendsList.innerHTML = `
 			<div class="d-flex flex-column justify-content-start align-items-center w-100">
-				<p class="text-secondary">No friends yet :(</p>
-				<p class="text-secondary">Try searching for users in the search bar</p>
+				<p class="text-dark">No friends yet :(</p>
+				<p class="text-dark">Try searching for users in the search bar</p>
 			</div>
 			`;
 		} else {
@@ -93,7 +93,7 @@ export class FriendsPage extends Component {
 					<small class="m-0 link-dark">${is_online ? "Online" : "Offline"}</small>
 				</div>
 			</div>
-			<p role="button" class="remove-friend p-1 link-secondary">X</p>
+			<p role="button" class="remove-friend p-1 link-danger">X</p>
 		</div>
 		`;
 	}
