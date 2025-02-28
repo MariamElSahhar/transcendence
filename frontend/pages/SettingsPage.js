@@ -108,7 +108,7 @@ export class SettingsPage extends Component {
 				<div class="d-flex justify-content-between justify-content-center mb-4">
 				<h2 >Settings</h2>
 				<div>
-					<button id="save-button" type="submit" class="btn btn-primary ms-2 p-2" disabled><i class="bi bi-floppy2-fill"></i></button>
+					<button id="save-button" type="submit" class="btn btn-success ms-2 p-2" disabled><i class="bi bi-floppy2-fill"></i></button>
 					<button id="deletePrompt" type="button" class="btn btn-danger ms-2">Delete account</button>
 				</div>
 				</div>
@@ -139,7 +139,6 @@ export class SettingsPage extends Component {
 						</div>
 					</div>
 				</div>
-
 
 				<!-- Password Section -->
 				<div class="form-group mb-4 ">
@@ -515,9 +514,8 @@ export class SettingsPage extends Component {
 		if (this.username.value === this.initialUser) {
 			this.username.classList.remove("is-invalid", "is-valid");
 			this.usernameFeedback.innerHTML = "";
-			if(this.vars.username)
-			{
-				delete this.vars.username
+			if (this.vars.username) {
+				delete this.vars.username;
 			}
 			this.usernameDiff = false;
 			this.validUsername = true;
@@ -546,9 +544,8 @@ export class SettingsPage extends Component {
 		clearTimeout(this.emailTimeout);
 		if (this.email.value === this.initialEmail) {
 			this.email.classList.remove("is-invalid", "is-valid");
-			if(this.vars.email)
-			{
-				delete this.vars.email
+			if (this.vars.email) {
+				delete this.vars.email;
 			}
 			this.emailDiff = false;
 			this.validEmail = true;
@@ -757,7 +754,7 @@ export class SettingsPage extends Component {
 				getUserSessionData().userid,
 				this.vars
 			);
-			console.log(this.vars)
+			console.log(this.vars);
 			if (!success) {
 				if (error.username) {
 					this.username.classList.remove("is-valid");
