@@ -1,13 +1,16 @@
 FROM python:3
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
-RUN mkdir /code
 WORKDIR /code
 
+# Copy and install dependencies first to leverage caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
 COPY . .
-RUN pip install -r requirements.txt
 
 ENV ENV=production
 EXPOSE 8000
