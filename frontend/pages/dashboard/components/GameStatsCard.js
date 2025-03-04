@@ -5,12 +5,12 @@ export class GameStatsCard extends Component {
 		super();
 		this.stats = {};
         this.colors = {
-            localWonColor: "var(--mario-blue-color)",
-            localPlayedColor: "var(--sky-100)",
-            remoteWonColor: "var(--mario-red-color)",
-            remotePlayedColor: "var(--brick-200)",
-            tttWonColor: "var(--mario-green-color)",
-            tttPlayedColor: "var(--brick-100)",
+            localWonColor: "var(--local-won-color)",
+            localPlayedColor: "var(--local-played-color)",
+            remoteWonColor: "var(--remote-won-color)",
+            remotePlayedColor: "var(--remote-played-color)",
+            tttWonColor: "var(--ttt-won-color)",
+            tttPlayedColor: "var(--ttt-played-color)",
           };
 	}
 
@@ -27,7 +27,7 @@ export class GameStatsCard extends Component {
 		return (
 			this.stats &&
 			`
-            <div class="game-stats d-flex h-100 w-100 justify-content-center align-items-center p-4 position-relative">
+            <div class="rounded bg-light game-stats d-flex h-100 w-100 justify-content-center align-items-center position-relative">
                 <div class="circle d-flex justify-content-center align-items-center position-relative">
                     <div class="stats-text d-flex flex-column justify-content-center align-items-center position-relative">
                     <img src="/assets/crown.png" alt="Game Icon" class="crown-icon position-relative">
@@ -101,30 +101,21 @@ export class GameStatsCard extends Component {
                 transition: width 0.5s ease-in-out;
             }
 
-            .local .progress {
-                background-color: var(--mario-blue-color);
-              }
+            .local .progress-bar {
+                background-color: var(--local-won-color);
+            }
 
-              .local .progress-bar {
-                background-color: var(--sky-100);
-              }
 
-              .remote .progress {
-                background-color: var(--mario-red-color);
-              }
+            .remote .progress-bar {
+                background-color: var(--remote-won-color);
+            }
 
-              .remote .progress-bar {
-                background-color: var(--brick-200);
-              }
 
-              .ttt .progress {
-                background-color: var(--mario-green-color);
-              }
-
-              .ttt .progress-bar {
-                background-color: var(--brick-100);
-              }
+            .ttt .progress-bar {
+                background-color: var(--ttt-won-color);
+            }
             .game-stats {
+                --bs-bg-opacity: .7;
                 width: 150px;
                 height: 150px;
                 flex-direction: column;
@@ -147,7 +138,7 @@ export class GameStatsCard extends Component {
                 height: 100px;
                 background: white;
                 border-radius: 50%;
-                background-color:#87ceeb;
+                background-color:white;
             }
             .breakdown {
                 width: 100%
@@ -244,7 +235,7 @@ export class GameStatsCard extends Component {
 			2 + localPercent
 		}%,
 
-            white ${2 + localPercent}% ${4 + localPercent}%,
+        white ${2 + localPercent}% ${4 + localPercent}%,
 
             ${this.colors.remoteWonColor} ${4 + localPercent}% ${
 			4 + localPercent + remoteWonPercent
@@ -253,7 +244,7 @@ export class GameStatsCard extends Component {
 			4 + localPercent + remoteWonPercent
 		}% ${4 + localPercent + remotePercent}%,
 
-            white ${4 + localPercent + remotePercent}% ${
+        white ${4 + localPercent + remotePercent}% ${
 			6 + localPercent + remotePercent
 		}%,
 

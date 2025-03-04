@@ -17,7 +17,7 @@ export class GameHeatMap extends Component {
 	render() {
 		return `
 			<div class="h-100 w-100 p-3 flex-column d-flex justify-content-center align-items-start">
-				<small class="my-0 mb-3">Game logs</small>
+				<small class="my-0 mb-3 fw-bold">Game logs</small>
 				<div class="heatmap-grid d-grid justify-content-start w-100"></div>
 			</div>
 		`;
@@ -45,11 +45,11 @@ export class GameHeatMap extends Component {
 				.day:hover {
 					transform: scale(1.2);
 				}
+				.day.level-1 { background-color: var(--brick-500); } /* Lightest */
+				.day.level-2 { background-color: var(--brick-600); } /* Medium-light */
+				.day.level-3 { background-color: var(--brick-700); } /* Medium-dark */
+				.day.level-4 { background-color: var(--brick-900); } /* Darkest */
 
-				.day.level-1 { background-color: #6185f8; }
-				.day.level-2 { background-color: #43b047; }
-				.day.level-3 { background-color: #ee830a; }
-				.day.level-4 { background-color: #e52521; }
 			</style>
 		`;
 	}

@@ -144,7 +144,6 @@ export class Match {
 	}
 
 	onPlayerReady() {
-		console.log("on player ready");
 		this.playersReady = true;
 		this.waitForPlayersToBeReady();
 	}

@@ -62,7 +62,6 @@ export class MainLayout extends Component {
 	}
 
 	renderSlot(content) {
-		console.log("here");
 		this.slot = "";
 		this.slot = content;
 		if (super.isRendered()) this.attributeChangedCallback();

@@ -76,12 +76,9 @@ export class SettingsPage extends Component {
 		</div>
 	</div>
 	<div id="settings" class="position-relative d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
-		<!-- Title -->
 		<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
-		<!-- Profile Image and Form -->
 			<div id="avatar-div" class="position-relative m-5">
 				<div id="profile-div" class="position-relative">
-				<!-- Main Profile Image -->
 					<img id="avatar" src="${getUserSessionData().avatar}" alt="Unavailable"
 					class="rounded-circle m-4">
 					<label for="photoUpload" id="camera-icon" class="position-absolute top-50 start-50 translate-middle">
@@ -92,7 +89,6 @@ export class SettingsPage extends Component {
 					<input type="file" id="photoUpload" accept="image/*">
 				</div>
 
-				<!-- Avatar Options -->
 				<div id="avatar-options" class="position-absolute top-50 start-50 translate-middle ">
 					<img src="${
 						this.avatars[3]
@@ -114,7 +110,6 @@ export class SettingsPage extends Component {
 					}" class="rounded avatar-option position-absolute" style="top: 140px; left: 250px;">
 				</div>
 
-				<!-- Button Below the Avatar Options -->
 				<div class="button-container d-flex justify-content-center mt-4">
 				<button id="deleteAvatarBtn" type="button" class="btn btn-danger">
 						Delete avatar <i class="bi bi-trash-fill"></i>
@@ -123,7 +118,6 @@ export class SettingsPage extends Component {
 			</div>
 
 
-				<!-- Form Fields -->
 				<div class="ms-5">
 				<div class="d-flex justify-content-between justify-content-center mb-4">
 				<h2 >Settings</h2>
@@ -133,7 +127,6 @@ export class SettingsPage extends Component {
 				</div>
 				</div>
 			<form id="settings-form" class="w-100 d-flex flex-column needs-validation" novalidate>
-				<!-- Email Section -->
 				<div class="form-group mb-4 ">
 					<div class="input-group has-validation">
 						<span class=" input-group-text fw-bold text-secondary"><i class="bi bi-envelope-open-heart icon-glow"></i></span>
@@ -144,7 +137,6 @@ export class SettingsPage extends Component {
 						<div class="valid-feedback"> Looks good! </div>
 					</div>
 				</div>
-				<!-- Username Section -->
 				<div class="form-group mb-4 ">
 					<div class="input-group has-validation">
 						<span class=" input-group-text fw-bold text-secondary">
@@ -160,7 +152,6 @@ export class SettingsPage extends Component {
 					</div>
 				</div>
 
-				<!-- Password Section -->
 				<div class="form-group mb-4 ">
 					<div class="input-group has-validation">
 					<span class=" input-group-text fw-bold text-secondary">NEW PASSWORD</span>
@@ -174,7 +165,6 @@ export class SettingsPage extends Component {
 					</div>
 				</div>
 
-				<!-- Confirm Password Section -->
 				<div class="form-group mb-4 ">
 					<div class="input-group has-validation">
 					<span class=" input-group-text fw-bold text-secondary">CONFIRM PASSWORD</span>
@@ -188,7 +178,6 @@ export class SettingsPage extends Component {
 					</div>
 				</div>
 
-				<!-- Two-Factor Authentication -->
 				<div class="form-group mb-4 ">
 					<div class="form-check form-switch d-flex align-items-center">
 						<input class="form-check-input" type="checkbox" id="twofa" ${
@@ -198,7 +187,6 @@ export class SettingsPage extends Component {
 					</div>
 				</div>
 
-				<!-- Buttons -->
 			</form>
 			</div>
 		</div>

@@ -17,10 +17,10 @@ body {
 	width: 100%;
 	z-index: 1000;
 }
-.navbar li:hover
+.navbar-nav li:hover
 {
 	color: black;
-	text-shadow: 1px 1px 1px var(--mario-green-color);
+	text-shadow: 1px 1px 1px var(--mario-yellow-color);
 	opacity:1;
 	transition: all 0.3s ease;
 }

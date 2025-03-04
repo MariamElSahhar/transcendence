@@ -30,7 +30,6 @@ export class Component extends HTMLElement {
     }
 
     attributeChangedCallback() {
-        console.log("here")
         this.innerHTML = this.render() + this.style();
         this.postRender();
     }
