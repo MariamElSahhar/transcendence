@@ -112,7 +112,7 @@ def avatar_view(request, user_id):
 
 # GET DEFAULT AVATAR
 @api_view(["GET"])
-def get_default_avatars():
+def get_default_avatars(request):
     default_avatar_path = os.path.join(settings.MEDIA_ROOT, 'default_avatar')
     try:
         avatars = os.listdir(default_avatar_path)

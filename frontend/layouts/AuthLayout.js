@@ -74,11 +74,11 @@ export class AuthLayout extends Component {
 				top: 0;
 				left: -400%;
 				width: 500%;
-				height: 20em;
+				opacity:0.8;
+				height: 10em;
 				animation: move-sky 500s linear infinite;
-				opacity: 0.5;
-				z-index: 0;
-				pointer-events: none; /* Allow interactions with elements above */
+				z-index: 0 !important;
+				pointer-events: none;
 			}
 		</style>
 		`;

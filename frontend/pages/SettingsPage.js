@@ -19,10 +19,7 @@ import {
 	getUserSessionData,
 	isAuth,
 } from "../scripts/utils/session-manager.js";
-import {
-	showError
-} from "/pages/error/ErrorPage.js";
-
+import { showError } from "/pages/error/ErrorPage.js";
 
 export class SettingsPage extends Component {
 	constructor() {
@@ -42,7 +39,7 @@ export class SettingsPage extends Component {
 	}
 
 	async connectedCallback() {
-		await import("/pages/error/ErrorPage.js")
+		await import("/pages/error/ErrorPage.js");
 		if (!(await isAuth())) window.redirect("/");
 		const { success, data } = await getDefaultAvatars();
 		if (success) {
@@ -60,160 +57,160 @@ export class SettingsPage extends Component {
 
 	renderWithSettings() {
 		return `
-	<div class="modal fade" id="errorModal" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5 text-danger">Error!</h1>
-				</div>
-					<div class="modal-body d-flex flex-column justify-content-center">
-						<p>There is an error in one of the fields!</p>
+			<div class="modal fade" id="errorModal" tabindex="-1">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5 text-danger">Error!</h1>
+						</div>
+							<div class="modal-body d-flex flex-column justify-content-center">
+								<p>There is an error in one of the fields!</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" id="errorClose" data-dismiss="modal">Close</button>
+						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" id="errorClose" data-dismiss="modal">Close</button>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div id="settings" class="position-relative d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
-		<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
-			<div id="avatar-div" class="position-relative m-5">
-				<div id="profile-div" class="position-relative">
-					<img id="avatar" src="${getUserSessionData().avatar}" alt="Unavailable"
-					class="rounded-circle m-4">
-					<label for="photoUpload" id="camera-icon" class="position-absolute top-50 start-50 translate-middle">
-						<div class="camera-icon-circle">
-							<i class="bi bi-camera"></i>
+			<div id="settings" class="position-relative d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
+				<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+					<div id="avatar-div" class="position-relative m-5">
+						<div id="profile-div" class="position-relative">
+							<img id="avatar" src="${getUserSessionData().avatar}" alt="Unavailable"
+							class="rounded-circle m-4">
+							<label for="photoUpload" id="camera-icon" class="position-absolute top-50 start-50 translate-middle">
+								<div class="camera-icon-circle">
+									<i class="bi bi-camera"></i>
+								</div>
+							</label>
+							<input type="file" id="photoUpload" accept="image/*">
 						</div>
-					</label>
-					<input type="file" id="photoUpload" accept="image/*">
-				</div>
 
-				<div id="avatar-options" class="position-absolute top-50 start-50 translate-middle ">
-					<img src="${
-						this.avatars[3]
-					}" class="rounded avatar-option position-absolute" style="top: 0px; left: -30px;">
-					<img src="${
-						this.avatars[0]
-					}" class="rounded avatar-option position-absolute" style="top: 0px; left: 250px;">
-					<img src="${
-						this.avatars[5]
-					}" class="rounded avatar-option position-absolute" style="top: 70px; left: -30px;">
-					<img src="${
-						this.avatars[1]
-					}" class="rounded avatar-option position-absolute" style="top: 70px; left: 250px;">
-					<img src="${
-						this.avatars[4]
-					}" class="rounded avatar-option position-absolute" style="top: 140px; left: -30px;">
-					<img src="${
-						this.avatars[2]
-					}" class="rounded avatar-option position-absolute" style="top: 140px; left: 250px;">
-				</div>
+						<div id="avatar-options" class="position-absolute top-50 start-50 translate-middle ">
+							<img src="${
+								this.avatars[3]
+							}" class="rounded avatar-option position-absolute" style="top: 0px; left: -30px;">
+							<img src="${
+								this.avatars[0]
+							}" class="rounded avatar-option position-absolute" style="top: 0px; left: 250px;">
+							<img src="${
+								this.avatars[5]
+							}" class="rounded avatar-option position-absolute" style="top: 70px; left: -30px;">
+							<img src="${
+								this.avatars[1]
+							}" class="rounded avatar-option position-absolute" style="top: 70px; left: 250px;">
+							<img src="${
+								this.avatars[4]
+							}" class="rounded avatar-option position-absolute" style="top: 140px; left: -30px;">
+							<img src="${
+								this.avatars[2]
+							}" class="rounded avatar-option position-absolute" style="top: 140px; left: 250px;">
+						</div>
 
-				<div class="button-container d-flex justify-content-center mt-4">
-				<button id="deleteAvatarBtn" type="button" class="btn btn-danger">
-						Delete avatar <i class="bi bi-trash-fill"></i>
-					</button>
+						<div class="button-container d-flex justify-content-center mt-4">
+							<button id="deleteAvatarBtn" type="button" class="btn btn-danger">
+								Delete avatar <i class="bi bi-trash-fill"></i>
+							</button>
+						</div>
+					</div>
+
+
+						<div class="ms-5">
+						<div class="d-flex justify-content-between justify-content-center mb-4">
+						<h2 >Settings</h2>
+						<div>
+							<button id="save-button" type="submit" class="btn btn-success ms-2 p-2" disabled><i class="bi bi-floppy2-fill"></i></button>
+							<button id="deletePrompt" type="button" class="btn btn-danger ms-2">Delete account</button>
+						</div>
+						</div>
+					<form id="settings-form" class="w-100 d-flex flex-column needs-validation" novalidate>
+						<div class="form-group mb-4 ">
+							<div class="input-group has-validation">
+								<span class=" input-group-text fw-bold text-secondary"><i class="bi bi-envelope-open-heart icon-glow"></i></span>
+								<input type="email" class="textbox form-control form-control-sm bg-light" id="email"
+								placeholder="New email" value="${getUserSessionData().email}"
+								autocomplete="email">
+								<div id="email-feedback" class="invalid-feedback"></div>
+								<div class="valid-feedback"> Looks good! </div>
+							</div>
+						</div>
+						<div class="form-group mb-4 ">
+							<div class="input-group has-validation">
+								<span class=" input-group-text fw-bold text-secondary">
+								<i class="bi bi-coin icon-glow" ></i></span>
+								<input type="text" class="textbox form-control bg-light" id="username"
+									placeholder="New username" value="${getUserSessionData().username}"
+									autocomplete="username">
+								<div id="username-feedback" class="invalid-feedback">
+								</div>
+								<div class="valid-feedback">
+									Looks good!
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group mb-4 ">
+							<div class="input-group has-validation">
+							<span class=" input-group-text fw-bold text-secondary">New Password</span>
+								<input type="password" class="textbox form-control bg-light" id="currentPassword" autocomplete="new-password" placeholder="******">
+
+								<div id="password-feedback" class="invalid-feedback">
+								</div>
+								<div class="valid-feedback">
+									Looks good!
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group mb-4 ">
+							<div class="input-group has-validation">
+							<span class=" input-group-text fw-bold text-secondary">Confirm Password</span>
+								<input type="password" class="textbox form-control bg-light" id="confirm-password" placeholder="******">
+								<div id="confirm-password-feedback" class="invalid-feedback">
+									Passwords do not match.
+								</div>
+								<div class="valid-feedback">
+									Looks good!
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group mb-4 ">
+							<div class="form-check form-switch d-flex align-items-center">
+								<input class="form-check-input" type="checkbox" id="twofa" ${
+									getUserSessionData().otp == "true"
+										? "checked"
+										: ""
+								}>
+								<label class="form-check-label ms-2" for="twofa">Two-factor authentication</label>
+							</div>
+						</div>
+
+					</form>
+					</div>
 				</div>
 			</div>
 
-
-				<div class="ms-5">
-				<div class="d-flex justify-content-between justify-content-center mb-4">
-				<h2 >Settings</h2>
-				<div>
-					<button id="save-button" type="submit" class="btn btn-success ms-2 p-2" disabled><i class="bi bi-floppy2-fill"></i></button>
-					<button id="deletePrompt" type="button" class="btn btn-danger ms-2">Delete account</button>
-				</div>
-				</div>
-			<form id="settings-form" class="w-100 d-flex flex-column needs-validation" novalidate>
-				<div class="form-group mb-4 ">
-					<div class="input-group has-validation">
-						<span class=" input-group-text fw-bold text-secondary"><i class="bi bi-envelope-open-heart icon-glow"></i></span>
-						<input type="email" class="textbox form-control form-control-sm" id="email"
-						placeholder="New email" value="${getUserSessionData().email}"
-						autocomplete="email">
-						<div id="email-feedback" class="invalid-feedback"></div>
-						<div class="valid-feedback"> Looks good! </div>
+			<div class="modal fade" id="confirm-delete-modal" aria-hidden="true" tabindex="-1">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5 text-danger">Confirm Account Deletion</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form>
+							<div class="modal-body d-flex flex-column justify-content-center">
+								<p>Are you sure you want to delete your account? </p>
+							</div>
+							<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+							<button id="deleteAccount" type="button" class="btn btn-danger">Delete</button>
+							</div>
+						</form>
 					</div>
 				</div>
-				<div class="form-group mb-4 ">
-					<div class="input-group has-validation">
-						<span class=" input-group-text fw-bold text-secondary">
-						<i class="bi bi-coin icon-glow" ></i></span>
-						<input type="text" class="textbox form-control" id="username"
-							placeholder="New username" value="${getUserSessionData().username}"
-							autocomplete="username">
-						<div id="username-feedback" class="invalid-feedback">
-						</div>
-						<div class="valid-feedback">
-							Looks good!
-						</div>
-					</div>
-				</div>
-
-				<div class="form-group mb-4 ">
-					<div class="input-group has-validation">
-					<span class=" input-group-text fw-bold text-secondary">NEW PASSWORD</span>
-						<input type="password" class="textbox form-control" id="currentPassword" autocomplete="new-password" placeholder="******">
-
-						<div id="password-feedback" class="invalid-feedback">
-						</div>
-						<div class="valid-feedback">
-							Looks good!
-						</div>
-					</div>
-				</div>
-
-				<div class="form-group mb-4 ">
-					<div class="input-group has-validation">
-					<span class=" input-group-text fw-bold text-secondary">CONFIRM PASSWORD</span>
-						<input type="password" class="textbox form-control" id="confirm-password" placeholder="******">
-						<div id="confirm-password-feedback" class="invalid-feedback">
-							Passwords do not match.
-						</div>
-						<div class="valid-feedback">
-							Looks good!
-						</div>
-					</div>
-				</div>
-
-				<div class="form-group mb-4 ">
-					<div class="form-check form-switch d-flex align-items-center">
-						<input class="form-check-input" type="checkbox" id="twofa" ${
-							getUserSessionData().otp == "true" ? "checked" : ""
-						}>
-						<label class="form-check-label ms-2" for="twofa">Two-factor authentication</label>
-					</div>
-				</div>
-
-			</form>
 			</div>
-		</div>
-	</div>
-
-
-
-	<div class="modal fade" id="confirm-delete-modal" aria-hidden="true" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5 text-danger">Confirm Account Deletion</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<form>
-					<div class="modal-body d-flex flex-column justify-content-center">
-						<p>Are you sure you want to delete your account? </p>
-					</div>
-					<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-					<button id="deleteAccount" type="button" class="btn btn-danger">Delete</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	`;
+			`;
 	}
 
 	style() {
@@ -226,24 +223,24 @@ export class SettingsPage extends Component {
 		}
 
 		#avatar-div{
-			width: 250px; height: 300px;
+			width: 250px;
+			height: 300px;
 		}
 
 		.icon-glow {
-		font-size: 2rem;
-		text-shadow: 0 0 8px skyblue
+			font-size: 2rem;
+			text-shadow: 0 0 8px skyblue
 		}
 
-		#profile-div
-		{
-		position:relative;
-		z-index:10;
+		#profile-div{
+			position:relative;
+			z-index:10;
 		}
 
 		.input-group
 		{
-		max-height:4rem;
-		max-width:25rem;
+			max-height:4rem;
+			max-width:25rem;
 		}
 
 		.valid-feedback,
@@ -258,12 +255,6 @@ export class SettingsPage extends Component {
 			height: 200px;
 			margin-left: 2rem !important;
 		}
-
-		.textbox
-		{
-		background-color: rgba(255,255,255,0.6);
-		}
-
 
 		#avatar-options {
 			width: 250px;
@@ -283,8 +274,8 @@ export class SettingsPage extends Component {
 			.avatar-option:hover {
 			transform: scale(1.2);
 		}
-				div.camera-icon-circle {
-				transition: transform 0.3s ease;
+		div.camera-icon-circle {
+			transition: transform 0.3s ease;
 			position: absolute;
 			transform: translate(-50%, -50%);
 			width: 60px;  /* Size of the circle */
@@ -319,7 +310,7 @@ export class SettingsPage extends Component {
 		this.initialUser = getUserSessionData().username;
 		this.initialEmail = getUserSessionData().email;
 		if (!(await this.loadSettings())) {
-			showError()
+			showError();
 			return;
 		}
 
@@ -680,7 +671,6 @@ export class SettingsPage extends Component {
 		event.preventDefault();
 		this.deleteModal.show();
 	}
-
 
 	async #closeError(event) {
 		event.preventDefault();
