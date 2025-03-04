@@ -34,7 +34,7 @@ export class Navbar extends Component {
 		return `
 			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary">
 				<div class="container-fluid d-flex align-items-center justify-content-between">
-					<a class="navbar-brand mr-auto" onclick="window.redirect('/home')"><img class="logo" alt="Logo" src="/assets/logo.png"/></a>
+					<a class="navbar-brand mr-auto" role="button" onclick="window.redirect('/home')"><img class="logo" alt="Logo" src="/assets/logo.png"/></a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 							data-bs-target="#navbarSupportedContent"
 							aria-controls="navbarSupportedContent" aria-expanded="false"
