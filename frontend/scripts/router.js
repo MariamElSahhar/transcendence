@@ -1,8 +1,8 @@
 import { isAuth } from "./utils/session-manager.js";
 import { fetchUserById } from "./clients/users-client.js";
+import { showError } from "../pages/error/ErrorPage.js";
+
 window.APP_CONFIG = {
-	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
-	// backendUrl: window.location.protocol=="https:" ? `https://${window.location.host}` : `http://${window.location.host}:8000`,
 	mediaUrl:
 		window.location.protocol == "https:"
 			? `https://${window.location.host}`
@@ -14,8 +14,6 @@ window.APP_CONFIG = {
 	pointsToWinPongMatch: 1,
 	gameCountdown: 3,
 };
-
-import { showError } from "../pages/error/ErrorPage.js";
 
 const routes = {
 	// PUBLIC SCREENS
