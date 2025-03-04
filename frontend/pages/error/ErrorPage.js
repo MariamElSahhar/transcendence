@@ -1,19 +1,17 @@
 import { Component } from "../Component.js";
-import {
-	isAuth
-} from "../../scripts/utils/session-manager.js";
+import { isAuth } from "../../scripts/utils/session-manager.js";
 
 export class ErrorPage extends Component {
 	async connectedCallback() {
 		this.auth = await isAuth();
-		this.dispatchEvent(new CustomEvent('connected', { bubbles: true, composed: true }));
+		this.dispatchEvent(
+			new CustomEvent("connected", { bubbles: true, composed: true })
+		);
 		super.connectedCallback();
 	}
 
 	render() {
 		return `
-		<style>
-		</style>
 		<div id="errorModal" class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 		  <div class="modal-content">
@@ -25,8 +23,8 @@ export class ErrorPage extends Component {
 			  <p>Please try refreshing the page or go back to home.</p>
 			</div>
 			<div class="modal-footer">
-			  <button id="refreshBtn" class="btn btn-primary" onclick="window.location.reload()">Refresh Page</button>
-			  <button id="homeBtn" class="btn btn-primary" onclick="window.location.href = '/home'">Home</button>
+			  <button id="refreshBtn" class="btn btn-primary" onclick="window.redirect(${window.location.pathname})">Refresh Page</button>
+			  <button id="homeBtn" class="btn btn-primary" onclick="window.redirect('/home')">Home</button>
 			</div>
 		  </div>
 		</div>
@@ -34,26 +32,25 @@ export class ErrorPage extends Component {
 
 		`;
 	}
-
 }
 
 export async function showError() {
-	const errorPage = document.createElement('error-page');
+	const errorPage = document.createElement("error-page");
 	document.body.appendChild(errorPage);
-	errorPage.addEventListener('connected', () => {
+	errorPage.addEventListener("connected", () => {
 		const errorModal = document.getElementById("errorModal");
 
 		if (errorModal) {
-			const backdrop = document.createElement('div');
-			backdrop.classList.add('modal-backdrop', 'fade', 'show');
+			const backdrop = document.createElement("div");
+			backdrop.classList.add("modal-backdrop", "fade", "show");
 			document.body.appendChild(backdrop);
 
-			errorModal.classList.add('show');
-			errorModal.style.display = 'block';
+			errorModal.classList.add("show");
+			errorModal.style.display = "block";
 
 			const modal = new bootstrap.Modal(errorModal, {
-				backdrop: 'static',
-				keyboard: false
+				backdrop: "static",
+				keyboard: false,
 			});
 			modal.show();
 		}

@@ -107,7 +107,10 @@ export class Navbar extends Component {
 			navbarItem.textContent = link.label;
 			navbarList.appendChild(navbarItem);
 
-			if (link.path == window.location.pathname)
+			if (
+				link.path == window.location.pathname ||
+				(link.label == "Games" && window.location.pathname == "/")
+			)
 				navbarItem.classList.add("active");
 
 			super.addComponentEventListener(navbarItem, "click", () => {

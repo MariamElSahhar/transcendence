@@ -3,16 +3,19 @@ import { fetchUserById } from "./clients/users-client.js";
 window.APP_CONFIG = {
 	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
 	// backendUrl: window.location.protocol=="https:" ? `https://${window.location.host}` : `http://${window.location.host}:8000`,
-	mediaUrl: window.location.protocol=="https:" ? `https://${window.location.host}` :`http://${window.location.host}:8000`,
-	backendUrl: window.location.protocol=="https:" ? `https://${window.location.host}` : `http://${window.location.host}:8000`,
+	mediaUrl:
+		window.location.protocol == "https:"
+			? `https://${window.location.host}`
+			: `http://${window.location.host}:8000`,
+	backendUrl:
+		window.location.protocol == "https:"
+			? `https://${window.location.host}`
+			: `http://${window.location.host}:8000`,
 	pointsToWinPongMatch: 1,
 	gameCountdown: 3,
 };
 
-import {
-	showError
-} from "../pages/error/ErrorPage.js";
-
+import { showError } from "../pages/error/ErrorPage.js";
 
 const routes = {
 	// PUBLIC SCREENS
@@ -172,21 +175,16 @@ const handleLocation = async () => {
 	loadRoute(route, layout);
 };
 
-window.onerror = function(message, source, lineno, colno, error) {
+window.onerror = function (message, source, lineno, colno, error) {
 	console.error("Global error caught:", error);
 	showError();
 	return true;
-  };
+};
 
-  window.addEventListener('unhandledrejection', function(event) {
+window.addEventListener("unhandledrejection", function (event) {
 	console.error("Unhandled promise rejection:", event.reason);
-	import('../pages/error/ErrorPage.js')
-	  .then(module => {
-		const errorPage = document.createElement('error-page');
-		document.getElementById('root').innerHTML = errorPage.render();
-	  })
-	  .catch(err => console.error("Error loading ErrorPage:", err));
-  });
+	showError();
+});
 
 const loadRoute = async (route, layout) => {
 	try {
@@ -206,9 +204,9 @@ const loadRoute = async (route, layout) => {
 			root.innerHTML = "";
 			root.appendChild(routeComponent);
 		}
-	}  catch (e) {
+	} catch (e) {
 		console.log("ERROR", e);
-        showError();
+		showError();
 	}
 };
 

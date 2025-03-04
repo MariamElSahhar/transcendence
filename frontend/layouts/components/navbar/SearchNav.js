@@ -6,10 +6,8 @@ export class SearchNav extends Component {
 	render() {
 		return `
 			<div class="position-relative z-1">
-				<form id="search-form" class="d-flex my-0" role="search">
-					<input id="search-bar" class="form-control rounded-pill" type="search"
-							placeholder="Search users..." aria-label="Search" autocomplete="off">
-				</form>
+				<input id="search-bar" class="form-control rounded-pill bg-light" type="search"
+						placeholder="Search users..." aria-label="Search" autocomplete="off">
 				<div id="search-results" class="rounded position-absolute w-100 z-2"></div>
 			</div>
 		`;
@@ -18,6 +16,10 @@ export class SearchNav extends Component {
 	style() {
 		return `
 			<style>
+				#search-bar:active, #search-bar:focus {
+					background-color: var(--bs-body-bg) !important;
+				}
+
 				#search-results {
 					max-height: 200px;
 					overflow-y: auto;
@@ -46,12 +48,6 @@ export class SearchNav extends Component {
 			this.#DOMClickHandler
 		);
 		this.searchResults = this.querySelector("#search-results");
-		this.searchForm = this.querySelector("#search-form");
-		super.addComponentEventListener(
-			this.searchForm,
-			"submit",
-			this.#searchFormHandler
-		);
 	}
 
 	async #searchBarHandler(event) {
@@ -98,10 +94,6 @@ export class SearchNav extends Component {
 		) {
 			this.searchResults.style.display = "none";
 		}
-	}
-
-	#searchFormHandler(event) {
-		event.preventDefault();
 	}
 }
 
