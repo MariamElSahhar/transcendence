@@ -72,37 +72,13 @@ export class DashboardPage extends Component {
 	}
 
 	async getGameLog() {
-		const { success, data } = await fetchUserGameLog(this.userid);
+		const { success, gamelog, stats } = await fetchUserGameLog(this.userid);
 		if (!success) {
 			console.error("Error fetching gamelog");
 			return;
 		}
-		this.gamelog = data;
-		const localPlayed = this.gamelog.local?.length || 0;
-		const remotePlayed = this.gamelog.remote?.length || 0;
-		const tttPlayed = this.gamelog.ttt?.length || 0;
-
-		const remoteWon =
-			this.gamelog.remote?.filter((item) => item.is_win === true)
-				.length || 0;
-		const localWon =
-			this.gamelog.local?.filter((item) => item.is_win === true).length ||
-			0;
-		const tttWon =
-			this.gamelog.ttt?.filter((item) => item.is_win === true).length ||
-			0;
-		const totalPlayed = localPlayed + remotePlayed + tttPlayed;
-		const totalWon = localWon + tttWon + remoteWon;
-		this.stats = {
-			localPlayed,
-			localWon,
-			remotePlayed,
-			remoteWon,
-			tttPlayed,
-			tttWon,
-			totalPlayed,
-			totalWon,
-		};
+		this.gamelog = gamelog;
+		this.stats = stats;
 	}
 }
 

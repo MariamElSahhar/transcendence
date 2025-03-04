@@ -10,11 +10,8 @@ services:
             - frontend-backend
         depends_on:
             - db
-            # - redis
         command: >
             sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-        # extra_hosts:
-        # - "host.docker.internal:host-gateway"
 
     db:
         image: postgres
@@ -41,14 +38,6 @@ services:
         restart: always
         depends_on:
             - backend
-
-    # redis:
-    #     image: redis:7
-    #     restart: always
-    #     ports:
-    #         - "6379:6379"
-    #     networks:
-    #         - backend-db
 
 networks:
     backend-db:

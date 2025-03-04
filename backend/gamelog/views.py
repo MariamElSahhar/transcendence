@@ -94,15 +94,34 @@ def gamelog(request, user_id):
     local_games = target_user.local_games.all().order_by("-date")
     ttt_games = target_user.ttt_games.all().order_by("-date")
 
+    local_serializer = LocalGameSerializer(local_games, many=True, context={"request": request})
+    remote_serializer = RemoteGameSerializer(remote_games, many=True, context={"request": request})
+    ttt_serializer = TicTacToeSerializer(ttt_games, many=True, context={"request": request})
+
+    local_games_count = len(local_serializer.data)
+    remote_games_count = len(remote_serializer.data)
+    ttt_games_count = len(ttt_serializer.data)
+
+    local_wins = len([item for item in local_serializer.data if item.get('is_win') == True])
+    remote_wins = len([item for item in remote_serializer.data if item.get('is_win') == True])
+    ttt_wins = len([item for item in ttt_serializer.data if item.get('is_win') == True])
+
     response_data = {
-        "local": LocalGameSerializer(
-            local_games, many=True, context={"request": request}
-        ).data,
-        "remote": RemoteGameSerializer(
-            remote_games, many=True, context={"request": request}
-        ).data,
-        "ttt": TicTacToeSerializer(
-            ttt_games, many=True, context={"request": request}
-        ).data,
+        "stats": {
+            "localPlayed": local_games_count,
+            "localWon": local_wins,
+            "remotePlayed": remote_games_count,
+            "remoteWon": remote_wins,
+            "tttPlayed": ttt_games_count,
+            "tttWon": ttt_wins,
+            "totalPlayed": local_games_count + remote_games_count + ttt_games_count,
+            "totalWon": local_wins + remote_wins + ttt_wins,
+        },
+        "data": {
+            "local":  local_serializer.data,
+            "remote": remote_serializer.data,
+            "ttt": ttt_serializer.data,
+        }
     }
+
     return Response(response_data)

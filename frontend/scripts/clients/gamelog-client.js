@@ -12,7 +12,7 @@ export const fetchUserGameLog = async (user_id) => {
 	const url = URIs.gamelog(user_id);
 	const { status, body, error } = await get(url);
 	if (error) return { success: false, data: null, error: error };
-	return { success: true, data: body };
+	return { success: true, gamelog: body.data, stats: body.stats };
 };
 
 // Add remote game to gamelog
