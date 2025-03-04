@@ -9,21 +9,6 @@ body {
 	background-color: var(--sky-400);
 }
 
-
-.navbar {
-	position: sticky;
-	background-color: rgba(135, 206, 235, 0.8) !important;
-	top: 0;
-	width: 100%;
-	z-index: 1000;
-}
-.navbar-nav li:hover
-{
-	color: black;
-	text-shadow: 1px 1px 1px var(--mario-yellow-color);
-	opacity:1;
-	transition: all 0.3s ease;
-}
 /* Smaller input boxes */
 input.form-control {
 	margin: 0 auto;
@@ -57,7 +42,6 @@ input.form-control {
 	transform: scaleX(-1);
 }
 
-
 @keyframes move-sky {
 	from {
 		transform: translateX(0%);
@@ -68,9 +52,8 @@ input.form-control {
 }
 
 .pipes-container {
-
 	gap: 35%;
-	bottom:0;
+	bottom: 0;
 }
 
 .pipe {
@@ -85,13 +68,13 @@ input.form-control {
 }
 
 .logo {
-    width: 200px; /* Scales properly on all devices */
-    height: auto;
-
+	width: 200px; /* Scales properly on all devices */
+	height: auto;
 }
 
 @keyframes jump {
-	0%, 100% {
+	0%,
+	100% {
 		transform: translateY(0);
 	}
 	50% {
@@ -99,11 +82,9 @@ input.form-control {
 	}
 }
 
-
 footer {
 	height: 50px;
 	background-image: url(/assets/textures/floor.png);
 	background-repeat: repeat;
 	background-size: 80px 80px;
 }
-

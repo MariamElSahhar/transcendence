@@ -75,6 +75,25 @@ export class Navbar extends Component {
 				max-height: auto;
 				height: auto;
 			}
+
+			.navbar {
+				position: sticky;
+				background-color: rgba(var(--bs-primary-rgb), 0.8) !important;
+				top: 0;
+				width: 100%;
+				z-index: 1000;
+			}
+
+			.navbar-nav li:hover {
+				color: black;
+				text-shadow: 1px 1px 1px var(--mario-yellow-color);
+				opacity: 1;
+				transition: all 0.3s ease;
+			}
+
+			.navbar-nav .active {
+				text-shadow: 1px 1px 1px var(--mario-yellow-color);
+			}
 		</style>
 		`;
 	}
@@ -87,6 +106,9 @@ export class Navbar extends Component {
 			navbarItem.setAttribute("role", "button");
 			navbarItem.textContent = link.label;
 			navbarList.appendChild(navbarItem);
+
+			if (link.path == window.location.pathname)
+				navbarItem.classList.add("active");
 
 			super.addComponentEventListener(navbarItem, "click", () => {
 				window.redirect(link.path);
