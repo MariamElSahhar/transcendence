@@ -21,39 +21,16 @@ export class GameLogTable extends Component {
 
                 .page-link
                 {
-                    color:black;
-                    cursor:pointer;
+                    color: black;
+                    cursor: pointer;
                 }
 
-                .hide-placeholder-text {
-                    color: var(--bs-secondary-bg)!important;
-                    background-color: var(--bs-secondary-bg)!important;
-                }
-
-                .avatar-sm {
-                    width: 2.25rem;
-                    height: 2.25rem;
-                }
-
-                .badge-dot i {
-                    width: .375rem;
-                    height: .375rem;
-                    border-radius: 50%;
-                    margin-right: .5rem;
-                    display: inline-block;
-                }
-
-                .progress {
-                    height: .5rem;
-                    font-size: .85rem;
-                    background-color: #e7eaf0;
-                    border-radius: 50rem;
-                    display: flex;
-                    overflow: hidden;
+                .tab-content {
+                    min-height: 350px;
                 }
 
                 .log-border {
-                    border-collapse:separate;
+                    border-collapse: separate;
                     border-top: 10px solid transparent !important;
                     border-image: url('assets/wall.png') 90 round !important;
                 }
@@ -124,12 +101,11 @@ export class GameLogTable extends Component {
 	}
 
 	renderMatches(gamelog, gametype) {
-
 		if (!gamelog || gamelog.length === 0) {
 			return `
                 <div class="d-flex flex-column justify-content-start align-items-center w-100">
-                    <p class="text-secondary">No games yet :(</p>
-                    <p class="text-secondary">Go to the home page to start playing!</p>
+                    <p class="text-dark mb-1">No games yet...</p>
+                    <p class="text-dark">Go to the home page to start playing!</p>
                 </div>`;
 		}
 		const rows = gamelog
@@ -138,9 +114,9 @@ export class GameLogTable extends Component {
 				(game) => `
                     <tr>
                     <td>${game.opponent_username}</td>
-                    <td class="result fs-3 ${ game.is_win
-                        ? "text-success"
-                        : "text-danger"}">
+                    <td class="result fs-3 ${
+						game.is_win ? "text-success" : "text-danger"
+					}">
                         ${game.is_win ? "WIN" : "LOSS"}
                     </td>
                         <td>${game.my_score} - ${game.opponent_score} </td>
@@ -171,10 +147,10 @@ export class GameLogTable extends Component {
                             <th scope="col">Score</th>
                             <th scope="col">Date</th>
                             ${
-                                gametype == "local"
-                                    ? `<th scope="col">Tournament</th>`
-                                    : ""
-                            }
+								gametype == "local"
+									? `<th scope="col">Tournament</th>`
+									: ""
+							}
                         </tr>
                     </thead>
                     <tbody>
@@ -199,7 +175,9 @@ export class GameLogTable extends Component {
                     <li class="page-item ${
 						this.pagenumber === i ? "active" : ""
 					}">
-                        <a class="page-link border-0 bg-transparent" data-page="${i}">${i + 1}</a>
+                        <a class="page-link border-0 bg-transparent" data-page="${i}">${
+								i + 1
+							}</a>
                     </li>`
 						)
 						.join("")}

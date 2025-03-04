@@ -17,7 +17,7 @@ export class GameHeatMap extends Component {
 	render() {
 		return `
 			<div class="h-100 w-100 p-3 flex-column d-flex justify-content-center align-items-start">
-				<small class="my-0 mb-3 fw-bold">Game logs</small>
+				<small class="my-0 mb-3 fw-bold">Games this year</small>
 				<div class="heatmap-grid d-grid justify-content-start w-100"></div>
 			</div>
 		`;
@@ -36,19 +36,20 @@ export class GameHeatMap extends Component {
 				.day {
 					width: 14px;
 					height: 14px;
-					background-color: #ffebc5;
+					background-color: var(--brick-200);
 					border-radius: 3px;
-					border: 1px solid #b5651d;
+					border: 1px solid var(--brick-700);
 					transition: transform 0.2s ease-in-out;
 				}
 
 				.day:hover {
 					transform: scale(1.2);
 				}
-				.day.level-1 { background-color: var(--brick-500); } /* Lightest */
-				.day.level-2 { background-color: var(--brick-600); } /* Medium-light */
-				.day.level-3 { background-color: var(--brick-700); } /* Medium-dark */
-				.day.level-4 { background-color: var(--brick-900); } /* Darkest */
+				.day.level-1 { background-color: var(--brick-300); } /* Lightest */
+				.day.level-2 { background-color: var(--brick-500); } /* Medium-light */
+				.day.level-3 { background-color: var(--brick-600); } /* Medium-dark */
+				.day.level-4 { background-color: var(--brick-700); } /* Darkest */
+				.day.level-5 { background-color: var(--brick-800); } /* Darkest */
 
 			</style>
 		`;
@@ -58,6 +59,7 @@ export class GameHeatMap extends Component {
 		const heatmap = this.querySelector(".heatmap-grid");
 
 		const getLevel = (count) => {
+			if (count > 20) return "level-5";
 			if (count > 10) return "level-4";
 			if (count > 7) return "level-3";
 			if (count > 3) return "level-2";
