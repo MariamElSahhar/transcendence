@@ -144,11 +144,11 @@ window.icons = {
 			flip ? `flip-h` : ``
 		}" alt="Luigi">`,
 	shroom: (flip) =>
-		`<img src="/assets/sprites/shroom.png" class="icon ${
+		`<img src="/assets/sprites/8bit_shroom.png" class="icon ${
 			flip ? `flip-h` : ``
 		}" alt="Luigi">`,
 	plant: (flip) =>
-		`<img src="/assets/sprites/plant.png" class="icon ${
+		`<img src="/assets/sprites/8bit_plant.png" class="icon ${
 			flip ? `flip-h` : ``
 		}" alt="Luigi">`,
 };
