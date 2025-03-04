@@ -5,6 +5,7 @@ export class GameLogTable extends Component {
 		super();
 		this.gamelog = {};
 		this.pagenumber = 0;
+		this.activeTab = "local";
 	}
 	style() {
 		return `
@@ -76,23 +77,35 @@ export class GameLogTable extends Component {
             <div class="mb-3 mt-3">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active text-dark me-2" id="pills-local-tab" data-bs-toggle="pill" data-bs-target="#pills-local" type="button" role="tab" aria-controls="pills-local" aria-selected="true"><i class="bi text-dark bi-joystick"></i> Local Pong</button>
+                        <button class="nav-link text-dark me-2 ${
+							this.activeTab === "local" ? "active" : ""
+						}" id="pills-local-tab" data-bs-toggle="pill" data-bs-target="#pills-local" type="button" role="tab" aria-controls="pills-local" aria-selected="true"><i class="bi text-dark bi-joystick"></i> Local Pong</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link text-dark me-2" id="pills-remote-tab" data-bs-toggle="pill" data-bs-target="#pills-remote" type="button" role="tab" aria-controls="pills-remote" aria-selected="false"><i class="bi text-dark bi-people-fill"></i> Online Pong</button>
+                        <button class="nav-link text-dark me-2 ${
+							this.activeTab === "remote" ? "active" : ""
+						}" id="pills-remote-tab" data-bs-toggle="pill" data-bs-target="#pills-remote" type="button" role="tab" aria-controls="pills-remote" aria-selected="false"><i class="bi text-dark bi-people-fill"></i> Online Pong</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link text-dark me-2" id="pills-ttt-tab" data-bs-toggle="pill" data-bs-target="#pills-ttt" type="button" role="tab" aria-controls="pills-ttt" aria-selected="false"><i class="bi text-dark bi-grid-3x3-gap-fill"></i> Tic Tac Toe</button>
+                        <button class="nav-link text-dark me-2 ${
+							this.activeTab === "ttt" ? "active" : ""
+						}" id="pills-ttt-tab" data-bs-toggle="pill" data-bs-target="#pills-ttt" type="button" role="tab" aria-controls="pills-ttt" aria-selected="false"><i class="bi text-dark bi-grid-3x3-gap-fill"></i> Tic Tac Toe</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-local" role="tabpanel" aria-labelledby="pills-local-tab">
+                    <div class="tab-pane fade ${
+						this.activeTab === "local" ? "show active" : ""
+					}" id="pills-local" role="tabpanel" aria-labelledby="pills-local-tab">
                         ${this.renderMatches(this.gamelog.local, "local")}
                     </div>
-                    <div class="tab-pane fade" id="pills-remote" role="tabpanel" aria-labelledby="pills-remote-tab">
+                    <div class="tab-pane fade ${
+						this.activeTab === "remote" ? "show active" : ""
+					}" id="pills-remote" role="tabpanel" aria-labelledby="pills-remote-tab">
                         ${this.renderMatches(this.gamelog.remote, "remote")}
                     </div>
-                    <div class="tab-pane fade" id="pills-ttt" role="tabpanel" aria-labelledby="pills-ttt-tab">
+                    <div class="tab-pane fade ${
+						this.activeTab === "ttt" ? "show active" : ""
+					}" id="pills-ttt" role="tabpanel" aria-labelledby="pills-ttt-tab">
                         ${this.renderMatches(this.gamelog.ttt, "ttt")}
                     </div>
                 </div>
@@ -196,9 +209,16 @@ export class GameLogTable extends Component {
 	}
 
 	postRender() {
+		this.querySelectorAll(".nav-link").forEach((link) => {
+			super.addComponentEventListener(link, "click", (_) => {
+				this.activeTab = link.getAttribute("id").split("-")[1];
+				this.attributeChangedCallback();
+			});
+		});
+
 		this.querySelectorAll(".page-link").forEach((link) => {
 			const page = link.getAttribute("data-page");
-			super.addComponentEventListener(link, "click", (event) => {
+			super.addComponentEventListener(link, "click", (_) => {
 				if (page === "previous") {
 					this.pagenumber--;
 				} else if (page === "next") {
