@@ -1,15 +1,14 @@
-const BASE_URL = `http://127.0.0.1:8000/api`;
 import { post, get } from "../utils/http-requests.js";
 import { storeUserSession, isAuth } from "../utils/session-manager.js";
 
 const URIS = {
-	login: `${BASE_URL}/login/`,
-	logout: `${BASE_URL}/logout/`,
-	refresh: `${BASE_URL}/token/refresh/`,
-	register: `${BASE_URL}/register/`,
-	auth: `${BASE_URL}/token/status`,
-	verifyOTP: `${BASE_URL}/verify-otp/`,
-	avatars: `${BASE_URL}/default-avatars/`,
+	login: `/api/login/`,
+	logout: `/api/logout/`,
+	refresh: `/api/token/refresh/`,
+	register: `/api/register/`,
+	auth: `/api/token/status`,
+	verifyOTP: `/api/verify-otp/`,
+	avatars: `/api/default-avatars/`,
 };
 
 export const getDefaultAvatars = async () => {

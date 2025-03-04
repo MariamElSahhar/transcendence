@@ -1,12 +1,11 @@
-const BASE_URL = `http://127.0.0.1:8000/api/users`;
 import { get, post, patch, del } from "../utils/http-requests.js";
 
 const URIs = {
-	myInfo: `${BASE_URL}/me`,
-	users: `${BASE_URL}`,
-	usersID: (id) => `${BASE_URL}/${id}/`,
-	usersUsername: (username) => `${BASE_URL}/?username=${username}`,
-	userAvatar: (id) => `${BASE_URL}/${id}/avatar/`,
+	myInfo: `/api/users/me`,
+	users: `/api/users`,
+	usersID: (id) => `/api/users/${id}/`,
+	usersUsername: (username) => `/api/users/?username=${username}`,
+	userAvatar: (id) => `/api/users/${id}/avatar/`,
 };
 
 // Fetch all users

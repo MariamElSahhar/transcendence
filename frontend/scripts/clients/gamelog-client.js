@@ -1,11 +1,10 @@
-const BASE_URL = `http://127.0.0.1:8000/api`;
 import { post, get } from "../utils/http-requests.js";
 
 const URIs = {
-	gamelog: (user_id) => `${BASE_URL}/users/${user_id}/gamelog/`,
-	gamelogRemote: `${BASE_URL}/gamelog/remote/`,
-	gamelogTTT: `${BASE_URL}/gamelog/ttt/`,
-	gamelogLocal: `${BASE_URL}/gamelog/local/`,
+	gamelog: (user_id) => `/api/users/${user_id}/gamelog/`,
+	gamelogRemote: `/api/gamelog/remote/`,
+	gamelogTTT: `/api/gamelog/ttt/`,
+	gamelogLocal: `/api/gamelog/local/`,
 };
 
 // Fetch game log

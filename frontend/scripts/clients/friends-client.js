@@ -1,11 +1,9 @@
-const BASE_URL = `http://127.0.0.1:8000/api`;
 import { post, get, del } from "../utils/http-requests.js";
-import { getUserSessionData } from "../utils/session-manager.js";
 
 const URIs = {
 	friendsID: (user_id, friend_id) =>
-		`${BASE_URL}/users/${user_id}/friends/${friend_id}/`,
-	friends: (user_id) => `${BASE_URL}/users/${user_id}/friends/`,
+		`/api/users/${user_id}/friends/${friend_id}/`,
+	friends: (user_id) => `/api/users/${user_id}/friends/`,
 };
 
 // Fetch all friends

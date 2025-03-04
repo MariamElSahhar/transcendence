@@ -2,11 +2,7 @@
 const request = async (url, options) => {
 	options.credentials = "include";
 	try {
-		url = window.location.protocol === "https:"
-				? new URL(url).pathname
-				: url;
-		// console.log(window.location.protocol, url)
-		// (new URL(url).pathname)
+		url = new URL(url).origin + url;
 		const response = await fetch(url, options);
 		const body = response.status != 204 ? await response.json() : null;
 		if (!response.ok) {

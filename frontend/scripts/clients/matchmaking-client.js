@@ -1,6 +1,5 @@
-const BASE_URL = `http://127.0.0.1:8000/api`;
 const URIs = {
-	matchmaker: `${BASE_URL}/remote-pong/matchmaking/`,
+	matchmaker: `/api/remote-pong/matchmaking/`,
 };
 import { post, del } from "../utils/http-requests.js";
 
