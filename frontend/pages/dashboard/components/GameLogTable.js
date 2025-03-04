@@ -211,6 +211,7 @@ export class GameLogTable extends Component {
 	postRender() {
 		this.querySelectorAll(".nav-link").forEach((link) => {
 			super.addComponentEventListener(link, "click", (_) => {
+				this.pagenumber = 0;
 				this.activeTab = link.getAttribute("id").split("-")[1];
 				this.attributeChangedCallback();
 			});
