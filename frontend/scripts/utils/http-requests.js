@@ -2,7 +2,8 @@
 const request = async (url, options) => {
 	options.credentials = "include";
 	try {
-		url = new URL(url).origin + url;
+		url = window.location.origin + url;
+		console.log(url);
 		const response = await fetch(url, options);
 		const body = response.status != 204 ? await response.json() : null;
 		if (!response.ok) {
@@ -14,6 +15,7 @@ const request = async (url, options) => {
 		}
 		return { status: response.status, body };
 	} catch (error) {
+		console.log(error);
 		return {
 			status: null,
 			body: null,
