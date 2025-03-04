@@ -113,7 +113,9 @@ class TicTacToeLog(models.Model):
             return self.winner_score
         elif self.loserID == user:
             return self.loser_score
-        return None
+        
+        # imply a draw
+        return self.winner_score
 
     def get_opponent_score(self, username):
         """Get the opponent's score based on the provided username."""

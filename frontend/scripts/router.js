@@ -3,14 +3,8 @@ import { fetchUserById } from "./clients/users-client.js";
 window.APP_CONFIG = {
 	// backendUrl: window.location.protocol=="https:" ? "": `http://${window.location.host}:8000`,
 	// backendUrl: window.location.protocol=="https:" ? `https://${window.location.host}` : `http://${window.location.host}:8000`,
-	mediaUrl:
-		window.location.protocol == "https:"
-			? ""
-			: `http://${window.location.host}:8000`,
-	backendUrl:
-		window.location.protocol == "https:"
-			? ""
-			: `https://${window.location.host}`,
+	mediaUrl: window.location.protocol=="https:" ? `https://${window.location.host}` :`http://${window.location.host}:8000`,
+	backendUrl: window.location.protocol=="https:" ? `https://${window.location.host}` : `http://${window.location.host}:8000`,
 	pointsToWinPongMatch: 1,
 	gameCountdown: 3,
 };
