@@ -16,7 +16,7 @@ from ..utils import send_otp
 from ..serializers import UserSerializer, ProfileSerializer
 
 
-# GET OR CREATE NEW USERS
+# GET ALL OR CREATE NEW USERS
 @api_view(["GET", "POST"])
 def user_list_create_view(request):
     if request.method == "GET":
@@ -66,7 +66,7 @@ def user_retrieve_update_destroy_view(request, user_id):
         print(response)
         return Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
 
-
+# ADD OR DELETE USER AVATAR
 @api_view(["POST", "DELETE"])
 def avatar_view(request, user_id):
     user = CustomUser.objects.get(id=user_id)
@@ -110,8 +110,9 @@ def avatar_view(request, user_id):
         except Exception as e:
             return Response({"error": f"Failed to delete avatar: {str(e)}"}, status=400)
 
+# GET DEFAULT AVATAR
 @api_view(["GET"])
-def get_default_avatars(request):
+def get_default_avatars():
     default_avatar_path = os.path.join(settings.MEDIA_ROOT, 'default_avatar')
     try:
         avatars = os.listdir(default_avatar_path)

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ..serializers import FriendSerializer
 from ..models import CustomUser
 
+# GET ALL FRIENDS OR ADD A FRIEND BY ID
 @api_view(['GET', 'POST'])
 def get_add_friends_view(request, user_id):
     if not user_id is request.user.id:
@@ -41,6 +42,7 @@ def get_add_friends_view(request, user_id):
 
         return Response({"message": "Friend added successfully."}, status=status.HTTP_201_CREATED)
 
+# DELETE FRIEND BY ID
 @api_view(['DELETE'])
 def remove_friend_view(request, user_id, friend_id):
     if not user_id is request.user.id:

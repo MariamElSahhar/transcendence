@@ -3,10 +3,6 @@ import { searchUsers } from "../../../scripts/clients/users-client.js";
 import { isAuth } from "../../../scripts/utils/session-manager.js";
 
 export class SearchNav extends Component {
-	constructor() {
-		super();
-	}
-
 	render() {
 		return `
 			<div class="position-relative z-1">
@@ -14,7 +10,7 @@ export class SearchNav extends Component {
 					<input id="search-bar" class="form-control rounded-pill" type="search"
 							placeholder="Search users..." aria-label="Search" autocomplete="off">
 				</form>
-				<div id="search-results" class="rounded"></div>
+				<div id="search-results" class="rounded position-absolute w-100 z-2"></div>
 			</div>
 		`;
 	}
@@ -23,12 +19,9 @@ export class SearchNav extends Component {
 		return `
 			<style>
 				#search-results {
-					position: absolute;
-					width: 100%;
 					max-height: 200px;
 					overflow-y: auto;
 					display: none;
-					z-index: 2;
 				}
 
 				.result-item {
