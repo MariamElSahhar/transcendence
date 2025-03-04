@@ -41,7 +41,7 @@ export const refresh = async () => {
 	const url = URIS.refresh;
 	const { status, body, error } = await post(url);
 	if (error) return { success: false, error: error };
-	return { success: true };
+	return { success: body.success };
 };
 
 // register and get access and refresh tokens
@@ -57,7 +57,8 @@ export const register = async ({ username, email, password }) => {
 export const tokenStatus = async () => {
 	const url = URIS.auth;
 	const { status, body, error } = await get(url);
-	return status == 200 ? true : false;
+	if (error) return false;
+	return body.success;
 };
 
 // clears http-only cookies and sets user as offline on the server
