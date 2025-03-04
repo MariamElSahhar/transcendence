@@ -80,32 +80,6 @@ export class AuthLayout extends Component {
 				z-index: 0;
 				pointer-events: none; /* Allow interactions with elements above */
 			}
-
-			@keyframes move-sky {
-				from {
-					transform: translateX(0%);
-				}
-				to {
-					transform: translateX(60%);
-				}
-			}
-
-
-			#pipes-container {
-				bottom: 50px;
-				gap: 35%;
-			}
-
-			.pipe {
-				height: 12em;
-			}
-
-			.pipe-content {
-				position: absolute;
-				bottom: 6em;
-				height: 5em;
-				transition: bottom 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-			}
 		</style>
 		`;
 	}
@@ -114,7 +88,7 @@ export class AuthLayout extends Component {
 		this.slot = "";
 		this.slot = content;
 		this.landing = window.location.pathname == "/";
-		if (super.isRendered()) this.update();
+		if (super.isRendered()) this.attributeChangedCallback();
 	}
 }
 

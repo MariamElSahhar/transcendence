@@ -16,7 +16,7 @@ export class ProfileHeader extends Component {
 
 	renderUserData(user) {
 		this.data = user;
-		this.update();
+		this.attributeChangedCallback();
 	}
 
 	connectedCallback() {

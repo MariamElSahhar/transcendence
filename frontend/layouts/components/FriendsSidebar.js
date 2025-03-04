@@ -23,7 +23,7 @@ export class FriendsSidebar extends Component {
 
 	renderFriends(friends) {
 		this.friends = friends;
-		this.update();
+		this.attributeChangedCallback();
 	}
 
 	postRender() {

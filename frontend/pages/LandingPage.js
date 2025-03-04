@@ -30,14 +30,6 @@ export class LandingPage extends Component {
 					width: 70%;
 				}
 
-				@keyframes jump {
-					0%, 100% {
-						transform: translateY(0);
-					}
-					50% {
-						transform: translateY(-20px);
-					}
-				}
 			</style>
 		`;
 	}

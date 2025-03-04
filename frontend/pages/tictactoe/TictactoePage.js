@@ -278,23 +278,17 @@ class TicTacToePage extends Component {
 	render() {
 		return `
 			<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative overflow-hidden menu-activated">
-				<div class="sky-wrapper w-100 overflow-hidden">
-					<div class="sky"></div>
-				</div>
+			<div id="timer" class="fs-1" style="z-index: 4;">03:00</div>
 				<img class="title-img" src="/pages/tictactoe/title.png" alt="X"/>
-
 				<div class="relative h-full w-full z-[3]">
 					<div class="board-wrapper">
 						${this.getBoardWrapperHtml()}
 					</div>
-
 					<div class="play-btn">Play</div>
 				</div>
-
 				<div class="scores">
 					${this.getScoresHtml()}
 				</div>
-				<div id="timer" class="fs-1" style="z-index: 4;">03:00</div>
 			</div>
 		`;
 	}
@@ -352,33 +346,11 @@ class TicTacToePage extends Component {
 					border: 0.2em solid white;
 				}
 
-				.sky {
-					display: flex;
-					background: url(/assets/sky.png);
-					background-size: contain;
-					background-repeat: repeat-x;
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 20em;
-					animation: move-sky 500s linear infinite;
-					z-index: 1;
-					opacity: 0.2;
-				}
-
-				@keyframes move-sky {
-					from {
-						background-position: 0 0;
-					}
-					to {
-						background-position: 10000px 0;
-					}
-				}
 
 				.title-img {
-					width: 50em;
-					height: 12em;
+					width: clamp(20em, 50%, 50em);
+					max-width: 90vw;
+    				height: auto;
 					z-index: 2;
 				}
 
@@ -438,8 +410,8 @@ class TicTacToePage extends Component {
 					grid-template-columns: repeat(3, 1fr);
 					grid-template-rows: repeat(3, 1fr);
 					gap: 10px;
-					width: 600px;
-					height: 600px;
+					width: min(90vw, 600px);
+					height: min(90vw, 600px);
 					z-index: 2;
 					position: relative;
 				}

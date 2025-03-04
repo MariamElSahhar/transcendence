@@ -1,98 +1,64 @@
 export class Component extends HTMLElement {
-	#componentEventListeners;
-	#rendered;
+    eventListeners;
+	rendered;
+    constructor() {
+        super();
+		this.rendered=false;
+        this.eventListeners = new Map();
+    }
 
-	constructor() {
-		super();
-		this.#rendered = false;
-		this.#componentEventListeners = [];
+    render() {}
+    postRender() {}
+    style() {
+        return ``;
+    }
+
+    renderComponent() {
+        this.innerHTML = this.render() + this.style();
+        this.rendered = true;
+        this.postRender();
+    }
+
+    connectedCallback() {
+        if (!this.rendered) {
+            this.renderComponent();
+        }
+    }
+
+    disconnectedCallback() {
+        this.removeAllComponentEventListeners();
+    }
+
+    attributeChangedCallback() {
+        console.log("here")
+        this.innerHTML = this.render() + this.style();
+        this.postRender();
+    }
+
+    addComponentEventListener(element, event, callback, callbackInstance = this) {
+        if (!element) return;
+
+        const eventCallback = callback.bind(callbackInstance);
+        if (!this.eventListeners.has(event)) {
+            this.eventListeners.set(event, new Set());
+        }
+
+        this.eventListeners.get(event).add({ element, eventCallback });
+        element.addEventListener(event, eventCallback);
+    }
+
+	isRendered()
+	{
+		return this.rendered;
 	}
 
-	connectedCallback() {
-		if (!this.#rendered) {
-			const render = this.render();
-			if (render === false) {
-				return;
-			}
-			this.innerHTML = render + this.style();
-			this.#rendered = true;
-			this.postRender();
-		}
-	}
-
-	disconnectedCallback() {
-		this.removeAllComponentEventListeners();
-	}
-
-	attributeChangedCallback(name, oldValue, newValue) {
-		this.update();
-	}
-
-	addComponentEventListener(
-		element,
-		event,
-		callback,
-		callbackInstance = this
-	) {
-		if (!element) {
-			return;
-		}
-		if (!this.#componentEventListeners[event]) {
-			this.#componentEventListeners[event] = [];
-		}
-		const eventCallback = callback.bind(callbackInstance);
-		this.#componentEventListeners[event].push({ element, eventCallback });
-		element.addEventListener(event, eventCallback);
-	}
-
-	removeComponentEventListener(element, event) {
-		const eventListeners = this.#componentEventListeners[event];
-
-		if (eventListeners) {
-			for (const eventListener of eventListeners) {
-				if (eventListener.element === element) {
-					element.removeEventListener(
-						event,
-						eventListener.eventCallback
-					);
-					eventListeners.splice(
-						eventListeners.indexOf(eventListener),
-						1
-					);
-				}
-			}
-		}
-	}
-
-	removeAllComponentEventListeners() {
-		for (const event in this.#componentEventListeners) {
-			if (this.#componentEventListeners.hasOwnProperty(event)) {
-				const eventListeners = this.#componentEventListeners[event];
-				for (const eventListener of eventListeners) {
-					eventListener.element.removeEventListener(
-						event,
-						eventListener.eventCallback
-					);
-				}
-			}
-		}
-		this.#componentEventListeners = [];
-	}
-
-	isRendered() {
-		return this.#rendered;
-	}
-
-	update() {
-		this.innerHTML = this.render() + this.style();
-		this.postRender();
-	}
-
-	render() {}
-
-	style() {
-		return ``;
-	}
-
-	postRender() {}
+    removeAllComponentEventListeners() {
+        this.eventListeners.forEach((listeners, event) => {
+            listeners.forEach(({ element, eventCallback }) => {
+                element.removeEventListener(event, eventCallback);
+            });
+        });
+        this.eventListeners.clear();
+    }
 }
+

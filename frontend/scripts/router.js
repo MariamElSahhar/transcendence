@@ -14,6 +14,12 @@ window.APP_CONFIG = {
 	pointsToWinPongMatch: 1,
 	gameCountdown: 3,
 };
+
+import {
+	showError
+} from "../pages/error/ErrorPage.js";
+
+
 const routes = {
 	// PUBLIC SCREENS
 	"/": {
@@ -172,6 +178,22 @@ const handleLocation = async () => {
 	loadRoute(route, layout);
 };
 
+window.onerror = function(message, source, lineno, colno, error) {
+	console.error("Global error caught:", error);
+	showError();
+	return true;
+  };
+
+  window.addEventListener('unhandledrejection', function(event) {
+	console.error("Unhandled promise rejection:", event.reason);
+	import('../pages/error/ErrorPage.js')
+	  .then(module => {
+		const errorPage = document.createElement('error-page');
+		document.getElementById('root').innerHTML = errorPage.render();
+	  })
+	  .catch(err => console.error("Error loading ErrorPage:", err));
+  });
+
 const loadRoute = async (route, layout) => {
 	try {
 		const root = document.getElementById("root");
@@ -179,7 +201,6 @@ const loadRoute = async (route, layout) => {
 		await import(route.path);
 		if (layout) {
 			let layoutComponent = document.querySelector(layout.component);
-			// load layout if it isn't already there
 			if (!layoutComponent) {
 				root.innerHTML = "";
 				await import(layout.path);
@@ -191,8 +212,9 @@ const loadRoute = async (route, layout) => {
 			root.innerHTML = "";
 			root.appendChild(routeComponent);
 		}
-	} catch (e) {
+	}  catch (e) {
 		console.log("ERROR", e);
+        showError();
 	}
 };
 

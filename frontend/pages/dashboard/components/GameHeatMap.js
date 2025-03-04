@@ -11,7 +11,7 @@ export class GameHeatMap extends Component {
 	renderGameHeatMap(gamelog, stats) {
 		this.stats = stats;
 		this.gamecount = this.countGames(gamelog);
-		this.update();
+		this.attributeChangedCallback();
 	}
 
 	render() {

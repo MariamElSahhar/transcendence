@@ -19,6 +19,10 @@ import {
 	getUserSessionData,
 	isAuth,
 } from "../scripts/utils/session-manager.js";
+import {
+	showError
+} from "/pages/error/ErrorPage.js";
+
 
 export class SettingsPage extends Component {
 	constructor() {
@@ -38,6 +42,7 @@ export class SettingsPage extends Component {
 	}
 
 	async connectedCallback() {
+		await import("/pages/error/ErrorPage.js")
 		if (!(await isAuth())) window.redirect("/");
 		const { success, data } = await getDefaultAvatars();
 		if (success) {
@@ -55,6 +60,21 @@ export class SettingsPage extends Component {
 
 	renderWithSettings() {
 		return `
+	<div class="modal fade" id="errorModal" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5 text-danger">Error!</h1>
+				</div>
+					<div class="modal-body d-flex flex-column justify-content-center">
+						<p>There is an error in one of the fields!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" id="errorClose" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="settings" class="position-relative d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
 		<!-- Title -->
 		<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
@@ -205,21 +225,7 @@ export class SettingsPage extends Component {
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="errorModal" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5 text-danger">Error!</h1>
-				</div>
-					<div class="modal-body d-flex flex-column justify-content-center">
-						<p>There is an error in one of the fields!</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" id="errorClose" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-			</div>
-	</div>`;
+	`;
 	}
 
 	style() {
@@ -316,7 +322,7 @@ export class SettingsPage extends Component {
 			transform: scale(1.5); /* Scale up the icon */
 		}
 
-      </style>
+		</style>
     `;
 	}
 
@@ -325,8 +331,10 @@ export class SettingsPage extends Component {
 		this.initialUser = getUserSessionData().username;
 		this.initialEmail = getUserSessionData().email;
 		if (!(await this.loadSettings())) {
+			showError()
 			return;
 		}
+
 		this.avatar = this.querySelector("#avatar");
 		this.photoUpload = this.querySelector("#photoUpload");
 		super.addComponentEventListener(
@@ -404,8 +412,6 @@ export class SettingsPage extends Component {
 
 		const deleteModal = document.getElementById("confirm-delete-modal");
 		this.deleteModal = new bootstrap.Modal(deleteModal);
-		const errorModal = document.getElementById("errorModal");
-		this.errorModal = new bootstrap.Modal(errorModal);
 		this.deleteError = document.getElementById("errorClose");
 		super.addComponentEventListener(
 			this.deleteError,
@@ -439,9 +445,9 @@ export class SettingsPage extends Component {
 			this.innerHTML = this.renderWithSettings() + this.style();
 			return true;
 		} catch (error) {
-			this.#showError();
+			showError();
+			return false;
 		}
-		return false;
 	}
 
 	async #avatarSelector(event) {
@@ -464,7 +470,7 @@ export class SettingsPage extends Component {
 			};
 			reader.readAsDataURL(file);
 		} else {
-			this.#showError();
+			showError();
 			return;
 		}
 	}
@@ -484,12 +490,12 @@ export class SettingsPage extends Component {
 					user_id: getUserSessionData().userid,
 				});
 				if (!success) {
-					this.#showError();
+					showError();
 					return false;
 				}
 				return true;
 			} catch (error) {
-				this.#showError();
+				showError();
 				return false;
 			}
 		}
@@ -503,7 +509,7 @@ export class SettingsPage extends Component {
 			user_id: getUserSessionData().userid,
 		});
 		if (!success) {
-			this.#showError();
+			showError();
 			return false;
 		}
 		return true;
@@ -687,9 +693,6 @@ export class SettingsPage extends Component {
 		this.deleteModal.show();
 	}
 
-	async #showError(event) {
-		this.errorModal.show();
-	}
 
 	async #closeError(event) {
 		event.preventDefault();
@@ -715,7 +718,7 @@ export class SettingsPage extends Component {
 			this.deleteModal.hide();
 			window.redirect("/");
 		} else {
-			this.#showError();
+			showError();
 		}
 		this.deleteAccountButton.innerHTML = "Delete";
 		this.deleteAccountButton.disabled = false;
@@ -754,7 +757,6 @@ export class SettingsPage extends Component {
 				getUserSessionData().userid,
 				this.vars
 			);
-			console.log(this.vars);
 			if (!success) {
 				if (error.username) {
 					this.username.classList.remove("is-valid");

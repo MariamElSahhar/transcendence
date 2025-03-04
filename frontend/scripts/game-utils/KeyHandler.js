@@ -72,9 +72,7 @@ export class KeyHandler {
     }
 
     stopListeningForKeys() {
-        this.#gameEngine.component.removeComponentEventListener(window, 'keydown');
-        this.#gameEngine.component.removeComponentEventListener(window, 'keyup');
-        this.#gameEngine.component.removeComponentEventListener(window, 'blur');
+        this.#gameEngine.component.removeAllComponentEventListeners()
     }
 
     handleKeyPress(event) {

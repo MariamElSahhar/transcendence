@@ -10,6 +10,7 @@ import {
 	initializeWebSocket,
 	sendWebSocketMessage,
 	closeWebSocket,
+	checkSocket,
 } from "../../scripts/utils/websocket-manager.js";
 import {
 	renderCountdownCard,
@@ -33,9 +34,14 @@ export class RemoteGamePage extends Component {
 		this.activeTimeouts = new Set();
 	}
 
-	connectedCallback() {
-		// this.socket = new WebSocket(`ws://${window.location.host}:8000/ws/game/`);
-		// this.keyHandler = new KeyHandler(this);
+	async waitForWebSocketToClose() {
+		while (checkSocket()) {
+			await new Promise((resolve) => setTimeout(resolve, 50));
+		}
+	}
+
+	async connectedCallback() {
+		await this.waitForWebSocketToClose();
 
 		initializeWebSocket(
 			`/ws/game/`,
@@ -127,10 +133,12 @@ export class RemoteGamePage extends Component {
 		this.container = this.querySelector("#container");
 		super.addComponentEventListener(window, "beforeunload", (event) => {
 			if (!this.engine || !this.engine.scene.match.matchIsOver)
+			{
 				sendWebSocketMessage({
 					action: "leavingMatch",
 					gameSession: this.gameID,
 				});
+			}
 		});
 	}
 

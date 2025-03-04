@@ -15,10 +15,15 @@ body {
 	background-color: rgba(135, 206, 235, 0.8) !important;
 	top: 0;
 	width: 100%;
-	z-index: 9999;
-	box-shadow: rgba(0, 82, 224, 0.1) 0px 6px 12px 0px;
+	z-index: 1000;
 }
-
+.navbar li:hover
+{
+	color: black;
+	text-shadow: 1px 1px 1px var(--mario-green-color);
+	opacity:1;
+	transition: all 0.3s ease;
+}
 /* Smaller input boxes */
 input.form-control {
 	margin: 0 auto;
@@ -52,22 +57,6 @@ input.form-control {
 	transform: scaleX(-1);
 }
 
- .sky {
-	display: flex;
-	background: url(/assets/sky.png);
-	background-size: contain;
-	background-repeat: repeat-x;
-	position: absolute;
-	top: 0;
-	left: -400%;
-	width: 500%;
-	opacity:0.8;
-	height: 10em;
-	animation: move-sky 500s linear infinite;
-	z-index: 0 !important;
-	pointer-events: none;
-}
-
 
 @keyframes move-sky {
 	from {
@@ -94,3 +83,27 @@ input.form-control {
 	height: 5em;
 	transition: bottom 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+
+.logo {
+    width: 200px; /* Scales properly on all devices */
+    height: auto;
+
+}
+
+@keyframes jump {
+	0%, 100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-20px);
+	}
+}
+
+
+footer {
+	height: 50px;
+	background-image: url(/assets/textures/floor.png);
+	background-repeat: repeat;
+	background-size: 80px 80px;
+}
+

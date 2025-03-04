@@ -70,14 +70,6 @@ export class HomePage extends Component {
 					grid-column: auto;
 				}
 			}
-
-			.brick-border {
-				border: none !important;
-				border-radius: 0 !important;
-				border-bottom: 1px solid #513604 !important;
-				border-right: 1px solid #513604 !important;
-			}
-
 			.icon {
 				width: auto;
 				height: 30px;

@@ -4,19 +4,19 @@ export class GameStatsCard extends Component {
 	constructor() {
 		super();
 		this.stats = {};
-		this.colors = {
-			localWonColor: "cornflowerblue",
-			localPlayedColor: "aliceblue",
-			remoteWonColor: "indigo",
-			remotePlayedColor: "lavender",
-			tttWonColor: "pink",
-			tttPlayedColor: "lavenderblush",
-		};
+        this.colors = {
+            localWonColor: "var(--mario-blue-color)",
+            localPlayedColor: "var(--sky-100)",
+            remoteWonColor: "var(--mario-red-color)",
+            remotePlayedColor: "var(--brick-200)",
+            tttWonColor: "var(--mario-green-color)",
+            tttPlayedColor: "var(--brick-100)",
+          };
 	}
 
 	renderGameStats(stats) {
 		this.stats = stats;
-		this.update();
+		this.attributeChangedCallback();
 	}
 
 	postRender() {
@@ -102,28 +102,28 @@ export class GameStatsCard extends Component {
             }
 
             .local .progress {
-                background-color: aliceblue;
-            }
+                background-color: var(--mario-blue-color);
+              }
 
-            .local .progress-bar {
-                background-color: cornflowerblue;
-            }
+              .local .progress-bar {
+                background-color: var(--sky-100);
+              }
 
-            .remote .progress {
-                background-color: lavender;
-            }
+              .remote .progress {
+                background-color: var(--mario-red-color);
+              }
 
-            .remote .progress-bar {
-                background-color: indigo;
-            }
+              .remote .progress-bar {
+                background-color: var(--brick-200);
+              }
 
-            .ttt .progress {
-                background-color: lavenderblush;
-            }
+              .ttt .progress {
+                background-color: var(--mario-green-color);
+              }
 
-            .ttt .progress-bar {
-                background-color: pink;
-            }
+              .ttt .progress-bar {
+                background-color: var(--brick-100);
+              }
             .game-stats {
                 width: 150px;
                 height: 150px;

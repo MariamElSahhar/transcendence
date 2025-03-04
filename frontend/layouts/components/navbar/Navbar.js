@@ -33,8 +33,8 @@ export class Navbar extends Component {
 		const avatar = getUserSessionData().avatar;
 		return `
 			<nav id="main-navbar" class="navbar navbar-expand-md bg-body-tertiary">
-				<div class="container-fluid">
-					<a class="navbar-brand" onclick="window.redirect('/home')">Transcendence</a>
+				<div class="container-fluid d-flex align-items-center justify-content-between">
+					<a class="navbar-brand mr-auto" onclick="window.redirect('/home')"><img class="logo" alt="Logo" src="/assets/logo.png"/></a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 							data-bs-target="#navbarSupportedContent"
 							aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -42,8 +42,8 @@ export class Navbar extends Component {
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav me-auto"></ul>
-						<navbar-searchbar class="me-2"></navbar-searchbar>
+						<ul class="navbar-nav"></ul>
+						<navbar-searchbar class="ms-auto me-2"></navbar-searchbar>
 						<div id="log-part" class="d-flex align-items-center">
 							<div class="dropdown mx-2">
 								<span class="dropdown-toggle" id="dropdownMenuLink"
@@ -83,7 +83,7 @@ export class Navbar extends Component {
 		const navbarList = this.querySelector(".navbar-nav");
 		this.links.forEach((link) => {
 			const navbarItem = document.createElement("li");
-			navbarItem.classList.add("mx-2");
+			navbarItem.classList.add("mx-2", "fw-bold");
 			navbarItem.setAttribute("role", "button");
 			navbarItem.textContent = link.label;
 			navbarList.appendChild(navbarItem);

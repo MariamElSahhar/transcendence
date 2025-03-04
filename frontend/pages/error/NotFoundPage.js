@@ -10,7 +10,8 @@ class NotFoundPage extends Component {
 	render() {
 		return `
 			<div class="vh-100 w-100 d-flex flex-column align-items-center pt-5">
-				<h1 class="">Page Not Found :(</h1>
+			<h1>404</h1>
+			<h1 class="">Page Not Found :(</h1>
 				<p>Double check the URL or go <a href=${
 					self.auth ? "/home" : "/"
 				}>back to home</a></p>

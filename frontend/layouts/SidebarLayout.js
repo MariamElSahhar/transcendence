@@ -67,7 +67,7 @@ export class SidebarLayout extends Component {
 		this.checkPath();
 		await this.getUserData();
 		await this.getUserFriends();
-		super.update();
+		super.attributeChangedCallback();
 	}
 
 	async renderSlot(content) {

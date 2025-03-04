@@ -41,14 +41,31 @@ export class MainLayout extends Component {
 			#slot > * {
 				width: 100%;
 			}
+
+			.sky {
+				display: flex;
+				background: url(/assets/sky.png);
+				background-size: contain;
+				background-repeat: repeat-x;
+				position: absolute;
+				top: 0;
+				left: -400%;
+				width: 500%;
+				opacity:0.8;
+				height: 10em;
+				animation: move-sky 500s linear infinite;
+				z-index: 0 !important;
+				pointer-events: none;
+			}
 		</style>
 		`;
 	}
 
 	renderSlot(content) {
+		console.log("here");
 		this.slot = "";
 		this.slot = content;
-		if (super.isRendered()) this.update();
+		if (super.isRendered()) this.attributeChangedCallback();
 	}
 }
 

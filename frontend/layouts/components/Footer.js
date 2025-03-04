@@ -13,18 +13,6 @@ export class Footer extends Component {
 		`;
 	}
 
-	style() {
-		return `
-			<style>
-				footer {
-					height: 50px;
-					background-image: url(/assets/textures/floor.png);
-					background-repeat: repeat;
-					background-size: 80px 80px;
-				}
-			</style>
-		`;
-	}
 }
 
 customElements.define("footer-component", Footer);

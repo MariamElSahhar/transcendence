@@ -58,7 +58,7 @@ export class FriendsPage extends Component {
 					async () => {
 						await this.removeFriend(friend.id);
 						await this.fetchFriends();
-						this.update();
+						this.attributeChangedCallback();
 					}
 				);
 			});
