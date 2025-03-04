@@ -40,14 +40,6 @@
 
 }
 
-:root{
---local-won-color: var(--mario-blue-color);
---local-played-color: var(--sky-100);
---remote-won-color: var(--mario-pink-color);
---remote-played-color: var(--mario-yellow-color);
---ttt-won-color: var(--mario-green-color);
---ttt-played-color: var(--brick-200);
-}
 :root,
 [data-bs-theme="light"] {
 	--bs-primary: var(--sky-400);

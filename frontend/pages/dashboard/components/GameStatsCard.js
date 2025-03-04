@@ -4,14 +4,15 @@ export class GameStatsCard extends Component {
 	constructor() {
 		super();
 		this.stats = {};
-        this.colors = {
-            localWonColor: "var(--local-won-color)",
-            localPlayedColor: "var(--local-played-color)",
-            remoteWonColor: "var(--remote-won-color)",
-            remotePlayedColor: "var(--remote-played-color)",
-            tttWonColor: "var(--ttt-won-color)",
-            tttPlayedColor: "var(--ttt-played-color)",
-          };
+		this.colors = {
+			localWonColor: "var(--mario-blue-color)",
+			localPlayedColor: "var(--sky-100)",
+			remoteWonColor: "var(--mario-pink-color)",
+			remotePlayedColor: "var(--sky-100)",
+			tttWonColor: "var(--mario-green-color)",
+			tttPlayedColor: "var(--sky-100)",
+			gapColor: "var(--sky-200)",
+		};
 	}
 
 	renderGameStats(stats) {
@@ -34,16 +35,18 @@ export class GameStatsCard extends Component {
                         <div class="position-relative d-flex flex-column align-items-center">
                             <h4 class=" stats-fraction d-flex flex-column">
                                 <span>
-                                    ${this.stats.totalWon}/${this.stats.totalPlayed}
+                                    ${this.stats.totalWon}/${
+				this.stats.totalPlayed
+			}
                                 </span>
                                 <span class="fs-5">Wins</span>
                             </h4>
                             <h4 class="position-absolute stats-percent d-flex flex-column">
                                 <span>
                                     ${Math.round(
-                                        (this.stats.totalWon * 100) /
-                                            this.stats.totalPlayed
-                                    )}%
+										(this.stats.totalWon * 100) /
+											this.stats.totalPlayed
+									)}%
                                 </span>
                                 <span class="fs-5">Win Rate</span>
                             </h4>
@@ -53,26 +56,39 @@ export class GameStatsCard extends Component {
                 <div class="breakdown d-flex flex-column">
                     <p class="d-flex align-items-baseline my-1">
                         <span><i class="bi bi-joystick"></i> Local Pong</span>
-                        <span class="ms-auto">${this.stats.localWon}/${this.stats.localPlayed}</span>
+                        <span class="ms-auto">${this.stats.localWon}/${
+				this.stats.localPlayed
+			}</span>
                     </p>
                     <div class="progress local">
-                        <div class="progress-bar" style="width: ${this.stats.localWon / this.stats.localPlayed * 100}%;"></div>
+                        <div class="progress-bar" style="width: ${
+							(this.stats.localWon / this.stats.localPlayed) * 100
+						}%;"></div>
                     </div>
 
                     <p class="d-flex align-items-baseline my-1">
                         <span><i class="bi bi-people-fill"></i> Remote Pong</span>
-                        <span class="ms-auto">${this.stats.remoteWon}/${this.stats.remotePlayed}</span>
+                        <span class="ms-auto">${this.stats.remoteWon}/${
+				this.stats.remotePlayed
+			}</span>
                     </p>
                     <div class="progress remote">
-                        <div class="progress-bar" style="width: ${this.stats.remoteWon / this.stats.remotePlayed * 100}%;"></div>
+                        <div class="progress-bar" style="width: ${
+							(this.stats.remoteWon / this.stats.remotePlayed) *
+							100
+						}%;"></div>
                     </div>
 
                     <p class="d-flex align-items-baseline my-1">
                         <span><i class="bi bi-grid-3x3-gap-fill"></i> Tic Tac Toe</span>
-                        <span class="ms-auto">${this.stats.tttWon}/${this.stats.tttPlayed}</span>
+                        <span class="ms-auto">${this.stats.tttWon}/${
+				this.stats.tttPlayed
+			}</span>
                     </p>
                     <div class="progress ttt">
-                        <div class="progress-bar" style="width: ${this.stats.tttWon / this.stats.tttPlayed * 100}%;"></div>
+                        <div class="progress-bar" style="width: ${
+							(this.stats.tttWon / this.stats.tttPlayed) * 100
+						}%;"></div>
                     </div>
                 </div>
             </div>
@@ -136,9 +152,9 @@ export class GameStatsCard extends Component {
                 position: absolute;
                 width: 100px;
                 height: 100px;
-                background: white;
+                background: ${this.colors.gapColor};
                 border-radius: 50%;
-                background-color:white;
+                background-color: var(--sky-200);
             }
             .breakdown {
                 width: 100%
@@ -228,14 +244,14 @@ export class GameStatsCard extends Component {
 			(this.stats.tttWon / this.stats.totalPlayed) * adjustedTotal;
 
 		circle.style.background = `conic-gradient(
-            white 0% 2%,
+            ${this.colors.gapColor} 0% 2%,
 
             ${this.colors.localWonColor} 2% ${2 + localWonPercent}%,
             ${this.colors.localPlayedColor} ${2 + localWonPercent}% ${
 			2 + localPercent
 		}%,
 
-        white ${2 + localPercent}% ${4 + localPercent}%,
+        ${this.colors.gapColor} ${2 + localPercent}% ${4 + localPercent}%,
 
             ${this.colors.remoteWonColor} ${4 + localPercent}% ${
 			4 + localPercent + remoteWonPercent
@@ -244,7 +260,7 @@ export class GameStatsCard extends Component {
 			4 + localPercent + remoteWonPercent
 		}% ${4 + localPercent + remotePercent}%,
 
-        white ${4 + localPercent + remotePercent}% ${
+        ${this.colors.gapColor} ${4 + localPercent + remotePercent}% ${
 			6 + localPercent + remotePercent
 		}%,
 
