@@ -42,12 +42,12 @@ export class AuthLayout extends Component {
 				<!-- Pipes -->
 				<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
 					<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
-						<img class="pipe left-pipe z-3" src="/assets/pipe.png" alt="X"/>
-						<img  id="plant" class="pipe-content z-2" src="/pages/tictactoe/plant.png" alt="X"/>
+						<img class="pipe left-pipe z-3" src="/assets/pipe.webp" alt="X"/>
+						<img  id="plant" class="pipe-content z-2" src="/pages/tictactoe/plant.webp" alt="X"/>
 					</div>
 					<div class="right-pipe-container d-flex flex-column position-relative align-items-center">
-						<img class="pipe right-pipe z-3" src="/assets/pipe.png" alt="X"/>
-						<img id="shroom" class="pipe-content z-2" src="/pages/tictactoe/shroom.png" alt="X"/>
+						<img class="pipe right-pipe z-3" src="/assets/pipe.webp" alt="X"/>
+						<img id="shroom" class="pipe-content z-2" src="/pages/tictactoe/shroom.webp" alt="X"/>
 					</div>
 				</div>
 				<footer-component class="position-relative mt-auto"></footer-component>
@@ -67,7 +67,7 @@ export class AuthLayout extends Component {
 
 			.sky {
 				display: flex;
-				background: url(/assets/sky.png);
+				background: url(/assets/sky.webp);
 				background-size: contain;
 				background-repeat: repeat-x;
 				position: absolute;

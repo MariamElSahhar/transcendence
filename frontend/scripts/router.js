@@ -127,23 +127,23 @@ const layouts = {
 
 window.icons = {
 	mario: (flip) =>
-		`<img src="/assets/sprites/mario.png" class="icon ${
+		`<img src="/assets/sprites/mario.webp" class="icon ${
 			flip ? `flip-h` : ``
 		}" alt="Mario">`,
 	luigi: (flip) =>
-		`<img src="/assets/sprites/luigi.png" class="icon ${
+		`<img src="/assets/sprites/luigi.webp" class="icon ${
 			flip ? `flip-h` : ``
 		}" alt="Luigi">`,
 	robot: (flip) =>
-		`<img src="/assets/sprites/robot.png" class="icon ${
+		`<img src="/assets/sprites/robot.webp" class="icon ${
 			flip ? `flip-h` : ``
 		}" alt="Luigi">`,
 	shroom: (flip) =>
-		`<img src="/assets/sprites/8bit_shroom.png" class="icon ${
+		`<img src="/assets/sprites/8bit_shroom.webp" class="icon ${
 			flip ? `flip-h` : ``
 		}" alt="Luigi">`,
 	plant: (flip) =>
-		`<img src="/assets/sprites/8bit_plant.png" class="icon ${
+		`<img src="/assets/sprites/8bit_plant.webp" class="icon ${
 			flip ? `flip-h` : ``
 		}" alt="Luigi">`,
 };

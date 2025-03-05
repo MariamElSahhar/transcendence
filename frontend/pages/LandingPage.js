@@ -9,7 +9,7 @@ export class LandingPage extends Component {
 	render() {
 		return `
 			<div class="d-flex flex-column h-100 w-75 justify-content-center align-items-center gap-3">
-				<img class="title-img z-1" src="/assets/titlepage.png" alt="Welcome to Pong!"/>
+				<img class="title-img z-1" src="/assets/titlepage.webp" alt="Welcome to Pong!"/>
 				<div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
 					<button id="login-button" class="btn" class="z-3">Log In</button>
 					<button id="sign-up-button" class="btn" class="z-3">Sign Up</button>

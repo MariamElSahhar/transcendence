@@ -108,7 +108,7 @@ export function renderEndGameCard(
 			<div class="card-body">
 				<img class="my-2" id="winner-sprite" src="/assets/sprites/${
 					winnerIsPlayer ? "mario" : "luigi"
-				}.png"/>
+				}.webp"/>
 				<h3 class="card-subtitle mb-2">${winnerName} Wins!</h3>
 				<div class="d-flex w-100 gap-3">
 					<div class="w-100">
@@ -151,7 +151,7 @@ export function renderTournamentResults(component, rankedPlayers) {
 	overlay.innerHTML = `
             <div class="card text-center bg-brick-100">
                 <div class="card-body">
-                    <img src="/assets/crown.png" alt="Game Icon" class="icon">
+                    <img src="/assets/crown.webp" alt="Game Icon" class="icon">
                     <h1 class="">${rankedPlayers[0]} wins</h1>
 					<p>🥈${rankedPlayers[1]} 🥉${rankedPlayers[2]} 🥲${rankedPlayers[3]}</p>
 					<div class="d-flex w-100 gap-2">

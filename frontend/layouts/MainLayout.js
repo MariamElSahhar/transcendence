@@ -24,10 +24,10 @@ export class MainLayout extends Component {
 				<div id="slot" slot="page-content" class="position-relative z-1 flex-grow-1 flex-1 d-flex w-100 h-100">${this.slot}</div>
 				<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
 					<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
-						<img class="pipe left-pipe" src="/assets/pipe.png" alt="X"/>
+						<img class="pipe left-pipe" src="/assets/pipe.webp" alt="X"/>
 					</div>
 					<div class="right-pipe-container d-flex flex-column position-relative align-items-center">
-						<img class="pipe right-pipe" src="/assets/pipe.png" alt="X"/>
+						<img class="pipe right-pipe" src="/assets/pipe.webp" alt="X"/>
 					</div>
 				</div>
 				<footer-component class="position-relative mt-auto"></footer-component>
@@ -44,7 +44,7 @@ export class MainLayout extends Component {
 
 			.sky {
 				display: flex;
-				background: url(/assets/sky.png);
+				background: url(/assets/sky.webp);
 				background-size: contain;
 				background-repeat: repeat-x;
 				position: absolute;

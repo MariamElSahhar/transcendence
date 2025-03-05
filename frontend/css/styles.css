@@ -84,7 +84,7 @@ input.form-control {
 
 footer {
 	height: 50px;
-	background-image: url(/assets/textures/floor.png);
+	background-image: url(/assets/textures/floor.webp);
 	background-repeat: repeat;
 	background-size: 80px 80px;
 }

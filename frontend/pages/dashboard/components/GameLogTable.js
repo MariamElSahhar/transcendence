@@ -33,7 +33,7 @@ export class GameLogTable extends Component {
                 .log-border {
                     border-collapse: separate;
                     border-top: 10px solid transparent !important;
-                    border-image: url('assets/wall.png') 90 round !important;
+                    border-image: url('assets/wall.webp') 90 round !important;
                 }
 
                 .btn-icon {
@@ -139,8 +139,8 @@ export class GameLogTable extends Component {
 								? `<td>${
 										game.tournament_round
 											? game.tournament_round < 3
-												? `<img src="/assets/letter-t.png" class="mr-2 btn-icon" alt="Left Icon">First Round`
-												: `<img src="/assets/letter-t.png" class="mr-2 btn-icon" alt="Left Icon">Final Round`
+												? `<img src="/assets/letter-t.webp" class="mr-2 btn-icon" alt="Left Icon">First Round`
+												: `<img src="/assets/letter-t.webp" class="mr-2 btn-icon" alt="Left Icon">Final Round`
 											: "-"
 								  }</td>`
 								: ""

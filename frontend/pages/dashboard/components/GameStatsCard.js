@@ -31,7 +31,7 @@ export class GameStatsCard extends Component {
             <div class="rounded bg-light game-stats d-flex h-100 w-100 justify-content-center align-items-center position-relative">
                 <div class="circle d-flex justify-content-center align-items-center position-relative">
                     <div class="stats-text d-flex flex-column justify-content-center align-items-center position-relative">
-                    <img src="/assets/crown.png" alt="Game Icon" class="crown-icon position-relative">
+                    <img src="/assets/crown.webp" alt="Game Icon" class="crown-icon position-relative">
                         <div class="position-relative d-flex flex-column align-items-center">
                             <h4 class=" stats-fraction d-flex flex-column">
                                 <span>

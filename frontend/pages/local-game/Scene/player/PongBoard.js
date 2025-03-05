@@ -68,7 +68,7 @@ export class PongBoard {
 
 		const textureLoader = new THREE.TextureLoader();
 		const wallTextureHorizontal = textureLoader.load(
-			"/assets/textures/floor.png",
+			"/assets/textures/floor.webp",
 			(texture) => {
 				texture.wrapS = THREE.RepeatWrapping;
 				texture.wrapT = THREE.RepeatWrapping;
@@ -107,7 +107,7 @@ export class PongBoard {
 		);
 
 		const goalTexture = textureLoader.load(
-			"/assets/textures/floor.png",
+			"/assets/textures/floor.webp",
 			(texture) => {
 				texture.wrapS = THREE.RepeatWrapping;
 				texture.wrapT = THREE.RepeatWrapping;
@@ -162,7 +162,7 @@ export class PongBoard {
 		const padding = 2.3;
 		const textureLoader = new THREE.TextureLoader();
 		const heartMaterial = new THREE.SpriteMaterial({
-			map: textureLoader.load("/assets/sprites/pixel-heart.png"),
+			map: textureLoader.load("/assets/sprites/pixel-heart.webp"),
 		});
 
 		const startX = this.#side
@@ -189,7 +189,7 @@ export class PongBoard {
 		const indexToReplace = this.#remainingLives;
 		const textureLoader = new THREE.TextureLoader();
 		const emptyHeart = new THREE.SpriteMaterial({
-			map: textureLoader.load("/assets/sprites/nocolor-heart.png"),
+			map: textureLoader.load("/assets/sprites/nocolor-heart.webp"),
 		});
 		const newLifeline = new THREE.Sprite(emptyHeart);
 

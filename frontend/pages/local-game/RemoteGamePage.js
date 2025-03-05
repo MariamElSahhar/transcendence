@@ -101,7 +101,7 @@ export class RemoteGamePage extends Component {
 		<div id="container" class="m-2 position-relative">
 			<div id="searchdiv" class="d-flex justify-content-center align-items-center h-100">
 				<div id="searchBox" class="card p-4 bg-light d-flex flex-column justify-content-center align-items-center gap-3">
-					<img id="search-icon" src="/assets/question.png" class="h-auto"/>
+					<img id="search-icon" src="/assets/question.webp" class="h-auto"/>
 					<h4 id="status">Waiting for an opponent</h4>
 				</div>
 			</div>
