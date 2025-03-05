@@ -256,12 +256,14 @@ def make_move_view(request):
 
             # The game is finished
             # Create the TicTacToeLog entry for the user
-            TicTacToeLog.objects.create(
+            gamelog = TicTacToeLog.objects.create(
                 player1_id=game.player_1.id,
                 player2_id=game.player_2.id,
                 player1_score=player_1_wins,
                 player2_score=player_2_wins,
             )
+            gamelog.users.set([game.player_1, game.player_2])
+
         else:
             game.current_round += 1
 
