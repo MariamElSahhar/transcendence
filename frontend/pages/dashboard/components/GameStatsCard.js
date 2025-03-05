@@ -118,18 +118,17 @@ export class GameStatsCard extends Component {
             }
 
             .local .progress-bar {
-                background-color: var(--local-won-color);
+                background-color: ${this.colors.localWonColor};
             }
-
 
             .remote .progress-bar {
-                background-color: var(--remote-won-color);
+                background-color: ${this.colors.remoteWonColor};
             }
-
 
             .ttt .progress-bar {
-                background-color: var(--ttt-won-color);
+                background-color: ${this.colors.tttWonColor};
             }
+
             .game-stats {
                 --bs-bg-opacity: .7;
                 width: 150px;
@@ -137,7 +136,6 @@ export class GameStatsCard extends Component {
                 flex-direction: column;
                 gap: 1rem;
             }
-
             .circle {
                 width: 120px;
                 height: 120px;
@@ -156,6 +154,7 @@ export class GameStatsCard extends Component {
                 border-radius: 50%;
                 background-color: var(--sky-200);
             }
+
             .breakdown {
                 width: 100%
             }

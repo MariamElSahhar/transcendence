@@ -74,6 +74,8 @@ export class SettingsPage extends Component {
 			</div>
 			<div id="settings" class="position-relative d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
 				<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+
+					<!-- AVATARS -->
 					<div id="avatar-div" class="position-relative m-5">
 						<div id="profile-div" class="position-relative">
 							<img id="avatar" src="${getUserSessionData().avatar}" alt="Unavailable"
@@ -114,14 +116,14 @@ export class SettingsPage extends Component {
 						</div>
 					</div>
 
-
-						<div class="ms-5">
+					<!-- SETTINGS -->
+					<div class="ms-5">
 						<div class="d-flex justify-content-between justify-content-center mb-4">
-						<h2 >Settings</h2>
-						<div>
-							<button id="save-button" type="submit" class="btn btn-success ms-2 p-2" disabled><i class="bi bi-floppy2-fill"></i></button>
-							<button id="deletePrompt" type="button" class="btn btn-danger ms-2">Delete account</button>
-						</div>
+							<h2>Settings</h2>
+							<div>
+								<button id="save-button" type="submit" class="btn btn-success ms-2 p-2" disabled><i class="bi bi-floppy2-fill"></i></button>
+								<button id="deletePrompt" type="button" class="btn btn-danger ms-2">Delete account</button>
+							</div>
 						</div>
 					<form id="settings-form" class="w-100 d-flex flex-column needs-validation" novalidate>
 						<div class="form-group mb-4 ">
@@ -141,8 +143,7 @@ export class SettingsPage extends Component {
 								<input type="text" class="textbox form-control bg-light" id="username"
 									placeholder="New username" value="${getUserSessionData().username}"
 									autocomplete="username">
-								<div id="username-feedback" class="invalid-feedback">
-								</div>
+								<div id="username-feedback" class="invalid-feedback"></div>
 								<div class="valid-feedback">
 									Looks good!
 								</div>
@@ -153,9 +154,7 @@ export class SettingsPage extends Component {
 							<div class="input-group has-validation">
 							<span class=" input-group-text fw-bold text-secondary">New Password</span>
 								<input type="password" class="textbox form-control bg-light" id="currentPassword" autocomplete="new-password" placeholder="******">
-
-								<div id="password-feedback" class="invalid-feedback">
-								</div>
+								<div id="password-feedback" class="invalid-feedback"></div>
 								<div class="valid-feedback">
 									Looks good!
 								</div>
@@ -216,13 +215,11 @@ export class SettingsPage extends Component {
 	style() {
 		return `
 		<style>
-
-		#photoUpload
-		{
+		#photoUpload {
 			display: none;
 		}
 
-		#avatar-div{
+		#avatar-div {
 			width: 250px;
 			height: 300px;
 		}
@@ -232,13 +229,12 @@ export class SettingsPage extends Component {
 			text-shadow: 0 0 8px skyblue
 		}
 
-		#profile-div{
+		#profile-div {
 			position:relative;
 			z-index:10;
 		}
 
-		.input-group
-		{
+		.input-group {
 			max-height:4rem;
 			max-width:25rem;
 		}
@@ -249,8 +245,7 @@ export class SettingsPage extends Component {
 			top: 100%;
 		}
 
-		#avatar
-		{
+		#avatar {
 			width: 200px;
 			height: 200px;
 			margin-left: 2rem !important;
@@ -260,10 +255,6 @@ export class SettingsPage extends Component {
 			width: 250px;
 			height: 250px;
 		}
-				.form-wrapper {
-				display: flex; /* Creates a flex container for alignment */
-			}
-
 
 		.avatar-option {
 			width: 50px;
@@ -271,9 +262,11 @@ export class SettingsPage extends Component {
 			cursor: pointer;
 			transition: transform 0.3s ease;
 		}
-			.avatar-option:hover {
+
+		.avatar-option:hover {
 			transform: scale(1.2);
 		}
+
 		div.camera-icon-circle {
 			transition: transform 0.3s ease;
 			position: absolute;
@@ -292,15 +285,14 @@ export class SettingsPage extends Component {
 			cursor: pointer;
 			font-size: 2rem;
 		}
+
 		div.camera-icon-circle:hover {
 			transform: translate(-50%, -50%) scale(1.5); /* Enlarges the circle */
 		}
 
-
 		div.camera-icon-circle:hover i.bi-camera {
 			transform: scale(1.5); /* Scale up the icon */
 		}
-
 		</style>
     `;
 	}
