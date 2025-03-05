@@ -212,14 +212,16 @@ const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
 		.replace("/dashboard/", "")
 		.replace(/\/+$/, "");
-	if (!(await isAuth()) || !userid || window.location.pathname.endsWith("/")) return false;
-	const response = await fetchUserById(userid);
-
-	if (response.data) return true;
-	else {
-		console.error(response.error);
+	if (
+		!(await isAuth()) ||
+		!userid ||
+		window.location.pathname.endsWith("/") ||
+		!/^\d+$/.test(userid)
+	)
 		return false;
-	}
+	const response = await fetchUserById(userid);
+	if (response.data) return true;
+	else return false;
 };
 
 window.onpopstate = handleLocation;
