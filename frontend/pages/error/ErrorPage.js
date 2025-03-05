@@ -34,7 +34,7 @@ export class ErrorPage extends Component {
 			</div>
 			<div class="modal-footer">
 			  <button id="refreshBtn" class="btn btn-primary">Refresh Page</button>
-			  <button id="homeBtn" class="btn btn-primary" onclick="window.redirect('/home')">Home</button>
+			  <button id="homeBtn" class="btn btn-primary">Home</button>
 			</div>
 		  </div>
 		</div>
@@ -50,7 +50,7 @@ export class ErrorPage extends Component {
 			modal.hide();
 		}
 		modalElement.remove();
-		window.redirect(pathname );
+		window.redirect(pathname);
 	}
 }
 export async function showError() {

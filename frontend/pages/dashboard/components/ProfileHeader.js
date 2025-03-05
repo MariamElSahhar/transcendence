@@ -130,7 +130,7 @@ export class ProfileHeader extends Component {
 					);
 					if (success) this.data.is_friend = true;
 				}
-				window.redirect(window.location.pathname);
+				this.attributeChangedCallback();
 			}
 		);
 	}
