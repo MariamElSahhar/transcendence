@@ -4,10 +4,10 @@ import { isAuth } from "../../scripts/utils/session-manager.js";
 export class ErrorPage extends Component {
 	async connectedCallback() {
 		this.auth = await isAuth();
+		super.connectedCallback();
 		this.dispatchEvent(
 			new CustomEvent("connected", { bubbles: true, composed: true })
 		);
-		super.connectedCallback();
 	}
 
 	render() {
@@ -39,15 +39,7 @@ export async function showError() {
 	document.body.appendChild(errorPage);
 	errorPage.addEventListener("connected", () => {
 		const errorModal = document.getElementById("errorModal");
-
 		if (errorModal) {
-			const backdrop = document.createElement("div");
-			backdrop.classList.add("modal-backdrop", "fade", "show");
-			document.body.appendChild(backdrop);
-
-			errorModal.classList.add("show");
-			errorModal.style.display = "block";
-
 			const modal = new bootstrap.Modal(errorModal, {
 				backdrop: "static",
 				keyboard: false,
@@ -56,5 +48,4 @@ export async function showError() {
 		}
 	});
 }
-
 customElements.define("error-page", ErrorPage);
