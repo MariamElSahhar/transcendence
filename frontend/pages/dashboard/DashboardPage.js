@@ -34,11 +34,11 @@ export class DashboardPage extends Component {
 			this.stats
 		);
 	}
-	// <profile-header></profile-header>
 
 	render() {
 		return `
-            <div class="container d-flex flex-column gap-3 my-3">
+		<div class="container d-flex flex-column gap-3 my-3">
+		<profile-header></profile-header>
                 <div class="d-flex w-100 row-gap-5">
                     <div class="d-flex flex-column w-100 gap-3">
 						<div class="graphs d-flex w-100 column-gap-2">

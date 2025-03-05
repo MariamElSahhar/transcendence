@@ -8,6 +8,7 @@ import {
 	getUserSessionData,
 } from "../../../scripts/utils/session-manager.js";
 
+import { fetchUserById } from "../../../scripts/clients/users-client.js";
 export class ProfileHeader extends Component {
 	constructor() {
 		super();
@@ -52,16 +53,16 @@ export class ProfileHeader extends Component {
 
 		this.data = user;
 		// this.isOwnProfile = user.userid === getUserSessionData().userid; // Check if the profile is the current user's
-		console.log(this.isOwnProfile);
+		// console.log(this.isOwnProfile);
 		this.attributeChangedCallback();
 	}
 
-	async update() {
-		this.checkPath();
-		await this.getUserData();
-		await this.getUserFriends();
-		super.attributeChangedCallback();
-	}
+	// async update() {
+	// 	this.checkPath();
+	// 	await this.getUserData();
+	// 	await this.getUserFriends();
+	// 	super.attributeChangedCallback();
+	// }
 
 
 	checkPath() {
@@ -69,7 +70,10 @@ export class ProfileHeader extends Component {
 			this.user.userid = window.location.pathname
 			.replace("/dashboard/", "")
 			.replace(/\/+$/, "");
-			this.me = false;
+			if(this.user.userid == getUserSessionData().userid)
+				this.me = true;
+			else
+				this.me = false;
 		} else this.me = true;
 		console.log(window.location.pathname, this.me);
 	}
@@ -94,7 +98,7 @@ export class ProfileHeader extends Component {
 	render() {
 		if (!this.data) return "";
 		return `
-            <div class="profile-section flex-fill h-100 w-100 d-flex align-items-center justify-content-between">
+            <div class="bg -light profile-section flex-fill h-100 w-100 d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-2">
                     <img src="${this.data.avatar}" alt="Profile Picture" class="profile-pic">
                     <h4 class="mb-0">${this.data.username || "Username"}</h4>

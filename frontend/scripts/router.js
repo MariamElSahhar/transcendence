@@ -212,8 +212,9 @@ const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
 		.replace("/dashboard/", "")
 		.replace(/\/+$/, "");
-	if (!(await isAuth())) return false;
+	if (!(await isAuth()) || !userid) return false;
 	const response = await fetchUserById(userid);
+
 	if (response.data) return true;
 	else {
 		console.error(response.error);
