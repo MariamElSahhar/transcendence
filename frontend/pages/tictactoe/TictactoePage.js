@@ -216,9 +216,9 @@ class TicTacToePage extends Component {
                 <div class="cell" data-index="${index}">
                     ${
                         cell === "X"
-                            ? `<img src="/pages/tictactoe/plant.webp" alt="X" />`
+                            ? `<img src="/assets/sprites/plant.webp" alt="X" />`
                             : cell === "O"
-                            ? `<img src="/pages/tictactoe/shroom.webp" alt="O" />`
+                            ? `<img src="/assets/sprites/shroom.webp" alt="O" />`
                             : ""
                     }
                 </div>
@@ -256,11 +256,11 @@ class TicTacToePage extends Component {
             <div class="player1">
                 <img class="star ${
                     this.player1 === this.nextToPlay ? "" : "hidden"
-                }" src="/pages/tictactoe/star.webp" alt="X" />
+                }" src="/assets/sprites/star.webp" alt="X" />
 
                 <div class="score-wrapper">
                     <span class="score">${this.scoreA}</span>
-                    <img class="shroom" src="/pages/tictactoe/plant.webp" alt="X" />
+                    <img class="shroom" src="/assets/sprites/plant.webp" alt="X" />
                 </div>
 
                 <div class="player-name text-truncate" data-player="${this.player1}">
@@ -271,11 +271,11 @@ class TicTacToePage extends Component {
             <div class="player2">
                 <img class="star ${
                     this.player2 === this.nextToPlay ? "" : "hidden"
-                }" src="/pages/tictactoe/star.webp" alt="X" />
+                }" src="/assets/sprites/star.webp" alt="X" />
 
                 <div class="score-wrapper">
                     <span class="score">${this.scoreB}</span>
-                    <img class="shroom" src="/pages/tictactoe/shroom.webp" alt="X" />
+                    <img class="shroom" src="/assets/sprites/shroom.webp" alt="X" />
                 </div>
                 <div class="player-name text-truncate" data-player="${this.player2}">
                     ${truncateName(this.player2)}
@@ -291,7 +291,7 @@ class TicTacToePage extends Component {
                 <div class="sky-wrapper w-100 overflow-hidden">
                     <div class="sky"></div>
                 </div>
-                <img class="title-img" src="/pages/tictactoe/title.webp" alt="X"/>
+                <img class="title-img" src="/assets/title.webp" alt="X"/>
 
                 <div class="relative h-full w-full z-[3]">
                     <div class="board-wrapper">
@@ -484,7 +484,7 @@ class TicTacToePage extends Component {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    background: url('/pages/tictactoe/cube.webp');  /* Use your pixelated webp */
+                    background: url('/assets/cube.webp');  /* Use your pixelated webp */
                     background-size: cover;   /* Make sure it covers the whole cell */
                     background-position: center;  /* Center the image */
                     cursor: pointer;

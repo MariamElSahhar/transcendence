@@ -43,11 +43,11 @@ export class AuthLayout extends Component {
 				<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
 					<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
 						<img class="pipe left-pipe z-3" src="/assets/pipe.webp" alt="X"/>
-						<img  id="plant" class="pipe-content z-2" src="/pages/tictactoe/plant.webp" alt="X"/>
+						<img  id="plant" class="pipe-content z-2" src="/assets/sprites/plant.webp" alt="X"/>
 					</div>
 					<div class="right-pipe-container d-flex flex-column position-relative align-items-center">
 						<img class="pipe right-pipe z-3" src="/assets/pipe.webp" alt="X"/>
-						<img id="shroom" class="pipe-content z-2" src="/pages/tictactoe/shroom.webp" alt="X"/>
+						<img id="shroom" class="pipe-content z-2" src="/assets/sprites/shroom.webp" alt="X"/>
 					</div>
 				</div>
 				<footer-component class="position-relative mt-auto"></footer-component>
