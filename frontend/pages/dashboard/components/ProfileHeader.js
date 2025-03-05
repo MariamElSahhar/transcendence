@@ -13,8 +13,7 @@ export class ProfileHeader extends Component {
 	constructor() {
 		super();
 		this.user = {};
-		this.data = {}; // User data
-		// this.isOwnProfile = false; // Flag to check if it's the current user's profile
+		this.data = {};
 	}
 
 	async getUserData() {
@@ -40,7 +39,6 @@ export class ProfileHeader extends Component {
 				console.log(error);
 			}
 		}
-		console.log(this.user);
 	}
 	async getUserFriends() {
 		const { success, data } = await fetchFriends(
@@ -71,12 +69,10 @@ export class ProfileHeader extends Component {
 			if (this.user.userid == getUserSessionData().userid) this.me = true;
 			else this.me = false;
 		} else this.me = true;
-		console.log(window.location.pathname, this.me);
 	}
 
 	async connectedCallback() {
 		this.checkPath();
-		console.log(this.me);
 		// await this.getUserFriends();
 		await this.getUserData();
 		this.renderUserData({
@@ -98,7 +94,18 @@ export class ProfileHeader extends Component {
                     <img src="${
 						this.data.avatar
 					}" alt="Profile Picture" class="profile-pic">
-                    <h4 class="mb-0">${this.data.username || "Username"}</h4>
+					<div class="d-flex flex-column justify-content-center">
+                    	<h4 class="mb-0">${this.data.username || "Username"}</h4>
+						${
+							!this.data.is_me
+								? `<p class="mb-0">${
+										this.data.is_online
+											? "Online"
+											: "Offline"
+								  }</p>`
+								: ""
+						}
+					</div>
                 </div>
 				${
 					!this.me

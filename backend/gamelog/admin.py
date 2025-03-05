@@ -36,10 +36,10 @@ class TicTacToeAdmin(admin.ModelAdmin):
     list_display = (
         "get_users",
         "date",
-        "winnerID",
-        "loserID",
-        "winner_score",
-        "loser_score",
+        "player1_id",
+        "player2_id",
+        "player1_score",
+        "player2_score",
     )
 
     def get_users(self, obj):

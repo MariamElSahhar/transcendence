@@ -41,30 +41,32 @@ def user_list_create_view(request):
 # GET, UPDATE, OR DELETE A USER BY ID
 @api_view(["GET", "PATCH", "DELETE"])
 def user_retrieve_update_destroy_view(request, user_id):
-    user = get_object_or_404(CustomUser, id=user_id)
 
     if request.method == "GET":
+        user = CustomUser.objects.filter(id=user_id).first()
+        if not user:
+            return Response({"data":None, "exists":False})
         serializer = ProfileSerializer(user)
         response_data = serializer.data
         response_data["is_friend"] = user in request.user.friends.all()
 
-        return Response(response_data)
+        return Response({"data":response_data, "exists":True})
+    else:
+        user = get_object_or_404(CustomUser, id=user_id)
 
-    elif request.method == "PATCH":
-        serializer = UserSerializer(user, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if "password" in serializer.validated_data:
-            print(serializer.validated_data["password"])
-            user = serializer.save(password=make_password(serializer.validated_data["password"]))
-        else:
-            serializer.save()
-        return Response({"message": "User modified", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        if request.method == "PATCH":
+            serializer = UserSerializer(user, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            if "password" in serializer.validated_data:
+                print(serializer.validated_data["password"])
+                user = serializer.save(password=make_password(serializer.validated_data["password"]))
+            else:
+                serializer.save()
+            return Response({"message": "User modified", "data": serializer.data}, status=status.HTTP_201_CREATED)
 
-    elif request.method == "DELETE":
-        user.delete()
-        response = Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
-        print(response)
-        return Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
+        if request.method == "DELETE":
+            user.delete()
+            return Response({"message": "User deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 # ADD OR DELETE USER AVATAR
 @api_view(["POST", "DELETE"])

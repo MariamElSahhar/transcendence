@@ -5,9 +5,14 @@ from django.utils import timezone
 
 
 class FriendSerializer(serializers.ModelSerializer):
+    is_online = serializers.SerializerMethodField()
     class Meta:
         model = CustomUser
         fields = ["id", "username", "avatar", "is_online", "last_seen"]
+
+    def get_is_online(self, obj):
+        obj.check_online_status()
+        return obj.is_online
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -43,10 +48,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise ValidationError({"email": "This email is already in use."})
 
         return attrs
-
-    def get_is_online(self, obj):
-        obj.check_online_status()
-        return obj.is_online
 
 
 class LoginSerializer(serializers.Serializer):
@@ -95,6 +96,12 @@ class OTPVerificationSerializer(serializers.Serializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    is_online = serializers.SerializerMethodField()
     class Meta:
         model = CustomUser
         fields = ["id", "username", "avatar", "is_online", "enable_otp", "email"]
+
+
+    def get_is_online(self, obj):
+        obj.check_online_status()
+        return obj.is_online

@@ -85,14 +85,14 @@ class TicTacToeLog(models.Model):
     date = models.DateTimeField(default=timezone.now)
 
     users = models.ManyToManyField(CustomUser, related_name="ttt_games")
-    loserID = models.ForeignKey(
+    player1 = models.ForeignKey(
         CustomUser,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="ttt_games_lost",
     )
-    winnerID = models.ForeignKey(
+    player2 = models.ForeignKey(
         CustomUser,
         on_delete=models.SET_NULL,
         null=True,
@@ -100,41 +100,26 @@ class TicTacToeLog(models.Model):
         related_name="ttt_games_won",
     )
 
-    winner_score = models.PositiveIntegerField(default=0)
-    loser_score = models.PositiveIntegerField(default=0)
+    player1_score = models.PositiveIntegerField(default=0)
+    player2_score = models.PositiveIntegerField(default=0)
 
-    def get_my_score(self, username):
-        """Get the score of the user based on the provided username."""
-        user = CustomUser.objects.filter(username=username).first()
-        if not user:
-            return None
+    def get_my_score(self, user_id):
+        """Get the score of the user based on the provided id."""
+        return self.player1_score if self.player1 and user_id == self.player1.id else self.player2_score
 
-        if self.winnerID == user:
-            return self.winner_score
-        elif self.loserID == user:
-            return self.loser_score
-        
-        # imply a draw
-        return self.winner_score
-
-    def get_opponent_score(self, username):
+    def get_opponent_score(self, user_id):
         """Get the opponent's score based on the provided username."""
-        user = CustomUser.objects.filter(username=username).first()
-        if not user:
-            return None
-
-        if self.winnerID == user:
-            return self.loser_score
-        elif self.loserID == user:
-            return self.winner_score
-        return None
-
-    def is_win_for_user(self, username):
-        """Check if the user with the provided username is the winner."""
-        user = CustomUser.objects.filter(username=username).first()
-        return self.winnerID == user
+        if not self.player1:
+            return self.player1_score
+        elif not self.player2:
+            return self.player2_score
+        else:
+            return self.player2_score if user_id == self.player1.id else self.player1_score
 
     def __str__(self):
-        winner = self.winnerID.username if self.winnerID else "Unknown"
-        loser = self.loserID.username if self.loserID else "Unknown"
-        return f"Tictactoe Game | Winner: {winner} | Loser: {loser}"
+        if self.player1_score == self.player2_score:
+            return f"Tictactoe Game | Draw | {self.player1.id} vs {self.player2.id}"
+        else:
+            winner = self.player1.id if self.player1_score > self.player2_score else self.player2.id
+            loser = self.player1.id if self.player1_score < self.player2_score else self.player2.id
+            return f"Tictactoe Game | Winner: {winner} | Loser: {loser}"
