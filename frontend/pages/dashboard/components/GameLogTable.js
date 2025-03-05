@@ -23,7 +23,6 @@ export class GameLogTable extends Component {
                 .page-link
                 {
                     color: black;
-                    cursor: pointer;
                 }
 
                 .tab-content {
@@ -128,9 +127,13 @@ export class GameLogTable extends Component {
                     <tr>
                     <td>${game.opponent_username}</td>
                     <td class="result fs-3 ${
-						game.is_win ? "text-success" : "text-danger"
+						game.is_draw
+							? "text-mario-yellow"
+							: game.is_win
+							? "text-success"
+							: "text-danger"
 					}">
-                        ${game.is_win ? "WIN" : "LOSS"}
+                        ${game.is_draw ? "DRAW" : game.is_win ? "WIN" : "LOSS"}
                     </td>
                         <td>${game.my_score} - ${game.opponent_score} </td>
                         <td>${game.date.split("T")[0]}</td>
@@ -176,7 +179,7 @@ export class GameLogTable extends Component {
                     <li class="
                         page-item ${this.pagenumber === 0 ? "disabled" : ""}
                     ">
-                        <a class="page-link  border-0 bg-transparent mt-1" data-page="previous">
+                        <a class="page-link cursor-pointer border-0 bg-transparent mt-1" data-page="previous">
                             <i class="arrows cursor-pointer bi bi-arrow-left-circle-fill"></i>
                         </a>
                     </li>
@@ -188,7 +191,7 @@ export class GameLogTable extends Component {
                     <li class="page-item ${
 						this.pagenumber === i ? "active" : ""
 					}">
-                        <a class="page-link border-0 bg-transparent" data-page="${i}">${
+                        <a class="page-link cursor-pointer border-0 bg-transparent" data-page="${i}">${
 								i + 1
 							}</a>
                     </li>`
@@ -200,7 +203,7 @@ export class GameLogTable extends Component {
 							? "disabled"
 							: ""
 					}">
-                        <a class="page-link border-0 bg-transparent mt-1" data-page="next">
+                        <a class="page-link cursor-pointer border-0 bg-transparent mt-1" data-page="next">
                             <i class="arrows cursor-pointer bi bi-arrow-right-circle-fill"></i>
                         </a>
                     </li>

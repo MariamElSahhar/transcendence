@@ -37,7 +37,6 @@
 	--error-100: #fdf7f5;
 	--error-200: #e52521;
 	--error-300: #330a09;
-
 }
 
 :root,
@@ -62,6 +61,14 @@
 	--bs-body-color: var(--black);
 	/* --bs-link-color: var(--sky-700);
 	--bs-link-hover-color: var(--sky-900); */
+
+	.text-mario-blue {
+		color: var(--mario-blue-color) !important;
+	}
+
+	.text-mario-yellow {
+		color: var(--mario-yellow-color) !important;
+	}
 
 	.bg-brick-100 {
 		background-color: var(--brick-100) !important;
