@@ -43,10 +43,10 @@ export class GameStatsCard extends Component {
                             </h4>
                             <h4 class="position-absolute stats-percent d-flex flex-column">
                                 <span>
-                                    ${Math.round(
+                                    ${this.stats.totalPlayed !== 0 ? Math.round(
 										(this.stats.totalWon * 100) /
 											this.stats.totalPlayed
-									)}%
+									): 0}%
                                 </span>
                                 <span class="fs-5">Win Rate</span>
                             </h4>
