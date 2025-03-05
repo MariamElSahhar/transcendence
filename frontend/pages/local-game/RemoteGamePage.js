@@ -58,7 +58,6 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketMessage(data) {
-		console.log("??????????", data);
 		this.data = data;
 		if (data["message"] === "Match found!" && !this.playerSet)
 			this.matchFound();
@@ -165,9 +164,8 @@ export class RemoteGamePage extends Component {
 		renderOpponentFoundCard(this, this.playerNames[0], this.playerNames[1]);
 		this.timeoutID = this.setTrackedTimeout(() => {
 			if (WebGL.isWebGLAvailable()) {
-				this.container.innerHTML = "";
-				console.log("playerLeft:", this.playerLeft); // Debugging line
 				if (!this.playerLeft) {
+					this.container.innerHTML = "";
 					this.engine = new Engine(
 						this,
 						this.isAIEnabled,
@@ -177,7 +175,6 @@ export class RemoteGamePage extends Component {
 						this.sameSystem
 					);
 					this.engine.createScene();
-					console.log("why are we here");
 					sendWebSocketMessage({
 						action: "ready",
 						gameSession: this.gameID,
@@ -193,7 +190,6 @@ export class RemoteGamePage extends Component {
 	}
 
 	startRound() {
-		console.log("??????????");
 		if (this.data.round == 1) {
 			renderCountdownCard(this.container, this.engine);
 		} else {
