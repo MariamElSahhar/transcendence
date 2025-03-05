@@ -21,7 +21,6 @@ from .serializers.ttt import (
 
 @api_view(["POST"])
 def create_gamelog_remote(request):
-    gamedata = GameSession.objects.get(id=request.data["gameSession"])
     user1 = request.user.id
     user2 = CustomUser.objects.get(username=request.data["opponent_username"]).id
     if(request.data["my_score"] > request.data["opponent_score"]):

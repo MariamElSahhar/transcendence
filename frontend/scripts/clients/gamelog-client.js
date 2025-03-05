@@ -20,14 +20,12 @@ export const addRemoteGame = async ({
 	opponent_score,
 	my_score,
 	opponent_username,
-	gameSession,
 }) => {
 	const url = URIs.gamelogRemote;
 	const requestBody = {
 		opponent_score,
 		my_score,
 		opponent_username,
-		gameSession,
 	};
 	const { status, body, error } = await post(url, requestBody);
 	if (error) return { success: false, error };

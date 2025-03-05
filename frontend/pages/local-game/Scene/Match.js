@@ -192,8 +192,7 @@ export class Match {
 			const { error } = await addRemoteGame({
 				opponent_score: this.#points[1],
 				my_score: this.#points[0],
-				opponent_username: this.engine.players[1],
-				gameSession: this.engine.gameSession,
+				opponent_username: this.engine.players[1]
 			});
 		}
 
