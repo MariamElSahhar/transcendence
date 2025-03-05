@@ -50,7 +50,6 @@ export class ProfileHeader extends Component {
 	}
 
 	renderUserData(user) {
-
 		this.data = user;
 		// this.isOwnProfile = user.userid === getUserSessionData().userid; // Check if the profile is the current user's
 		// console.log(this.isOwnProfile);
@@ -64,54 +63,50 @@ export class ProfileHeader extends Component {
 	// 	super.attributeChangedCallback();
 	// }
 
-
 	checkPath() {
 		if (window.location.pathname.startsWith("/dashboard/")) {
 			this.user.userid = window.location.pathname
-			.replace("/dashboard/", "")
-			.replace(/\/+$/, "");
-			if(this.user.userid == getUserSessionData().userid)
-				this.me = true;
-			else
-				this.me = false;
+				.replace("/dashboard/", "")
+				.replace(/\/+$/, "");
+			if (this.user.userid == getUserSessionData().userid) this.me = true;
+			else this.me = false;
 		} else this.me = true;
 		console.log(window.location.pathname, this.me);
 	}
 
 	async connectedCallback() {
 		this.checkPath();
-		console.log(this.me)
+		console.log(this.me);
 		// await this.getUserFriends();
 		await this.getUserData();
-		this.renderUserData({			username: this.user.username,
+		this.renderUserData({
+			username: this.user.username,
 			avatar: this.user.avatar,
 			is_me: this.user.is_me,
 			is_online: this.user.is_online,
 			is_friend: this.user.is_friend,
-			userid: this.user.userid,})
+			userid: this.user.userid,
+		});
 		super.connectedCallback();
-
 	}
-
-
 
 	render() {
 		if (!this.data) return "";
 		return `
-            <div class="bg -light profile-section flex-fill h-100 w-100 d-flex align-items-center justify-content-between">
+            <div class="bg-light rounded profile-section h-100 w-100 d-flex align-items-center justify-content-between p-2">
                 <div class="d-flex align-items-center gap-2">
-                    <img src="${this.data.avatar}" alt="Profile Picture" class="profile-pic">
+                    <img src="${
+						this.data.avatar
+					}" alt="Profile Picture" class="profile-pic">
                     <h4 class="mb-0">${this.data.username || "Username"}</h4>
                 </div>
-                <div class="w-50 d-flex justify-content-center">
-                    ${
-						!this.me
-							? `<button id="add-remove-friend" class="btn btn-primary btn-sm">
-									${this.data.is_friend ? "Remove Friend" : "Add Friend"}
-								</button>`
-							: ""
-					}
-                </div>
+				${
+					!this.me
+						? `<button id="add-remove-friend" class="btn btn-primary btn-sm">
+								${this.data.is_friend ? "Remove Friend" : "Add Friend"}
+							</button>`
+						: ""
+				}
             </div>
         `;
 	}
@@ -143,25 +138,22 @@ export class ProfileHeader extends Component {
 	style() {
 		return `
             <style>
+				.profile-section {
+					--bs-bg-opacity: .7;
+				}
+
+				.profile-pic {
+					width: 50px;
+					height: 50px;
+					border-radius: 50%;
+					object-fit: cover;
+				}
+
                 .profile-img-container {
                     width: 75px;
                     height: 75px;
                     min-width: 75px;
                     min-height: 75px;
-                    border-radius: 50%;
-                }
-
-                .profile-section {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-
-                .profile-pic {
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    object-fit: cover;
                 }
 
                 .profile-info h4 {

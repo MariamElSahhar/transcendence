@@ -14,10 +14,9 @@ export class GameHeatMap extends Component {
 		this.attributeChangedCallback();
 	}
 
-	// <div class="heatmap bg-light p-3 flex-column d-flex justify-content-center align-items-start w-auto">
 	render() {
 		return `
-		<div class="heatmap bg-light heatmap-container p-3 w-auto">
+		<div class="heatmap bg-light heatmap-container p-3 w-auto rounded">
 			<div class="p-3 flex-column d-flex justify-content-center align-items-start">
 				<small class="my-0 mb-3 fw-bold">Games this year</small>
 				<div class="heatmap-grid d-grid justify-content-start w-100"></div>
@@ -30,9 +29,6 @@ export class GameHeatMap extends Component {
 	style() {
 		return `
 			<style>
-			.heatmap-container {
-				display: inline-block;
-			  }
 
 			  .heatmap {
 				padding: 0;

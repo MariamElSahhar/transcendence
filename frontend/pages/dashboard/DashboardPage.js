@@ -23,8 +23,7 @@ export class DashboardPage extends Component {
 		await import("./components/GameStatsCard.js");
 		await import("./components/GameHeatMap.js");
 		await import("./components/ProfileHeader.js"),
-
-		super.connectedCallback();
+			super.connectedCallback();
 
 		await this.getGameLog();
 		this.querySelector("gamelog-table").renderGameLog(this.gamelog);
@@ -38,17 +37,17 @@ export class DashboardPage extends Component {
 	render() {
 		return `
 		<div class="container d-flex flex-column gap-3 my-3">
-		<profile-header></profile-header>
-                <div class="d-flex w-100 row-gap-5">
-                    <div class="d-flex flex-column w-100 gap-3">
-						<div class="graphs d-flex w-100 column-gap-2">
-							<game-stats class=" w-100 flex-fill h-100 rounded"></game-stats>
-							<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
-						</div>
-                        <gamelog-table class=""></gamelog-table>
-                    </div>
-                </div>
-            </div>
+			<profile-header></profile-header>
+			<div class="d-flex w-100 row-gap-5">
+				<div class="d-flex flex-column w-100 gap-3">
+					<div class="graphs d-flex w-100 column-gap-2 row-gap-2">
+						<game-stats class="w-100 flex-fill h-100 rounded"></game-stats>
+						<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
+					</div>
+					<gamelog-table class=""></gamelog-table>
+				</div>
+			</div>
+		</div>
         `;
 	}
 
@@ -68,27 +67,6 @@ export class DashboardPage extends Component {
 	style() {
 		return `
 			<style>
-			.profile-pic {
-				width: 40px;
-				height: 40px;
-				border-radius: 50%;
-				object-fit: cover;
-			}
-			.profile-section {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				width: 100%;
-				padding: 10px;
-			}
-
-			.profile-pic {
-				width: 50px;
-				height: 50px;
-				border-radius: 50%;
-				object-fit: cover;
-			}
-
 				.graphs {
 					flex-direction: column;
 				}
