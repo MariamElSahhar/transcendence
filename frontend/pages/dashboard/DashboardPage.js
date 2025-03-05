@@ -22,6 +22,7 @@ export class DashboardPage extends Component {
 		await import("./components/GameLogTable.js");
 		await import("./components/GameStatsCard.js");
 		await import("./components/GameHeatMap.js");
+		await import("./components/ProfileHeader.js"),
 
 		super.connectedCallback();
 
@@ -33,6 +34,7 @@ export class DashboardPage extends Component {
 			this.stats
 		);
 	}
+	// <profile-header></profile-header>
 
 	render() {
 		return `
@@ -50,9 +52,43 @@ export class DashboardPage extends Component {
         `;
 	}
 
+	// postRender()
+	// {
+	// 	this.querySelector("profile-header").renderUserData({
+	// 		username: this.user.username,
+	// 		avatar: this.user.avatar,
+	// 		is_me: this.user.is_me,
+	// 		is_online: this.user.is_online,
+	// 		is_friend: this.user.is_friend,
+	// 		userid: this.user.userid,
+	// 	});
+	// 	this.querySelector("friends-sidebar").renderFriends(this.friends);
+	// }
+
 	style() {
 		return `
 			<style>
+			.profile-pic {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
+			.profile-section {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				padding: 10px;
+			}
+
+			.profile-pic {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
+
 				.graphs {
 					flex-direction: column;
 				}

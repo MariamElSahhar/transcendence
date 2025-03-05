@@ -9,13 +9,16 @@ export class Paddle {
 	#moveSpeed = 15;
 	#movement = new THREE.Vector3(0, 0, 0);
 	#boardEdgeLimit = 10;
-	#lastReactionTime = 0;
+	#lastReactionTime = Date.now();
 	#isAIControlled = false;
 	#isResetting = false;
+	anticipatedPositionY;
+	distanceToBall;
+	lastBallMovement;
 
 	#paddleObject;
 	#light;
-
+	flag = 0;
 	#topCollisionSegment;
 	#frontCollisionSegment;
 	#bottomCollisionSegment;
@@ -90,23 +93,49 @@ export class Paddle {
 			return;
 		}
 
-		const reactionDelay = 50;
+		const reactionDelay = 1000;
+		const movementDelay = 50;
 		const currentTime = Date.now();
+		let aiSpeed;
 
-		if (currentTime - this.#lastReactionTime < reactionDelay) return;
+		const movementThreshold = 0.1;
+		const maxAISpeed = 3.5;
 
+		// console.log(currentTime - this.#lastReactionTime , currentTime - this.lastBallMovement , currentTime - this.#lastReactionTime )
+		if (this.flag == 1 && currentTime - this.lastBallMovement > 50)
+		{
+			// console.log("here");
+		aiSpeed = Math.min(maxAISpeed, Math.abs(this.distanceToBall) * 0.15);
+		if (Math.abs(this.anticipatedPositionY) > this.#boardEdgeLimit) {
+			aiSpeed *= 0.8;
+		}
+		if (Math.abs(this.distanceToBall) > movementThreshold) {
+			const newYPosition =
+				this.#threeJSGroup.position.y +
+				(this.distanceToBall > 0 ? aiSpeed : -aiSpeed);
+
+			this.#threeJSGroup.position.setY(newYPosition);
+		}
+		this.lastBallMovement = currentTime;
+	}
+	// console.log("timinng!!",currentTime - this.#lastReactionTime , reactionDelay)
+	if(this.flag == 0 || currentTime - this.#lastReactionTime > reactionDelay)
+	{
+		console.log("timing!!", currentTime - this.#lastReactionTime);
+		if(this.flag == 0)
+			this.lastBallMovement = 0;
+		this.flag = 1;
 		this.#lastReactionTime = currentTime;
 
 		const anticipationFactor = 0.3;
-		const anticipatedPositionY =
+		this.anticipatedPositionY =
 			ballPosition.y + (ballVelocity?.y || 0) * anticipationFactor;
-		const distanceToBall =
-			anticipatedPositionY - this.#threeJSGroup.position.y;
+		this.distanceToBall =
+		this.anticipatedPositionY - this.#threeJSGroup.position.y;
 
-		const maxAISpeed = 3.5;
-		let aiSpeed = Math.min(maxAISpeed, Math.abs(distanceToBall) * 0.15);
+		aiSpeed = Math.min(maxAISpeed, Math.abs(this.distanceToBall) * 0.15);
 
-		if (Math.abs(anticipatedPositionY) > this.#boardEdgeLimit) {
+		if (Math.abs(this.anticipatedPositionY) > this.#boardEdgeLimit) {
 			aiSpeed *= 0.8;
 		}
 
@@ -114,15 +143,8 @@ export class Paddle {
 		if (Math.random() < missChance) {
 			return;
 		}
+	}
 
-		const movementThreshold = 0.1;
-		if (Math.abs(distanceToBall) > movementThreshold) {
-			const newYPosition =
-				this.#threeJSGroup.position.y +
-				(distanceToBall > 0 ? aiSpeed : -aiSpeed);
-
-			this.#threeJSGroup.position.setY(newYPosition);
-		}
 	}
 
 	#constrainPaddle(pongGameBox) {
