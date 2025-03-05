@@ -40,7 +40,6 @@ export class ProfileHeader extends Component {
 				console.log(error);
 			}
 		}
-		console.log(this.user);
 	}
 	async getUserFriends() {
 		const { success, data } = await fetchFriends(
@@ -71,12 +70,10 @@ export class ProfileHeader extends Component {
 			if (this.user.userid == getUserSessionData().userid) this.me = true;
 			else this.me = false;
 		} else this.me = true;
-		console.log(window.location.pathname, this.me);
 	}
 
 	async connectedCallback() {
 		this.checkPath();
-		console.log(this.me);
 		// await this.getUserFriends();
 		await this.getUserData();
 		this.renderUserData({
