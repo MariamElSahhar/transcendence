@@ -28,7 +28,7 @@ export class GameStatsCard extends Component {
 		return (
 			this.stats &&
 			`
-            <div class="rounded bg-light game-stats d-flex h-100 w-100 justify-content-center align-items-center position-relative">
+            <div class="rounded bg-light game-stats d-flex h-100 w-100 justify-content-center align-items-center position-relative p-2">
                 <div class="circle d-flex justify-content-center align-items-center position-relative">
                     <div class="stats-text d-flex flex-column justify-content-center align-items-center position-relative">
                     <img src="/assets/crown.webp" alt="Game Icon" class="crown-icon position-relative">
@@ -43,10 +43,15 @@ export class GameStatsCard extends Component {
                             </h4>
                             <h4 class="position-absolute stats-percent d-flex flex-column">
                                 <span>
-                                    ${this.stats.totalPlayed !== 0 ? Math.round(
-										(this.stats.totalWon * 100) /
-											this.stats.totalPlayed
-									): 0}%
+                                    ${
+										this.stats.totalPlayed !== 0
+											? Math.round(
+													(this.stats.totalWon *
+														100) /
+														this.stats.totalPlayed
+											  )
+											: 0
+									}%
                                 </span>
                                 <span class="fs-5">Win Rate</span>
                             </h4>

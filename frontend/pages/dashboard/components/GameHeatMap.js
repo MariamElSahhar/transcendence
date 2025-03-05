@@ -17,12 +17,11 @@ export class GameHeatMap extends Component {
 	render() {
 		return `
 		<div class="heatmap bg-light heatmap-container p-3 w-auto rounded">
-			<div class="p-3 flex-column d-flex justify-content-center align-items-start">
+			<div class="flex-column d-flex justify-content-center align-items-start">
 				<small class="my-0 mb-3 fw-bold">Games this year</small>
 				<div class="heatmap-grid d-grid justify-content-start w-100"></div>
 			</div>
-			</div>
-
+		</div>
 		`;
 	}
 
