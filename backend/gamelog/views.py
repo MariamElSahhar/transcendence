@@ -95,7 +95,7 @@ def gamelog(request, user_id):
 
     local_serializer = LocalGameSerializer(local_games, many=True, context={"request": request})
     remote_serializer = RemoteGameSerializer(remote_games, many=True, context={"request": request})
-    ttt_serializer = TicTacToeSerializer(ttt_games, many=True, context={"request": request})
+    ttt_serializer = TicTacToeSerializer(ttt_games, many=True, context={"user_id": user_id})
 
     local_games_count = len(local_serializer.data)
     remote_games_count = len(remote_serializer.data)

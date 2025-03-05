@@ -12,7 +12,7 @@ from gamelog.models import TicTacToeLog
 from ..models import Game
 from django.db import models
 from datetime import timedelta
-from django.utils import timezone 
+from django.utils import timezone
 
 # Tells you if you are subscribed to matchmaking or playing a game
 # If you are in a game, returns the game information
@@ -256,23 +256,14 @@ def make_move_view(request):
 
             # The game is finished
             # Create the TicTacToeLog entry for the user
+            gamelog = TicTacToeLog.objects.create(
+                player1_id=game.player_1.id,
+                player2_id=game.player_2.id,
+                player1_score=player_1_wins,
+                player2_score=player_2_wins,
+            )
+            gamelog.users.set([game.player_1, game.player_2])
 
-            # Draw
-            if player_1_wins == player_2_wins:
-                log = TicTacToeLog.objects.create(
-                    winner_score=player_1_wins,
-                    loser_score=player_1_wins,
-                )
-                log.users.set([game.player_1, game.player_2])
-            else:
-                # Not Draw
-                log = TicTacToeLog.objects.create(
-                    winnerID = game.player_1 if player_1_wins > player_2_wins else game.player_2,
-                    loserID = game.player_2 if player_1_wins > player_2_wins else game.player_1,
-                    winner_score=max(player_1_wins, player_2_wins),
-                    loser_score=min(player_1_wins, player_2_wins),
-                )
-                log.users.set([game.player_1, game.player_2])
         else:
             game.current_round += 1
 
@@ -340,10 +331,10 @@ def timeout_game_view(request):
 
     if not game:
         return Response({"error": "No active game found"}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     if game.status != "PLAYING":
         return Response({"error": "Incorrect stage"}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     if game.last_play_time + timedelta(seconds=180) < timezone.now():
         if game.next_to_play == game.player_1.username:
             game.game_winner = game.player_2

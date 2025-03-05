@@ -25,7 +25,6 @@ export const fetchUserSessionData = async () => {
 		sessionStorage.getItem("avatar") == "undefined" ||
 		sessionStorage.getItem("otp") == "undefined"
 	) {
-		console.log("refetching my info");
 		const response = await getMyInfo();
 		if (response.success) {
 			storeUserSession({
