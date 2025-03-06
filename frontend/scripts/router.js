@@ -199,7 +199,7 @@ const loadRoute = async (route, layout) => {
 			}
 			await layoutComponent.renderSlot(routeComponent.outerHTML);
 		} else {
-			// root.innerHTML = "";
+			root.innerHTML = "";
 			root.appendChild(routeComponent);
 		}
 	} catch (e) {
