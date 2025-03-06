@@ -36,16 +36,13 @@ export class MainLayout extends Component {
         `;
 	}
 
-
 	style() {
 		return `
 		<style>
-		#slot > * {
-			width: 100%;
-		}
-		#slot-component  {
-			width: 100%;
-		}
+			#slot > * {
+				width: 100%;
+			}
+
 			.sky {
 				display: flex;
 				background: url(/assets/sky.webp);
@@ -65,13 +62,12 @@ export class MainLayout extends Component {
 		`;
 	}
 
-
 	renderSlot(content) {
 		this.slot = content;
-		if (super.isRendered())
-		{
-
-			document.querySelector("navbar-component").attributeChangedCallback();
+		if (super.isRendered()) {
+			document
+				.querySelector("navbar-component")
+				.attributeChangedCallback();
 			document.querySelector("slot-component").renderSlot(this.slot);
 		}
 	}

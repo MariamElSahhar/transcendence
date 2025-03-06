@@ -12,9 +12,6 @@ export class AuthLayout extends Component {
 		await import("./components/Footer.js");
 		await import("./components/SlotComponent.js");
 		super.connectedCallback();
-		this.slot
-		super.connectedCallback();
-		document.querySelector("slot-component").renderSlot(this.slot);
 	}
 
 	render() {
@@ -93,14 +90,14 @@ export class AuthLayout extends Component {
 		`;
 	}
 
+	postRender() {
+		document.querySelector("slot-component").renderSlot(this.slot);
+	}
+
 	renderSlot(content) {
 		this.slot = content;
-		const navbar = document.querySelector("navbar-component");
-		if (navbar) {
-			navbar.remove();
-		}
-		if (super.isRendered())
-		{
+		this.landing = window.location.pathname == "/";
+		if (super.isRendered()) {
 			document.querySelector("slot-component").renderSlot(this.slot);
 		}
 	}
