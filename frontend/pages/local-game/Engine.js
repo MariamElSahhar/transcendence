@@ -71,11 +71,11 @@ export class Engine {
 	cleanUp() {
 		if (this.scene) this.clearScene(this.scene.threeJSScene);
 		this.stopAnimationLoop();
-		this.#threeJS.clearRenderer();
+		this.#threeJS.disposeResources();
 	}
 
 	renderFrame() {
-		this.#threeJS.renderFrame(this.scene.threeJSScene);
+		this.#threeJS.renderScene(this.scene.threeJSScene);
 	}
 
 	get isAIGame() {
@@ -105,7 +105,7 @@ export class Engine {
 	}
 
 	setAnimationLoop(loopFunction) {
-		this.#threeJS.setAnimationLoop(loopFunction);
+		this.#threeJS.startAnimationLoop(loopFunction);
 	}
 
 	stopAnimationLoop() {
@@ -121,7 +121,7 @@ export class Engine {
 			this.scene.updateFrame(currentTime, delta);
 
 			this.renderFrame();
-			this.#threeJS.updateControls();
+			this.#threeJS.refreshControls();
 		});
 	}
 
@@ -139,8 +139,8 @@ export class Engine {
 			cameraLookAt.y,
 			cameraLookAt.z
 		);
-		this.#threeJS.setCameraPosition(cameraPosition);
-		this.#threeJS.setCameraLookAt(cameraLookAt);
+		this.#threeJS.updateCameraPosition(cameraPosition);
+		this.#threeJS.updateCameraLookAt(cameraLookAt);
 	}
 
 	resizeHandler() {

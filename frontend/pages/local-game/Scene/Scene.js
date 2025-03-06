@@ -22,7 +22,7 @@ export class Scene {
 			this.#threeJSScene.add(this.match.threeJSGroup);
 
 			// Set the camera position
-			const camera = engine.threeJS.getCamera();
+			const camera = engine.threeJS.getCurrentCamera();
 			camera.position.set(0, 50, 100);
 			camera.lookAt(0, 0, 0);
 
@@ -73,15 +73,12 @@ export class Scene {
 	setPlayerPaddleDirection(direction, index) {
 		this.match.players[index].paddle.setDirection(direction);
 	}
-
 	updateCamera(animation = false) {
 		const matchPosition = this.match.threeJSGroup.position;
-		const xHeight =
-			(this.#matchHalfWidth + this.#cameraPadding * 0.5) /
-			Math.tan(this.#engine.threeJS.getCameraHorizontalFOVRadian() * 0.5); // Calculate height based on field of view
-		const yHeight =
-			(this.#matchHalfHeight + this.#cameraPadding * 0.5) /
-			Math.tan(this.#engine.threeJS.getCameraVerticalFOVRadian() * 0.5);
+		const horizontalFOV = this.#engine.threeJS.getHorizontalFOV();
+		const verticalFOV = this.#engine.threeJS.getVerticalFOV();
+		const xHeight = (this.#matchHalfWidth + this.#cameraPadding * 0.5) / Math.tan(horizontalFOV * 0.5);
+		const yHeight = (this.#matchHalfHeight + this.#cameraPadding * 0.5) / Math.tan(verticalFOV * 0.5);
 		const cameraHeight = Math.max(xHeight, yHeight);
 
 		const cameraPosition = new THREE.Vector3(
