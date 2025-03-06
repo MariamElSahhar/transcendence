@@ -58,7 +58,6 @@ def user_retrieve_update_destroy_view(request, user_id):
             serializer = UserSerializer(user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             if "password" in serializer.validated_data:
-                print(serializer.validated_data["password"])
                 user = serializer.save(password=make_password(serializer.validated_data["password"]))
             else:
                 serializer.save()
@@ -74,7 +73,6 @@ def avatar_view(request, user_id):
     user = CustomUser.objects.get(id=user_id)
     if user_id != request.user.id:
         return Response({"error": "You may only edit your own avatar."}, status=401)
-    print(user_id)
     if request.method == "POST":
         try:
             avatar_data = request.data.get("avatar")
@@ -83,10 +81,8 @@ def avatar_view(request, user_id):
             if avatar_data.find(";base64,") == -1:
                 if not  user.avatar.name.startswith("default_avatar/"):
                     user.avatar.delete()
-                print(avatar_data)
                 parsed_url = urlparse(avatar_data)
                 relative_path = parsed_url.path.lstrip('/')
-                print(relative_path)
                 user.avatar.name = relative_path.replace("media/","")
             else:
                 file_format, imgstr = avatar_data.split(";base64,")[0],avatar_data.split(";base64,")[1]

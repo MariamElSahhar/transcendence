@@ -38,7 +38,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-SECRET_KEY = "django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -120,7 +120,6 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = "pong.wsgi.application"
 
 
 # Database
@@ -129,9 +128,9 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "mypassword",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": en("DB_PASS"),
         "HOST": "db" if env("ENV") == "production" else "localhost",
         "PORT": "5432" if env("ENV") == "production" else "8001",
     }
@@ -179,7 +178,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-# CORS_ALLOW_PRIVATE_NETWORK = True
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
@@ -214,12 +212,12 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Gmail SMTP settings
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'transcendence.42ad@gmail.com'
-EMAIL_HOST_PASSWORD = 'uuqp fyzm dtzs cnze'
-DEFAULT_FROM_EMAIL = '42AD Transcendence <transcendence.42ad@gmail.com>'   # Optional
+EMAIL_HOST =  env("EMAIL_HOST")
+EMAIL_PORT =  env("EMAIL_PORT")
+EMAIL_USE_TLS =  env("EMAIL_USE_TLS")
+EMAIL_HOST_USER =  env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD =  env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL =  env("DEFAULT_FROM_EMAIL")  # Optional
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
