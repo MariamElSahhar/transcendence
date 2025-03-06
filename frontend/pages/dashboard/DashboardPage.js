@@ -41,8 +41,8 @@ export class DashboardPage extends Component {
 		<div class="d-flex w-100 row-gap-5">
 				<div class="d-flex flex-column w-100 gap-3">
 				 	<div class="graphs d-flex w-100 column-gap-2 row-gap-2">
-						<game-stats class="w-100 flex-fill h-100 rounded"></game-stats>
-						<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
+						<game-stats class="flex-fill h-100 rounded"></game-stats>
+						<game-heatmap class="flex-fill h-100 rounded"></game-heatmap>
 					</div>
 					<gamelog-table></gamelog-table>
 				</div>
@@ -51,21 +51,26 @@ export class DashboardPage extends Component {
         `;
 	}
 
-
 	style() {
 		return `
 			<style>
 				.graphs {
 					flex-direction: column;
 				}
-				.game-heatmap {
+				game-heatmap {
+					width: 100%;
+				}
+				game-stats {
 					width: 100%;
 				}
 				@media (min-width: 992px) {
 					.graphs {
 						flex-direction: row;
 					}
-					.game-heatmap {
+					game-heatmap {
+						width: 50%;
+					}
+					game-stats {
 						width: 50%;
 					}
 				}

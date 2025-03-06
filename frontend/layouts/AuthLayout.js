@@ -44,6 +44,9 @@ export class AuthLayout extends Component {
 	style() {
 		return `
 		<style>
+			#slot {
+				height: 100%;
+			}
 			.sky {
 				display: flex;
 				background: url(/assets/sky.webp);

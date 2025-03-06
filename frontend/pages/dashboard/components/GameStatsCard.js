@@ -3,7 +3,16 @@ import { Component } from "../../Component.js";
 export class GameStatsCard extends Component {
 	constructor() {
 		super();
-		this.stats = {};
+		this.stats = {
+			totalWon: 0,
+			totalPlayed: 0,
+			localWon: 0,
+			localPlayed: 0,
+			remoteWon: 0,
+			remotePlayed: 0,
+			tttWon: 0,
+			tttPlayed: 0,
+		};
 		this.colors = {
 			localWonColor: "var(--mario-blue-color)",
 			localPlayedColor: "var(--sky-100)",

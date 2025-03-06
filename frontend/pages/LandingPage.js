@@ -29,7 +29,6 @@ export class LandingPage extends Component {
 					animation: jump 4s ease-in-out infinite;
 					width: 60%;
 				}
-
 			</style>
 		`;
 	}
@@ -39,6 +38,8 @@ export class LandingPage extends Component {
 		const signupButton = document.querySelector("#sign-up-button");
 		const plant = document.querySelector("#plant");
 		const shroom = document.querySelector("#shroom");
+		plant.style.bottom = "6em";
+		shroom.style.bottom = "6em";
 
 		super.addComponentEventListener(loginButton, "click", () => {
 			window.redirect("/login");

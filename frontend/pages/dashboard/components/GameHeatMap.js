@@ -6,6 +6,14 @@ export class GameHeatMap extends Component {
 		this.stats = {};
 		this.gamelog = {};
 		this.gamecount = [];
+		this.tooltips = [];
+	}
+
+	disconnectedCallback() {
+		this.tooltips.forEach((tooltip) => {
+			tooltip.dispose();
+		});
+		super.disconnectedCallback();
 	}
 
 	renderGameHeatMap(gamelog, stats) {
@@ -19,7 +27,7 @@ export class GameHeatMap extends Component {
 		<div class="heatmap bg-light heatmap-container p-3 w-auto rounded">
 			<div class="flex-column d-flex justify-content-center align-items-start">
 				<small class="my-0 mb-3 fw-bold">Games this year</small>
-				<div class="heatmap-grid d-grid justify-content-start w-100"></div>
+				<div class="heatmap-grid d-grid justify-content-start w-100 overflow-scroll p-1"></div>
 			</div>
 		</div>
 		`;
@@ -28,12 +36,10 @@ export class GameHeatMap extends Component {
 	style() {
 		return `
 			<style>
-
-			  .heatmap {
-				padding: 0;
-				border: none;
+				.heatmap {
 				--bs-bg-opacity: .7;
-			  }
+				}
+
 				.heatmap-grid {
 					grid-template-rows: repeat(7, 14px);
 					grid-auto-flow: column;
@@ -52,6 +58,7 @@ export class GameHeatMap extends Component {
 				.day:hover {
 					transform: scale(1.2);
 				}
+
 				.day.level-1 { background-color: var(--brick-300); } /* Lightest */
 				.day.level-2 { background-color: var(--brick-500); } /* Medium-light */
 				.day.level-3 { background-color: var(--brick-600); } /* Medium-dark */
@@ -92,7 +99,7 @@ export class GameHeatMap extends Component {
 			cell.className = `day ${getLevel(count)}`;
 			cell.setAttribute("data-bs-toggle", `tooltip`);
 			cell.setAttribute("data-bs-title", `${dateString}: ${count} games`);
-			new bootstrap.Tooltip(cell);
+			this.tooltips.push(new bootstrap.Tooltip(cell));
 
 			heatmap.appendChild(cell);
 			currentDate.setDate(currentDate.getDate() + 1);

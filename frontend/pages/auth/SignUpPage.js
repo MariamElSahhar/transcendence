@@ -98,6 +98,11 @@ export class SignUpPage extends Component {
 	}
 
 	postRender() {
+		const plant = document.querySelector("#plant");
+		const shroom = document.querySelector("#shroom");
+		plant.style.bottom = "6em";
+		shroom.style.bottom = "12em";
+
 		this.elements = {
 			username: this.querySelector("#username"),
 			email: this.querySelector("#email"),
