@@ -73,8 +73,7 @@ export class GameHeatMap extends Component {
 			return "";
 		};
 
-		// const latestDate = new Date();
-		const latestDate = new Date(2025, 11, 31);
+		const latestDate = new Date();
 		const startDate = new Date(latestDate.getFullYear(), 0, 1);
 		const currentDate = new Date(startDate);
 
