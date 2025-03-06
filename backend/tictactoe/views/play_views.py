@@ -244,15 +244,15 @@ def make_move_view(request):
             round_winners = [game.winner_round_1, game.winner_round_2, game.winner_round_3]
             player_1_wins = round_winners.count(game.player_1)
             player_2_wins = round_winners.count(game.player_2)
+
             if player_1_wins >= 2:  # Player 1 wins best of 3
                 game.game_winner = game.player_1
-                game.status = "FINISHED"
             elif player_2_wins >= 2:  # Player 2 wins best of 3
                 game.game_winner = game.player_2
-                game.status = "FINISHED"
             else:
-                game.status = "FINISHED"
                 game.game_winner = None  # No overall winner
+            
+            game.status = "FINISHED"
 
             # The game is finished
             # Create the TicTacToeLog entry for the user
@@ -335,13 +335,45 @@ def timeout_game_view(request):
     if game.status != "PLAYING":
         return Response({"error": "Incorrect stage"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if game.last_play_time + timedelta(seconds=180) < timezone.now():
-        if game.next_to_play == game.player_1.username:
+    if game.last_play_time + timedelta(seconds=60) < timezone.now():
+        non_afk = game.player_2 if game.next_to_play == game.player_1.username else game.player_1
+
+        if game.current_round == 1:
+            game.winner_round_1 = non_afk
+            game.winner_round_2 = non_afk
+            game.winner_round_3 = non_afk
+        elif game.current_round == 2:
+            game.winner_round_2 = non_afk
+            game.winner_round_3 = non_afk
+        elif game.current_round == 3:
+            game.winner_round_3 = non_afk
+        
+        game.current_round = 3
+
+        round_winners = [game.winner_round_1, game.winner_round_2, game.winner_round_3]
+        player_1_wins = round_winners.count(game.player_1)
+        player_2_wins = round_winners.count(game.player_2)
+
+        if player_1_wins >= 2:  # Player 1 wins best of 3
+            game.game_winner = game.player_1
+        elif player_2_wins >= 2:  # Player 2 wins best of 3
             game.game_winner = game.player_2
         else:
-            game.game_winner = game.player_1
+            game.game_winner = None  # No overall winner
+            
         game.status = "FINISHED"
         game.save()
+
+        # The game is finished
+        # Create the TicTacToeLog entry for the user
+        gamelog = TicTacToeLog.objects.create(
+            player1_id=game.player_1.id,
+            player2_id=game.player_2.id,
+            player1_score=player_1_wins,
+            player2_score=player_2_wins,
+        )
+        gamelog.users.set([game.player_1, game.player_2])
+
         return Response({"timeout"}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Not a timeout"}, status=status.HTTP_400_BAD_REQUEST)

@@ -201,10 +201,27 @@ export function renderWaitingForOpponent(component, onCancel) {
 			<div class="card-body">
 				<img id="search-icon" src="/assets/question.webp" class="h-auto"/>
 				<h4 id="status">Waiting for an opponent</h4>
-
+				<p id="timer">0:00</p>
 				<button id="cancel-matchmaking" class="btn w-100">Cancel Matchmaking</button>
 			</div>
 		</div> `;
+
+	// Timer logic using Date.now()
+	const timerElement = overlay.querySelector("#timer");
+	const startTime = Date.now();
+
+	const updateTimer = () => {
+		const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+		const minutes = Math.floor(elapsedSeconds / 60);
+		const seconds = elapsedSeconds % 60;
+
+		// Format as MM:SS
+		timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+		requestAnimationFrame(updateTimer); // Smooth update
+	};
+
+	updateTimer(); // Start the timer
 
 	// Attach event listener after rendering
 	const cancelButton = overlay.querySelector("#cancel-matchmaking");

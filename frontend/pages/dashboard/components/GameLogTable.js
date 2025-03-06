@@ -127,7 +127,7 @@ export class GameLogTable extends Component {
                     <td>${game.opponent_username}</td>
                     <td class="result fs-3 ${
 						game.is_draw
-							? "text-mario-yellow"
+							? "text-warning"
 							: game.is_win
 							? "text-success"
 							: "text-danger"
