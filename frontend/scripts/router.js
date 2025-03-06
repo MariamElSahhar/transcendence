@@ -170,7 +170,6 @@ const handleLocation = async () => {
 		route = routes["/home"];
 	}
 	const layout = layouts[route.layout];
-	console.log(route);
 	loadRoute(route, layout);
 };
 
@@ -208,17 +207,11 @@ const loadRoute = async (route, layout) => {
 	}
 };
 
-
 const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
 		.replace("/dashboard/", "")
 		.replace(/\/+$/, "");
-	if (
-		!(await isAuth()) ||
-		!userid  ||
-		!/^\d+$/.test(userid)
-	)
-		return false;
+	if (!(await isAuth()) || !userid || !/^\d+$/.test(userid)) return false;
 	const response = await fetchUserById(userid);
 	if (response.data) return true;
 	else return false;

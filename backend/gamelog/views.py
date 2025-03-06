@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from remote_pong.models import  GameSession
 from users.models import CustomUser
-from .models import RemoteGameLog, LocalGameLog, TicTacToeLog
 
 from .serializers.local import (
     LocalGameSerializer,
