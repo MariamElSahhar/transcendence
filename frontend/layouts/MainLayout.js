@@ -19,33 +19,26 @@ export class MainLayout extends Component {
 	}
 	render() {
 		return `
-		<div id="main-layout" class="min-vh-100 d-flex flex-column position-relative overflow-hidden">
-		<div class="sky"></div>
-		<navbar-component></navbar-component>
-		<slot-component class="position-relative z-1 flex-grow-1 flex-1 d-flex w-100 h-100"> </slot-component>
-		<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
-					<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
-						<img class="pipe left-pipe" src="/assets/pipe.webp" alt="X"/>
-					</div>
-					<div class="right-pipe-container d-flex flex-column position-relative align-items-center">
-						<img class="pipe right-pipe" src="/assets/pipe.webp" alt="X"/>
-					</div>
+		<div id="main-layout" class="min-vh-100 vh-100 d-flex flex-column position-relative overflow-x-hidden">
+			<div class="sky"></div>
+			<navbar-component></navbar-component>
+			<slot-component class="position-relative z-1 flex-grow-1 flex-1 d-flex w-100 h-100"></slot-component>
+			<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
+				<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
+					<img class="pipe left-pipe" src="/assets/pipe.webp" alt="X"/>
 				</div>
-				<footer-component class="position-relative mt-auto"></footer-component>
+				<div class="right-pipe-container d-flex flex-column position-relative align-items-center">
+					<img class="pipe right-pipe" src="/assets/pipe.webp" alt="X"/>
+				</div>
 			</div>
+			<footer-component class="position-relative mt-auto"></footer-component>
+		</div>
         `;
 	}
-
 
 	style() {
 		return `
 		<style>
-		#slot > * {
-			width: 100%;
-		}
-		#slot-component  {
-			width: 100%;
-		}
 			.sky {
 				display: flex;
 				background: url(/assets/sky.webp);
@@ -65,13 +58,12 @@ export class MainLayout extends Component {
 		`;
 	}
 
-
 	renderSlot(content) {
 		this.slot = content;
-		if (super.isRendered())
-		{
-
-			document.querySelector("navbar-component").attributeChangedCallback();
+		if (super.isRendered()) {
+			document
+				.querySelector("navbar-component")
+				.attributeChangedCallback();
 			document.querySelector("slot-component").renderSlot(this.slot);
 		}
 	}
