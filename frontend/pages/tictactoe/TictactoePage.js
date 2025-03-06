@@ -302,10 +302,10 @@ class TicTacToePage extends Component {
     render() {
         return `
 			<div class="container">
-				<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative menu-activated">
+				<div class="tictactoe d-flex flex-column align-content-center align-items-center relative menu-activated">
 					<img class="title-img" src="/assets/title.webp" alt="X"/>
 
-					<div class="relative h-full w-full z-[3] d-flex align-content-center align-items-center">
+					<div class="position-relative z-[3] d-flex align-content-center align-items-center">
 						<div class="board-wrapper">
 							${this.getBoardWrapperHtml()}
 						</div>
@@ -339,8 +339,8 @@ class TicTacToePage extends Component {
 
                     .play-btn {
                         display: none;
-                        justify-self: anchor-center;
                         position: absolute;
+                        margin-left: calc(50% - 3em);
                         width: 6em;
                         height: 2em;
                         background-color: red;
