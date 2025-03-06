@@ -23,7 +23,6 @@ services:
             - 8001:5432
         networks:
             - backend-db
-        restart: always
         volumes:
             - ./data/db:/var/lib/postgresql/data
 

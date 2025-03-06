@@ -288,6 +288,9 @@ class TicTacToePage extends Component {
     render() {
         return `
             <div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative menu-activated">
+                <div class="sky-wrapper w-100 overflow-hidden">
+                    <div class="sky"></div>
+                </div>
                 <img class="title-img" src="/assets/title.webp" alt="X"/>
 
                 <div class="relative h-full w-full z-[3]">
@@ -401,7 +404,7 @@ class TicTacToePage extends Component {
                     font-size: 10em;
                     color: #ebebeb;
                     position: absolute;
-                    bottom: 25%;
+                    bottom: 0.5em;
                     z-index: 2;
                 }
 
@@ -421,7 +424,7 @@ class TicTacToePage extends Component {
 					font-size: 0.5em;
                     width: 3em;
 					height: 1em;
-					top: 0;
+					bottom: 0.6em;
                     position: relative;
                     display: flex;
                     justify-content: center;
@@ -430,6 +433,26 @@ class TicTacToePage extends Component {
 
 				body {
 					font-size: 0.5em;
+				}
+
+				@media (min-width: 576px) {
+					body {
+						font-size: 0.7em;
+					}
+				}
+
+				/* Large screens (≥768px, like iPads) */
+				@media (min-width: 768px) {
+					body {
+						font-size: 0.8em;
+					}
+				}
+
+				/* Extra-large screens (≥1200px, like MacBooks) */
+				@media (min-width: 1200px) {
+					body {
+						font-size: 0.9em;
+					}
 				}
 
                 .player1 {
@@ -466,7 +489,7 @@ class TicTacToePage extends Component {
                     background-position: center;  /* Center the image */
                     cursor: pointer;
                     padding: 0.5em;
-                    font-size: 0.7em;
+                    font-size: 3em;
                     position: relative;
                     image-rendering: pixelated;  /* Apply pixelation effect */
                     z-index: 2;
@@ -482,6 +505,9 @@ class TicTacToePage extends Component {
                     image-rendering: pixelated;
                 }
 
+				.hidden {
+					display: none;
+				}
 
             </style>
         `;

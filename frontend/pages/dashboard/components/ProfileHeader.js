@@ -137,7 +137,7 @@ export class ProfileHeader extends Component {
 					);
 					if (success) this.data.is_friend = true;
 				}
-				this.attributeChangedCallback();
+				window.redirect(window.location.pathname);
 			}
 		);
 	}

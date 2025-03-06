@@ -208,46 +208,6 @@ const loadRoute = async (route, layout) => {
 	}
 };
 
-
-// const loadRoute = async (route, layout) => {
-// 	try {
-// 		const root = document.getElementById("root");
-// 		const routeComponent = document.createElement(route.component);
-// 		let slotComponent = document.querySelector("slot-component");
-// 		await import(route.path);
-// 		if (layout) {
-// 			let layoutComponent = document.querySelector(layout.component);
-// 			console.log(layoutComponent);
-// 			if (!layoutComponent) {
-// 				console.log("here");
-// 				root.innerHTML = "";
-// 				await import(layout.path);
-// 				layoutComponent = document.createElement(layout.component);
-// 				root.appendChild(layoutComponent);
-// 				console.log(document);
-// 				// slotComponent = root.querySelector("slot-component");
-// 			}
-// 			errorPage.addEventListener("connected", async() => {
-
-// 					await slotComponent.renderSlot(routeComponent);
-// 			});
-// 			// console.log(root.querySelector("main-layout"), slotComponent);
-// 			// if (slotComponent) {
-// 			// } else {
-// 			// 	console.warn("SlotComponent not found or renderSlot() is undefined");
-// 			}
-// 		 else {
-// 			root.innerHTML = "";
-// 			root.appendChild(routeComponent);
-// 		}
-// 	} catch (e) {
-// 		console.log("ERROR", e);
-// 		showError();
-// 	}
-// };
-
-
-
 const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
 		.replace("/dashboard/", "")
