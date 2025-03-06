@@ -99,7 +99,7 @@ export function renderEndGameCard(
 	tournament = false
 ) {
 	const overlay = renderOverlay(component.container);
-
+	const isDraw = playerScores[0] === playerScores[1];
 	const winnerIsPlayer = playerScores[0] > playerScores[1];
 	const winnerName = winnerIsPlayer ? playerNames[0] : playerNames[1];
 
@@ -109,7 +109,7 @@ export function renderEndGameCard(
 				<img class="my-2" id="winner-sprite" src="/assets/sprites/${
 					winnerIsPlayer ? "mario" : "luigi"
 				}.webp"/>
-				<h3 class="card-subtitle mb-2">${winnerName} Wins!</h3>
+				<h3 class="card-subtitle mb-2">${isDraw ? `It's a Draw!`: `${winnerName} Wins!`}</h3>
 				<div class="d-flex w-100 gap-3">
 					<div class="w-100">
 						<p class="text-truncate text-end mb-0">${playerNames[0]}</p>

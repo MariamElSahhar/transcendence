@@ -435,21 +435,21 @@ class TicTacToePage extends Component {
 
 				@media (min-width: 576px) {
 					body {
-						font-size: 0.7em;
+						font-size: 0.3em;
 					}
 				}
 
 				/* Large screens (≥768px, like iPads) */
 				@media (min-width: 768px) {
 					body {
-						font-size: 0.8em;
+						font-size: 0.4em;
 					}
 				}
 
 				/* Extra-large screens (≥1200px, like MacBooks) */
 				@media (min-width: 1200px) {
 					body {
-						font-size: 0.9em;
+						font-size: 0.65em;
 					}
 				}
 
