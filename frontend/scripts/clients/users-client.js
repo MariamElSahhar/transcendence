@@ -20,10 +20,8 @@ export const fetchUsers = async () => {
 export const fetchUserById = async (id) => {
 	const url = URIs.usersID(id);
 	const { status, body, error } = await get(url);
-	if (error) return { success: false, error: error };
-	if (!body.exists)
-		return { success: false, error: "User does not exist" };
-	return { success: body.exists, data: body.data };
+	if (error) return { success: false, data: null, error: error };
+	return { success: true, data: body };
 };
 
 // Function user by ID
