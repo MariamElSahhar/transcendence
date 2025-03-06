@@ -9,7 +9,7 @@ export class GameStatsCard extends Component {
 			localPlayedColor: "var(--sky-100)",
 			remoteWonColor: "var(--mario-pink-color)",
 			remotePlayedColor: "var(--sky-100)",
-			tttWonColor: "var(--mario-green-color)",
+			tttWonColor: "var(--mario-yellow-color)",
 			tttPlayedColor: "var(--sky-100)",
 			gapColor: "var(--sky-200)",
 		};
@@ -138,9 +138,8 @@ export class GameStatsCard extends Component {
                 --bs-bg-opacity: .7;
                 width: 150px;
                 height: 150px;
-                flex-direction: column;
-                gap: 1rem;
             }
+
             .circle {
                 width: 120px;
                 height: 120px;
