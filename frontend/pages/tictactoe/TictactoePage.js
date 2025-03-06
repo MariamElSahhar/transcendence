@@ -296,15 +296,15 @@ class TicTacToePage extends Component {
 
     render() {
         return `
-			<div class="container w-100 h-100 d-flex align-content-center justify-content-center">
-				<div class="tictactoe d-flex flex-column align-content-center justify-content-center h-100 w-100 relative menu-activated">
+			<div class="container">
+				<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative menu-activated">
 					<div class="sky-wrapper w-100 overflow-hidden">
 						<div class="sky"></div>
 					</div>
 					<img class="title-img" src="/assets/title.webp" alt="X"/>
 
-					<div class="h-100 w-100 z-[3] d-flex align-content-center justify-content-center">
-						<div class="board-wrapper d-flex align-content-center justify-content-center">
+					<div class="relative h-full w-full z-[3]">
+						<div class="board-wrapper">
 							${this.getBoardWrapperHtml()}
 						</div>
 
@@ -314,7 +314,7 @@ class TicTacToePage extends Component {
 					<div class="scores">
 						${this.getScoresHtml()}
 					</div>
-					<div id="timer" class="fs-1 hidden z-4">03:00</div>
+					<div id="timer" class="fs-1 hidden" style="z-index: 4;">03:00</div>
 				</div>
 			</div>
         `;
