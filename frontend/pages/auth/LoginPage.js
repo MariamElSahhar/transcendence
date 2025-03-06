@@ -71,6 +71,10 @@ export class LoginPage extends Component {
 		const loginButton = this.querySelector("#login-btn");
 		const errorAlert = this.querySelector("#error-alert");
 		const registerLink = this.querySelector("#register-link");
+		const plant = document.querySelector("#plant");
+		const shroom = document.querySelector("#shroom");
+		plant.style.bottom = "12em";
+		shroom.style.bottom = "6em";
 
 		super.addComponentEventListener(usernameInput, "input", () => {
 			this.handleUsernameInput(usernameInput, loginButton);
