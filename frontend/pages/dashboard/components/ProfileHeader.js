@@ -49,17 +49,8 @@ export class ProfileHeader extends Component {
 
 	renderUserData(user) {
 		this.data = user;
-		// this.isOwnProfile = user.userid === getUserSessionData().userid; // Check if the profile is the current user's
-		// console.log(this.isOwnProfile);
 		this.attributeChangedCallback();
 	}
-
-	// async update() {
-	// 	this.checkPath();
-	// 	await this.getUserData();
-	// 	await this.getUserFriends();
-	// 	super.attributeChangedCallback();
-	// }
 
 	checkPath() {
 		if (window.location.pathname.startsWith("/dashboard/")) {
@@ -73,7 +64,6 @@ export class ProfileHeader extends Component {
 
 	async connectedCallback() {
 		this.checkPath();
-		// await this.getUserFriends();
 		await this.getUserData();
 		this.renderUserData({
 			username: this.user.username,
@@ -137,7 +127,7 @@ export class ProfileHeader extends Component {
 					);
 					if (success) this.data.is_friend = true;
 				}
-				window.redirect(window.location.pathname);
+				this.attributeChangedCallback();
 			}
 		);
 	}

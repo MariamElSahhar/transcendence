@@ -7,6 +7,12 @@ import {
     getUserSessionData,
 } from "../../../scripts/utils/session-manager.js";
 
+import {
+	renderEndGameCard,
+	renderWaitingForOpponent,
+	removeOverlay,
+} from "../local-game/Overlays.js";
+
 const BASE_URL = `/api/tictactoe`;
 
 function truncateName(name) {
@@ -21,6 +27,7 @@ class TicTacToePage extends Component {
         this.inMatchmaking = false;
         this.isFinished = false;
         this.gameInfoGetIntervalFd = null;
+		this.waitingForOpponentOverlay = null;
 
         // Bo3 information
         this.gameId = -1;
@@ -99,6 +106,11 @@ class TicTacToePage extends Component {
             if (gameInfo.status === "PLAYING") {
                 if (lastStatus !== "PLAYING") {
                     this.inGame = true;
+
+					if (this.waitingForOpponentOverlay !== null) {
+						removeOverlay(this.waitingForOpponentOverlay);
+						this.waitingForOpponentOverlay = null;
+					}
                 }
 
                 if (
@@ -117,7 +129,10 @@ class TicTacToePage extends Component {
                     this.menuActivation(true);
                     this.refreshScoresHtml();
                     this.refreshBoardWrapperHtml();
-                    this.changePlayBtnText("Play again?");
+
+					// In case the user finished the game and not after page reload
+					if (lastStatus !== "NONE" && lastStatus !== "MATCHMAKING")
+						renderEndGameCard(this, [this.player1, this.player2], [this.scoreA, this.scoreB], false);
                 }
             }
             return;
@@ -143,7 +158,7 @@ class TicTacToePage extends Component {
 
             if (lastStatus !== "MATCHMAKING") {
                 this.menuActivation(true);
-                this.changePlayBtnText("Waiting for Player...");
+				this.waitingForOpponentOverlay = renderWaitingForOpponent(this, this.handlePlayBtnClick.bind(this));
                 this.refreshScoresHtml();
                 this.refreshBoardWrapperHtml();
             }
@@ -152,7 +167,6 @@ class TicTacToePage extends Component {
 
         if (lastStatus !== "NONE") {
             this.menuActivation(true);
-            this.changePlayBtnText("Play");
             this.refreshScoresHtml();
             this.refreshBoardWrapperHtml();
         }
@@ -185,11 +199,6 @@ class TicTacToePage extends Component {
 
         if (b) tictactoe.classList.add("menu-activated");
         else tictactoe.classList.remove("menu-activated");
-    }
-
-    changePlayBtnText(text) {
-        const playBtn = this.querySelector(".play-btn");
-        playBtn.innerHTML = text;
     }
 
     async connectedCallback() {
@@ -287,32 +296,43 @@ class TicTacToePage extends Component {
 
     render() {
         return `
-            <div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative menu-activated">
-                <div class="sky-wrapper w-100 overflow-hidden">
-                    <div class="sky"></div>
-                </div>
-                <img class="title-img" src="/assets/title.webp" alt="X"/>
+			<div class="container">
+				<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative menu-activated">
+					<div class="sky-wrapper w-100 overflow-hidden">
+						<div class="sky"></div>
+					</div>
+					<img class="title-img" src="/assets/title.webp" alt="X"/>
 
-                <div class="relative h-full w-full z-[3]">
-                    <div class="board-wrapper">
-                        ${this.getBoardWrapperHtml()}
-                    </div>
+					<div class="relative h-full w-full z-[3]">
+						<div class="board-wrapper">
+							${this.getBoardWrapperHtml()}
+						</div>
 
-                    <div class="play-btn">Play</div>
-                </div>
+						<div class="play-btn">Play</div>
+					</div>
 
-                <div class="scores">
-                    ${this.getScoresHtml()}
-                </div>
-                <div id="timer" class="fs-1 hidden" style="z-index: 4;">03:00</div>
-            </div>
+					<div class="scores">
+						${this.getScoresHtml()}
+					</div>
+					<div id="timer" class="fs-1 hidden" style="z-index: 4;">03:00</div>
+				</div>
+			</div>
         `;
     }
 
     style() {
         return `
             <style>
-                .tictactoe {
+				#winner-sprite {
+					height: 56px;
+					width: 56px;
+				}
+				.icon {
+					width: auto;
+					height: 30px;
+				}
+
+				.tictactoe {
                     background-color: rgb(135, 206, 235);
                 }
 
@@ -362,29 +382,7 @@ class TicTacToePage extends Component {
                     border: 0.2em solid white;
                 }
 
-                .sky {
-                    display: flex;
-                    background: url(/assets/sky.png);
-                    background-size: contain;
-                    background-repeat: repeat-x;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 20em;
-                    animation: move-sky 500s linear infinite;
-                    z-index: 1;
-                    opacity: 0.2;
-                }
 
-                @keyframes move-sky {
-                    from {
-                        background-position: 0 0;
-                    }
-                    to {
-                        background-position: 10000px 0;
-                    }
-                }
 
                 .title-img {
                     width: 50em;
@@ -508,7 +506,6 @@ class TicTacToePage extends Component {
 				.hidden {
 					display: none;
 				}
-
             </style>
         `;
     }
@@ -533,6 +530,8 @@ class TicTacToePage extends Component {
             this.handlePlayBtnClick,
             this
         );
+
+		this.container = document.querySelector(".container");
     }
 
     startTimer(remainingTimeInSec) {
@@ -674,7 +673,7 @@ class TicTacToePage extends Component {
                     winnerRound3: g.winner_round_3,
                 };
 
-                console.log("Constructed game info object:", gameInfo);
+                // console.log("Constructed game info object:", gameInfo);
                 return gameInfo; // Return the constructed game info object
             }
 

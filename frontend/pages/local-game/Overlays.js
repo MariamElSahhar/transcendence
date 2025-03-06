@@ -187,3 +187,28 @@ export function renderOpponentFoundCard(component, player1, player2) {
 		</div>
 	  </div>`;
 }
+
+export function renderWaitingForOpponent(component, onCancel) {
+	const overlay = renderOverlay(component.container);
+	overlay.innerHTML = `
+		<div class="card text-center">
+			<div class="card-body">
+				<img id="search-icon" src="/assets/question.webp" class="h-auto"/>
+				<h4 id="status">Waiting for an opponent</h4>
+
+				<button id="cancel-matchmaking" class="btn w-100">Cancel Matchmaking</button>
+			</div>
+		</div> `;
+
+	// Attach event listener after rendering
+	const cancelButton = overlay.querySelector("#cancel-matchmaking");
+	if (cancelButton && typeof onCancel === "function") {
+			cancelButton.addEventListener("click", function() {
+				onCancel();
+				removeOverlay(overlay);
+			});
+	}
+
+	return overlay;
+}
+

@@ -38,6 +38,21 @@ input.form-control {
 	position: relative;
 }
 
+#search-icon {
+	width: 50px;
+	animation: rotateCube 2s linear infinite;
+	transform-origin: center;
+}
+
+@keyframes rotateCube {
+	0% {
+		transform: rotateY(0deg);
+	}
+	100% {
+		transform: rotateY(360deg);
+	}
+}
+
 .flip-h {
 	transform: scaleX(-1);
 }

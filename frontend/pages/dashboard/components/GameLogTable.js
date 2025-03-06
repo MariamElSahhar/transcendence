@@ -25,10 +25,9 @@ export class GameLogTable extends Component {
                     color: black;
                 }
 
-                .tab-content {
-                    min-height: 350px;
-                }
-
+				.tab-content {
+					height: auto;
+				}
                 .log-border {
                     border-collapse: separate;
                     border-top: 10px solid transparent !important;
