@@ -46,7 +46,7 @@ export class SearchNav extends Component {
 		if (!data || data.length === 0) return "";
 		return data.slice(0, 3)
 			.map(user => `
-				<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.id}/')">
+				<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.id}')">
 					<img src="${window.APP_CONFIG.backendUrl}${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
 					${user.username}
 				</div>
@@ -62,7 +62,7 @@ export class SearchNav extends Component {
 			this.searchResults.style.display = "none";
 		}
 	};
-	
+
 	style() {
 		return `
 			<style>

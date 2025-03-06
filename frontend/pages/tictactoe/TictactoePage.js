@@ -288,9 +288,6 @@ class TicTacToePage extends Component {
     render() {
         return `
             <div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative menu-activated">
-                <div class="sky-wrapper w-100 overflow-hidden">
-                    <div class="sky"></div>
-                </div>
                 <img class="title-img" src="/assets/title.webp" alt="X"/>
 
                 <div class="relative h-full w-full z-[3]">
@@ -362,29 +359,7 @@ class TicTacToePage extends Component {
                     border: 0.2em solid white;
                 }
 
-                .sky {
-                    display: flex;
-                    background: url(/assets/sky.png);
-                    background-size: contain;
-                    background-repeat: repeat-x;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 20em;
-                    animation: move-sky 500s linear infinite;
-                    z-index: 1;
-                    opacity: 0.2;
-                }
 
-                @keyframes move-sky {
-                    from {
-                        background-position: 0 0;
-                    }
-                    to {
-                        background-position: 10000px 0;
-                    }
-                }
 
                 .title-img {
                     width: 50em;

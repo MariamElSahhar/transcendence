@@ -37,32 +37,20 @@ export class DashboardPage extends Component {
 	render() {
 		return `
 		<div class="container d-flex flex-column gap-3 my-3">
-			<profile-header></profile-header>
-			<div class="d-flex w-100 row-gap-5">
+		<profile-header></profile-header>
+		<div class="d-flex w-100 row-gap-5">
 				<div class="d-flex flex-column w-100 gap-3">
-					<div class="graphs d-flex w-100 column-gap-2 row-gap-2">
+				 	<div class="graphs d-flex w-100 column-gap-2 row-gap-2">
 						<game-stats class="w-100 flex-fill h-100 rounded"></game-stats>
 						<game-heatmap class="game-heatmap flex-fill h-100 rounded"></game-heatmap>
 					</div>
-					<gamelog-table class=""></gamelog-table>
+					<gamelog-table></gamelog-table>
 				</div>
 			</div>
 		</div>
         `;
 	}
 
-	// postRender()
-	// {
-	// 	this.querySelector("profile-header").renderUserData({
-	// 		username: this.user.username,
-	// 		avatar: this.user.avatar,
-	// 		is_me: this.user.is_me,
-	// 		is_online: this.user.is_online,
-	// 		is_friend: this.user.is_friend,
-	// 		userid: this.user.userid,
-	// 	});
-	// 	this.querySelector("friends-sidebar").renderFriends(this.friends);
-	// }
 
 	style() {
 		return `

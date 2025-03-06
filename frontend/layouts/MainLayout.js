@@ -5,24 +5,25 @@ export class MainLayout extends Component {
 	constructor() {
 		super();
 		this.user = {};
-		this.slot;
+		// this.slot;
 	}
 
 	async connectedCallback() {
 		await import("./components/navbar/Navbar.js");
 		await import("./components/Footer.js");
-
+		await import("./components/SlotComponent.js");
+		this.slot;
 		this.user = getUserSessionData();
 		super.connectedCallback();
+		document.querySelector("slot-component").renderSlot(this.slot);
 	}
-
 	render() {
 		return `
-			<div id="main-layout" class="min-vh-100 d-flex flex-column position-relative overflow-hidden">
-				<div class="sky"></div>
-				<navbar-component></navbar-component>
-				<div id="slot" slot="page-content" class="position-relative z-1 flex-grow-1 flex-1 d-flex w-100 h-100">${this.slot}</div>
-				<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
+		<div id="main-layout" class="min-vh-100 d-flex flex-column position-relative overflow-hidden">
+		<div class="sky"></div>
+		<navbar-component></navbar-component>
+		<slot-component class="position-relative z-1 flex-grow-1 flex-1 d-flex w-100 h-100"> </slot-component>
+		<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
 					<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
 						<img class="pipe left-pipe" src="/assets/pipe.webp" alt="X"/>
 					</div>
@@ -35,13 +36,14 @@ export class MainLayout extends Component {
         `;
 	}
 
+
 	style() {
 		return `
 		<style>
-			#slot > * {
-				width: 100%;
-			}
 
+		#slot-component  {
+			width: 100%;
+		}
 			.sky {
 				display: flex;
 				background: url(/assets/sky.webp);
@@ -61,10 +63,14 @@ export class MainLayout extends Component {
 		`;
 	}
 
+
 	renderSlot(content) {
-		this.slot = "";
 		this.slot = content;
-		if (super.isRendered()) this.attributeChangedCallback();
+		if (super.isRendered())
+		{
+			document.querySelector("navbar-component").attributeChangedCallback();
+			document.querySelector("slot-component").renderSlot(this.slot);
+		}
 	}
 }
 

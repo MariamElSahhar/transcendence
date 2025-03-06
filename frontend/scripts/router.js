@@ -170,6 +170,7 @@ const handleLocation = async () => {
 		route = routes["/home"];
 	}
 	const layout = layouts[route.layout];
+	console.log(route);
 	loadRoute(route, layout);
 };
 
@@ -192,14 +193,13 @@ const loadRoute = async (route, layout) => {
 		if (layout) {
 			let layoutComponent = document.querySelector(layout.component);
 			if (!layoutComponent) {
-				root.innerHTML = "";
 				await import(layout.path);
 				layoutComponent = document.createElement(layout.component);
 				root.appendChild(layoutComponent);
 			}
 			await layoutComponent.renderSlot(routeComponent.outerHTML);
 		} else {
-			root.innerHTML = "";
+			// root.innerHTML = "";
 			root.appendChild(routeComponent);
 		}
 	} catch (e) {
@@ -208,14 +208,14 @@ const loadRoute = async (route, layout) => {
 	}
 };
 
+
 const validDashboardPath = async (path) => {
 	const userid = window.location.pathname
 		.replace("/dashboard/", "")
 		.replace(/\/+$/, "");
 	if (
 		!(await isAuth()) ||
-		!userid ||
-		window.location.pathname.endsWith("/") ||
+		!userid  ||
 		!/^\d+$/.test(userid)
 	)
 		return false;
