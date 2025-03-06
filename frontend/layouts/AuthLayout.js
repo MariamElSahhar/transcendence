@@ -10,8 +10,8 @@ export class AuthLayout extends Component {
 
 	async connectedCallback() {
 		await import("./components/Footer.js");
-		super.connectedCallback();
 		await import("./components/SlotComponent.js");
+		super.connectedCallback();
 		this.slot
 		super.connectedCallback();
 		document.querySelector("slot-component").renderSlot(this.slot);

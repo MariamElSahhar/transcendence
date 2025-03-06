@@ -194,6 +194,7 @@ const loadRoute = async (route, layout) => {
 			if (!layoutComponent) {
 				await import(layout.path);
 				layoutComponent = document.createElement(layout.component);
+				root.innerHTML = "";
 				root.appendChild(layoutComponent);
 			}
 			await layoutComponent.renderSlot(routeComponent.outerHTML);
