@@ -5,6 +5,8 @@ services:
             - HOST_IP=${HOST_IP}
         ports:
             - 8000:8000
+        env_file:
+            .env
         networks:
             - backend-db
             - frontend-backend
