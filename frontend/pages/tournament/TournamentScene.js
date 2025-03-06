@@ -52,7 +52,7 @@ export class Scene {
 			this.#threeJSScene.add(directionalLight);
 
 			// Adjust camera
-			const camera = this.#engine.threeJS.getCamera();
+			const camera = this.#engine.threeJS.getCurrentCamera();
 			camera.position.set(0, 50, 100);
 			camera.lookAt(0, 0, 0);
 
@@ -97,10 +97,10 @@ export class Scene {
 		const matchPosition = this.#match.threeJSGroup.position;
 		const xHeight =
 			(this.#matchHalfWidth + this.#cameraPadding * 0.5) /
-			Math.tan(this.#engine.threeJS.getCameraHorizontalFOVRadian() * 0.5);
+			Math.tan(this.#engine.threeJS.getHorizontalFOV() * 0.5);
 		const yHeight =
 			(this.#matchHalfHeight + this.#cameraPadding * 0.5) /
-			Math.tan(this.#engine.threeJS.getCameraVerticalFOVRadian() * 0.5);
+			Math.tan(this.#engine.threeJS.getVerticalFOV() * 0.5);
 		const cameraHeight = Math.max(xHeight, yHeight);
 
 		const cameraPosition = new THREE.Vector3(

@@ -30,7 +30,7 @@ export class Engine {
 		}
 		if (this.#threeJS) {
 			this.stopAnimationLoop();
-			this.#threeJS.clearRenderer();
+			this.#threeJS.disposeResourcesr();
 			this.#threeJS = null;
 		}
 
@@ -90,7 +90,7 @@ export class Engine {
 		}
 		try {
 			if (this.#threeJS) {
-				this.#threeJS.clearRenderer();
+				this.#threeJS.disposeResources();
 			}
 		} catch (err) {
 			console.error("Error clearing the renderer:", err);
@@ -98,7 +98,7 @@ export class Engine {
 	}
 
 	renderFrame() {
-		this.#threeJS.renderFrame(this.#scene.threeJSScene);
+		this.#threeJS.renderScene(this.#scene.threeJSScene);
 	}
 
 	get scene() {
@@ -143,7 +143,7 @@ export class Engine {
 	}
 
 	setAnimationLoop(loopFunction) {
-		this.#threeJS.setAnimationLoop(loopFunction);
+		this.#threeJS.startAnimationLoop(loopFunction);
 	}
 
 	stopAnimationLoop() {
@@ -158,7 +158,7 @@ export class Engine {
 			const delta = clock.getDelta();
 			this.scene.updateFrame(currentTime, delta);
 
-			this.threeJS.updateControls();
+			this.threeJS.refreshControls();
 			this.renderFrame();
 		});
 	}
@@ -177,8 +177,8 @@ export class Engine {
 			cameraLookAt.y,
 			cameraLookAt.z
 		);
-		this.#threeJS.setCameraPosition(cameraPosition);
-		this.#threeJS.setCameraLookAt(cameraLookAt);
+		this.#threeJS.updateCameraPosition(cameraPosition);
+		this.#threeJS.updateCameraLookAt(cameraLookAt);
 	}
 
 	resizeHandler() {
