@@ -97,7 +97,7 @@ export class RemoteGamePage extends Component {
 
 	render() {
 		return `
-		<div id="container" class="m-2 position-relative">
+		<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
 			<div id="searchdiv" class="d-flex justify-content-center align-items-center h-100">
 				<div id="searchBox" class="card p-4 bg-light d-flex flex-column justify-content-center align-items-center gap-3">
 					<img id="search-icon" src="/assets/question.webp" class="h-auto"/>
@@ -162,19 +162,19 @@ export class RemoteGamePage extends Component {
 		clearTimeout(this.timeoutID);
 		this.container.innerHTML = "";
 		renderOpponentFoundCard(this, this.playerNames[0], this.playerNames[1]);
+		this.engine = new Engine(
+			this,
+			this.isAIEnabled,
+			this.playerNames,
+			this.playerSide,
+			this.gameID,
+			this.sameSystem
+		);
+		this.engine.createScene();
 		this.timeoutID = this.setTrackedTimeout(() => {
 			if (WebGL.isWebGLAvailable()) {
 				if (!this.playerLeft) {
 					this.container.innerHTML = "";
-					this.engine = new Engine(
-						this,
-						this.isAIEnabled,
-						this.playerNames,
-						this.playerSide,
-						this.gameID,
-						this.sameSystem
-					);
-					this.engine.createScene();
 					sendWebSocketMessage({
 						action: "ready",
 						gameSession: this.gameID,

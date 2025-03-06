@@ -94,11 +94,7 @@ export class AuthLayout extends Component {
 	}
 
 	renderSlot(content) {
-		this.slot = content;
-		const navbar = document.querySelector("navbar-component");
-		if (navbar) {
-			navbar.remove();
-		}
+		this.slot = content;	
 		if (super.isRendered())
 		{
 			document.querySelector("slot-component").renderSlot(this.slot);
