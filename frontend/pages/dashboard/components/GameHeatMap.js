@@ -6,6 +6,14 @@ export class GameHeatMap extends Component {
 		this.stats = {};
 		this.gamelog = {};
 		this.gamecount = [];
+		this.tooltips = [];
+	}
+
+	disconnectedCallback() {
+		this.tooltips.forEach((tooltip) => {
+			tooltip.dispose();
+		});
+		super.disconnectedCallback();
 	}
 
 	renderGameHeatMap(gamelog, stats) {
@@ -91,7 +99,7 @@ export class GameHeatMap extends Component {
 			cell.className = `day ${getLevel(count)}`;
 			cell.setAttribute("data-bs-toggle", `tooltip`);
 			cell.setAttribute("data-bs-title", `${dateString}: ${count} games`);
-			new bootstrap.Tooltip(cell);
+			this.tooltips.push(new bootstrap.Tooltip(cell));
 
 			heatmap.appendChild(cell);
 			currentDate.setDate(currentDate.getDate() + 1);
