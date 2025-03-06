@@ -14,15 +14,12 @@ export class SlotComponent extends Component {
 		this.user = getUserSessionData();
 		super.connectedCallback();
 		this.slot = "";
-		this.dispatchEvent(
-			new CustomEvent("connected", { bubbles: true, composed: true })
-		);
 	}
 
 	render() {
 		return `
-		<div id="slot-component">
-				<div id="slot" slot="page-content" >${this.slot}</div>
+		<div id="slot-component" class="w-100">
+				<div id="slot"  class="w-100" slot="page-content" >${this.slot}</div>
 		</div>
         `;
 	}
@@ -30,9 +27,7 @@ export class SlotComponent extends Component {
 	style() {
 		return `
 		<style>
-		#slot > * {
-			width: 100%;
-		}
+
 		</style>
 		`;
 	}

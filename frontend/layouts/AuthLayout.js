@@ -11,6 +11,10 @@ export class AuthLayout extends Component {
 	async connectedCallback() {
 		await import("./components/Footer.js");
 		super.connectedCallback();
+		await import("./components/SlotComponent.js");
+		this.slot
+		super.connectedCallback();
+		document.querySelector("slot-component").renderSlot(this.slot);
 	}
 
 	render() {
@@ -35,9 +39,7 @@ export class AuthLayout extends Component {
 				}
 
 				<!-- Slot -->
-				<div id="slot" slot="page-content" class="position-relative z-1 d-flex flex-column align-items-center justify-content-center flex-grow-1 flex-1 d-flex w-100 h-100">${
-					this.slot
-				}</div>
+				<slot-component class="position-relative z-1 d-flex flex-column align-items-center justify-content-center flex-grow-1 flex-1 d-flex w-100 h-100"></slot-component>
 
 				<!-- Pipes -->
 				<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
@@ -58,7 +60,14 @@ export class AuthLayout extends Component {
 	style() {
 		return `
 		<style>
-			#slot > * {
+		#slot > *  {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			#slot-component {
 				width: 100%;
 				display: flex;
 				justify-content: center;
@@ -85,10 +94,15 @@ export class AuthLayout extends Component {
 	}
 
 	renderSlot(content) {
-		this.slot = "";
 		this.slot = content;
-		this.landing = window.location.pathname == "/";
-		if (super.isRendered()) this.attributeChangedCallback();
+		const navbar = document.querySelector("navbar-component");
+		if (navbar) {
+			navbar.remove();
+		}
+		if (super.isRendered())
+		{
+			document.querySelector("slot-component").renderSlot(this.slot);
+		}
 	}
 }
 

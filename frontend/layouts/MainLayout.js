@@ -40,7 +40,9 @@ export class MainLayout extends Component {
 	style() {
 		return `
 		<style>
-
+		#slot > * {
+			width: 100%;
+		}
 		#slot-component  {
 			width: 100%;
 		}
@@ -68,6 +70,7 @@ export class MainLayout extends Component {
 		this.slot = content;
 		if (super.isRendered())
 		{
+
 			document.querySelector("navbar-component").attributeChangedCallback();
 			document.querySelector("slot-component").renderSlot(this.slot);
 		}
