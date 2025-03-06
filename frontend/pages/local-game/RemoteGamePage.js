@@ -161,19 +161,19 @@ export class RemoteGamePage extends Component {
 		clearTimeout(this.timeoutID);
 		this.container.innerHTML = "";
 		renderOpponentFoundCard(this, this.playerNames[0], this.playerNames[1]);
+		this.engine = new Engine(
+			this,
+			this.isAIEnabled,
+			this.playerNames,
+			this.playerSide,
+			this.gameID,
+			this.sameSystem
+		);
+		this.engine.createScene();
 		this.timeoutID = this.setTrackedTimeout(() => {
 			if (WebGL.isWebGLAvailable()) {
 				if (!this.playerLeft) {
 					this.container.innerHTML = "";
-					this.engine = new Engine(
-						this,
-						this.isAIEnabled,
-						this.playerNames,
-						this.playerSide,
-						this.gameID,
-						this.sameSystem
-					);
-					this.engine.createScene();
 					sendWebSocketMessage({
 						action: "ready",
 						gameSession: this.gameID,
