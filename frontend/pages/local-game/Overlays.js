@@ -109,7 +109,9 @@ export function renderEndGameCard(
 				<img class="my-2" id="winner-sprite" src="/assets/sprites/${
 					winnerIsPlayer ? "mario" : "luigi"
 				}.webp"/>
-				<h3 class="card-subtitle mb-2">${isDraw ? `It's a Draw!`: `${winnerName} Wins!`}</h3>
+				<h3 class="card-subtitle mb-2">${
+					isDraw ? `It's a Draw!` : `${winnerName} Wins!`
+				}</h3>
 				<div class="d-flex w-100 gap-3">
 					<div class="w-100">
 						<p class="text-truncate text-end mb-0">${playerNames[0]}</p>
@@ -183,7 +185,11 @@ export function renderOpponentFoundCard(component, player1, player2) {
 	overlay.innerHTML = `
 		<div class="card text-center">
 		<div class="card-body">
-			<h2>${player1} vs ${player2}</h2>
+			<div class="d-flex justify-content-between align-items-center w-75">
+			${window.icons.mario()} <h2>${player1} vs ${player2}</h2> ${window.icons.luigi(
+		true
+	)}
+			</div>
 		</div>
 	  </div>`;
 }
@@ -203,12 +209,11 @@ export function renderWaitingForOpponent(component, onCancel) {
 	// Attach event listener after rendering
 	const cancelButton = overlay.querySelector("#cancel-matchmaking");
 	if (cancelButton && typeof onCancel === "function") {
-			cancelButton.addEventListener("click", function() {
-				onCancel();
-				removeOverlay(overlay);
-			});
+		cancelButton.addEventListener("click", function () {
+			onCancel();
+			removeOverlay(overlay);
+		});
 	}
 
 	return overlay;
 }
-

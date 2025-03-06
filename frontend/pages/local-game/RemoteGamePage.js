@@ -17,7 +17,7 @@ import {
 	renderEndGameCard,
 	renderOpponentFoundCard,
 	renderPlayerDisconnectedCard,
-	removeOverlay
+	removeOverlay,
 } from "./Overlays.js";
 
 export class RemoteGamePage extends Component {
@@ -118,6 +118,15 @@ export class RemoteGamePage extends Component {
   				transform-origin: center;
 			}
 
+			#winner-sprite {
+				height: 56px;
+			}
+
+			.icon {
+				width: auto;
+				height: 30px;
+			}
+
 			@keyframes rotateCube {
 				0% {
 					transform: rotateY(0deg);
@@ -165,15 +174,15 @@ export class RemoteGamePage extends Component {
 		renderOpponentFoundCard(this, this.playerNames[0], this.playerNames[1]);
 		this.timeoutID = this.setTrackedTimeout(() => {
 			this.engine = new Engine(
-			this,
-			this.isAIEnabled,
-			this.playerNames,
-			this.playerSide,
-			this.gameID,
-			this.sameSystem
+				this,
+				this.isAIEnabled,
+				this.playerNames,
+				this.playerSide,
+				this.gameID,
+				this.sameSystem
 			);
 			this.engine.createScene();
-		},3000)
+		}, 3000);
 		this.timeoutID = this.setTrackedTimeout(() => {
 			if (WebGL.isWebGLAvailable()) {
 				removeOverlay(document.querySelector("#game-overlay"));
