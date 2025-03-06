@@ -22,19 +22,6 @@ export class AuthLayout extends Component {
 				<!-- Sky -->
 				<div class="sky"></div>
 
-				<!-- Arrow Back -->
-				${
-					this.landing
-						? ``
-						: `<h3 class="w-100 py-2">
-						<i
-							role="button"
-							class="bi bi-arrow-left p-2 mx-2"
-							onclick="window.redirect('/')"
-						></i>
-					</h3>`
-				}
-
 				<!-- Slot -->
 				<slot-component class="position-relative z-1 d-flex flex-column align-items-center justify-content-center flex-grow-1 flex-1 d-flex w-100 h-100"></slot-component>
 
@@ -57,20 +44,6 @@ export class AuthLayout extends Component {
 	style() {
 		return `
 		<style>
-		#slot > *  {
-			width: 100%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-			#slot-component {
-				width: 100%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-
 			.sky {
 				display: flex;
 				background: url(/assets/sky.webp);

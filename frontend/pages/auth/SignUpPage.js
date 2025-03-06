@@ -28,7 +28,10 @@ export class SignUpPage extends Component {
 
 	render() {
 		return `
-			<main class="d-flex justify-content-center align-items-center flex-grow-1">
+			<h3 class="w-100 py-2">
+					<i class="bi bi-arrow-left p-2 mx-2 cursor-pointer" onclick="window.redirect('/')"></i>
+			</h3>
+			<main class="d-flex justify-content-center align-items-center flex-grow-1 h-100 w-100">
 				<div class="login-card card shadow p-5 mx-auto bg-light">
 					<!-- Header -->
 					<h2 class="m-0 w-100 text-center mb-3">Create an Account</h2>
