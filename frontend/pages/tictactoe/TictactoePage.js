@@ -80,7 +80,7 @@ class TicTacToePage extends Component {
 
             if (previousLastPlay != this.lastPlayTime) {
                 console.log('>>> lastPlayTime', Date.now(), this.lastPlayTime, Date.now() - this.lastPlayTime)
-                this.startTimer(180 - ((Date.now() - this.lastPlayTime) / 1000)); // the time management
+                this.startTimer(60 - ((Date.now() - this.lastPlayTime) / 1000)); // the time management
             }
 
             this.scoreA = (() => {
@@ -204,6 +204,10 @@ class TicTacToePage extends Component {
     async connectedCallback() {
         super.connectedCallback();
 
+        window.addEventListener('beforeunload', (event) => {
+            this.disconnectedCallback();
+        });
+
         this.subscribeToGameInfo();
     }
 
@@ -262,9 +266,9 @@ class TicTacToePage extends Component {
 
     getScoresHtml() {
         return `
-            <div class="player1">
+            <div class="player1 player-score-container">
                 <img class="star ${
-                    this.player1 === this.nextToPlay ? "" : "hidden"
+                    this.player1 === this.nextToPlay ? "" : "hidden-opacity"
                 }" src="/assets/sprites/star.webp" alt="X" />
 
                 <div class="score-wrapper">
@@ -277,15 +281,16 @@ class TicTacToePage extends Component {
                 </div>
             </div>
 
-            <div class="player2">
+            <div class="player2 player-score-container">
                 <img class="star ${
-                    this.player2 === this.nextToPlay ? "" : "hidden"
+                    this.player2 === this.nextToPlay ? "" : "hidden-opacity"
                 }" src="/assets/sprites/star.webp" alt="X" />
 
                 <div class="score-wrapper">
                     <span class="score">${this.scoreB}</span>
                     <img class="shroom" src="/assets/sprites/shroom.webp" alt="X" />
                 </div>
+
                 <div class="player-name text-truncate" data-player="${this.player2}">
                     ${truncateName(this.player2)}
                 </div>
@@ -298,12 +303,9 @@ class TicTacToePage extends Component {
         return `
 			<div class="container">
 				<div class="tictactoe d-flex flex-column align-content-center align-items-center h-full w-full relative menu-activated">
-					<div class="sky-wrapper w-100 overflow-hidden">
-						<div class="sky"></div>
-					</div>
 					<img class="title-img" src="/assets/title.webp" alt="X"/>
 
-					<div class="relative h-full w-full z-[3]">
+					<div class="relative h-full w-full z-[3] d-flex align-content-center align-items-center">
 						<div class="board-wrapper">
 							${this.getBoardWrapperHtml()}
 						</div>
@@ -332,169 +334,147 @@ class TicTacToePage extends Component {
 					height: 30px;
 				}
 
-				.tictactoe {
-                    background-color: rgb(135, 206, 235);
-                }
+                .container {
+                    background-color: transparent;
 
-                .board-wrapper {
-                    position: relative;
-                    z-index: 4;
-                }
+                    .play-btn {
+                        display: none;
+                        justify-self: anchor-center;
+                        position: absolute;
+                        width: 6em;
+                        height: 2em;
+                        background-color: red;
+                        z-index: 6;
+                        color: white;
+                        font-family: 'New Super Mario Font U', sans-serif;
+                        font-size: 1.5em;
+                        border: 0.2em solid white;
+                    }
 
-                .hidden {
-                    opacity: 0;
-                }
-
-                .menu-activated {
-                    .board {
-                        filter: blur(10px);
-
-                        .cell {
-                            cursor: default;
-                        }
+                    .title-img {
+                        margin-top: 3em;
+                        background-color: transparent;
+                        width: 20em;
+                        height: 5em;
+                        z-index: 2;
                     }
 
                     .scores {
-                        filter: blur(10px);
-                    }
-
-                    .play-btn {
+                        margin-top: 2em;
                         display: flex;
-                        justify-content: center;
+                        justify-content: space-between;
                         align-items: center;
-                        cursor: pointer;
+                        width: 100%;
+                        max-width: 100%;
+                        padding-left: 1em;
+                        padding-right: 1em;
+                        -webkit-text-stroke: 0.1em #000000;
+                        color: #ebebeb;
+                        bottom: 0.5em;
+                        z-index: 2;
+
+                         .player1 {
+                            span {
+                                color: #43b133
+                            }
+                        }
+
+                        .player2 {
+                            span {
+                                color: #e71f07
+                            }
+                        }
+
+                        .player-score-container {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+
+                            .score-wrapper {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+
+                                .score {
+                                    font-size: 5em;
+                                    margin-right: 0.2em;
+                                    font-family: 'New Super Mario Font U', sans-serif;
+                                }
+                                
+                                .shroom {
+                                    width: 5em;
+                                    height: 5em;
+                                }
+                            }
+
+                            .star {
+                                width: 3em;
+                                height: 3em;
+                            }
+
+                            .player-name {
+                                font-size: 2.5em;
+                                position: relative;
+                                bottom: 0.5em;
+                                font-family: 'New Super Mario Font U', sans-serif;
+                            }
+                        }
                     }
-                }
 
-                .play-btn {
-                    display: none;
-                    width: 10em;
-                    height: 3em;
-                    background-color: red;
-                    position: absolute;
-                    z-index: 6;
-                    top: calc(50% - 1.5em);
-                    left: calc(50% - 5em);
-                    bottom: auto;
-                    color: white;
-                    font-family: 'New Super Mario Font U', sans-serif;
-                    font-size: 1.5em;
-                    border: 0.2em solid white;
-                }
+                    .board-wrapper {
+                        position: relative;
+                        z-index: 4;
 
+                        .board {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            grid-template-rows: repeat(3, 1fr);
+                            gap: 0.7em;
+                            width: 20em;
+                            height: 20em;
+                            z-index: 3;
+                            position: relative;
 
+                            .cell {
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                background: url('/assets/cube.webp');  /* Use your pixelated webp */
+                                background-size: cover;   /* Make sure it covers the whole cell */
+                                background-position: center;  /* Center the image */
+                                cursor: pointer;
+                                padding: 0.2em;
+                                font-size: 3em;
+                                position: relative;
+                                image-rendering: pixelated;  /* Apply pixelation effect */
+                                z-index: 2;
+                            }
+                        }
+                     }
 
-                .title-img {
-                    width: 50em;
-					height: 12.5em;
-                    z-index: 2;
-                }
+                    .menu-activated {
+                        .board {
+                            filter: blur(10px);
 
-                .scores {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center; /* Ensures vertical alignment */
-                    width: 90%;
-                    margin: 0 auto;
-                    padding: 0;
-                    -webkit-text-stroke: 5px #000000;
-                    font-family: 'New Super Mario Font U', sans-serif;
-                    font-size: 10em;
-                    color: #ebebeb;
-                    position: absolute;
-                    bottom: 0.5em;
-                    z-index: 2;
-                }
+                            .cell {
+                                cursor: default;
+                            }
+                        }
 
-                .star {
-                    left: 0.5em;
-                    position: relative;
-                    width: 0.5em;
-                    height: 0.5em;
-                }
+                        .scores {
+                            filter: blur(10px);
+                        }
 
-                .shroom {
-                    width: 0.7em;
-                    height: 0.7em;
-                }
-
-                .player-name {
-					font-size: 0.5em;
-                    width: 3em;
-					height: 1em;
-					bottom: 0.6em;
-                    position: relative;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-				body {
-					font-size: 0.5em;
-				}
-
-				@media (min-width: 576px) {
-					body {
-						font-size: 0.3em;
-					}
-				}
-
-				/* Large screens (≥768px, like iPads) */
-				@media (min-width: 768px) {
-					body {
-						font-size: 0.4em;
-					}
-				}
-
-				/* Extra-large screens (≥1200px, like MacBooks) */
-				@media (min-width: 1200px) {
-					body {
-						font-size: 0.65em;
-					}
-				}
-
-                .player1 {
-                    span {
-                        color: #43b133
+                        .play-btn {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            cursor: pointer;
+                        }
                     }
-                }
-
-                .player2 {
-                    span {
-                        color: #e71f07
-                    }
-                }
-
-                .board {
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
-                    grid-template-rows: repeat(3, 1fr);
-                    gap: 0.7em;
-                    width: 45em;
-					height: 45em;
-                    z-index: 3;
-                    position: relative;
-                }
-
-                .cell {
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background: url('/assets/cube.webp');  /* Use your pixelated webp */
-                    background-size: cover;   /* Make sure it covers the whole cell */
-                    background-position: center;  /* Center the image */
-                    cursor: pointer;
-                    padding: 0.5em;
-                    font-size: 3em;
-                    position: relative;
-                    image-rendering: pixelated;  /* Apply pixelation effect */
-                    z-index: 2;
-                }
-
-                .cell:hover {
-                    background-color: #e0e0e0;
                 }
 
                 img {
@@ -506,6 +486,45 @@ class TicTacToePage extends Component {
 				.hidden {
 					display: none;
 				}
+
+                .hidden-opacity {
+                    opacity: 0;
+                }
+
+                .pipes-container {
+                    opacity: 0;
+                }
+
+                @media (min-width: 900px) {
+                    .container {
+                        font-size: 1.2em;
+                    } 
+				}
+
+                @media (min-width: 1400px) {
+                    .container {
+                        font-size: 1.4em;
+                    } 
+				}
+
+                @media (min-width: 1400px) or (max-height: 1000px and min-width: 1200px) {
+                    .container {
+                        .scores {
+                            position: absolute;
+                            padding-left: 8em;
+                            padding-right: 8em;
+                            bottom: 20%;
+                            max-width: 80em;
+                        }   
+                    } 
+				}
+
+                @media (min-width: 1200px) and (min-height: 1200px) {
+                    .pipes-container {
+                        opacity: 1;
+                    }
+                }
+
             </style>
         `;
     }
@@ -537,8 +556,6 @@ class TicTacToePage extends Component {
     startTimer(remainingTimeInSec) {
         const timerElement = document.getElementById("timer");
         let timeLeft = remainingTimeInSec;
-
-        console.log('REMAINING TIME', remainingTimeInSec)
 
 		if (timeLeft < 30) {
 			timerElement.classList.remove("hidden");
@@ -601,6 +618,10 @@ class TicTacToePage extends Component {
     }
 
     disconnectedCallback() {
+        if (this.inMatchmaking) {
+            this.cancelMatchmaking();
+        }
+
         clearInterval(this.checkAuthInterval);
         this.unsubscribeToGameInfo();
         super.disconnectedCallback();
@@ -624,14 +645,6 @@ class TicTacToePage extends Component {
         }
 
         return this.joinMatchmaking();
-    }
-
-    handleBeforeUnload(event) {
-        // Check if the user is currently in a game
-        if (this.inGame || this.inMatchmaking) {
-            // Optionally, you can send data to the server before unloading (e.g., cancel matchmaking)
-            this.cancelMatchmaking();
-        }
     }
 
     async cancelMatchmaking() {
