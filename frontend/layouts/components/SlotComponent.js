@@ -18,7 +18,7 @@ export class SlotComponent extends Component {
 
 	render() {
 		return `
-			<div id="slot" class="w-100 h-100" slot="page-content" >${this.slot}</div>
+			<div id="slot" class="w-100" slot="page-content" >${this.slot}</div>
         `;
 	}
 

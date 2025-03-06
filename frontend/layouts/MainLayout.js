@@ -19,7 +19,7 @@ export class MainLayout extends Component {
 	}
 	render() {
 		return `
-		<div id="main-layout" class="min-vh-100 vh-100 d-flex flex-column position-relative overflow-x-hidden">
+		<div id="main-layout" class="min-vh-100 d-flex flex-column position-relative overflow-x-hidden">
 			<div class="sky"></div>
 			<navbar-component></navbar-component>
 			<slot-component class="position-relative z-1 flex-grow-1 flex-1 d-flex w-100 h-100"></slot-component>
