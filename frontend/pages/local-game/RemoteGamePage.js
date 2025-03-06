@@ -98,7 +98,7 @@ export class RemoteGamePage extends Component {
 
 	render() {
 		return `
-		<div id="container" class="d-flex justify-content-center align-items-center w-100 h-100">
+		<div id="container" class="m-2 position-relative h-100">
 			<div id="searchdiv" class="d-flex justify-content-center align-items-center h-100">
 				<div id="searchBox" class="card p-4 bg-light d-flex flex-column justify-content-center align-items-center gap-3">
 					<img id="search-icon" src="/assets/question.webp" class="h-auto"/>
@@ -132,8 +132,7 @@ export class RemoteGamePage extends Component {
 	postRender() {
 		this.container = this.querySelector("#container");
 		super.addComponentEventListener(window, "beforeunload", (event) => {
-			if (!this.engine || !this.engine.scene.match.matchIsOver)
-			{
+			if (!this.engine || !this.engine.scene.match.matchIsOver) {
 				sendWebSocketMessage({
 					action: "leavingMatch",
 					gameSession: this.gameID,

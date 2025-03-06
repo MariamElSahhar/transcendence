@@ -9,10 +9,10 @@ export class LandingPage extends Component {
 	render() {
 		return `
 			<div class="d-flex flex-column h-100 w-100 justify-content-center align-items-center gap-3">
-				<img class="title-img z-1" src="/assets/titlepage.webp" alt="Welcome to Pong!"/>
+				<img class="title-img z-1 w-50" src="/assets/titlepage.webp" alt="Welcome to Pong!"/>
 				<div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
-					<button id="login-button" class="btn z-3">Log In</button>
-					<button id="sign-up-button" class="btn z-3">Sign Up</button>
+					<button id="login-button" class="btn z-3 w-25">Log In</button>
+					<button id="sign-up-button" class="btn z-3 w-25">Sign Up</button>
 				</div>
 			</div>
 		`;
@@ -21,13 +21,8 @@ export class LandingPage extends Component {
 	style() {
 		return `
 			<style>
-				#login-button, #sign-up-button {
-					width: 40%;
-				}
-
 				.title-img {
 					animation: jump 4s ease-in-out infinite;
-					width: 60%;
 				}
 			</style>
 		`;
