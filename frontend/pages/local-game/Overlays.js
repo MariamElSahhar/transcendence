@@ -155,7 +155,11 @@ export function renderTournamentResults(component, rankedPlayers) {
                 <div class="card-body">
                     <img src="/assets/crown.webp" alt="Game Icon" class="icon">
                     <h1 class="">${rankedPlayers[0]} wins</h1>
-					<p>🥈${rankedPlayers[1]} 🥉${rankedPlayers[2]} 🥲${rankedPlayers[3]}</p>
+					<p class="d-flex w-75 gap-3">
+						<span class="flex-grow-1 text-center">🥈 ${rankedPlayers[1]}</span>
+						<span class="flex-grow-1 text-center">🥉 ${rankedPlayers[2]}</span>
+						<span class="flex-grow-1 text-center">🥲 ${rankedPlayers[3]}</span>
+					</p>
 					<div class="d-flex w-100 gap-2">
 						<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
 						<button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
@@ -216,7 +220,9 @@ export function renderWaitingForOpponent(component, onCancel) {
 		const seconds = elapsedSeconds % 60;
 
 		// Format as MM:SS
-		timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+		timerElement.textContent = `${minutes}:${seconds
+			.toString()
+			.padStart(2, "0")}`;
 
 		requestAnimationFrame(updateTimer); // Smooth update
 	};

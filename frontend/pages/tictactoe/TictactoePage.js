@@ -305,7 +305,7 @@ class TicTacToePage extends Component {
 				<div class="tictactoe d-flex flex-column align-content-center align-items-center relative menu-activated">
 					<img class="title-img" src="/assets/title.webp" alt="X"/>
 
-					<div class="position-relative z-[3] d-flex align-content-center align-items-center">
+					<div class="position-relative z-3 d-flex align-content-center align-items-center">
 						<div class="board-wrapper">
 							${this.getBoardWrapperHtml()}
 						</div>
@@ -327,7 +327,7 @@ class TicTacToePage extends Component {
             <style>
 				#winner-sprite {
 					height: 56px;
-					width: 56px;
+					width: auto;
 				}
 				.icon {
 					width: auto;
@@ -343,7 +343,7 @@ class TicTacToePage extends Component {
                         margin-left: calc(50% - 3em);
                         width: 6em;
                         height: 2em;
-                        background-color: red;
+                        background-color: var(--mario-red-color);
                         z-index: 6;
                         color: white;
                         font-family: 'New Super Mario Font U', sans-serif;
@@ -401,7 +401,7 @@ class TicTacToePage extends Component {
                                     margin-right: 0.2em;
                                     font-family: 'New Super Mario Font U', sans-serif;
                                 }
-                                
+
                                 .shroom {
                                     width: 5em;
                                     height: 5em;
@@ -498,13 +498,13 @@ class TicTacToePage extends Component {
                 @media (min-width: 900px) {
                     .container {
                         font-size: 1.2em;
-                    } 
+                    }
 				}
 
                 @media (min-width: 1400px) {
                     .container {
                         font-size: 1.4em;
-                    } 
+                    }
 				}
 
                 @media (min-width: 1400px) or (max-height: 1000px and min-width: 1200px) {
@@ -515,8 +515,8 @@ class TicTacToePage extends Component {
                             padding-right: 8em;
                             bottom: 20%;
                             max-width: 80em;
-                        }   
-                    } 
+                        }
+                    }
 				}
 
                 @media (min-width: 1200px) and (min-height: 1200px) {

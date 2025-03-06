@@ -1,13 +1,12 @@
 import { Component } from "../Component.js";
-import { isAuth } from "../../scripts/utils/session-manager.js";
 
 export class ErrorPage extends Component {
 	async connectedCallback() {
-		this.auth = await isAuth();
 		super.connectedCallback();
 		this.dispatchEvent(
 			new CustomEvent("connected", { bubbles: true, composed: true })
 		);
+
 		const errorModal = document.getElementById("errorModal");
 		if (errorModal) {
 			const modal = new bootstrap.Modal(errorModal, {
@@ -16,8 +15,6 @@ export class ErrorPage extends Component {
 			});
 			modal.show();
 		}
-		document.getElementById("refreshBtn").addEventListener("click", () => this.closeModal(window.location.pathname));
-		document.getElementById("homeBtn").addEventListener("click", () => this.closeModal("/home"));
 	}
 
 	render() {
@@ -28,13 +25,12 @@ export class ErrorPage extends Component {
 			<div class="modal-header">
 			  <h5 class="modal-title" id="errorModalLabel">Oops! Something Went Wrong</h5>
 			</div>
-			<div class="modal-body text-center">
+			<div class="modal-body">
 			  <p>We're sorry, but an unexpected error has occurred.</p>
-			  <p>Please try refreshing the page or go back to home.</p>
+			  <p>Please refresh the page or try again later.</p>
 			</div>
 			<div class="modal-footer">
 			  <button id="refreshBtn" class="btn btn-primary">Refresh Page</button>
-			  <button id="homeBtn" class="btn btn-primary" onclick="window.redirect('/home')">Home</button>
 			</div>
 		  </div>
 		</div>
@@ -42,20 +38,27 @@ export class ErrorPage extends Component {
 
 		`;
 	}
-	closeModal(pathname)
-	{
+
+	postRender() {
+		document
+			.getElementById("refreshBtn")
+			.addEventListener("click", () =>
+				this.closeModal(window.location.pathname)
+			);
+	}
+
+	closeModal(pathname) {
 		const modalElement = document.getElementById("errorModal");
 		const modal = bootstrap.Modal.getInstance(modalElement);
 		if (modal) {
 			modal.hide();
 		}
 		modalElement.remove();
-		window.redirect(pathname );
+		window.redirect(pathname);
 	}
 }
 export async function showError() {
 	const errorPage = document.createElement("error-page");
 	document.body.appendChild(errorPage);
-
 }
 customElements.define("error-page", ErrorPage);
