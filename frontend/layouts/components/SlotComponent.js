@@ -38,7 +38,6 @@ export class SlotComponent extends Component {
 	}
 
 	renderSlot(content) {
-		console.log("WHATTTT")
 		this.slot = "";
 		this.slot = content;
 		if (super.isRendered()) this.attributeChangedCallback();
