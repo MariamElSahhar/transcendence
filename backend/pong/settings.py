@@ -35,10 +35,12 @@ else:
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+import os
 
+EMAIL_HOST = os.getenv("EMAIL_HOST")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -128,9 +130,9 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": en("DB_PASS"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DBPASS"),
         "HOST": "db" if env("ENV") == "production" else "localhost",
         "PORT": "5432" if env("ENV") == "production" else "8001",
     }
@@ -212,12 +214,12 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Gmail SMTP settings
-EMAIL_HOST =  env("EMAIL_HOST")
-EMAIL_PORT =  env("EMAIL_PORT")
-EMAIL_USE_TLS =  env("EMAIL_USE_TLS")
-EMAIL_HOST_USER =  env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD =  env("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL =  env("DEFAULT_FROM_EMAIL")  # Optional
+EMAIL_HOST =  os.environ.get("EMAIL_HOST")
+EMAIL_PORT =  os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS =  os.environ.get("EMAIL_USE_TLS")
+EMAIL_HOST_USER =  os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD =  os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL =  os.environ.get("DEFAULT_FROM_EMAIL")  # Optional
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
