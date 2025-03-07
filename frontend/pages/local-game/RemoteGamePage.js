@@ -89,7 +89,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketClose() {
-		console.log("WebSocket closed");
+		// console.log("WebSocket closed");
 	}
 
 	onWebSocketError(error) {
@@ -226,7 +226,6 @@ export class RemoteGamePage extends Component {
 	}
 
 	async disconnectedCallback() {
-		console.log("disconnected callback");
 		try {
 			if (!this.engine || !this.engine.scene.match.matchIsOver)
 				sendWebSocketMessage({
@@ -292,9 +291,6 @@ export class RemoteGamePage extends Component {
 	updateScore(playerIndex) {
 		if (playerIndex < this.scores.length) {
 			this.scores[playerIndex] += 1;
-			console.log(
-				`Player ${playerIndex} scored! Current score: ${this.scores[playerIndex]}`
-			);
 		} else {
 			console.error("Invalid player index:", playerIndex);
 		}

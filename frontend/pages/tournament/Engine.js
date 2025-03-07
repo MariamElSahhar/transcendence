@@ -83,7 +83,6 @@ export class Engine {
 		try {
 			if (this.#scene) {
 				this.clearScene(this.#scene.threeJSScene);
-				// console.log("Scene cleared.");
 			}
 		} catch (err) {
 			console.error("Error clearing the scene:", err);

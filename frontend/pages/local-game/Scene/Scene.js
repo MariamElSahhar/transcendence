@@ -18,7 +18,6 @@ export class Scene {
 		this.#engine = engine;
 
 		try {
-			console.log(engine)
 			await this.match.init(engine);
 			this.#threeJSScene.add(this.match.threeJSGroup);
 

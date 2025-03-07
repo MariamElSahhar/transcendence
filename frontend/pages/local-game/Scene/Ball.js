@@ -89,7 +89,6 @@ export class Ball {
 						});
 
 						clearInterval(checkInterval);
-						console.log("Movement set, resolving...");
 						resolve("Success");
 					}
 				}, 100);

@@ -203,7 +203,6 @@ const loadRoute = async (route, layout) => {
 			root.appendChild(routeComponent);
 		}
 	} catch (e) {
-		console.log("ERROR", e);
 		showError();
 	}
 };

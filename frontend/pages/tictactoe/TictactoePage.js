@@ -1,10 +1,8 @@
-
-
 import { Component } from "../Component.js";
 import { get, post } from "../../scripts/utils/http-requests.js";
 import {
-    isAuth,
-    getUserSessionData,
+	isAuth,
+	getUserSessionData,
 } from "../../../scripts/utils/session-manager.js";
 
 import {
@@ -16,291 +14,309 @@ import {
 const BASE_URL = `/api/tictactoe`;
 
 function truncateName(name) {
-    return name.length > 6 ? name.substring(0 , 5) + ".." : name;
-};
+	return name.length > 6 ? name.substring(0, 5) + ".." : name;
+}
 
 class TicTacToePage extends Component {
-    constructor() {
-        super();
-        this.myself = getUserSessionData().username;
-        this.inGame = false;
-        this.inMatchmaking = false;
-        this.isFinished = false;
-        this.gameInfoGetIntervalFd = null;
+	constructor() {
+		super();
+		this.myself = getUserSessionData().username;
+		this.inGame = false;
+		this.inMatchmaking = false;
+		this.isFinished = false;
+		this.gameInfoGetIntervalFd = null;
 		this.waitingForOpponentOverlay = null;
 
-        // Bo3 information
-        this.gameId = -1;
-        this.status = "";
-        this.player1 = "";
-        this.player2 = "";
-        this.mapRound1 = Array(9).fill(null);
-        this.mapRound2 = Array(9).fill(null);
-        this.mapRound3 = Array(9).fill(null);
-        this.currentRound = 0;
-        this.nextToPlay = "";
-        this.lastPlayTime = 0;
-        this.winnerRound1 = "";
-        this.winnerRound2 = "";
-        this.winnerRound3 = "";
+		// Bo3 information
+		this.gameId = -1;
+		this.status = "";
+		this.player1 = "";
+		this.player2 = "";
+		this.mapRound1 = Array(9).fill(null);
+		this.mapRound2 = Array(9).fill(null);
+		this.mapRound3 = Array(9).fill(null);
+		this.currentRound = 0;
+		this.nextToPlay = "";
+		this.lastPlayTime = 0;
+		this.winnerRound1 = "";
+		this.winnerRound2 = "";
+		this.winnerRound3 = "";
 
-        this.scoreA = 0;
-        this.scoreB = 0;
-        this.winner = null; // Winner status
+		this.scoreA = 0;
+		this.scoreB = 0;
+		this.winner = null; // Winner status
 
-        this.checkAuthInterval = setInterval(async() => {
-            if (!(await isAuth())) window.redirect("/");
-        }, 30000);
-    }
+		this.checkAuthInterval = setInterval(async () => {
+			if (!(await isAuth())) window.redirect("/");
+		}, 30000);
+	}
 
-    applyGameInfo(gameInfo) {
-        const lastStatus = this.inGame
-            ? "PLAYING"
-            : this.inMatchmaking
-            ? "MATCHMAKING"
-            : this.isFinished
-            ? "FINISHED"
-            : "NONE";
-        const previousLastPlay = this.lastPlayTime;
+	applyGameInfo(gameInfo) {
+		const lastStatus = this.inGame
+			? "PLAYING"
+			: this.inMatchmaking
+			? "MATCHMAKING"
+			: this.isFinished
+			? "FINISHED"
+			: "NONE";
+		const previousLastPlay = this.lastPlayTime;
 
-        if (gameInfo && (gameInfo.status === "PLAYING" || gameInfo.status === "FINISHED")) {
-            this.gameId = gameInfo.id;
-            this.status = gameInfo.status;
-            this.player1 = gameInfo.player1;
-            this.player2 = gameInfo.player2;
-            this.mapRound1 = gameInfo.mapRound1;
-            this.mapRound2 = gameInfo.mapRound2;
-            this.mapRound3 = gameInfo.mapRound3;
-            this.currentRound = gameInfo.currentRound;
-            this.nextToPlay = gameInfo.nextToPlay;
-            this.lastPlayTime = gameInfo.lastPlayTime;
-            this.winnerRound1 = gameInfo.winnerRound1;
-            this.winnerRound2 = gameInfo.winnerRound2;
-            this.winnerRound3 = gameInfo.winnerRound3;
+		if (
+			gameInfo &&
+			(gameInfo.status === "PLAYING" || gameInfo.status === "FINISHED")
+		) {
+			this.gameId = gameInfo.id;
+			this.status = gameInfo.status;
+			this.player1 = gameInfo.player1;
+			this.player2 = gameInfo.player2;
+			this.mapRound1 = gameInfo.mapRound1;
+			this.mapRound2 = gameInfo.mapRound2;
+			this.mapRound3 = gameInfo.mapRound3;
+			this.currentRound = gameInfo.currentRound;
+			this.nextToPlay = gameInfo.nextToPlay;
+			this.lastPlayTime = gameInfo.lastPlayTime;
+			this.winnerRound1 = gameInfo.winnerRound1;
+			this.winnerRound2 = gameInfo.winnerRound2;
+			this.winnerRound3 = gameInfo.winnerRound3;
 
-            if (previousLastPlay != this.lastPlayTime) {
-                console.log('>>> lastPlayTime', Date.now(), this.lastPlayTime, Date.now() - this.lastPlayTime)
-                this.startTimer(60 - ((Date.now() - this.lastPlayTime) / 1000)); // the time management
-            }
+			if (previousLastPlay != this.lastPlayTime) {
+				/* console.log(
+					">>> lastPlayTime",
+					Date.now(),
+					this.lastPlayTime,
+					Date.now() - this.lastPlayTime
+				); */
+				this.startTimer(60 - (Date.now() - this.lastPlayTime) / 1000); // the time management
+			}
 
-            this.scoreA = (() => {
-                let score = 0;
+			this.scoreA = (() => {
+				let score = 0;
 
-                if (this.winnerRound1 === this.player1) score++;
-                if (this.winnerRound2 === this.player1) score++;
-                if (this.winnerRound3 === this.player1) score++;
+				if (this.winnerRound1 === this.player1) score++;
+				if (this.winnerRound2 === this.player1) score++;
+				if (this.winnerRound3 === this.player1) score++;
 
-                return score;
-            })();
+				return score;
+			})();
 
-            this.scoreB = (() => {
-                let score = 0;
+			this.scoreB = (() => {
+				let score = 0;
 
-                if (this.winnerRound1 === this.player2) score++;
-                if (this.winnerRound2 === this.player2) score++;
-                if (this.winnerRound3 === this.player2) score++;
+				if (this.winnerRound1 === this.player2) score++;
+				if (this.winnerRound2 === this.player2) score++;
+				if (this.winnerRound3 === this.player2) score++;
 
-                return score;
-            })();
+				return score;
+			})();
 
-            if (gameInfo.status === "PLAYING") {
-                if (lastStatus !== "PLAYING") {
-                    this.inGame = true;
+			if (gameInfo.status === "PLAYING") {
+				if (lastStatus !== "PLAYING") {
+					this.inGame = true;
 
 					if (this.waitingForOpponentOverlay !== null) {
 						removeOverlay(this.waitingForOpponentOverlay);
 						this.waitingForOpponentOverlay = null;
 					}
-                }
+				}
 
-                if (
-                    lastStatus !== "PLAYING" ||
-                    previousLastPlay !== this.lastPlayTime
-                ) {
-                    this.menuActivation(false);
-                    this.refreshScoresHtml();
-                    this.refreshBoardWrapperHtml();
-                }
-            } else {
-                if (lastStatus !== "FINISHED") {
-                    this.isFinished = true;
-                    this.inMatchmaking = false;
-                    this.inGame = false;
-                    this.menuActivation(true);
-                    this.refreshScoresHtml();
-                    this.refreshBoardWrapperHtml();
+				if (
+					lastStatus !== "PLAYING" ||
+					previousLastPlay !== this.lastPlayTime
+				) {
+					this.menuActivation(false);
+					this.refreshScoresHtml();
+					this.refreshBoardWrapperHtml();
+				}
+			} else {
+				if (lastStatus !== "FINISHED") {
+					this.isFinished = true;
+					this.inMatchmaking = false;
+					this.inGame = false;
+					this.menuActivation(true);
+					this.refreshScoresHtml();
+					this.refreshBoardWrapperHtml();
 
 					// In case the user finished the game and not after page reload
 					if (lastStatus !== "NONE" && lastStatus !== "MATCHMAKING")
-						renderEndGameCard(this, [this.player1, this.player2], [this.scoreA, this.scoreB], false);
-                }
-            }
-            return;
-        }
+						renderEndGameCard(
+							this,
+							[this.player1, this.player2],
+							[this.scoreA, this.scoreB],
+							false
+						);
+				}
+			}
+			return;
+		}
 
-        if (gameInfo && gameInfo.status === "MATCHMAKING") {
-            this.inMatchmaking = true;
-            this.gameId = gameInfo.id;
-            this.status = gameInfo.status;
-            this.player1 = gameInfo.player1;
-            this.player2 = gameInfo.player2 ?? "mario";
-            this.mapRound1 = [];
-            this.mapRound2 = [];
-            this.mapRound3 = [];
-            this.currentRound = 0;
-            this.nextToPlay = "";
-            this.lastPlayTime = 0;
-            this.winnerRound1 = "";
-            this.winnerRound2 = "";
-            this.winnerRound3 = "";
-            this.scoreA = 0;
-            this.scoreB = 0;
+		if (gameInfo && gameInfo.status === "MATCHMAKING") {
+			this.inMatchmaking = true;
+			this.gameId = gameInfo.id;
+			this.status = gameInfo.status;
+			this.player1 = gameInfo.player1;
+			this.player2 = gameInfo.player2 ?? "mario";
+			this.mapRound1 = [];
+			this.mapRound2 = [];
+			this.mapRound3 = [];
+			this.currentRound = 0;
+			this.nextToPlay = "";
+			this.lastPlayTime = 0;
+			this.winnerRound1 = "";
+			this.winnerRound2 = "";
+			this.winnerRound3 = "";
+			this.scoreA = 0;
+			this.scoreB = 0;
 
-            if (lastStatus !== "MATCHMAKING") {
-                this.menuActivation(true);
-				this.waitingForOpponentOverlay = renderWaitingForOpponent(this, this.handlePlayBtnClick.bind(this));
-                this.refreshScoresHtml();
-                this.refreshBoardWrapperHtml();
-            }
-            return;
-        }
+			if (lastStatus !== "MATCHMAKING") {
+				this.menuActivation(true);
+				this.waitingForOpponentOverlay = renderWaitingForOpponent(
+					this,
+					this.handlePlayBtnClick.bind(this)
+				);
+				this.refreshScoresHtml();
+				this.refreshBoardWrapperHtml();
+			}
+			return;
+		}
 
-        if (lastStatus !== "NONE") {
-            this.menuActivation(true);
-            this.refreshScoresHtml();
-            this.refreshBoardWrapperHtml();
-        }
+		if (lastStatus !== "NONE") {
+			this.menuActivation(true);
+			this.refreshScoresHtml();
+			this.refreshBoardWrapperHtml();
+		}
 
-        console.log(gameInfo);
+		this.inGame = false;
+		this.inMatchmaking = false;
+		this.gameId = -1;
+		this.status = "";
+		this.player1 = "";
+		this.player2 = "";
+		this.mapRound1 = Array(9).fill(null);
+		this.mapRound2 = Array(9).fill(null);
+		this.mapRound3 = Array(9).fill(null);
+		this.currentRound = 0;
+		this.nextToPlay = "";
+		this.lastPlayTime = 0;
+		this.winnerRound1 = "";
+		this.winnerRound2 = "";
+		this.winnerRound3 = "";
 
-        this.inGame = false;
-        this.inMatchmaking = false;
-        this.gameId = -1;
-        this.status = "";
-        this.player1 = "";
-        this.player2 = "";
-        this.mapRound1 = Array(9).fill(null);
-        this.mapRound2 = Array(9).fill(null);
-        this.mapRound3 = Array(9).fill(null);
-        this.currentRound = 0;
-        this.nextToPlay = "";
-        this.lastPlayTime = 0;
-        this.winnerRound1 = "";
-        this.winnerRound2 = "";
-        this.winnerRound3 = "";
+		this.scoreA = 0;
+		this.scoreB = 0;
+		this.winner = null;
+	}
 
-        this.scoreA = 0;
-        this.scoreB = 0;
-        this.winner = null;
-    }
+	menuActivation(b) {
+		const tictactoe = this.querySelector(".tictactoe");
 
-    menuActivation(b) {
-        const tictactoe = this.querySelector(".tictactoe");
+		if (b) tictactoe.classList.add("menu-activated");
+		else tictactoe.classList.remove("menu-activated");
+	}
 
-        if (b) tictactoe.classList.add("menu-activated");
-        else tictactoe.classList.remove("menu-activated");
-    }
+	async connectedCallback() {
+		super.connectedCallback();
 
-    async connectedCallback() {
-        super.connectedCallback();
+		window.addEventListener("beforeunload", (event) => {
+			this.disconnectedCallback();
+		});
 
-        window.addEventListener('beforeunload', (event) => {
-            this.disconnectedCallback();
-        });
+		this.subscribeToGameInfo();
+	}
 
-        this.subscribeToGameInfo();
-    }
+	getBoard() {
+		if (this.currentRound === 1) return this.mapRound1;
+		if (this.currentRound === 2) return this.mapRound2;
+		if (this.currentRound === 3) return this.mapRound3;
 
-    getBoard() {
-        if (this.currentRound === 1) return this.mapRound1;
-        if (this.currentRound === 2) return this.mapRound2;
-        if (this.currentRound === 3) return this.mapRound3;
+		return Array(9).fill(null);
+	}
 
-        return Array(9).fill(null);
-    }
+	getBoardWrapperHtml() {
+		let boardHTML = '<div class="board">';
 
-    getBoardWrapperHtml() {
-        let boardHTML = '<div class="board">';
+		const board = this.getBoard();
 
-        const board = this.getBoard();
-
-        board.forEach((cell, index) => {
-            boardHTML += `
+		board.forEach((cell, index) => {
+			boardHTML += `
                 <div class="cell" data-index="${index}">
                     ${
-                        cell === "X"
-                            ? `<img src="/assets/sprites/plant.webp" alt="X" />`
-                            : cell === "O"
-                            ? `<img src="/assets/sprites/shroom.webp" alt="O" />`
-                            : ""
-                    }
+						cell === "X"
+							? `<img src="/assets/sprites/plant.webp" alt="X" />`
+							: cell === "O"
+							? `<img src="/assets/sprites/shroom.webp" alt="O" />`
+							: ""
+					}
                 </div>
             `;
-        });
+		});
 
-        boardHTML += "</div>";
+		boardHTML += "</div>";
 
-        return boardHTML;
-    }
+		return boardHTML;
+	}
 
-    refreshBoardWrapperHtml() {
-        const container = document.querySelector(".board-wrapper");
-        container.innerHTML = this.getBoardWrapperHtml();
+	refreshBoardWrapperHtml() {
+		const container = document.querySelector(".board-wrapper");
+		container.innerHTML = this.getBoardWrapperHtml();
 
-        const cells = this.querySelectorAll(".cell");
+		const cells = this.querySelectorAll(".cell");
 
-        cells.forEach((cell) => {
-            this.addComponentEventListener(
-                cell,
-                "click",
-                this.handleCellClick,
-                this
-            );
-        });
-    }
+		cells.forEach((cell) => {
+			this.addComponentEventListener(
+				cell,
+				"click",
+				this.handleCellClick,
+				this
+			);
+		});
+	}
 
-    refreshScoresHtml() {
-        const container = document.querySelector(".scores");
-        container.innerHTML = this.getScoresHtml();
-    }
+	refreshScoresHtml() {
+		const container = document.querySelector(".scores");
+		container.innerHTML = this.getScoresHtml();
+	}
 
-    getScoresHtml() {
-        return `
+	getScoresHtml() {
+		return `
             <div class="player1 player-score-container">
                 <img class="star ${
-                    this.player1 === this.nextToPlay ? "" : "hidden-opacity"
-                }" src="/assets/sprites/star.webp" alt="X" />
+					this.player1 === this.nextToPlay ? "" : "hidden-opacity"
+				}" src="/assets/sprites/star.webp" alt="X" />
 
                 <div class="score-wrapper">
                     <span class="score">${this.scoreA}</span>
                     <img class="shroom" src="/assets/sprites/plant.webp" alt="X" />
                 </div>
 
-                <div class="player-name text-truncate" data-player="${this.player1}">
+                <div class="player-name text-truncate" data-player="${
+					this.player1
+				}">
                     ${truncateName(this.player1)}
                 </div>
             </div>
 
             <div class="player2 player-score-container">
                 <img class="star ${
-                    this.player2 === this.nextToPlay ? "" : "hidden-opacity"
-                }" src="/assets/sprites/star.webp" alt="X" />
+					this.player2 === this.nextToPlay ? "" : "hidden-opacity"
+				}" src="/assets/sprites/star.webp" alt="X" />
 
                 <div class="score-wrapper">
                     <span class="score">${this.scoreB}</span>
                     <img class="shroom" src="/assets/sprites/shroom.webp" alt="X" />
                 </div>
 
-                <div class="player-name text-truncate" data-player="${this.player2}">
+                <div class="player-name text-truncate" data-player="${
+					this.player2
+				}">
                     ${truncateName(this.player2)}
                 </div>
 
             </div>
          `;
-    }
+	}
 
-    render() {
-        return `
+	render() {
+		return `
 			<div class="container">
 				<div class="tictactoe d-flex flex-column align-content-center align-items-center relative menu-activated">
 					<img class="title-img" src="/assets/title.webp" alt="X"/>
@@ -320,10 +336,10 @@ class TicTacToePage extends Component {
 				</div>
 			</div>
         `;
-    }
+	}
 
-    style() {
-        return `
+	style() {
+		return `
             <style>
 				#winner-sprite {
 					height: 56px;
@@ -527,35 +543,35 @@ class TicTacToePage extends Component {
 
             </style>
         `;
-    }
+	}
 
-    postRender() {
-        const cells = this.querySelectorAll(".cell");
+	postRender() {
+		const cells = this.querySelectorAll(".cell");
 
-        cells.forEach((cell) => {
-            this.addComponentEventListener(
-                cell,
-                "click",
-                this.handleCellClick,
-                this
-            );
-        });
+		cells.forEach((cell) => {
+			this.addComponentEventListener(
+				cell,
+				"click",
+				this.handleCellClick,
+				this
+			);
+		});
 
-        const playBtn = this.querySelector(".play-btn");
+		const playBtn = this.querySelector(".play-btn");
 
-        this.addComponentEventListener(
-            playBtn,
-            "click",
-            this.handlePlayBtnClick,
-            this
-        );
+		this.addComponentEventListener(
+			playBtn,
+			"click",
+			this.handlePlayBtnClick,
+			this
+		);
 
 		this.container = document.querySelector(".container");
-    }
+	}
 
-    startTimer(remainingTimeInSec) {
-        const timerElement = document.getElementById("timer");
-        let timeLeft = remainingTimeInSec;
+	startTimer(remainingTimeInSec) {
+		const timerElement = document.getElementById("timer");
+		let timeLeft = remainingTimeInSec;
 
 		if (timeLeft < 30) {
 			timerElement.classList.remove("hidden");
@@ -563,221 +579,217 @@ class TicTacToePage extends Component {
 			timerElement.classList.add("hidden");
 		}
 
-        clearInterval(this.timerInterval); // Clear previous timers
+		clearInterval(this.timerInterval); // Clear previous timers
 
-        if (this.status != 'PLAYING') {
-            timerElement.innerHTML = "";
-            return;
-        }
+		if (this.status != "PLAYING") {
+			timerElement.innerHTML = "";
+			return;
+		}
 
-        const updateTimer = () => {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = Math.floor(timeLeft % 60);
+		const updateTimer = () => {
+			const minutes = Math.floor(timeLeft / 60);
+			const seconds = Math.floor(timeLeft % 60);
 
 			if (timeLeft < 30) {
 				timerElement.classList.remove("hidden");
 			} else {
 				timerElement.classList.add("hidden");
 			}
-            timerElement.innerHTML = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-            if (timeLeft <= 0) {
-                clearInterval(this.timerInterval);
-                timerElement.innerHTML = "00:00";
-                this.timeOutManager();
-            } else {
-                timeLeft--;
-            }
-        };
+			timerElement.innerHTML = `${minutes
+				.toString()
+				.padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+			if (timeLeft <= 0) {
+				clearInterval(this.timerInterval);
+				timerElement.innerHTML = "00:00";
+				this.timeOutManager();
+			} else {
+				timeLeft--;
+			}
+		};
 
-        updateTimer(); // Initial update
-        this.timerInterval = setInterval(updateTimer, 1000); // Start the countdown
-    }
+		updateTimer(); // Initial update
+		this.timerInterval = setInterval(updateTimer, 1000); // Start the countdown
+	}
 
-    async subscribeToGameInfo() {
-        // Already subscribed
-        if (this.gameInfoGetIntervalFd !== null) {
-            return;
-        }
+	async subscribeToGameInfo() {
+		// Already subscribed
+		if (this.gameInfoGetIntervalFd !== null) {
+			return;
+		}
 
-        this.gameInfoGetIntervalFd = setInterval(async () => {
-            const game = await this.getGameInfo();
+		this.gameInfoGetIntervalFd = setInterval(async () => {
+			const game = await this.getGameInfo();
 
-            if (game === false) return;
+			if (game === false) return;
 
-            this.applyGameInfo(game);
+			this.applyGameInfo(game);
 
-            this.render();
-        }, 500);
-    }
+			this.render();
+		}, 500);
+	}
 
-    unsubscribeToGameInfo() {
-        if (this.gameInfoGetIntervalFd !== null) {
-            clearInterval(this.gameInfoGetIntervalFd);
-            this.gameInfoGetIntervalFd = null;
-        }
-    }
+	unsubscribeToGameInfo() {
+		if (this.gameInfoGetIntervalFd !== null) {
+			clearInterval(this.gameInfoGetIntervalFd);
+			this.gameInfoGetIntervalFd = null;
+		}
+	}
 
-    disconnectedCallback() {
-        if (this.inMatchmaking) {
-            this.cancelMatchmaking();
-        }
+	disconnectedCallback() {
+		if (this.inMatchmaking) {
+			this.cancelMatchmaking();
+		}
 
-        clearInterval(this.checkAuthInterval);
-        this.unsubscribeToGameInfo();
-        super.disconnectedCallback();
-    }
+		clearInterval(this.checkAuthInterval);
+		this.unsubscribeToGameInfo();
+		super.disconnectedCallback();
+	}
 
-    async joinMatchmaking() {
-        try {
-            const response = await post(`${BASE_URL}/join_matchmaking/`);
-            if (response.message) {
-                console.log("Subscribe to matchmaking:", response.message);
-                this.inMatchmaking = true;
-            }
-        } catch (error) {
-            console.error("Error subscribing to matchmaking:", error);
-        }
-    }
+	async joinMatchmaking() {
+		try {
+			const response = await post(`${BASE_URL}/join_matchmaking/`);
+			if (response.message) {
+				// console.log("Subscribe to matchmaking:", response.message);
+				this.inMatchmaking = true;
+			}
+		} catch (error) {
+			console.error("Error subscribing to matchmaking:", error);
+		}
+	}
 
-    async handlePlayBtnClick(event) {
-        if (this.inMatchmaking) {
-            return this.cancelMatchmaking();
-        }
+	async handlePlayBtnClick(event) {
+		if (this.inMatchmaking) {
+			return this.cancelMatchmaking();
+		}
 
-        return this.joinMatchmaking();
-    }
+		return this.joinMatchmaking();
+	}
 
-    async cancelMatchmaking() {
-        try {
-            const response = await post(`${BASE_URL}/cancel_matchmaking/`);
-            if (response.message) {
-                console.log("Unsubscribed from matchmaking:", response.message);
-                this.inMatchmaking = false;
-            }
-        } catch (error) {
-            console.error("Error unsubscribing from matchmaking:", error);
-        }
-    }
+	async cancelMatchmaking() {
+		try {
+			const response = await post(`${BASE_URL}/cancel_matchmaking/`);
+			if (response.message) {
+				// console.log("Unsubscribed from matchmaking:", response.message);
+				this.inMatchmaking = false;
+			}
+		} catch (error) {
+			console.error("Error unsubscribing from matchmaking:", error);
+		}
+	}
 
-    async getGameInfo() {
-        try {
-            console.log(`${BASE_URL}/play/`)
-            const response = await get(`${BASE_URL}/play/`);
+	async getGameInfo() {
+		try {
+			const response = await get(`${BASE_URL}/play/`);
 
-            if (response.body?.game) {
-                const g = response.body.game;
+			if (response.body?.game) {
+				const g = response.body.game;
 
-                console.log("Game info received:", g);
+				// Create a new object containing game information
+				const gameInfo = {
+					id: g.id,
+					status: g.status,
+					player1: g.player_1,
+					player2: g.player_2,
+					mapRound1: (g.map_round_1 ?? "").split(""),
+					mapRound2: (g.map_round_2 ?? "").split(""),
+					mapRound3: (g.map_round_3 ?? "").split(""),
+					currentRound: g.current_round,
+					nextToPlay: g.next_to_play,
+					lastPlayTime: new Date(g.last_play_time).getTime(),
+					winnerRound1: g.winner_round_1,
+					winnerRound2: g.winner_round_2,
+					winnerRound3: g.winner_round_3,
+				};
 
-                // Create a new object containing game information
-                const gameInfo = {
-                    id: g.id,
-                    status: g.status,
-                    player1: g.player_1,
-                    player2: g.player_2,
-                    mapRound1: (g.map_round_1 ?? "").split(""),
-                    mapRound2: (g.map_round_2 ?? "").split(""),
-                    mapRound3: (g.map_round_3 ?? "").split(""),
-                    currentRound: g.current_round,
-                    nextToPlay: g.next_to_play,
-                    lastPlayTime: new Date(g.last_play_time).getTime(),
-                    winnerRound1: g.winner_round_1,
-                    winnerRound2: g.winner_round_2,
-                    winnerRound3: g.winner_round_3,
-                };
+				// console.log("Constructed game info object:", gameInfo);
+				return gameInfo; // Return the constructed game info object
+			}
 
-                // console.log("Constructed game info object:", gameInfo);
-                return gameInfo; // Return the constructed game info object
-            }
+			// console.log("No active game found:", response.message);
+			// Return null or an empty object if no game is found
+			return null;
+		} catch (error) {
+			console.error("Error fetching game info:", error);
+			// Return false or handle the error as appropriate
+			return false;
+		}
+	}
 
-            console.log("No active game found:", response.message);
-            // Return null or an empty object if no game is found
-            return null;
-        } catch (error) {
-            console.error("Error fetching game info:", error);
-            // Return false or handle the error as appropriate
-            return false;
-        }
-    }
+	handleCellClick(event) {
+		if (!this.inGame || this.nextToPlay !== this.myself) {
+			// console.log("CLICK REJECTED, NOT MY TURN");
+			return;
+		}
 
-    handleCellClick(event) {
-        if (!this.inGame || this.nextToPlay !== this.myself) {
-            console.log("CLICK REJECTED, NOT MY TURN");
-            return;
-        }
+		const cell = event.target.closest(".cell"); // Ensure we get the correct cell
+		if (!cell) {
+			// console.log("CLICK REJECTED, NOT A CELL");
+			return;
+		}
 
-        const cell = event.target.closest(".cell"); // Ensure we get the correct cell
-        if (!cell) {
-            console.log("CLICK REJECTED, NOT A CELL");
-            return;
-        }
+		const index = cell.dataset.index;
 
-        const index = cell.dataset.index;
+		// Ignore click if the cell is already filled
+		if (this.getBoard()[index] !== "-") {
+			// console.log("IGNORE CLICK, ALREADY OCCUPIED");
+			return;
+		}
 
-        // Ignore click if the cell is already filled
-        if (this.getBoard()[index] !== "-") {
-            console.log("IGNORE CLICK, ALREADY OCCUPIED");
-            return;
-        }
+		return this.makeMove(index);
+	}
 
-        return this.makeMove(index);
-    }
+	async makeMove(index) {
+		try {
+			const response = await post(`${BASE_URL}/make_move/`, {
+				game_id: this.gameId,
+				move: index,
+			});
+			if (response.message) {
+				// console.log("Make move:", response.message);
+			}
+		} catch (error) {
+			console.error("Error making move:", error);
+		}
+	}
 
-    async makeMove(index) {
-        try {
-            const response = await post(`${BASE_URL}/make_move/`, {
-                game_id: this.gameId,
-                move: index,
-            });
-            if (response.message) {
-                console.log("Make move:", response.message);
-            }
-        } catch (error) {
-            console.error("Error making move:", error);
-        }
-    }
+	async timeOutManager() {
+		try {
+			const response = await post(`${BASE_URL}/timeout_game/`, {
+				game_id: this.gameId,
+			});
+		} catch (error) {}
+	}
 
-    async timeOutManager()
-    {
-        try {
-            const response = await post(`${BASE_URL}/timeout_game/`, {
-            game_id: this.gameId,
-        });
-        } catch (error) {
-        }
-    }
+	checkWinner() {
+		const winningCombinations = [
+			[0, 1, 2],
+			[3, 4, 5],
+			[6, 7, 8],
+			[0, 3, 6],
+			[1, 4, 7],
+			[2, 5, 8],
+			[0, 4, 8],
+			[2, 4, 6],
+		];
 
-    checkWinner() {
-        const winningCombinations = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
+		for (const combo of winningCombinations) {
+			const [a, b, c] = combo;
+			if (
+				this.board[a] &&
+				this.board[a] === this.board[b] &&
+				this.board[a] === this.board[c]
+			) {
+				this.winner = this.board[a] === "X" ? "A" : "B";
+				return;
+			}
+		}
 
-        for (const combo of winningCombinations) {
-            const [a, b, c] = combo;
-            if (
-                this.board[a] &&
-                this.board[a] === this.board[b] &&
-                this.board[a] === this.board[c]
-            ) {
-                this.winner = this.board[a] === "X" ? "A" : "B";
-                return;
-            }
-        }
-
-        // Check for draw
-        if (!this.board.includes(null)) {
-            this.winner = "Draw";
-        }
-    }
+		// Check for draw
+		if (!this.board.includes(null)) {
+			this.winner = "Draw";
+		}
+	}
 }
 
 // Define the custom element
 customElements.define("tictactoe-page", TicTacToePage);
-

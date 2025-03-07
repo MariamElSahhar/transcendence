@@ -9,18 +9,17 @@ export function initializeWebSocket(url, onOpen, onMessage, onClose, onError) {
     socket = new WebSocket(url);
 
     socket.onopen = () => {
-        console.log('WebSocket connected');
+        // console.log('WebSocket connected');
         if (onOpen) onOpen(socket);
     };
 
     socket.onmessage = (event) => {
-        // console.log('Message from server:', event.data);
         const data = JSON.parse(event.data);
         if (onMessage) onMessage(data);
     };
 
     socket.onclose = () => {
-        console.log('WebSocket closed');
+        // console.log('WebSocket closed');
         if(socket)
         {
             if (onClose) onClose();

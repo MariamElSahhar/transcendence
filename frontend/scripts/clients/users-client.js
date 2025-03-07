@@ -73,36 +73,3 @@ export const uploadAvatar = async ({ avatar, user_id }) => {
 	if (error) return { success: false, error: error };
 	return { success: true, data: body };
 };
-
-/* export const usernameExist = async (username) => {
-	// console.log(username.username)
-	const url = `${URIs.users}/username/${username}/exists/`;
-	const { status, body, error } = await get(url);
-	if (error) return { success: false, error: error };
-	return { success: true, exists: body.exists };
-}; */
-
-/* export const emailExist = async (email) => {
-	// console.log(email.email)
-	const url = `${URIs.users}/email/${email}/exists/`;
-	const { status, body, error } = await get(url);
-	if (error) return { success: false, error: error };
-	return { success: true, body };
-};
- */
-
-/* export const update2fa = async ({ id, update }) => {
-	const url = `${URIs.users}/${id}/2fa/`;
-	console.log(url);
-	const { status, body, error } = await post(url, update);
-	if (error) return { success: false, data: null, error: error };
-	return { success: true, body };
-}; */
-
-/* // Create user
-export const createUser = async (userData) => {
-	const url = URIs.users;
-	const { status, body, error } = await post(url, userData);
-	if (error) return { success: false, data: null, error: error };
-	return { success: true, data: body };
-}; */

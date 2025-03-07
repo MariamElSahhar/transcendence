@@ -14,7 +14,6 @@ const request = async (url, options) => {
 		}
 		return { status: response.status, body };
 	} catch (error) {
-		console.log(error);
 		return {
 			status: null,
 			body: null,

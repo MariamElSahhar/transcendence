@@ -183,7 +183,7 @@ class Paddle extends PhysicalObject {
         .normalize();
         if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0)
         {
-          console.log("right",_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost,"left",  _match.gameType == "remote" && ball.movement.x < 0, )
+          // console.log("right",_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost,"left",  _match.gameType == "remote" && ball.movement.x < 0, )
           sendWebSocketMessage({ type: "ballPosition", position:normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration), gameSession: _match.engine.gameSession });
           ball.movement.x=0;
           ball.movement.y=0;

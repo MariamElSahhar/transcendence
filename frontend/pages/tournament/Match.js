@@ -150,7 +150,6 @@ export class Match {
 	}
 
 	resetMatch() {
-		console.log("Resetting match...");
 		this.#points = [0, 0];
 		this.#matchIsOver = false;
 
