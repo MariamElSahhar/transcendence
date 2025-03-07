@@ -1,4 +1,4 @@
-import { showError } from "../../pages/error/ErrorPage";
+import { showError } from "../../pages/error/ErrorPage.js";
 
 let socket = null;
 
