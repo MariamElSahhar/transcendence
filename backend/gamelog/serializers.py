@@ -170,27 +170,22 @@ class CreateRemoteGameSerializer(serializers.ModelSerializer):
         loser = data.get("loserID")
 
         if not winner or not loser:
-            print("Both")
             raise serializers.ValidationError("Both winnerID and loserID are required.")
 
         if winner == loser:
-            print("Winner and loser cannot be the same user.")
             raise serializers.ValidationError(
                 "Winner and loser cannot be the same user."
             )
 
         if not CustomUser.objects.filter(id=winner.id).exists():
-            print("Winner with ID {winner} does not exist.")
             raise serializers.ValidationError(
                 f"Winner with ID {winner} does not exist."
             )
 
         if not CustomUser.objects.filter(id=loser.id).exists():
-            print("Loser with st.")
             raise serializers.ValidationError(f"Loser with ID {loser} does not exist.")
 
         if data.get("winner_score") < data.get("loser_score"):
-            print("winner higher")
             raise serializers.ValidationError(
                 "Winner score should be higher than loser score."
             )

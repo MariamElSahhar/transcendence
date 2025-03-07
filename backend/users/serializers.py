@@ -44,7 +44,6 @@ class UserSerializer(serializers.ModelSerializer):
         email = attrs.get("email")
 
         if CustomUser.objects.filter(username=username).exists():
-            print("validation")
             raise ValidationError({"username": "This username is already in use."})
 
         if CustomUser.objects.filter(email=email).exists():
