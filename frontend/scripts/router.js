@@ -174,14 +174,14 @@ const handleLocation = async () => {
 };
 
 window.onerror = function (message, source, lineno, colno, error) {
-	console.error("Global error caught:", error);
 	showError();
+	console.error("Global error caught:", error);
 	return true;
 };
 
 window.addEventListener("unhandledrejection", function (event) {
-	console.error("Unhandled promise rejection:", event.reason);
 	showError();
+	console.error("Unhandled promise rejection:", event.reason);
 });
 
 const loadRoute = async (route, layout) => {

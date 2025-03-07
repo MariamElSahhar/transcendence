@@ -3,6 +3,7 @@ import WebGL from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/capab
 import { Engine } from "./Engine.js";
 import { getUserSessionData } from "../../scripts/utils/session-manager.js";
 import { renderEndGameCard, renderPreGameCard } from "./Overlays.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class LocalGamePage extends Component {
 	constructor() {
@@ -116,6 +117,7 @@ export class LocalGamePage extends Component {
 			this.overlay = overlay;
 			this.countDownIntervalId = countDownIntervalId;
 		} else {
+			showError();
 			console.error("WebGL not supported:", WebGL.getWebGLErrorMessage());
 		}
 	}

@@ -6,6 +6,7 @@ import {
 	addRemoteGame,
 } from "../../../scripts/clients/gamelog-client.js";
 import { isAuth } from "../../../scripts/utils/session-manager.js";
+import { showError } from "../../error/ErrorPage.js";
 
 export class Match {
 	engine;
@@ -192,7 +193,7 @@ export class Match {
 			const { error } = await addRemoteGame({
 				opponent_score: this.#points[1],
 				my_score: this.#points[0],
-				opponent_username: this.engine.players[1]
+				opponent_username: this.engine.players[1],
 			});
 		}
 
@@ -201,6 +202,7 @@ export class Match {
 				player.stopGame();
 				player.resetPaddle(); // Reset paddles at the end of the game
 			} else {
+				showError();
 				console.error(
 					`Player ${index} is null during reset at game end.`
 				);

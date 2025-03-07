@@ -1,7 +1,7 @@
 import { Component } from "../../../pages/Component.js";
 import { searchUsers } from "../../../scripts/clients/users-client.js";
 import { isAuth } from "../../../scripts/utils/session-manager.js";
-
+import { showError } from "../../../pages/error/ErrorPage.js";
 export class SearchNav extends Component {
 	render() {
 		return `
@@ -17,8 +17,16 @@ export class SearchNav extends Component {
 		this.searchBar = this.querySelector("#search-bar");
 		this.searchResults = this.querySelector("#search-results");
 
-		super.addComponentEventListener(this.searchBar, "input", this.handleInput);
-		super.addComponentEventListener(document, "click", this.handleDocumentClick);
+		super.addComponentEventListener(
+			this.searchBar,
+			"input",
+			this.handleInput
+		);
+		super.addComponentEventListener(
+			document,
+			"click",
+			this.handleDocumentClick
+		);
 	}
 
 	handleInput = async (event) => {
@@ -36,21 +44,27 @@ export class SearchNav extends Component {
 
 		if (success) {
 			this.searchResults.innerHTML = this.renderResults(body.data);
-			this.searchResults.style.display = (body.data && body.data.length > 0) ? "block" : "none";
+			this.searchResults.style.display =
+				body.data && body.data.length > 0 ? "block" : "none";
 		} else {
-			console.error(error);
+			showError();
+			console.error(error || "Weird error occured.");
 		}
 	};
 
 	renderResults(data) {
 		if (!data || data.length === 0) return "";
-		return data.slice(0, 3)
-			.map(user => `
+		return data
+			.slice(0, 3)
+			.map(
+				(user) => `
 				<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.id}')">
 					<img src="${window.APP_CONFIG.backendUrl}${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
 					${user.username}
 				</div>
-			`).join("");
+			`
+			)
+			.join("");
 	}
 
 	handleDocumentClick = (event) => {

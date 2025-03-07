@@ -1,19 +1,25 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { OrbitControls } from "./controls/OrbitControls.js";
+import { showError } from "../../pages/error/ErrorPage.js";
 
 export class ThreeJSUtils {
 	constructor(engine) {
-		
 		this.appEngine = engine;
 		this.container = engine.component?.container;
 		if (!this.container) {
-			console.error("Engine container is not available; renderer cannot be appended.");
+			showError();
+			console.error(
+				"Engine container is not available; renderer cannot be appended."
+			);
 		}
 
 		this.setupRenderer();
 		this.setupCamera();
 
-		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+		this.controls = new OrbitControls(
+			this.camera,
+			this.renderer.domElement
+		);
 		this.controls.target.set(0, 0, 0);
 
 		this._resizeHandler = () => {
@@ -39,7 +45,9 @@ export class ThreeJSUtils {
 		const topMargin = parseInt(style.marginTop, 10) || 0;
 		const bottomMargin = parseInt(style.marginBottom, 10) || 0;
 		const slotElement = document.querySelector("#slot");
-		const slotHeight = slotElement ? slotElement.offsetHeight : window.innerHeight;
+		const slotHeight = slotElement
+			? slotElement.offsetHeight
+			: window.innerHeight;
 		return slotHeight - topMargin - bottomMargin;
 	}
 
@@ -59,7 +67,12 @@ export class ThreeJSUtils {
 	}
 
 	setupCamera() {
-		this.camera = new THREE.PerspectiveCamera(59, this.viewportWidth / this.viewportHeight, 0.1, 1000);
+		this.camera = new THREE.PerspectiveCamera(
+			59,
+			this.viewportWidth / this.viewportHeight,
+			0.1,
+			1000
+		);
 		this.camera.position.set(15, -52, 17);
 		this.camera.lookAt(0, 0, -1);
 		this.camera.up.set(0, 0, 1);
@@ -85,7 +98,12 @@ export class ThreeJSUtils {
 
 	getHorizontalFOV() {
 		const vFOV = this.getVerticalFOV();
-		return 2 * Math.atan(Math.tan(vFOV / 2) * (this.viewportWidth / this.viewportHeight));
+		return (
+			2 *
+			Math.atan(
+				Math.tan(vFOV / 2) * (this.viewportWidth / this.viewportHeight)
+			)
+		);
 	}
 
 	startAnimationLoop(callback) {

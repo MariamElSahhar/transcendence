@@ -6,6 +6,7 @@ import {
 	isValidEmail,
 } from "../../scripts/utils/input-validator.js";
 import { Footer } from "../../layouts/components/Footer.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class SignUpPage extends Component {
 	constructor() {
@@ -256,6 +257,7 @@ export class SignUpPage extends Component {
 				errorMessageElement.textContent = message;
 			}
 		} else {
+			showError();
 			console.error(`Error message element for ${field} not found.`);
 		}
 
@@ -295,6 +297,7 @@ export class SignUpPage extends Component {
 				this.#showErrorBanner(error);
 			}
 		} catch (err) {
+			showError();
 			console.error("Error during registration:", err);
 			this.elements.registerButton.innerHTML = "Sign Up";
 			this.elements.registerButton.disabled = false;

@@ -10,6 +10,7 @@ import {
 	renderWaitingForOpponent,
 	removeOverlay,
 } from "../local-game/Overlays.js";
+import { showError } from "../error/ErrorPage.js";
 
 const BASE_URL = `/api/tictactoe`;
 
@@ -653,6 +654,7 @@ class TicTacToePage extends Component {
 				this.inMatchmaking = true;
 			}
 		} catch (error) {
+			showError();
 			console.error("Error subscribing to matchmaking:", error);
 		}
 	}
@@ -673,6 +675,7 @@ class TicTacToePage extends Component {
 				this.inMatchmaking = false;
 			}
 		} catch (error) {
+			showError();
 			console.error("Error unsubscribing from matchmaking:", error);
 		}
 	}
@@ -709,6 +712,7 @@ class TicTacToePage extends Component {
 			// Return null or an empty object if no game is found
 			return null;
 		} catch (error) {
+			showError();
 			console.error("Error fetching game info:", error);
 			// Return false or handle the error as appropriate
 			return false;
@@ -748,6 +752,7 @@ class TicTacToePage extends Component {
 				// console.log("Make move:", response.message);
 			}
 		} catch (error) {
+			showError();
 			console.error("Error making move:", error);
 		}
 	}

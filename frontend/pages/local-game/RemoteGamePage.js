@@ -19,6 +19,7 @@ import {
 	renderPlayerDisconnectedCard,
 	removeOverlay,
 } from "./Overlays.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class RemoteGamePage extends Component {
 	constructor() {
@@ -93,6 +94,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketError(error) {
+		showError();
 		console.error("WebSocket error:", error);
 	}
 
@@ -193,6 +195,7 @@ export class RemoteGamePage extends Component {
 					});
 				}
 			} else {
+				showError();
 				console.error(
 					"WebGL not supported:",
 					WebGL.getWebGLErrorMessage()
@@ -246,6 +249,7 @@ export class RemoteGamePage extends Component {
 				this.timeoutID = null; // Reset the global variable
 			}
 		} catch (error) {
+			showError();
 			console.error(
 				"Error while removing from matchmaking queue:",
 				error
@@ -292,6 +296,7 @@ export class RemoteGamePage extends Component {
 		if (playerIndex < this.scores.length) {
 			this.scores[playerIndex] += 1;
 		} else {
+			showError();
 			console.error("Invalid player index:", playerIndex);
 		}
 	}

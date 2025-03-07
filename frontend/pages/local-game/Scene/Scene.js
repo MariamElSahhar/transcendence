@@ -1,6 +1,7 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Match } from "./Match.js";
 import { PongGameBox } from "./PongGameBox.js";
+import { showError } from "../../error/ErrorPage.js";
 
 export class Scene {
 	#engine;
@@ -52,6 +53,7 @@ export class Scene {
 				throw new Error("threeJS controls are not defined on engine.");
 			}
 		} catch (error) {
+			showError();
 			console.error("Error during Scene initialization:", error);
 			throw error;
 		}
@@ -77,8 +79,12 @@ export class Scene {
 		const matchPosition = this.match.threeJSGroup.position;
 		const horizontalFOV = this.#engine.threeJS.getHorizontalFOV();
 		const verticalFOV = this.#engine.threeJS.getVerticalFOV();
-		const xHeight = (this.#matchHalfWidth + this.#cameraPadding * 0.5) / Math.tan(horizontalFOV * 0.5);
-		const yHeight = (this.#matchHalfHeight + this.#cameraPadding * 0.5) / Math.tan(verticalFOV * 0.5);
+		const xHeight =
+			(this.#matchHalfWidth + this.#cameraPadding * 0.5) /
+			Math.tan(horizontalFOV * 0.5);
+		const yHeight =
+			(this.#matchHalfHeight + this.#cameraPadding * 0.5) /
+			Math.tan(verticalFOV * 0.5);
 		const cameraHeight = Math.max(xHeight, yHeight);
 
 		const cameraPosition = new THREE.Vector3(

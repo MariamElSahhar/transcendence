@@ -1,6 +1,7 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Match } from "./Match.js";
 import { PongGameBox } from "../local-game/Scene/PongGameBox.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class Scene {
 	#engine;
@@ -62,6 +63,7 @@ export class Scene {
 				throw new Error("threeJS controls are not defined on engine.");
 			}
 		} catch (error) {
+			showError();
 			console.error("Error during Scene initialization:", error);
 			throw error;
 		}
@@ -75,12 +77,14 @@ export class Scene {
 		if (this.#match && this.#match.players[index]) {
 			this.#match.players[index].paddle.setDirection(direction);
 		} else {
-			// console.error(`Player ${index} or match is not initialized.`);
+			showError();
+			console.error(`Player ${index} or match is not initialized.`);
 		}
 	}
 
 	updateFrame(currentTime, timeDelta) {
 		if (!this.#pongGameBox) {
+			showError();
 			console.error("PongGameBox is not initialized.");
 			return;
 		}

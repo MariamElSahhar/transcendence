@@ -5,6 +5,7 @@ import {
 } from "../scripts/clients/friends-client.js";
 import { getUserSessionData } from "../scripts/utils/session-manager.js";
 import { isAuth } from "../scripts/utils/session-manager.js";
+import { showError } from "./error/ErrorPage.js";
 
 export class FriendsPage extends Component {
 	constructor() {
@@ -105,6 +106,7 @@ export class FriendsPage extends Component {
 			friend_id
 		);
 		if (!success) {
+			showError();
 			console.error("Failed to remove friend:", error);
 		}
 	}
@@ -115,6 +117,7 @@ export class FriendsPage extends Component {
 		if (success) {
 			this.friends = data;
 		} else {
+			showError();
 			console.error("Failed to fetch friends:", error);
 		}
 

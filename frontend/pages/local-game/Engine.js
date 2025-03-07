@@ -3,6 +3,7 @@ import { ThreeJSUtils } from "../../scripts/game-utils/ThreeJSUtils.js";
 import { KeyHandler } from "../../scripts/game-utils/KeyHandler.js";
 import { Player } from "./Scene/player/Player.js";
 import { Scene } from "./Scene/Scene.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class Engine {
 	#threeJS;
@@ -18,14 +19,14 @@ export class Engine {
 		players,
 		playerSide = "NA",
 		gameSession = -1,
-    sameSystem="NA"
+		sameSystem = "NA"
 	) {
 		this.#component = component;
 		this.#isAIGame = isAIGame;
 		this.playerSide = playerSide;
 		this.gameSession = gameSession;
 		this.players = players;
-    	this.sameSystem=sameSystem;
+		this.sameSystem = sameSystem;
 		this.#threeJS = new ThreeJSUtils(this);
 		this.keyHookHandler = new KeyHandler(this, this.#isAIGame);
 		this.scene = new Scene();
@@ -33,6 +34,7 @@ export class Engine {
 
 	async createScene() {
 		if (!this.#component.container) {
+			showError();
 			console.error(
 				"Container not found in component; delaying initialization."
 			);
@@ -40,6 +42,7 @@ export class Engine {
 		}
 
 		if (!this.players || this.players.length < 2) {
+			showError();
 			console.error(
 				"Players are not correctly initialized:",
 				this.players
@@ -59,6 +62,7 @@ export class Engine {
 			this.scene.updateCamera();
 			this.displayGameScene();
 		} else {
+			showError();
 			console.error("Scene initialization failed");
 		}
 	}
@@ -156,7 +160,7 @@ export class Engine {
 				this.playerSide,
 				this.players,
 				this.gameSession,
-        this.sameSystem
+				this.sameSystem
 			);
 		else this.keyHookHandler.startListeningForKeys();
 	}

@@ -1,6 +1,7 @@
 import { Component } from "../Component.js";
 import { login } from "../../scripts/clients/token-client.js";
 import { Footer } from "../../layouts/components/Footer.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class LoginPage extends Component {
 	constructor() {
@@ -170,6 +171,7 @@ export class LoginPage extends Component {
 
 	displayError(message, errorAlert) {
 		if (!errorAlert) {
+			showError();
 			console.error("Error alert element not found.");
 			return;
 		}
@@ -180,6 +182,7 @@ export class LoginPage extends Component {
 
 	hideError(errorAlert) {
 		if (!errorAlert) {
+			showError();
 			console.error("Error alert element not found.");
 			return;
 		}

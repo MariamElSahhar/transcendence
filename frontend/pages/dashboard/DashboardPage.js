@@ -5,6 +5,7 @@ import {
 	isAuth,
 	getUserSessionData,
 } from "../../scripts/utils/session-manager.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class DashboardPage extends Component {
 	constructor() {
@@ -81,6 +82,7 @@ export class DashboardPage extends Component {
 	async getGameLog() {
 		const { success, gamelog, stats } = await fetchUserGameLog(this.userid);
 		if (!success) {
+			showError();
 			console.error("Error fetching gamelog");
 			return;
 		}

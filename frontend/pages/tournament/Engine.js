@@ -2,6 +2,7 @@ import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/
 import { ThreeJSUtils } from "../../scripts/game-utils/ThreeJSUtils.js";
 import { KeyHandler } from "../../scripts/game-utils/KeyHandler.js";
 import { Scene } from "./TournamentScene.js";
+import { showError } from "../error/ErrorPage.js";
 
 export class Engine {
 	#threeJS;
@@ -20,11 +21,13 @@ export class Engine {
 
 	async renderScene() {
 		if (!Array.isArray(this.playerNames) || this.playerNames.length < 2) {
+			showError();
 			console.error("Invalid player names:", this.playerNames);
 			return;
 		}
 
 		if (!this.#component || !this.#component.container) {
+			showError();
 			console.error("Invalid component or container.");
 			return;
 		}
@@ -57,6 +60,7 @@ export class Engine {
 			this.#scene.updateCamera();
 			this.displayGameScene();
 		} else {
+			showError();
 			console.error("Scene initialization failed");
 		}
 	}
@@ -70,6 +74,7 @@ export class Engine {
 		try {
 			this.stopAnimationLoop();
 		} catch (err) {
+			showError();
 			console.error("Error stopping animation loop:", err);
 		}
 		try {
@@ -77,6 +82,7 @@ export class Engine {
 				this.#keyHookHandler.stopListeningForKeys();
 			}
 		} catch (err) {
+			showError();
 			console.error("Error stopping key hook handler:", err);
 		}
 
@@ -85,6 +91,7 @@ export class Engine {
 				this.clearScene(this.#scene.threeJSScene);
 			}
 		} catch (err) {
+			showError();
 			console.error("Error clearing the scene:", err);
 		}
 		try {
@@ -92,6 +99,7 @@ export class Engine {
 				this.#threeJS.disposeResources();
 			}
 		} catch (err) {
+			showError();
 			console.error("Error clearing the renderer:", err);
 		}
 	}
@@ -192,6 +200,7 @@ export class Engine {
 
 	getComponent() {
 		if (!this.#component) {
+			showError();
 			console.error("Component is not defined.");
 			return null;
 		}
