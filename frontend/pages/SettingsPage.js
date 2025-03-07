@@ -190,6 +190,13 @@ export class SettingsPage extends Component {
 				</div>
 			</div>
 
+
+			`;
+	}
+
+	deleteAccountModal() {
+		const modalWrapper = document.createElement("div");
+		modalWrapper.innerHTML = `
 			<div class="modal fade" id="confirm-delete-modal" aria-hidden="true" tabindex="-1">
 				<div class="modal-dialog modal-dialog-centered">
 					<div class="modal-content">
@@ -199,17 +206,17 @@ export class SettingsPage extends Component {
 						</div>
 						<form>
 							<div class="modal-body d-flex flex-column justify-content-center">
-								<p>Are you sure you want to delete your account? </p>
+								<p>Are you sure you want to delete your account?</p>
 							</div>
 							<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-							<button id="deleteAccount" type="button" class="btn btn-danger">Delete</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+								<button id="deleteAccount" type="button" class="btn btn-danger">Delete</button>
 							</div>
 						</form>
 					</div>
 				</div>
-			</div>
-			`;
+			</div>`;
+		return modalWrapper.firstElementChild;
 	}
 
 	style() {
@@ -381,8 +388,6 @@ export class SettingsPage extends Component {
 			this.#saveEnabler();
 		});
 
-		const deleteModal = document.getElementById("confirm-delete-modal");
-		this.deleteModal = new bootstrap.Modal(deleteModal);
 		this.deleteError = document.getElementById("errorClose");
 		super.addComponentEventListener(
 			this.deleteError,
@@ -661,6 +666,9 @@ export class SettingsPage extends Component {
 
 	async #deleteHandler(event) {
 		event.preventDefault();
+		document.querySelector("body").appendChild(this.deleteAccountModal());
+		const deleteModal = document.getElementById("confirm-delete-modal");
+		this.deleteModal = new bootstrap.Modal(deleteModal);
 		this.deleteModal.show();
 	}
 
