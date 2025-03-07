@@ -21,7 +21,16 @@ from .serializers.ttt import (
 @api_view(["POST"])
 def create_gamelog_remote(request):
     user1 = request.user.id
-    user2 = CustomUser.objects.get(username=request.data["opponent_username"]).id
+    try:
+        user2 = CustomUser.objects.get(username=request.data["opponent_username"]).id
+    except CustomUser.DoesNotExist:
+        return Response(
+            {
+                "error": "Username not found.",
+            },
+            status=status.HTTP_404_NOT_FOUND
+        )
+
     if(request.data["my_score"] > request.data["opponent_score"]):
         winnerID=user1
         winner_score=request.data["my_score"]
