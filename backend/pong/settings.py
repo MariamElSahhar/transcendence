@@ -17,9 +17,6 @@ from datetime import timedelta
 
 import socket
 
-
-import socket
-
 env = environ.Env()
 environ.Env.read_env()
 if(env("ENV") == "production" ):
