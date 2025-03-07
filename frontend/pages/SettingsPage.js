@@ -392,12 +392,6 @@ export class SettingsPage extends Component {
 			this.#deleteHandler
 		);
 
-		this.deleteAccountButton = this.querySelector("#deleteAccount");
-		super.addComponentEventListener(
-			this.deleteAccountButton,
-			"click",
-			this.#deleteAccountHandler
-		);
 
 		this.cancelButton = this.querySelector("#cancel-button");
 		super.addComponentEventListener(
@@ -659,6 +653,12 @@ export class SettingsPage extends Component {
 		event.preventDefault();
 		document.querySelector("body").appendChild(this.deleteAccountModal());
 		const deleteModal = document.getElementById("confirm-delete-modal");
+		this.deleteAccountButton = document.getElementById("deleteAccount");
+		super.addComponentEventListener(
+			this.deleteAccountButton,
+			"click",
+			this.#deleteAccountHandler
+		);
 		this.deleteModal = new bootstrap.Modal(deleteModal);
 		this.deleteModal.show();
 	}
@@ -674,6 +674,7 @@ export class SettingsPage extends Component {
 	}
 
 	async #deleteAccountHandler(event) {
+		console.log("hefhsl");
 		event.preventDefault();
 		this.deleteAccountButton.innerHTML = `
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
