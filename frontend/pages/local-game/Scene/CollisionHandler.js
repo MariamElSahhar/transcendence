@@ -181,8 +181,9 @@ class Paddle extends PhysicalObject {
       const normalizedMovement = this.intersection.clone()
         .sub(movementReference)
         .normalize();
-        if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0 && _match.isHost)
+        if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0)
         {
+          console.log("right",_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost,"left",  _match.gameType == "remote" && ball.movement.x < 0, )
           sendWebSocketMessage({ type: "ballPosition", position:normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration), gameSession: _match.engine.gameSession });
           ball.movement.x=0;
           ball.movement.y=0;
@@ -192,7 +193,7 @@ class Paddle extends PhysicalObject {
         newTravelVector = normalizedMovement.multiplyScalar(newTravelVector.length());
       }
       else {
-        if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0 && _match.isHost)
+        if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0)
         {
           let move= ball.movement;
           move.y=ball.movement.y * -1
