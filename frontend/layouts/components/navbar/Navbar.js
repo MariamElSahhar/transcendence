@@ -54,9 +54,9 @@ export class Navbar extends Component {
 								</span>
 								<ul class="dropdown-menu dropdown-menu-end"
 									aria-labelledby="dropdownMenuLink">
-									<li class="dropdown-item fw-bolder" onclick="window.redirect('/dashboard')">${username}</li>
-									<li id="settings" class="dropdown-item" onclick="window.redirect('/settings')">Settings</li>
-									<li id="logout" class="dropdown-item text-danger">Sign out</li>
+									<li class="dropdown-item fw-bolder cursor-pointer" onclick="window.redirect('/dashboard')">${username}</li>
+									<li id="settings" class="dropdown-item cursor-pointer" onclick="window.redirect('/settings')">Settings</li>
+									<li id="logout" class="dropdown-item text-danger cursor-pointer">Sign out</li>
 								</ul>
 							</div>
 						</div>

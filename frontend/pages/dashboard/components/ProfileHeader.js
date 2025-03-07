@@ -36,7 +36,7 @@ export class ProfileHeader extends Component {
 				this.user.is_me = mydata.userid == data.id;
 				this.user.is_online = data.is_online;
 			} else {
-				// console.log(error);
+				console.log(error);
 			}
 		}
 	}
