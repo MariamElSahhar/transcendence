@@ -116,7 +116,7 @@ export class Paddle {
 			this.lastBallMovement = currentTime;
 		}
 
-		if (this.flag == 0 || currentTime - this.#lastReactionTime > reactionDelay) {
+		if ((this.flag == 0 && currentTime - this.lastReactionTime > 300) || (this.flag==1 && currentTime - this.lastReactionTime > reactionDelay)) {
 
 			if (this.flag == 0) {
 				this.lastBallMovement = 0;

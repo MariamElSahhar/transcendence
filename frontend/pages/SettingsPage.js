@@ -19,7 +19,7 @@ import {
 	getUserSessionData,
 	isAuth,
 } from "../scripts/utils/session-manager.js";
-import { showError } from "/pages/error/ErrorPage.js";
+import { showError } from "../pages/error/ErrorPage.js";
 
 export class SettingsPage extends Component {
 	constructor() {
