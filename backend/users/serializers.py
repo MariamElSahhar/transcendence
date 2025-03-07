@@ -36,6 +36,9 @@ class UserSerializer(serializers.ModelSerializer):
     friends = FriendSerializer(many=True, read_only=True)
     is_online = serializers.SerializerMethodField()
 
+    def get_is_online(self, obj):
+        obj.check_online_status()
+        return obj.is_online
     def validate(self, attrs):
         username = attrs.get("username")
         email = attrs.get("email")

@@ -57,21 +57,6 @@ export class SettingsPage extends Component {
 
 	renderWithSettings() {
 		return `
-			<div class="modal fade" id="errorModal" tabindex="-1">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h1 class="modal-title fs-5 text-danger">Error!</h1>
-						</div>
-							<div class="modal-body d-flex flex-column justify-content-center">
-								<p>There is an error in one of the fields!</p>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" id="errorClose" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
 			<div id="settings" class="position-relative d-flex flex-column align-items-center justify-content-center min-h-100 h-100 p-4">
 				<div class="form-wrapper d-flex flex-column flex-md-row align-items-center text-center text-md-start">
 
@@ -239,6 +224,12 @@ export class SettingsPage extends Component {
 		#profile-div {
 			position:relative;
 			z-index:10;
+		}
+		.modal {
+			z-index: 1050 !important;
+		}
+		.modal-backdrop {
+			z-index: 1040 !important;
 		}
 
 		.input-group {
