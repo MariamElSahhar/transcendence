@@ -92,6 +92,8 @@ export class Match {
 	}
 
 	startGame() {
+		if(this.engine.isAIGame)
+			this.players[1].paddle.startTime = 0;
 		this.players.forEach((player) => {
 			if (player) {
 				player.startGame();
