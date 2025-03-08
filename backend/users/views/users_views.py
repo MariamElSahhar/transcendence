@@ -34,7 +34,10 @@ def user_list_create_view(request):
         user = serializer.save(
             password=make_password(serializer.validated_data["password"])
         )
-        send_otp(user)
+        try:
+            send_otp(user)
+        except Exception as e:
+            return Response({"error": f"Failed to send OTP: {str(e)}"}, status=400)
         return Response({"message": "User created", "data": serializer.data}, status=status.HTTP_201_CREATED)
 
 
