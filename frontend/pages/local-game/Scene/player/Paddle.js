@@ -102,7 +102,9 @@ export class Paddle {
 		const movementDelay = 50;
 		const currentTime = Date.now();
 		const movementThreshold = 0.1;
-		const maxAISpeed = 15;
+		const maxSpeed = 3.5;
+		const smoothMove = 0.1;
+
 		if (this.#isResetting) {
 			return;
 		}
@@ -112,16 +114,24 @@ export class Paddle {
             this.startTime =currentTime;
 		}
 		if (this.flag == 1 && currentTime - this.lastBallMovement > movementDelay) {
-			this.ballPrevPredX = this.ballPrevPredX + this.ballVelocityX * ((movementDelay+100)/1000);
-			this.ballPrevPredY = this.ballPrevPredY + this.ballVelocityY * ((movementDelay+100)/1000);
+			this.ballPrevPredX = this.ballPrevPredX + this.ballVelocityX * ((movementDelay+50)/1000);
+			this.ballPrevPredY = this.ballPrevPredY + this.ballVelocityY * ((movementDelay+50)/1000);
 			this.distanceToBall = this.ballPrevPredY - this.#threeJSGroup.position.y;
-			this.aiSpeed = Math.min(maxAISpeed, Math.abs(this.distanceToBall) * 0.15);
 			if (Math.abs(this.ballPrevPredY) > this.#boardEdgeLimit) {
-				this.aiSpeed *= 0.9;
+				this.ballVelocityY = - this.ballVelocityY;
+				console.log("here");
+				// this.ballPrevPredY = this.ballPrevPredY + this.ballVelocityY * ((movementDelay+100)/1000);
 			}
+			// this.aiSpeed = 15;
+			// console.log(this.aiSpeed)
+			// if (Math.abs(this.ballPrevPredY) > this.#boardEdgeLimit) {
+			// 	AISpeed *= 0.9;
+			// }
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
-				const smoothMove = 0.1;
-				const newYPosition = this.#threeJSGroup.position.y + (this.distanceToBall * smoothMove);
+				let moveAmount = this.distanceToBall * smoothMove;
+				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), minSpeed, maxSpeed);
+				console.log(moveAmount)
+				const newYPosition = this.#threeJSGroup.position.y + moveAmount;
 				this.#threeJSGroup.position.setY(newYPosition);
 			}
 			this.lastBallMovement = currentTime;
