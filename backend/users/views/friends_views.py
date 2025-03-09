@@ -16,7 +16,7 @@ def get_add_friends_view(request, user_id):
     # Get friends
     if request.method == "GET":
         friends = user.get_friends()
-        serializer = FriendSerializer(friends, many=True)
+        serializer = FriendSerializer(friends, many=True, context={'request': request})
         return Response({"message": "Friends retrieved","data":serializer.data}, status=status.HTTP_200_OK)
 
     # Add friend

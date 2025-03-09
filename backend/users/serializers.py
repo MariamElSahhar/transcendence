@@ -6,13 +6,18 @@ from django.utils import timezone
 
 class FriendSerializer(serializers.ModelSerializer):
     is_online = serializers.SerializerMethodField()
+    is_friend = serializers.SerializerMethodField()
     class Meta:
         model = CustomUser
-        fields = ["id", "username", "avatar", "is_online", "last_seen"]
+        fields = ["id", "username", "avatar", "is_online", "is_friend"]
 
     def get_is_online(self, obj):
         obj.check_online_status()
         return obj.is_online
+
+    def get_is_friend(self, obj):
+        user = self.context.get("request").user
+        return user in obj.friends.all()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,7 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "password",
             "email_otp",
-            "is_email_verified",
             "enable_otp",
             "avatar",
             "friends",

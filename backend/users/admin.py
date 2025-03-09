@@ -15,7 +15,6 @@ class CustomUserAdmin(UserAdmin):
             ("Permissions"),
             {
                 "fields": (
-                    "is_email_verified",
                     "is_superuser",
                     "is_staff",
                     "enable_otp",
@@ -25,7 +24,7 @@ class CustomUserAdmin(UserAdmin):
         ),
         (("Important dates"), {"fields": ("last_login",)}),
     )
-    readonly_fields = ["last_login", "is_email_verified"]
+    readonly_fields = ["last_login"]
     add_fieldsets = (
         (
             None,
