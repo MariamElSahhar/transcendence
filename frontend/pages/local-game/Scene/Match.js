@@ -113,7 +113,8 @@ export class Match {
 					timeDelta,
 					pongGameBox,
 					index === 1 ? ballPosition : null,
-					!this.#ballIsWaiting && !this.matchIsOver
+					!this.#ballIsWaiting && !this.matchIsOver,
+					this.ball.movement
 				);
 			}
 		});

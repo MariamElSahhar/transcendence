@@ -255,8 +255,6 @@ export class PongBoard {
 		this.#threeJSBoard.add(this.#scoreSprite);
 	}
 
-	updateFrame() {}
-
 	get score() {
 		return this.#score;
 	}
