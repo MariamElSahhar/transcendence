@@ -12,7 +12,7 @@ def custom_exception_handler(exc, context):
                 if isinstance(messages, list):
                     error_messages.append(f"{field.capitalize()}: {' '.join(messages)}")
                 else:
-                    if field == "detail":
+                    if field in ["detail", "non_field_errors"]:
                         error_messages.append(str(messages))
                     else:
                         error_messages.append(f"{field.capitalize()}: {str(messages)}")

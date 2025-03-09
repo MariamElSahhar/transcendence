@@ -7,8 +7,8 @@ class RemoteGameAdmin(admin.ModelAdmin):
     list_display = (
         "get_users",
         "date",
-        "winnerID",
-        "loserID",
+        "winner",
+        "loser",
         "winner_score",
         "loser_score",
     )
