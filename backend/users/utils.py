@@ -13,6 +13,7 @@ def send_otp(user):
     """
 
     otp = generate_otp()
+    print(otp)
     user.email_otp = otp
     user.otp_created_at = timezone.now()
     user.save()
