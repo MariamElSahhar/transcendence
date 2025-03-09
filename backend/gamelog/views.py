@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from remote_pong.models import  GameSession
 from users.models import CustomUser
 
 from .serializers.local import (
@@ -28,20 +27,25 @@ def create_gamelog_remote(request):
             {
                 "error": "Username not found.",
             },
-            status=status.HTTP_404_NOT_FOUND
+            status=status.HTTP_404_NOT_FOUND,
         )
 
-    if(request.data["my_score"] > request.data["opponent_score"]):
-        winnerID=user1
-        winner_score=request.data["my_score"]
-        loserID=user2
-        loser_score=request.data["opponent_score"]
+    if request.data["my_score"] > request.data["opponent_score"]:
+        winnerID = user1
+        winner_score = request.data["my_score"]
+        loserID = user2
+        loser_score = request.data["opponent_score"]
     else:
-        winnerID=user2
-        winner_score=request.data["opponent_score"]
-        loserID=user1
-        loser_score=request.data["my_score"]
-    data={"winnerID":winnerID,"loserID":loserID,"winner_score":winner_score,"loser_score":loser_score}
+        winnerID = user2
+        winner_score = request.data["opponent_score"]
+        loserID = user1
+        loser_score = request.data["my_score"]
+    data = {
+        "winnerID": winnerID,
+        "loserID": loserID,
+        "winner_score": winner_score,
+        "loser_score": loser_score,
+    }
 
     serializer = CreateRemoteGameSerializer(data=data)
     if serializer.is_valid():
@@ -101,17 +105,27 @@ def gamelog(request, user_id):
     local_games = target_user.local_games.all().order_by("-date")
     ttt_games = target_user.ttt_games.all().order_by("-date")
 
-    local_serializer = LocalGameSerializer(local_games, many=True, context={"request": request})
-    remote_serializer = RemoteGameSerializer(remote_games, many=True, context={"request": request})
-    ttt_serializer = TicTacToeSerializer(ttt_games, many=True, context={"user_id": user_id})
+    local_serializer = LocalGameSerializer(
+        local_games, many=True, context={"request": request}
+    )
+    remote_serializer = RemoteGameSerializer(
+        remote_games, many=True, context={"request": request}
+    )
+    ttt_serializer = TicTacToeSerializer(
+        ttt_games, many=True, context={"user_id": user_id}
+    )
 
     local_games_count = len(local_serializer.data)
     remote_games_count = len(remote_serializer.data)
     ttt_games_count = len(ttt_serializer.data)
 
-    local_wins = len([item for item in local_serializer.data if item.get('is_win') == True])
-    remote_wins = len([item for item in remote_serializer.data if item.get('is_win') == True])
-    ttt_wins = len([item for item in ttt_serializer.data if item.get('is_win') == True])
+    local_wins = len(
+        [item for item in local_serializer.data if item.get("is_win") is True]
+    )
+    remote_wins = len(
+        [item for item in remote_serializer.data if item.get("is_win") is True]
+    )
+    ttt_wins = len([item for item in ttt_serializer.data if item.get("is_win") is True])
 
     response_data = {
         "stats": {
@@ -125,10 +139,10 @@ def gamelog(request, user_id):
             "totalWon": local_wins + remote_wins + ttt_wins,
         },
         "data": {
-            "local":  local_serializer.data,
+            "local": local_serializer.data,
             "remote": remote_serializer.data,
             "ttt": ttt_serializer.data,
-        }
+        },
     }
 
     return Response(response_data)

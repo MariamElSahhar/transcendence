@@ -17,10 +17,14 @@ class CreateLocalGameSerializer(serializers.ModelSerializer):
     def validate(self, data):
         my_score = data.get("my_score")
         opponent_score = data.get("opponent_score")
+        opponent_username = data.get("opponent_username")
+
+        if opponent_username is None:
+            raise serializers.ValidationError("Opponent username is required.")
 
         if my_score is None or opponent_score is None:
             raise serializers.ValidationError(
-                "Both my_score and opponent_score are required."
+                "Both scores are required."
             )
 
         return data

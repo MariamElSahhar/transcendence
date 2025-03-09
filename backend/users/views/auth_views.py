@@ -44,7 +44,10 @@ def login_view(request):
                     )
                 return set_response_cookie(response, tokens, user, True)
             elif user.enable_otp:
-                send_otp(user)
+                try:
+                    send_otp(user)
+                except Exception as e:
+                    return Response({"error": f"Failed to send OTP: {str(e)}"}, status=400)
                 return Response(
                     {
                         "message": "OTP sent to your email.",
@@ -76,7 +79,10 @@ def register_view(request):
         user = user_serializer.save(password=make_password(password))
 
         # Send OTP
-        send_otp(user)
+        try:
+            send_otp(user)
+        except Exception as e:
+            return Response({"error": f"Failed to send OTP: {str(e)}"}, status=400)
 
         return Response(
             {"message": "Registration successful. OTP has been sent to your email."},
