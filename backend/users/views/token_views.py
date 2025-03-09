@@ -19,6 +19,7 @@ def token_refresh_view(request):
             status=status.HTTP_200_OK
         )
 
+    # custom error handling here to avoid the console error on frontend
     try:
         token_serializer = TokenRefreshSerializer(data={"refresh": refresh_token})
         token_serializer.is_valid(raise_exception=True)
@@ -49,9 +50,10 @@ def token_status_view(request):
             status=status.HTTP_200_OK
         )
 
+    # custom error handling here to avoid the console error on frontend
     try:
         token_serializer = TokenVerifySerializer(data={"token": access_token})
-        token_serializer.is_valid(raise_exception=True)  # Raises TokenError if invalid
+        token_serializer.is_valid(raise_exception=True)
 
         if request.user and request.user.is_authenticated:
             update_user_activity(request.user, True)
