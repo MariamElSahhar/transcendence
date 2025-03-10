@@ -11,10 +11,8 @@ export class Paddle {
 	#boardEdgeLimit = 10;
 	lastReactionTime = Date.now();
 	#isAIControlled = false;
-	ballPrevPosX;
-	ballPrevPredY;
-	ballPrevPredX;
-	ballPrevPosY;
+	ballPredY;
+	ballPredX;
 	ballVelocityX;
 	ballVelocityY;
 	startTime;
@@ -103,7 +101,7 @@ export class Paddle {
 		const currentTime = Date.now();
 		const movementThreshold = 0.1;
 		const maxSpeed = 3.5;
-		const smoothMove = 0.1;
+		const smoothMove = 0.15;
 
 		if (this.#isResetting) {
 			return;
@@ -114,36 +112,55 @@ export class Paddle {
             this.startTime =currentTime;
 		}
 		if (this.flag == 1 && currentTime - this.lastBallMovement > movementDelay) {
-			this.ballPrevPredX = this.ballPrevPredX + this.ballVelocityX * ((movementDelay+50)/1000);
-			this.ballPrevPredY = this.ballPrevPredY + this.ballVelocityY * ((movementDelay+50)/1000);
-			this.distanceToBall = this.ballPrevPredY - this.#threeJSGroup.position.y;
-			if (Math.abs(this.ballPrevPredY) > this.#boardEdgeLimit) {
-				this.ballVelocityY = - this.ballVelocityY;
-				console.log("here");
-				// this.ballPrevPredY = this.ballPrevPredY + this.ballVelocityY * ((movementDelay+100)/1000);
+			// console.log(Math.abs(this.ballPredY + this.ballVelocityY * ((movementDelay+50)/1000)));
+			// if (Math.abs(this.ballPredY + this.ballVelocityY * ((movementDelay+50)/1000)) > this.#boardEdgeLimit)
+			// {
+			// 	this.ballVelocityY = -this.ballVelocityY;
+			// 	console.log("changing!!!",this.ballVelocityY, velocity.y, this.ballVelocityX,  velocity.x);
+			// }
+			// console.log(this.ballVelocityY, velocity.y, this.ballVelocityX,  velocity.x);
+
+			// 	// this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay+100)/1000);
+			// }
+			// this.ballPredX = this.ballPredX + this.ballVelocityX * ((movementDelay)/1000);
+			this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay)/1000);
+			// console.log(this.#boardEdgeLimit)
+			let futurePred = this.ballPredY + this.ballVelocityY * ((movementDelay + 100)/1000);
+			if (futurePred > this.#boardEdgeLimit)
+			{
+				// this.ballVelocityY = -this.ballVelocityY;
+				console.log(futurePred > 0, "if this is yes on top we actuaklly need to add");
+				futurePred = futurePred > 0 ? this.#boardEdgeLimit - (futurePred  - this.#boardEdgeLimit) : -this.#boardEdgeLimit - (futurePred - this.#boardEdgeLimit);
+				console.log("FUTTURE", futurePred);
 			}
+			console.log("CURRENT", ballPosition.y);
+			// console.log("here",this.ballPredX, ballPosition.x, this.ballPredY, ballPosition.y);
+			this.distanceToBall = futurePred - this.#threeJSGroup.position.y;
 			// this.aiSpeed = 15;
 			// console.log(this.aiSpeed)
-			// if (Math.abs(this.ballPrevPredY) > this.#boardEdgeLimit) {
+			// if (Math.abs(this.ballPredY) > this.#boardEdgeLimit) {
 			// 	AISpeed *= 0.9;
 			// }
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
 				let moveAmount = this.distanceToBall * smoothMove;
-				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), minSpeed, maxSpeed);
-				console.log(moveAmount)
+				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), maxSpeed);
+				// console.log(moveAmount)
 				const newYPosition = this.#threeJSGroup.position.y + moveAmount;
 				this.#threeJSGroup.position.setY(newYPosition);
 			}
 			this.lastBallMovement = currentTime;
 		}
-		if ((this.flag == 0 && currentTime - this.startTime > 500) || (this.flag == 1 && currentTime - this.lastReactionTime > reactionDelay)) {
+		if ((this.flag == 0 && currentTime - this.startTime > 300) || (this.flag == 1 && currentTime - this.lastReactionTime > reactionDelay)) {
 			this.flag = 1;
 			this.ballVelocityX = velocity.x;
 			this.ballVelocityY = velocity.y;
-			this.ballPrevPredX = this.ballPrevPosX = ballPosition.x;
-            this.ballPrevPredY = this.ballPrevPosY = ballPosition.y;
+			this.ballPredX = ballPosition.x;
+            this.ballPredY = ballPosition.y;
 			this.lastBallMovement = currentTime;
 			this.lastReactionTime = Date.now();
+			console.log(velocity.x, velocity.y)
+			// console.log("here",this.ballPredX, ballPosition.x, this.ballPredY, ballPosition.y);
+
 		}
 	}
 
