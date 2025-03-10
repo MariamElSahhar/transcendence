@@ -19,6 +19,9 @@ class CreateLocalGameSerializer(serializers.ModelSerializer):
         opponent_score = data.get("opponent_score")
         opponent_username = data.get("opponent_username")
 
+        if opponent_score == my_score:
+            raise serializers.ValidationError("Pong cannot end in a draw.")
+
         if opponent_username is None:
             raise serializers.ValidationError("Opponent username is required.")
 
