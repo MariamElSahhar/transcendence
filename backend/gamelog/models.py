@@ -9,14 +9,14 @@ class RemoteGameLog(models.Model):
     date = models.DateTimeField(default=timezone.now)
 
     users = models.ManyToManyField(CustomUser, related_name="remote_games")
-    loserID = models.ForeignKey(
+    loser = models.ForeignKey(
         CustomUser,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="games_lost",
     )
-    winnerID = models.ForeignKey(
+    winner = models.ForeignKey(
         CustomUser,
         on_delete=models.SET_NULL,
         null=True,
@@ -33,9 +33,9 @@ class RemoteGameLog(models.Model):
         if not user:
             return None
 
-        if self.winnerID == user:
+        if self.winner == user:
             return self.winner_score
-        elif self.loserID == user:
+        elif self.loser == user:
             return self.loser_score
         return None
 
@@ -45,20 +45,20 @@ class RemoteGameLog(models.Model):
         if not user:
             return None
 
-        if self.winnerID == user:
+        if self.winner == user:
             return self.loser_score
-        elif self.loserID == user:
+        elif self.loser == user:
             return self.winner_score
         return None
 
     def is_win_for_user(self, username):
         """Check if the user with the provided username is the winner."""
         user = CustomUser.objects.filter(username=username).first()
-        return self.winnerID == user
+        return self.winner == user
 
     def __str__(self):
-        winner = self.winnerID.username if self.winnerID else "Unknown"
-        loser = self.loserID.username if self.loserID else "Unknown"
+        winner = self.winner.username if self.winner else "Unknown"
+        loser = self.loser.username if self.loser else "Unknown"
         return f"Remote game | Winner: {winner} | Loser: {loser}"
 
 

@@ -7,15 +7,15 @@ class CreateRemoteGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = RemoteGameLog
         fields = [
-            "winnerID",
-            "loserID",
+            "winner",
+            "loser",
             "winner_score",
             "loser_score",
         ]
 
     def validate(self, data):
-        winner = data.get("winnerID")
-        loser = data.get("loserID")
+        winner = data.get("winner")
+        loser = data.get("loser")
 
         if not winner or not loser:
             raise serializers.ValidationError("Both winnerID and loserID are required.")
@@ -25,16 +25,6 @@ class CreateRemoteGameSerializer(serializers.ModelSerializer):
                 "Winner and loser cannot be the same user."
             )
 
-        try:
-            winner = CustomUser.objects.get(id=winner)
-        except CustomUser.DoesNotExist:
-            raise serializers.ValidationError({"winnerID": f"User with ID {winner} does not exist."})
-
-        try:
-            loser = CustomUser.objects.get(id=loser)
-        except CustomUser.DoesNotExist:
-            raise serializers.ValidationError({"loserID": f"User with ID {loser} does not exist."})
-
         if not CustomUser.objects.filter(id=winner.id).exists():
             raise serializers.ValidationError(
                 f"Winner with ID {winner} does not exist."
@@ -43,7 +33,7 @@ class CreateRemoteGameSerializer(serializers.ModelSerializer):
         if not CustomUser.objects.filter(id=loser.id).exists():
             raise serializers.ValidationError(f"Loser with ID {loser} does not exist.")
 
-        if data.get("winner_score") < data.get("loser_score"):
+        if data.get("winner_score") <= data.get("loser_score"):
             raise serializers.ValidationError(
                 "Winner score should be higher than loser score."
             )
@@ -52,7 +42,7 @@ class CreateRemoteGameSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         remote_game = RemoteGameLog.objects.create(**validated_data)
-        remote_game.users.set([validated_data["winnerID"], validated_data["loserID"]])
+        remote_game.users.set([validated_data["winner"], validated_data["loser"]])
 
         return remote_game
 

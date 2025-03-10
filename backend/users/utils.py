@@ -11,8 +11,8 @@ def send_otp(user):
     """
     Utility function to generate and send OTP
     """
-
     otp = generate_otp()
+    # print(otp)
     user.email_otp = otp
     user.otp_created_at = timezone.now()
     user.save()

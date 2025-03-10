@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -15,6 +16,7 @@ from ..serializers import LoginSerializer, OTPVerificationSerializer, UserSerial
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login_view(request):
+    # manually handle the no user found error here to avoid disclosing if user exists
     login_serializer = LoginSerializer(data=request.data)
     if login_serializer.is_valid():
         username = login_serializer.validated_data["username"]
@@ -27,7 +29,7 @@ def login_view(request):
                 token_serializer = TokenObtainPairSerializer(
                     data={"username": user.username, "password": password}
                 )
-                if token_serializer.is_valid():
+                if token_serializer.is_valid(raise_exception=True):
                     tokens = token_serializer.validated_data
                     response = Response(
                         {
@@ -47,7 +49,7 @@ def login_view(request):
                 try:
                     send_otp(user)
                 except Exception as e:
-                    return Response({"error": f"Failed to send OTP: {str(e)}"}, status=400)
+                    return Response({"error": f"Failed to send OTP: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 return Response(
                     {
                         "message": "OTP sent to your email.",
@@ -59,12 +61,10 @@ def login_view(request):
             return Response(
                 {"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED
             )
-
-    error_messages = []
-    for _, errors in login_serializer.errors.items():
-        error_messages.extend(errors)
-    return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
-
+    else:
+        return Response(
+            {"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED
+        )
 
 # REGISTRATION
 @api_view(["POST"])
@@ -72,7 +72,7 @@ def login_view(request):
 def register_view(request):
     user_serializer = UserSerializer(data=request.data)
 
-    if user_serializer.is_valid():
+    if user_serializer.is_valid(raise_exception=True):
         # Save and handle successful registration
         password = user_serializer.validated_data["password"]
         request.session["password"] = password
@@ -82,17 +82,12 @@ def register_view(request):
         try:
             send_otp(user)
         except Exception as e:
-            return Response({"error": f"Failed to send OTP: {str(e)}"}, status=400)
+            return Response({"error": f"Failed to send OTP: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(
             {"message": "Registration successful. OTP has been sent to your email."},
             status=status.HTTP_201_CREATED,
         )
-
-    error_messages = []
-    for _, errors in user_serializer.errors.items():
-        error_messages.extend(errors)
-    return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # OTP VERIFICATION
@@ -101,7 +96,7 @@ def register_view(request):
 def verify_otp_view(request):
     serializer = OTPVerificationSerializer(data=request.data)
     # The serializer will validate OTP and expiration
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         user = serializer.validated_data["user"]
         password = request.session.get("password")
 
@@ -110,7 +105,7 @@ def verify_otp_view(request):
             data={"username": user.username, "password": password}
         )
 
-        if token_serializer.is_valid():
+        if token_serializer.is_valid(raise_exception=True):
             tokens = token_serializer.validated_data
             response = Response(
                 {
@@ -128,18 +123,6 @@ def verify_otp_view(request):
             response = set_response_cookie(response, tokens, user, True)
             del request.session["password"]
             return response
-        else:
-            error_messages = []
-            for _, errors in token_serializer.errors.items():
-                error_messages.extend(errors)
-            return Response(
-                {"error": error_messages}, status=status.HTTP_400_BAD_REQUEST
-            )
-    else:
-        error_messages = []
-        for _, errors in serializer.errors.items():
-            error_messages.extend(errors)
-        return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
 # RETRIEVE SESSION
 @api_view(["GET"])
@@ -147,7 +130,6 @@ def get_user_info_view(request):
     user = request.user
     response = Response(
                 {
-                    "message": "OTP verified successfully. Login successful.",
                     "data": {
                         "username": user.username,
                         "user_id": user.id,

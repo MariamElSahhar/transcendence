@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -19,36 +20,29 @@ from .serializers.ttt import (
 
 @api_view(["POST"])
 def create_gamelog_remote(request):
-    user1 = request.user.id
-    try:
-        user2 = CustomUser.objects.get(username=request.data["opponent_username"]).id
-    except CustomUser.DoesNotExist:
-        return Response(
-            {
-                "error": "Username not found.",
-            },
-            status=status.HTTP_404_NOT_FOUND,
-        )
+    user1_id = request.user.id
+    user2_id = get_object_or_404(CustomUser, username=request.data["opponent_username"]).id
 
     if request.data["my_score"] > request.data["opponent_score"]:
-        winnerID = user1
+        winner_id = user1_id
         winner_score = request.data["my_score"]
-        loserID = user2
+        loser_id = user2_id
         loser_score = request.data["opponent_score"]
     else:
-        winnerID = user2
+        winner_id = user2_id
         winner_score = request.data["opponent_score"]
-        loserID = user1
+        loser_id = user1_id
         loser_score = request.data["my_score"]
+
     data = {
-        "winnerID": winnerID,
-        "loserID": loserID,
+        "winner": winner_id,
+        "loser": loser_id,
         "winner_score": winner_score,
         "loser_score": loser_score,
     }
 
     serializer = CreateRemoteGameSerializer(data=data)
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         serializer.save()
         return Response(
             {
@@ -57,7 +51,6 @@ def create_gamelog_remote(request):
             },
             status=status.HTTP_201_CREATED,
         )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
