@@ -28,18 +28,18 @@ from django.conf.urls.static import static  #Serves media files during developme
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
     # TicTacToe app
     path("api/tictactoe/", include("tictactoe.urls")),
-    # GameLog app
-    path("api/", include("gamelog.urls")),
-    # Users app
+    # Remote Pong app
     path("api/remote-pong/", include("remote_pong.urls")),
-    path("api/", include("users.urls")),
 
     # API Schema and AutoDocs
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
         "api/docs/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="api-docs"
     ),
+    # GameLog app
+    path("api/", include("gamelog.urls")),
+    # Users app
+    path("api/", include("users.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
