@@ -8,7 +8,8 @@ export class Paddle {
 	#threeJSGroup = new THREE.Group();
 	#moveSpeed = 15;
 	#movement = new THREE.Vector3(0, 0, 0);
-	#boardEdgeLimit = 10;
+	#boardEdgeLimitY = 13.75;
+	#boardEdgeLimitX = 18;
 	lastReactionTime = Date.now();
 	#isAIControlled = false;
 	ballPredY;
@@ -101,7 +102,7 @@ export class Paddle {
 		const currentTime = Date.now();
 		const movementThreshold = 0.1;
 		const maxSpeed = 3.5;
-		const smoothMove = 0.15;
+		const smoothMove = 0.2;
 
 		if (this.#isResetting) {
 			return;
@@ -122,20 +123,32 @@ export class Paddle {
 
 			// 	// this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay+100)/1000);
 			// }
-			// this.ballPredX = this.ballPredX + this.ballVelocityX * ((movementDelay)/1000);
+			this.ballPredX = this.ballPredX + this.ballVelocityX * ((movementDelay)/1000);
 			this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay)/1000);
 			// console.log(this.#boardEdgeLimit)
-			let futurePred = this.ballPredY + this.ballVelocityY * ((movementDelay + 100)/1000);
-			if (futurePred > this.#boardEdgeLimit)
+
+
+			let futurePredY = this.ballPredY + this.ballVelocityY * ((movementDelay + 100)/1000);
+			if (futurePredY > this.#boardEdgeLimitY || futurePredY < -this.#boardEdgeLimitY)
 			{
 				// this.ballVelocityY = -this.ballVelocityY;
-				console.log(futurePred > 0, "if this is yes on top we actuaklly need to add");
-				futurePred = futurePred > 0 ? this.#boardEdgeLimit - (futurePred  - this.#boardEdgeLimit) : -this.#boardEdgeLimit - (futurePred - this.#boardEdgeLimit);
-				console.log("FUTTURE", futurePred);
+				futurePredY = futurePredY > 0 ? this.#boardEdgeLimitY - (futurePredY  - this.#boardEdgeLimitY) : -this.#boardEdgeLimitY - (futurePredY + this.#boardEdgeLimitY);
+				console.log("WE'RE IN------------------------------------------------------------------------------------", futurePredY);
+				// this.ballVelocityY = -this.ballVelocityY;
 			}
-			console.log("CURRENT", ballPosition.y);
+			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 100)/1000);
+			if (futurePredX > this.#boardEdgeLimitX || futurePredX < -this.#boardEdgeLimitX)
+			{
+				// this.ballVelocityY = -this.ballVelocityY;
+				console.log(futurePredX > 0, "if this is yes on top we actuaklly need to add");
+				futurePredX = futurePredX > 0 ? this.#boardEdgeLimitX - (futurePredX  - this.#boardEdgeLimitX) : -this.#boardEdgeLimitX - (futurePredX + this.#boardEdgeLimitX);
+				console.log("WE'RE IN------------------------------------------------------------------------------------", futurePredX);
+				// this.ballVelocityY = -this.ballVelocityY;
+			}
+			console.log("FUTTUREYYYYYYYYYYYYYYYYYYYYYY", futurePredY, "CURRENTYYYYYYYYYYYYYY", ballPosition.y);
+			console.log("FUTTUREX", futurePredX, "CURRENTX", ballPosition.x);
 			// console.log("here",this.ballPredX, ballPosition.x, this.ballPredY, ballPosition.y);
-			this.distanceToBall = futurePred - this.#threeJSGroup.position.y;
+			this.distanceToBall = futurePredY - this.#threeJSGroup.position.y;
 			// this.aiSpeed = 15;
 			// console.log(this.aiSpeed)
 			// if (Math.abs(this.ballPredY) > this.#boardEdgeLimit) {
@@ -150,7 +163,7 @@ export class Paddle {
 			}
 			this.lastBallMovement = currentTime;
 		}
-		if ((this.flag == 0 && currentTime - this.startTime > 300) || (this.flag == 1 && currentTime - this.lastReactionTime > reactionDelay)) {
+		if ((this.flag == 0 && currentTime - this.startTime > 50) || (this.flag == 1 && currentTime - this.lastReactionTime > reactionDelay)) {
 			this.flag = 1;
 			this.ballVelocityX = velocity.x;
 			this.ballVelocityY = velocity.y;
@@ -158,7 +171,7 @@ export class Paddle {
             this.ballPredY = ballPosition.y;
 			this.lastBallMovement = currentTime;
 			this.lastReactionTime = Date.now();
-			console.log(velocity.x, velocity.y)
+			// console.log(velocity.x, velocity.y)
 			// console.log("here",this.ballPredX, ballPosition.x, this.ballPredY, ballPosition.y);
 
 		}
