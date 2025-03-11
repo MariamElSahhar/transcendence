@@ -36,7 +36,7 @@ def user_retrieve_update_destroy_view(request, user_id):
         if not user:
             return Response({"error": "User not found.", "exists": False}, status=status.HTTP_404_NOT_FOUND)
         if request.user.id != user_id:
-            serializer = FriendSerializer(user, context={'request': request})
+            serializer = FriendSerializer(user, context={'user_id': user_id})
         else:
             serializer = ProfileSerializer(user)
 
