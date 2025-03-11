@@ -18,8 +18,6 @@ export class Paddle {
 	ballVelocityY;
 	startTime;
 	#isResetting = false;
-	aiSpeed;
-	anticipatedPositionY;
 	distanceToBall;
 	lastBallMovement;
 
@@ -49,6 +47,7 @@ export class Paddle {
 		this.#playerPosition = playerPosition;
 
 		this.#setCollisionSegments();
+		// console.log(this.#threeJSGroup.position);
 	}
 
 	updateFrame(
@@ -98,12 +97,11 @@ export class Paddle {
 
 	#moveAIPaddle(ballPosition, velocity) {
 		const reactionDelay = 1000;
-		const movementDelay = 50;
+		const movementDelay = 30;
 		const currentTime = Date.now();
 		const movementThreshold = 0.1;
-		const maxSpeed = 3.5;
+		const maxSpeed = 2.5;
 		const smoothMove = 0.2;
-
 		if (this.#isResetting) {
 			return;
 		}
@@ -113,51 +111,26 @@ export class Paddle {
             this.startTime =currentTime;
 		}
 		if (this.flag == 1 && currentTime - this.lastBallMovement > movementDelay) {
-			// console.log(Math.abs(this.ballPredY + this.ballVelocityY * ((movementDelay+50)/1000)));
-			// if (Math.abs(this.ballPredY + this.ballVelocityY * ((movementDelay+50)/1000)) > this.#boardEdgeLimit)
-			// {
-			// 	this.ballVelocityY = -this.ballVelocityY;
-			// 	console.log("changing!!!",this.ballVelocityY, velocity.y, this.ballVelocityX,  velocity.x);
-			// }
-			// console.log(this.ballVelocityY, velocity.y, this.ballVelocityX,  velocity.x);
-
-			// 	// this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay+100)/1000);
-			// }
 			this.ballPredX = this.ballPredX + this.ballVelocityX * ((movementDelay)/1000);
 			this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay)/1000);
-			// console.log(this.#boardEdgeLimit)
 
 
 			let futurePredY = this.ballPredY + this.ballVelocityY * ((movementDelay + 100)/1000);
 			if (futurePredY > this.#boardEdgeLimitY || futurePredY < -this.#boardEdgeLimitY)
 			{
-				// this.ballVelocityY = -this.ballVelocityY;
-				futurePredY = futurePredY > 0 ? this.#boardEdgeLimitY - (futurePredY  - this.#boardEdgeLimitY) : -this.#boardEdgeLimitY - (futurePredY + this.#boardEdgeLimitY);
-				console.log("WE'RE IN------------------------------------------------------------------------------------", futurePredY);
-				// this.ballVelocityY = -this.ballVelocityY;
+				this.ballVelocityY = -this.ballVelocityY;
+				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY: -2 * this.#boardEdgeLimitY + futurePredY + futurePredY);
 			}
 			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 100)/1000);
 			if (futurePredX > this.#boardEdgeLimitX || futurePredX < -this.#boardEdgeLimitX)
 			{
-				// this.ballVelocityY = -this.ballVelocityY;
-				console.log(futurePredX > 0, "if this is yes on top we actuaklly need to add");
-				futurePredX = futurePredX > 0 ? this.#boardEdgeLimitX - (futurePredX  - this.#boardEdgeLimitX) : -this.#boardEdgeLimitX - (futurePredX + this.#boardEdgeLimitX);
-				console.log("WE'RE IN------------------------------------------------------------------------------------", futurePredX);
-				// this.ballVelocityY = -this.ballVelocityY;
+				this.ballVelocityX = -this.ballVelocityX;
+				futurePredX = (futurePredX > 0 ? 2*this.#boardEdgeLimitX : 2*-this.#boardEdgeLimitX) - futurePredX;
 			}
-			console.log("FUTTUREYYYYYYYYYYYYYYYYYYYYYY", futurePredY, "CURRENTYYYYYYYYYYYYYY", ballPosition.y);
-			console.log("FUTTUREX", futurePredX, "CURRENTX", ballPosition.x);
-			// console.log("here",this.ballPredX, ballPosition.x, this.ballPredY, ballPosition.y);
 			this.distanceToBall = futurePredY - this.#threeJSGroup.position.y;
-			// this.aiSpeed = 15;
-			// console.log(this.aiSpeed)
-			// if (Math.abs(this.ballPredY) > this.#boardEdgeLimit) {
-			// 	AISpeed *= 0.9;
-			// }
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
-				let moveAmount = this.distanceToBall * smoothMove;
+				let moveAmount = this.distanceToBall * smoothMove ;
 				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), maxSpeed);
-				// console.log(moveAmount)
 				const newYPosition = this.#threeJSGroup.position.y + moveAmount;
 				this.#threeJSGroup.position.setY(newYPosition);
 			}
@@ -171,9 +144,6 @@ export class Paddle {
             this.ballPredY = ballPosition.y;
 			this.lastBallMovement = currentTime;
 			this.lastReactionTime = Date.now();
-			// console.log(velocity.x, velocity.y)
-			// console.log("here",this.ballPredX, ballPosition.x, this.ballPredY, ballPosition.y);
-
 		}
 	}
 
