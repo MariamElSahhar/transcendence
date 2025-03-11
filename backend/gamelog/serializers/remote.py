@@ -68,13 +68,10 @@ class RemoteGameSerializer(serializers.ModelSerializer):
 
     def _get_user(self):
         """Helper to get the user making the request."""
-        request = self.context.get("request")
-        if not request:
+        user_id = self.context.get("user_id")
+        if not user_id:
             return None
-        username = request.query_params.get("username", None)
-        if username:
-            return CustomUser.objects.filter(username=username).first()
-        return request.user if request.user.is_authenticated else None
+        return CustomUser.objects.filter(id=user_id).first()
 
     def get_my_score(self, obj):
         """Return the score of the user making the request."""
@@ -86,7 +83,6 @@ class RemoteGameSerializer(serializers.ModelSerializer):
     def get_opponent_username(self, obj):
         """Determine the opponent dynamically."""
         user = self._get_user()
-
         if user and user in obj.users.all():
             opponents = obj.users.exclude(id=user.id)
             return opponents.first().username if opponents.exists() else "Deleted User"
