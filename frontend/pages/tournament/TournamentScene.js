@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
 import { Match } from "./Match.js";
-import { PongGameBox } from "../local-game/Scene/PongGameBox.js";
+import { PongGameBox } from "../pong/Scene/PongGameBox.js";
 import { showError } from "../error/ErrorPage.js";
 
 export class Scene {

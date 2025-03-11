@@ -7,7 +7,7 @@ import {
 	renderPreGameCard,
 	renderTournamentResults,
 	renderEndGameCard,
-} from "../local-game/Overlays.js";
+} from "../pong/Overlays.js";
 
 export class TournamentPage extends Component {
 	constructor() {

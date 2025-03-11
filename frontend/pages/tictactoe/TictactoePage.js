@@ -9,7 +9,7 @@ import {
 	renderEndGameCard,
 	renderWaitingForOpponent,
 	removeOverlay,
-} from "../local-game/Overlays.js";
+} from "../pong/Overlays.js";
 import { showError } from "../error/ErrorPage.js";
 
 const BASE_URL = `/api/tictactoe`;
