@@ -70,7 +70,6 @@ export class LocalGamePage extends Component {
 
 	postRender() {
 		this.container = this.querySelector("#container");
-		let overlay, countDownIntervalId;
 		if (!this.isAIEnabled) {
 			const startGameButton = this.querySelector("#submit-players");
 			const player2NameInput = this.querySelector("#player2-name");
@@ -107,6 +106,10 @@ export class LocalGamePage extends Component {
 		if (WebGL.isWebGLAvailable()) {
 			this.engine = new Engine(this, this.isAIEnabled, this.playerNames);
 			await this.engine.createScene();
+			this.querySelector("canvas")?.classList.add("d-none");
+			setTimeout(() => {
+				this.querySelector("canvas")?.classList.remove("d-none");
+			}, 300);
 			const { overlay, countDownIntervalId } = renderPreGameCard(
 				this,
 				this.container,

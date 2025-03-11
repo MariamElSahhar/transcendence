@@ -187,6 +187,10 @@ export class TournamentPage extends Component {
 					this.endMatch(winner, player1, player2, score1, score2)
 			);
 			this.engine.renderScene();
+			this.querySelector("canvas")?.classList.add("d-none");
+			setTimeout(() => {
+				this.querySelector("canvas")?.classList.remove("d-none");
+			}, 300);
 			const { overlay, countDownIntervalId } = renderPreGameCard(
 				this,
 				this.container,
