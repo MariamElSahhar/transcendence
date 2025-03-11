@@ -60,7 +60,7 @@ def create_gamelog_local(request):
     datamod["user"] = user.id
 
     serializer = CreateLocalGameSerializer(data=datamod)
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         serializer.save(user=user)
         return Response(
             {
@@ -69,13 +69,12 @@ def create_gamelog_local(request):
             },
             status=status.HTTP_201_CREATED,
         )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+# TESTING ONLY
 @api_view(["POST"])
 def create_gamelog_ttt(request):
     serializer = CreateTTTGameSerializer(data=request.data)
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         serializer.save()
         return Response(
             {
@@ -84,8 +83,6 @@ def create_gamelog_ttt(request):
             },
             status=status.HTTP_201_CREATED,
         )
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 # GET OR CREATE NEW REMOTE GAMESLOGS
 @api_view(["GET"])

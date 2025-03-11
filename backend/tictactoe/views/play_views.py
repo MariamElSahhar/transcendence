@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.timezone import now
 from rest_framework.exceptions import ValidationError
 
-from gamelog.models import TicTacToeLog
+from gamelog.serializers.ttt import CreateTTTGameSerializer
 
 from ..models import Game
 from django.db import models
@@ -251,19 +251,19 @@ def make_move_view(request):
                 game.game_winner = game.player_2
             else:
                 game.game_winner = None  # No overall winner
-            
+
             game.status = "FINISHED"
 
             # The game is finished
             # Create the TicTacToeLog entry for the user
-            gamelog = TicTacToeLog.objects.create(
-                player1_id=game.player_1.id,
-                player2_id=game.player_2.id,
-                player1_score=player_1_wins,
-                player2_score=player_2_wins,
-            )
-            gamelog.users.set([game.player_1, game.player_2])
-
+            serializer = CreateTTTGameSerializer(data={
+                "player1_id": game.player_1.id,
+                "player2_id": game.player_2.id,
+                "player1_score": player_1_wins,
+                "player2_score": player_2_wins,
+            })
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
         else:
             game.current_round += 1
 
@@ -347,7 +347,7 @@ def timeout_game_view(request):
             game.winner_round_3 = non_afk
         elif game.current_round == 3:
             game.winner_round_3 = non_afk
-        
+
         game.current_round = 3
 
         round_winners = [game.winner_round_1, game.winner_round_2, game.winner_round_3]
@@ -360,20 +360,21 @@ def timeout_game_view(request):
             game.game_winner = game.player_2
         else:
             game.game_winner = None  # No overall winner
-            
+
         game.status = "FINISHED"
         game.save()
 
         # The game is finished
         # Create the TicTacToeLog entry for the user
-        gamelog = TicTacToeLog.objects.create(
-            player1_id=game.player_1.id,
-            player2_id=game.player_2.id,
-            player1_score=player_1_wins,
-            player2_score=player_2_wins,
-        )
-        gamelog.users.set([game.player_1, game.player_2])
-
+        # Create the TicTacToeLog entry for the user
+        serializer = CreateTTTGameSerializer(data={
+            "player1_id": game.player_1.id,
+            "player2_id": game.player_2.id,
+            "player1_score": player_1_wins,
+            "player2_score": player_2_wins,
+        })
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
         return Response({"timeout"}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Not a timeout"}, status=status.HTTP_400_BAD_REQUEST)
