@@ -99,7 +99,7 @@ def gamelog(request, user_id):
         local_games, many=True, context={"request": request}
     )
     remote_serializer = RemoteGameSerializer(
-        remote_games, many=True, context={"request": request}
+        remote_games, many=True, context={"user_id": user_id}
     )
     ttt_serializer = TicTacToeSerializer(
         ttt_games, many=True, context={"user_id": user_id}
