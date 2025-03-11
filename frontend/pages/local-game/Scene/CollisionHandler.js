@@ -196,7 +196,7 @@ class Paddle extends PhysicalObject {
         if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0)
         {
           let move= ball.movement;
-          move.y=ball.movement.y * -1
+          move.y=ball.movement.y * -1;
           sendWebSocketMessage({ type: "ballPosition", position:move, gameSession: _match.engine.gameSession });
         }
         else if(_match.gameType == "local"){

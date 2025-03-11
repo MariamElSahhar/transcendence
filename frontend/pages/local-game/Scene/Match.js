@@ -92,6 +92,8 @@ export class Match {
 	}
 
 	startGame() {
+		if(this.engine.isAIGame)
+			this.players[1].paddle.startTime = 0;
 		this.players.forEach((player) => {
 			if (player) {
 				player.startGame();
@@ -111,7 +113,8 @@ export class Match {
 					timeDelta,
 					pongGameBox,
 					index === 1 ? ballPosition : null,
-					!this.#ballIsWaiting && !this.matchIsOver
+					!this.#ballIsWaiting && !this.matchIsOver,
+					this.ball.movement
 				);
 			}
 		});

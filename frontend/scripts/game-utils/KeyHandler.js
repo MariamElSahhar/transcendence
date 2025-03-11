@@ -56,19 +56,6 @@ export class KeyHandler {
                 this.handleKeyRelease(event);
             }, this,
         );
-        // this.#gameEngine.component.addComponentEventListener(
-        //     window, 'blur', () => {
-        //         if(player=="remote")
-		// 			{
-		// 				// if ((event.key === "w" || event.key === "s" || event.key === "ArrowUp" || event.key === "ArrowDown"))
-		// 				// {
-		// 					sendWebSocketMessage({action:"move",type:"blur",key: -1, players:players, playerSide:playerSide,gameSession:gameSession});
-		// 				// }
-		// 		}
-		// 		else
-        //             this.handleFocusLoss();
-        //     }, this,
-        // );
     }
 
     stopListeningForKeys() {

@@ -28,11 +28,11 @@ export class Player {
         this.#threeJSGroup.add(this.#board.threeJSBoard);
     }
 
-    updateFrame(timeDelta, pongGameBox, ballPosition = null, gameStarted = false) {
+    updateFrame(timeDelta, pongGameBox, ballPosition = null, gameStarted = false, movement) {
+		// console.log(movement);
         if (!this.#gameStarted) return; // Prevent movement if the game hasn't started
 
-        this.paddle.updateFrame(timeDelta, pongGameBox, ballPosition, gameStarted);
-        this.#board.updateFrame();
+        this.paddle.updateFrame(timeDelta, pongGameBox, ballPosition, gameStarted, movement);
     }
 
     startGame() {

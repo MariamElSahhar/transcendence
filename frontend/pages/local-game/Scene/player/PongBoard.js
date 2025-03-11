@@ -19,7 +19,6 @@ export class PongBoard {
 		if (!playerName || playerName.trim() === "") {
 			playerName = "Unknown Player";
 		}
-
 		this.#side = side;
 		this.#threeJSBoard = new THREE.Group();
 		this.#size = new THREE.Vector3(20, 27.5, 1);
@@ -254,8 +253,6 @@ export class PongBoard {
 		this.#scoreSprite.position.set(0, 0, 1.2);
 		this.#threeJSBoard.add(this.#scoreSprite);
 	}
-
-	updateFrame() {}
 
 	get score() {
 		return this.#score;
