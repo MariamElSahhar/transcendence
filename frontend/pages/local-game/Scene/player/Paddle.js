@@ -99,9 +99,9 @@ export class Paddle {
 		const reactionDelay = 1000;
 		const movementDelay = 30;
 		const currentTime = Date.now();
-		const movementThreshold = 0.1;
-		const maxSpeed = 2.5;
-		const smoothMove = 0.2;
+		const movementThreshold = 0.2;
+		const maxSpeed = 2.0;
+		const smoothMove = 0.1;
 		if (this.#isResetting) {
 			return;
 		}
@@ -119,15 +119,22 @@ export class Paddle {
 			if (futurePredY > this.#boardEdgeLimitY || futurePredY < -this.#boardEdgeLimitY)
 			{
 				this.ballVelocityY = -this.ballVelocityY;
-				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY: -2 * this.#boardEdgeLimitY + futurePredY + futurePredY);
+				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY: -2 * this.#boardEdgeLimitY - futurePredY );
 			}
 			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 100)/1000);
 			if (futurePredX > this.#boardEdgeLimitX || futurePredX < -this.#boardEdgeLimitX)
 			{
 				this.ballVelocityX = -this.ballVelocityX;
-				futurePredX = (futurePredX > 0 ? 2*this.#boardEdgeLimitX : 2*-this.#boardEdgeLimitX) - futurePredX;
+				futurePredX = (futurePredX > 0 ? 2 * this.#boardEdgeLimitX : 2 * -this.#boardEdgeLimitX - futurePredX);
 			}
 			this.distanceToBall = futurePredY - this.#threeJSGroup.position.y;
+			const missEdgeThreshold = 0.8; // 80% of board edge
+        	if (Math.abs(futurePredY) > this.#boardEdgeLimitY * missEdgeThreshold) {
+            	if (Math.random() < 0.3) { // 30% chance to miss the ball near the edge
+                	this.lastBallMovement = currentTime;
+                	return;
+            	}
+        }
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
 				let moveAmount = this.distanceToBall * smoothMove ;
 				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), maxSpeed);
@@ -146,6 +153,7 @@ export class Paddle {
 			this.lastReactionTime = Date.now();
 		}
 	}
+	
 
 	#constrainPaddle(pongGameBox) {
 		if (this.#threeJSGroup.position.y < pongGameBox.y_min) {
