@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser
+from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
@@ -16,7 +17,7 @@ class FriendSerializer(serializers.ModelSerializer):
         return obj.is_online
 
     def get_is_friend(self, obj):
-        user = self.context.get("request").user
+        user = get_object_or_404(CustomUser, id=self.context.get("user_id"))
         return user in obj.friends.all()
 
 
@@ -106,7 +107,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ["id", "username", "avatar", "is_online", "enable_otp", "email"]
-
 
     def get_is_online(self, obj):
         obj.check_online_status()
