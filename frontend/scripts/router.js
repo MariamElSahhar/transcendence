@@ -11,7 +11,7 @@ window.APP_CONFIG = {
 		window.location.protocol == "https:"
 			? `https://${window.location.host}`
 			: `http://${window.location.host}:8000`,
-	pointsToWinPongMatch: 5,
+	pointsToWinPongMatch: 1,
 	gameCountdown: 3,
 };
 

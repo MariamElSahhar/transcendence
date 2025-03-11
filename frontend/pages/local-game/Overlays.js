@@ -56,6 +56,44 @@ export function renderPreGameCard(
 			<button id="start-game" class="btn w-100">Go!</button>
 		</div>
 	  </div>
+	  <div class="card text-center bg-brick-100">
+	  <div class="card-body">
+		  <img src="/assets/crown.webp" alt="Game Icon" class="icon">
+		  <h1 class="">hello wins</h1>
+		  <p class="d-flex w-75 gap-3">
+		  <div id="podium-box" class="row" style="height: 300px">
+		  <div class="col-md-4 step-container m-0 p-0">
+			<div>
+			  Text 2
+			</div>
+			<div id="second-step" class="bg-blue step centerBoth podium-number">
+			  2
+			</div>
+		  </div>
+		  <div class="col-md-4 step-container m-0 p-0">
+			<div>
+			  Text 1
+			</div>
+			<div id="first-step" class="bg-blue step centerBoth podium-number">
+			  1
+			</div>
+		  </div>
+		  <div class="col-md-4 step-container m-0 p-0">
+			<div>
+			  Text 3
+			</div>
+			<div id="third-step" class="bg-blue step centerBoth podium-number">
+			  3
+			</div>
+		  </div>
+		</div>
+		  </p>
+		  <div class="d-flex w-100 gap-2">
+			  <button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
+			  <button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
+		  </div>
+	  </div>
+  </div>
 	`;
 	component.addComponentEventListener(
 		document.querySelector("#start-game"),
