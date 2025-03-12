@@ -74,7 +74,7 @@ export class Engine {
 
 	cleanUp() {
 		if (this.scene) this.clearScene(this.scene.threeJSScene);
-		this.stopAnimationLoop();
+		this.threeJS.stopAnimationLoop();
 		this.threeJS.disposeResources();
 	}
 
@@ -96,26 +96,19 @@ export class Engine {
 	}
 
 	clearScene(scene) {
-		while (scene.children.length > 0) {
-			this.clearScene(scene.children[0]);
-			scene.remove(scene.children[0]);
+		for (let i = scene.children.length - 1; i >= 0; i--) {
+			this.clearScene(scene.children[i]);
+			scene.remove(scene.children[i]);
 		}
-		if (scene.geometry) {
-			scene.geometry.dispose();
-		}
-		if (scene.material) {
-			scene.material.dispose();
-		}
+		scene.geometry?.dispose();
+		scene.material?.dispose();
 	}
+
 
 	setAnimationLoop(loopFunction) {
 		this.threeJS.beginAnimationLoop(loopFunction);
 	}
-
-	stopAnimationLoop() {
-		this.threeJS.stopAnimationLoop();
-	}
-
+	
 	displayGameScene() {
 		const clock = new THREE.Clock();
 
