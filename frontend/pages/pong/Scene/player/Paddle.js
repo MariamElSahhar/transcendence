@@ -100,7 +100,7 @@ export class Paddle {
 		const currentTime = Date.now();
 		const movementThreshold = 0.2;
 		const maxSpeed = 1.5;
-		const smoothMove = 0.2;
+		const smoothMove = 0.15;
 		if (this.#isResetting) {
 			return;
 		}
@@ -130,12 +130,10 @@ export class Paddle {
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
 				let moveAmount = this.distanceToBall * smoothMove ;
 				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), maxSpeed);
-				// console.log(moveAmount);
 				const newYPosition = this.#threeJSGroup.position.y + moveAmount;
 				this.#threeJSGroup.position.setY(newYPosition);
 			}
 			this.lastBallMovement = currentTime;
-			// console.log("\n REAL",ballPosition.x, ballPosition.y,"\n",futurePredX, futurePredY)
 		}
 		if ((this.flag == 0 && currentTime - this.startTime > 50) || (this.flag == 1 && currentTime - this.lastReactionTime > reactionDelay)) {
 			this.flag = 1;
