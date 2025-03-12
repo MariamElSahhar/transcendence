@@ -42,7 +42,6 @@ export class Paddle {
 			? RIGHT_PADDLE_COLOR
 			: LEFT_PADDLE_COLOR;
 		this.#addPaddleToGroup(color);
-		this.#addLightToGroup();
 
 		this.#playerPosition = playerPosition;
 
@@ -153,7 +152,7 @@ export class Paddle {
 			this.lastReactionTime = Date.now();
 		}
 	}
-	
+
 
 	#constrainPaddle(pongGameBox) {
 		if (this.#threeJSGroup.position.y < pongGameBox.y_min) {
@@ -200,14 +199,6 @@ export class Paddle {
 		);
 		this.#paddleObject.position.set(0, 0, 1); // Set z position to lift paddle above board.
 		this.#threeJSGroup.add(this.#paddleObject);
-	}
-
-	#addLightToGroup() {
-		this.#light = this.paddleIsOnTheRight
-			? new THREE.PointLight(0x00ffff, 4, 50)
-			: new THREE.PointLight(0xff30ff, 10, 50);
-		this.#light.position.z += this.#paddleSize.z * 1.5;
-		this.#threeJSGroup.add(this.#light);
 	}
 
 	#setCollisionSegments() {

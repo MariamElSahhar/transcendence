@@ -5,7 +5,6 @@ import {
 	isValidUsername,
 	isValidEmail,
 } from "../../scripts/utils/input-validator.js";
-import { Footer } from "../../layouts/components/Footer.js";
 import { showError } from "../error/ErrorPage.js";
 
 export class SignUpPage extends Component {

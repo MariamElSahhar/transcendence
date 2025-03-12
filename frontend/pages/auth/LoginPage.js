@@ -74,6 +74,7 @@ export class LoginPage extends Component {
 		const registerLink = this.querySelector("#register-link");
 		const plant = document.querySelector("#plant");
 		const shroom = document.querySelector("#shroom");
+
 		plant.style.bottom = "12em";
 		shroom.style.bottom = "6em";
 
