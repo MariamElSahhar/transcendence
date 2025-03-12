@@ -30,26 +30,19 @@ export class ThreeJSUtils {
 		};
 		window.addEventListener("resize", this._resizeHandler);
 	}
-
 	get viewportWidth() {
 		if (!this.container) return window.innerWidth;
-		const style = window.getComputedStyle(this.container);
-		const leftMargin = parseInt(style.marginLeft, 10) || 0;
-		const rightMargin = parseInt(style.marginRight, 10) || 0;
-		return window.innerWidth - leftMargin - rightMargin;
+		const { marginLeft, marginRight } = window.getComputedStyle(this.container);
+		return window.innerWidth - (parseInt(marginLeft, 10) || 0) - (parseInt(marginRight, 10) || 0);
 	}
 
 	get viewportHeight() {
 		if (!this.container) return window.innerHeight;
-		const style = window.getComputedStyle(this.container);
-		const topMargin = parseInt(style.marginTop, 10) || 0;
-		const bottomMargin = parseInt(style.marginBottom, 10) || 0;
-		const slotElement = document.querySelector("#slot");
-		const slotHeight = slotElement
-			? slotElement.offsetHeight
-			: window.innerHeight;
-		return slotHeight - topMargin - bottomMargin;
+		const { topMargin, bottomMargin } = window.getComputedStyle(this.container);
+		const slotHeight = document.querySelector("#slot")?.offsetHeight || window.innerHeight;
+		return slotHeight - (parseInt(topMargin, 10) || 0) - (parseInt(bottomMargin, 10) || 0);
 	}
+
 
 	setupRenderer() {
 		this.renderer = new THREE.WebGLRenderer({
