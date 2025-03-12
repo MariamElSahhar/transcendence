@@ -113,7 +113,8 @@ export class Match {
 	playerMarkedPoint(playerIndex) {
 		this.#points[playerIndex]++;
 		this.#players[playerIndex].addPoint();
-
+		let index = playerIndex == 1 ? 0 : 1;
+		this.players[index].board.removeLife();
 		if (this.#points[playerIndex] >= this.#pointsToWinMatch) {
 			this.#matchIsOver = true;
 			this.#ball.removeBall();

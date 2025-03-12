@@ -195,7 +195,7 @@ export class Engine {
 	}
 
 	startListeningForKeyHooks() {
-		this.#keyHookHandler.startListeningForKeys();
+		this.#keyHookHandler.listenForKeys();
 	}
 
 	getComponent() {

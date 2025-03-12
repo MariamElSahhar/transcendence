@@ -155,13 +155,13 @@ export class Engine {
 
 	startListeningForKeyHooks() {
 		if (this.gameSession != -1)
-			this.keyHookHandler.startListeningForKeys(
+			this.keyHookHandler.listenForKeys(
 				"remote",
 				this.playerSide,
 				this.players,
 				this.gameSession,
 				this.sameSystem
 			);
-		else this.keyHookHandler.startListeningForKeys();
+		else this.keyHookHandler.listenForKeys();
 	}
 }

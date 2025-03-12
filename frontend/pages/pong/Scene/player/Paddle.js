@@ -104,7 +104,6 @@ export class Paddle {
 		if (this.#isResetting) {
 			return;
 		}
-
 		if (this.startTime == 0) {
 			this.flag = 0;
             this.startTime =currentTime;

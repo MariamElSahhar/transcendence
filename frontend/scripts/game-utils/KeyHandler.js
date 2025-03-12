@@ -1,16 +1,16 @@
 import {sendWebSocketMessage} from "../../scripts/utils/websocket-manager.js"
 
 export class KeyHandler {
-    #gameEngine;
-    #isUpKeyPressed = [false, false];
-    #isDownKeyPressed = [false, false];
+    isUp = [false, false];
+    engine;
+    isDown = [false, false];
 
     constructor(gameEngine) {
-        this.#gameEngine = gameEngine;
+        this.engine = gameEngine;
     }
 
-    startListeningForKeys(player="local",playerSide="NA",players=null,gameSession=-1, sameSystem="NA") {
-		this.#gameEngine.component.addComponentEventListener(
+    listenForKeys(player="local",playerSide="NA",players=null,gameSession=-1, sameSystem="NA") {
+		this.engine.component.addComponentEventListener(
 			window, 'keydown', async (event) => {
 				if(player=="remote")
 					{
@@ -33,7 +33,7 @@ export class KeyHandler {
                		this.handleKeyPress(event);
             }, this,
         );
-        this.#gameEngine.component.addComponentEventListener(
+        this.engine.component.addComponentEventListener(
             window, 'keyup', async (event) => {
                 if(player=="remote")
 					{
@@ -59,92 +59,82 @@ export class KeyHandler {
     }
 
     stopListeningForKeys() {
-        this.#gameEngine.component.removeAllComponentEventListeners()
+        this.engine.component.removeAllComponentEventListeners()
     }
 
     handleKeyPress(event) {
-        switch (event.key) {
-            case 'w':
-            case 'W':
-                this.#pressKey(0, 'up');
-                return;
-            case 'ArrowUp':
-                this.#pressKey(1, 'up');
-                return;
-            case 's':
-            case 'S':
-                this.#pressKey(0, 'down');
-                return;
-            case 'ArrowDown':
-                this.#pressKey(1, 'down');
-                return;
-            default:
-                return;
+        if (event.key === 'w' || event.key === 'W') {
+            this.pressKey(0, 'up');
+            return;
+        }
+        if (event.key === 'ArrowUp') {
+            this.pressKey(1, 'up');
+            return;
+        }
+        if (event.key === 's' || event.key === 'S') {
+            this.pressKey(0, 'down');
+            return;
+        }
+        if (event.key === 'ArrowDown') {
+            this.pressKey(1, 'down');
+            return;
         }
     }
 
     handleKeyRelease(event) {
-        switch (event.key) {
-            case 'w':
-            case 'W':
-                this.#releaseKey(0, 'up');
-                return;
-            case 'ArrowUp':
-                this.#releaseKey(1, 'up');
-                return;
-            case 's':
-            case 'S':
-                this.#releaseKey(0, 'down');
-                return;
-            case 'ArrowDown':
-                this.#releaseKey(1, 'down');
-                return;
-            default:
-                return;
+        if (event.key === 'w' || event.key === 'W') {
+            this.releaseKey(0, 'up');
+            return;
+        }
+        if (event.key === 'ArrowUp') {
+            this.releaseKey(1, 'up');
+            return;
+        }
+        if (event.key === 's' || event.key === 'S') {
+            this.releaseKey(0, 'down');
+            return;
+        }
+        if (event.key === 'ArrowDown') {
+            this.releaseKey(1, 'down');
+            return;
         }
     }
 
-    #pressKey(index, direction) {
-		const oppositeKey = direction === 'up' ? this.#isDownKeyPressed : this.#isUpKeyPressed;
+    pressKey(index, direction) {
+        const isMovingUp = direction === 'up';
+        const oppositeKey = isMovingUp ? this.isDown : this.isUp;
+
         if (oppositeKey[index]) {
-			this.#stopMovement(index);
+            this.stopMovement(index);
         } else {
-            direction === 'up' ? this.#moveUp(index) : this.#moveDown(index);
+            isMovingUp ? this.moveUp(index) : this.moveDown(index);
         }
-        direction === 'up' ? (this.#isUpKeyPressed[index] = true) : (this.#isDownKeyPressed[index] = true);
+
+        (isMovingUp ? this.isUp : this.isDown)[index] = true;
     }
 
-    #releaseKey(index, direction) {
-        const pressedKey = direction === 'up' ? this.#isDownKeyPressed : this.#isUpKeyPressed;
+    releaseKey(index, direction) {
+        const isMovingUp = direction === 'up';
+        const pressedKey = isMovingUp ? this.isDown : this.isUp;
+
         if (pressedKey[index]) {
-            direction === 'up' ? this.#moveDown(index) : this.#moveUp(index);
+            isMovingUp ? this.moveDown(index) : this.moveUp(index);
         } else {
-            this.#stopMovement(index);
+            this.stopMovement(index);
         }
-        direction === 'up' ? (this.#isUpKeyPressed[index] = false) : (this.#isDownKeyPressed[index] = false);
+
+        (isMovingUp ? this.isUp : this.isDown)[index] = false;
     }
 
-
-    // handleFocusLoss() {
-    //     this.#isUpKeyPressed[0] = false;
-    //     this.#isUpKeyPressed[1] = false;
-    //     this.#isDownKeyPressed[0] = false;
-    //     this.#isDownKeyPressed[1] = false;
-
-    //     this.#stopMovement(0);
-    //     this.#stopMovement(1);
-    // }
-
-    #stopMovement(index) {
-        this.#gameEngine.scene.setPlayerPaddleDirection('none', index);
+    moveDown(index) {
+        this.engine.scene.setPaddleDirection('down', index);
     }
 
-    #moveUp(index) {
-        this.#gameEngine.scene.setPlayerPaddleDirection('up', index);
+  moveUp(index) {
+      this.engine.scene.setPaddleDirection('up', index);
     }
 
-    #moveDown(index) {
-        this.#gameEngine.scene.setPlayerPaddleDirection('down', index);
+    stopMovement(index) {
+        this.engine.scene.setPaddleDirection('none', index);
     }
-  }
-
+}
