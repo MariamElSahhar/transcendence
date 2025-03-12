@@ -96,10 +96,10 @@ export class Paddle {
 
 	#moveAIPaddle(ballPosition, velocity) {
 		const reactionDelay = 1000;
-		const movementDelay = 40;
+		const movementDelay = 30;
 		const currentTime = Date.now();
 		const movementThreshold = 0.2;
-		const maxSpeed = 3.5;
+		const maxSpeed = 1.5;
 		const smoothMove = 0.2;
 		if (this.#isResetting) {
 			return;
@@ -113,29 +113,29 @@ export class Paddle {
 			this.ballPredX = this.ballPredX + this.ballVelocityX * ((movementDelay)/1000);
 			this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay)/1000);
 
-			let futurePredY = this.ballPredY + this.ballVelocityY * ((movementDelay + 50)/1000);
+			let futurePredY = this.ballPredY + this.ballVelocityY * ((movementDelay + 30)/1000);
 			if (futurePredY > this.#boardEdgeLimitY || futurePredY < -this.#boardEdgeLimitY)
 			{
 				this.ballVelocityY = -this.ballVelocityY;
 				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY: -2 * this.#boardEdgeLimitY - futurePredY);
 			}
-			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 50)/1000);
+			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 30)/1000);
 			if (futurePredX > this.#boardEdgeLimitX || futurePredX < -this.#boardEdgeLimitX)
 			{
 				this.ballVelocityX = -this.ballVelocityX;
 				futurePredX = (futurePredX > 0 ? 2 * this.#boardEdgeLimitX - futurePredX: -2 * this.#boardEdgeLimitX - futurePredX);
 			}
 			this.distanceToBall = futurePredY - this.#threeJSGroup.position.y;
-	
+
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
 				let moveAmount = this.distanceToBall * smoothMove ;
 				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), maxSpeed);
-				
+				// console.log(moveAmount);
 				const newYPosition = this.#threeJSGroup.position.y + moveAmount;
 				this.#threeJSGroup.position.setY(newYPosition);
 			}
 			this.lastBallMovement = currentTime;
-			console.log("\n REAL",ballPosition.x, ballPosition.y,"\n",futurePredX, futurePredY)
+			// console.log("\n REAL",ballPosition.x, ballPosition.y,"\n",futurePredX, futurePredY)
 		}
 		if ((this.flag == 0 && currentTime - this.startTime > 50) || (this.flag == 1 && currentTime - this.lastReactionTime > reactionDelay)) {
 			this.flag = 1;
