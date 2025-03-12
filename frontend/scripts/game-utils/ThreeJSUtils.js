@@ -88,7 +88,7 @@ export class ThreeJSUtils {
 		this.camera.position.set(x, y, z);
 	}
 
-	updateCameraLookAt({ x, y, z }) {
+	updateCameraView({ x, y, z }) {
 		this.camera.lookAt(x, y, z);
 	}
 
@@ -106,7 +106,7 @@ export class ThreeJSUtils {
 		);
 	}
 
-	startAnimationLoop(callback) {
+	beginAnimationLoop(callback) {
 		this.renderer.setAnimationLoop(callback);
 	}
 

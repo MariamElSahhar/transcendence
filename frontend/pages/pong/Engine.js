@@ -6,11 +6,11 @@ import { Scene } from "./Scene/Scene.js";
 import { showError } from "../error/ErrorPage.js";
 
 export class Engine {
-	#threeJS;
-	keyHookHandler;
+	threeJS;
+	keyHandler;
 	scene;
-	#component;
-	#isAIGame;
+	component;
+	isAIGame;
 	gameStarted = false;
 
 	constructor(
@@ -21,19 +21,19 @@ export class Engine {
 		gameSession = -1,
 		sameSystem = "NA"
 	) {
-		this.#component = component;
-		this.#isAIGame = isAIGame;
+		this.component = component;
+		this.isAIGame = isAIGame;
+		this.players = players;
+		this.threeJS = new ThreeJSUtils(this);
 		this.playerSide = playerSide;
 		this.gameSession = gameSession;
-		this.players = players;
 		this.sameSystem = sameSystem;
-		this.#threeJS = new ThreeJSUtils(this);
-		this.keyHookHandler = new KeyHandler(this, this.#isAIGame);
+		this.keyHandler = new KeyHandler(this, this.isAIGame);
 		this.scene = new Scene();
 	}
 
 	async createScene() {
-		if (!this.#component.container) {
+		if (!this.component.container) {
 			showError();
 			console.error(
 				"Container not found in component; delaying initialization."
@@ -53,7 +53,7 @@ export class Engine {
 		const player1 = new Player(false);
 		await player1.init(0, 3, this.players[0]);
 
-		const player2 = new Player(this.#isAIGame);
+		const player2 = new Player(this.isAIGame);
 		await player2.init(1, 3, this.players[1]);
 
 		await this.scene.init(this, [player1, player2]);
@@ -75,15 +75,15 @@ export class Engine {
 	cleanUp() {
 		if (this.scene) this.clearScene(this.scene.threeJSScene);
 		this.stopAnimationLoop();
-		this.#threeJS.disposeResources();
+		this.threeJS.disposeResources();
 	}
 
 	renderFrame() {
-		this.#threeJS.renderScene(this.scene.threeJSScene);
+		this.threeJS.renderScene(this.scene.threeJSScene);
 	}
 
 	get isAIGame() {
-		return this.#isAIGame;
+		return this.isAIGame;
 	}
 
 	get scene() {
@@ -109,11 +109,11 @@ export class Engine {
 	}
 
 	setAnimationLoop(loopFunction) {
-		this.#threeJS.startAnimationLoop(loopFunction);
+		this.threeJS.beginAnimationLoop(loopFunction);
 	}
 
 	stopAnimationLoop() {
-		this.#threeJS.stopAnimationLoop();
+		this.threeJS.stopAnimationLoop();
 	}
 
 	displayGameScene() {
@@ -125,26 +125,26 @@ export class Engine {
 			this.scene.updateFrame(currentTime, delta);
 
 			this.renderFrame();
-			this.#threeJS.refreshControls();
+			this.threeJS.refreshControls();
 		});
 	}
 
 	get component() {
-		return this.#component;
+		return this.component;
 	}
 
 	get threeJS() {
-		return this.#threeJS;
+		return this.threeJS;
 	}
 
-	updateCamera(cameraPosition, cameraLookAt) {
-		this.#threeJS.controls.target.set(
-			cameraLookAt.x,
-			cameraLookAt.y,
-			cameraLookAt.z
+	updateCamera(position, view) {
+		this.threeJS.controls.target.set(
+			view.x,
+			view.y,
+			view.z
 		);
-		this.#threeJS.updateCameraPosition(cameraPosition);
-		this.#threeJS.updateCameraLookAt(cameraLookAt);
+		this.threeJS.updateCameraPosition(position);
+		this.threeJS.updateCameraView(view);
 	}
 
 	resizeHandler() {
@@ -155,13 +155,13 @@ export class Engine {
 
 	startListeningForKeyHooks() {
 		if (this.gameSession != -1)
-			this.keyHookHandler.startListeningForKeys(
+			this.keyHandler.listenForKeys(
 				"remote",
 				this.playerSide,
 				this.players,
 				this.gameSession,
 				this.sameSystem
 			);
-		else this.keyHookHandler.startListeningForKeys();
+		else this.keyHandler.listenForKeys();
 	}
 }

@@ -56,6 +56,8 @@ export function renderPreGameCard(
 			<button id="start-game" class="btn w-100">Go!</button>
 		</div>
 	  </div>
+	</div>
+
 	`;
 	component.addComponentEventListener(
 		document.querySelector("#start-game"),
@@ -151,21 +153,32 @@ export function renderEndGameCard(
 export function renderTournamentResults(component, rankedPlayers) {
 	const overlay = renderOverlay(component.container);
 	overlay.innerHTML = `
-            <div class="card text-center bg-brick-100">
-                <div class="card-body">
-                    <img src="/assets/crown.webp" alt="Game Icon" class="icon">
-                    <h1 class="">${rankedPlayers[0]} wins</h1>
-					<p class="d-flex w-75 gap-3">
-						<span class="flex-grow-1 text-center">🥈 ${rankedPlayers[1]}</span>
-						<span class="flex-grow-1 text-center">🥉 ${rankedPlayers[2]}</span>
-						<span class="flex-grow-1 text-center">🥲 ${rankedPlayers[3]}</span>
-					</p>
-					<div class="d-flex w-100 gap-2">
+			<div class="card text-center bg-brick-100">
+				<div class="card-body">
+					<h1 class="fw-bold">Winners!</h1>
+					<div id="podium-box" class=" w-100 row justify-content-center align-items-end">
+						<div class="col-4 text-center pe-0 ps-0">
+							<div class="fw-bold"><p class="fs-3">${rankedPlayers[1]}</p></div>
+							<img src="/assets/second.webp" alt="Silver Medal" class="mb-2" width="60">
+							<div id="second-step" class="h-25 bg-secondary text-white fw-bold fs-1 d-flex align-items-center justify-content-center">2</div>
+						</div>
+						<div class="col-4 text-center pe-0 ps-0 ">
+							<div class="fw-bold"><p class="fs-3">${rankedPlayers[0]}</p></div>
+							<img src="/assets/first.webp" alt="Silver Medal" class="mb-2" width="60">
+							<div id="first-step " class="h-50 bg-secondary text-white fw-bold fs-1 d-flex align-items-center justify-content-center">1</div>
+						</div>
+						<div class="col-4 text-center pe-0 ps-0">
+							<div class="fw-bold"><p class="fs-3">${rankedPlayers[2]}</p></div>
+							<img src="/assets/third.webp" alt="Silver Medal" class="mb-2" width="60">
+							<div id="third-step" class="h-25 bg-secondary text-white fw-bold fs-1 d-flex align-items-center justify-content-center">3</div>
+						</div>
+					</div>
+					<div class="d-flex gap-2 mt-3 w-100">
 						<button class="btn btn-secondary w-100" onclick="window.redirect('/home')">Go Home</button>
 						<button class="btn btn-primary w-100" onclick="window.redirect('${window.location.pathname}')">Play Again</button>
 					</div>
 				</div>
-            </div>
+			</div>
         `;
 }
 

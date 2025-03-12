@@ -31,7 +31,7 @@ export class ProfileHeader extends Component {
 
 			if (success) {
 				this.user.username = data.username;
-				this.user.avatar = window.APP_CONFIG.mediaUrl + data.avatar;
+				this.user.avatar =  data.avatar;
 				this.user.is_friend = data.is_friend;
 				this.user.is_me = mydata.userid == data.id;
 				this.user.is_online = data.is_online;

@@ -72,7 +72,7 @@ export class Scene {
 		this.match.gameStarted = true;
 	}
 
-	setPlayerPaddleDirection(direction, index) {
+	setPaddleDirection(direction, index) {
 		this.match.players[index].paddle.setDirection(direction);
 	}
 	updateCamera(animation = false) {

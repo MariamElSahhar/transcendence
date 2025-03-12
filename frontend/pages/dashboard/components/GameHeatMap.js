@@ -44,6 +44,7 @@ export class GameHeatMap extends Component {
 					grid-template-rows: repeat(7, 14px);
 					grid-auto-flow: column;
 					gap: 3px;
+					scrollbar-color:rgba(0,0,0,0) rgba(0,0,0,0);
 				}
 
 				.day {

@@ -86,9 +86,7 @@ export class FriendsPage extends Component {
 		return `
 		<div class="friend-card p-2 d-flex flex-row h-60px p-auto justify-content-between bg-light rounded">
 			<div role="button" class="user-info d-flex flex-row align-items-center gap-3">
-				<img src="${
-					window.APP_CONFIG.backendUrl
-				}${avatar}" class="h-100 rounded-circle" id="friend-profile-img"/>
+				<img src="${avatar}/" class="h-100 rounded-circle" id="friend-profile-img"/>
 				<div>
 					<h4 class="m-0 link-dark">${username}</h4>
 					<small class="m-0 link-dark">${is_online ? "Online" : "Offline"}</small>

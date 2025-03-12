@@ -29,14 +29,14 @@ export class Paddle {
 	#bottomCollisionSegment;
 
 	#playerPosition;
-	#paddleSize = new THREE.Vector3(1, 5, 1); // Adjusted paddle size with depth.
+	#paddleSize = new THREE.Vector3(1, 5, 1);
 	#originalSize = this.#paddleSize.clone();
 	#paddleIsOnTheRight;
 
 	constructor(paddleIsOnTheRight, playerPosition, isAIControlled = false) {
 		this.#paddleIsOnTheRight = paddleIsOnTheRight;
 		this.#isAIControlled = isAIControlled;
-		this.#threeJSGroup.position.set(paddleIsOnTheRight ? 8 : -8, 0, 1); // Lift paddle above the board.
+		this.#threeJSGroup.position.set(paddleIsOnTheRight ? 8 : -8, 0, 1);
 
 		const color = this.#paddleIsOnTheRight
 			? RIGHT_PADDLE_COLOR
@@ -46,7 +46,6 @@ export class Paddle {
 		this.#playerPosition = playerPosition;
 
 		this.#setCollisionSegments();
-		// console.log(this.#threeJSGroup.position);
 	}
 
 	updateFrame(
@@ -56,7 +55,7 @@ export class Paddle {
 		gameStarted = false,
 		velocity
 	) {
-		if (!gameStarted) return; // Skip movement if the game is not active
+		if (!gameStarted) return;
 
 		if (this.#isAIControlled && ballPosition) {
 			this.#moveAIPaddle(ballPosition, velocity);
@@ -90,8 +89,8 @@ export class Paddle {
 		this.#isResetting = true;
 
 		setTimeout(() => {
-			this.#isResetting = false; // Re-enable AI movement after reset
-		}, 1000); // Allow delay for reset to take effect
+			this.#isResetting = false;
+		}, 1000);
 	}
 
 	#moveAIPaddle(ballPosition, velocity) {
@@ -99,12 +98,11 @@ export class Paddle {
 		const movementDelay = 30;
 		const currentTime = Date.now();
 		const movementThreshold = 0.2;
-		const maxSpeed = 2.0;
-		const smoothMove = 0.1;
+		const maxSpeed = 1.5;
+		const smoothMove = 0.15;
 		if (this.#isResetting) {
 			return;
 		}
-
 		if (this.startTime == 0) {
 			this.flag = 0;
             this.startTime =currentTime;
@@ -113,27 +111,20 @@ export class Paddle {
 			this.ballPredX = this.ballPredX + this.ballVelocityX * ((movementDelay)/1000);
 			this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay)/1000);
 
-
-			let futurePredY = this.ballPredY + this.ballVelocityY * ((movementDelay + 100)/1000);
+			let futurePredY = this.ballPredY + this.ballVelocityY * ((movementDelay + 30)/1000);
 			if (futurePredY > this.#boardEdgeLimitY || futurePredY < -this.#boardEdgeLimitY)
 			{
 				this.ballVelocityY = -this.ballVelocityY;
-				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY: -2 * this.#boardEdgeLimitY - futurePredY );
+				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY: -2 * this.#boardEdgeLimitY - futurePredY);
 			}
-			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 100)/1000);
+			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 30)/1000);
 			if (futurePredX > this.#boardEdgeLimitX || futurePredX < -this.#boardEdgeLimitX)
 			{
 				this.ballVelocityX = -this.ballVelocityX;
-				futurePredX = (futurePredX > 0 ? 2 * this.#boardEdgeLimitX : 2 * -this.#boardEdgeLimitX - futurePredX);
+				futurePredX = (futurePredX > 0 ? 2 * this.#boardEdgeLimitX - futurePredX: -2 * this.#boardEdgeLimitX - futurePredX);
 			}
 			this.distanceToBall = futurePredY - this.#threeJSGroup.position.y;
-			const missEdgeThreshold = 0.8; // 80% of board edge
-        	if (Math.abs(futurePredY) > this.#boardEdgeLimitY * missEdgeThreshold) {
-            	if (Math.random() < 0.3) { // 30% chance to miss the ball near the edge
-                	this.lastBallMovement = currentTime;
-                	return;
-            	}
-        }
+
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
 				let moveAmount = this.distanceToBall * smoothMove ;
 				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), maxSpeed);
@@ -197,7 +188,7 @@ export class Paddle {
 			),
 			new THREE.MeshStandardMaterial({ color: color })
 		);
-		this.#paddleObject.position.set(0, 0, 1); // Set z position to lift paddle above board.
+		this.#paddleObject.position.set(0, 0, 1);
 		this.#threeJSGroup.add(this.#paddleObject);
 	}
 

@@ -66,9 +66,9 @@ export class RemoteGamePage extends Component {
 		else if (data["message"] == "Move slab") {
 			const event = { key: data["key"] };
 			if (data["keytype"] == "keydown")
-				this.engine.keyHookHandler.handleKeyPress(event);
+				this.engine.keyHandler.handleKeyPress(event);
 			else if (data["keytype"] == "keyup")
-				this.engine.keyHookHandler.handleKeyRelease(event);
+				this.engine.keyHandler.handleKeyRelease(event);
 		} else if (data["message"] == "Move ball")
 			this.engine.scene.match.ball.setMovement(data["position"]);
 		else if (data["message"] == "Update positions") {

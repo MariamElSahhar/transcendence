@@ -68,6 +68,10 @@ export class TournamentPage extends Component {
 	style() {
 		return `
 		<style>
+		#podium-box
+		{
+			height:300px !important;
+		}
 			#winner-sprite {
 				height: 56px;
 			}
