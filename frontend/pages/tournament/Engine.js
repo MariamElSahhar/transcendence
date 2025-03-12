@@ -149,14 +149,10 @@ export class Engine {
 		}
 	}
 
-	setAnimationLoop(loopFunction) {
-		this.threeJS.beginAnimationLoop(loopFunction);
-	}
-
 	displayGameScene() {
 		const clock = new THREE.Clock();
 
-		this.setAnimationLoop(() => {
+		this.threeJS.beginAnimationLoop(() => {
 			const currentTime = Date.now();
 			const delta = clock.getDelta();
 			this.scene.updateFrame(currentTime, delta);
