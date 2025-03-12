@@ -102,8 +102,7 @@ export class Navbar extends Component {
 		const navbarList = this.querySelector(".navbar-nav");
 		this.links.forEach((link) => {
 			const navbarItem = document.createElement("li");
-			navbarItem.classList.add("mx-2", "fw-bold");
-			navbarItem.setAttribute("role", "button");
+			navbarItem.classList.add("mx-2", "fw-bold", "cursor-pointer");
 			navbarItem.textContent = link.label;
 			navbarList.appendChild(navbarItem);
 

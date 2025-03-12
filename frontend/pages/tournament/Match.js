@@ -1,6 +1,6 @@
 import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js";
-import { Player } from "../local-game/Scene/player/Player.js";
-import { Ball } from "../local-game/Scene/Ball.js";
+import { Player } from "../pong/Scene/player/Player.js";
+import { Ball } from "../pong/Scene/Ball.js";
 
 export class Match {
 	#engine;

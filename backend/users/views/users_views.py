@@ -31,22 +31,23 @@ def user_list_create_view(request):
 @api_view(["GET", "PATCH", "DELETE"])
 def user_retrieve_update_destroy_view(request, user_id):
     # get user by ID
+    request_user = request.user
     if request.method == "GET":
-        user = CustomUser.objects.filter(id=user_id).first()
-        if not user:
+        target_user = CustomUser.objects.filter(id=user_id).first()
+        if not target_user:
             return Response({"error": "User not found.", "exists": False}, status=status.HTTP_404_NOT_FOUND)
-        if request.user.id != user_id:
-            serializer = FriendSerializer(user, context={'user_id': user_id})
+        if request_user.id != user_id:
+            serializer = FriendSerializer(target_user, context={'user_id': request_user.id})
         else:
-            serializer = ProfileSerializer(user)
+            serializer = ProfileSerializer(target_user)
 
         return Response({"data": serializer.data, "exists": True}, status=status.HTTP_200_OK)
 
     # update/delete user by ID
     else:
-        if request.user.id != user_id:
+        if request_user.id != user_id:
             return Response({"error": "Not authorized."}, status=status.HTTP_401_UNAUTHORIZED)
-        user = request.user
+        user = request_user
         if request.method == "PATCH":
             serializer = UserSerializer(user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)

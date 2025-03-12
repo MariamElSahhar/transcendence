@@ -8,7 +8,7 @@ export class SearchNav extends Component {
 			<div class="position-relative z-1">
 				<input id="search-bar" class="form-control rounded-pill bg-light" type="search"
 						placeholder="Search users..." aria-label="Search" autocomplete="off">
-				<div id="search-results" class="rounded position-absolute w-100 z-2"></div>
+				<div id="search-results" class="rounded position-absolute w-100 z-2 d-none"></div>
 			</div>
 		`;
 	}
@@ -22,60 +22,54 @@ export class SearchNav extends Component {
 			"input",
 			this.handleInput
 		);
-		super.addComponentEventListener(
-			document,
-			"click",
-			this.handleDocumentClick
-		);
+		super.addComponentEventListener(document, "click", this.closeSearchBar);
 	}
 
-	handleInput = async (event) => {
+	async handleInput(event) {
 		if (event.target.value.length < 2) {
 			this.searchResults.style.display = "none";
 			return;
 		}
-		if (!(await isAuth())) {
-			window.redirect("/");
-			return;
-		}
-
+		if (!(await isAuth())) window.redirect("/");
 		const { success, body, error } = await searchUsers(event.target.value);
 		this.searchResults.innerHTML = "";
 
-		if (success) {
-			this.searchResults.innerHTML = this.renderResults(body.data);
-			this.searchResults.style.display =
-				body.data && body.data.length > 0 ? "block" : "none";
-		} else {
+		if (error || !success) {
 			showError();
 			console.error(error || "Weird error occured.");
 		}
-	};
+		if (success) {
+			if (body.data && body.data.length > 0) {
+				this.searchResults.classList.remove("d-none");
+				this.searchResults.classList.add("d-block");
+				body.data.slice(0, 4).forEach((user) => {
+					const div = document.createElement("div");
+					div.className = "result-item p-1 cursor-pointer bg-body";
+					div.innerHTML = `
+						<img src="${window.APP_CONFIG.backendUrl}${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover">
+						${user.username}
+					`;
 
-	renderResults(data) {
-		if (!data || data.length === 0) return "";
-		return data
-			.slice(0, 3)
-			.map(
-				(user) => `
-				<div class="result-item p-1" onclick="window.redirect('/dashboard/${user.id}')">
-					<img src="${window.APP_CONFIG.backendUrl}${user.avatar}" alt="profile image" class="rounded-circle object-fit-cover" style="width: 40px; height: 40px;">
-					${user.username}
-				</div>
-			`
-			)
-			.join("");
+					super.addComponentEventListener(div, "click", () => {
+						window.redirect(`/dashboard/${user.id}`);
+					});
+
+					this.searchResults.appendChild(div);
+				});
+			}
+		}
 	}
 
-	handleDocumentClick = (event) => {
+	closeSearchBar(event) {
 		if (
-			this.searchResults &&
-			!this.searchResults.contains(event.target) &&
-			event.target !== this.searchBar
+			!(
+				this.searchResults?.contains(event.target) ||
+				event.target == this.searchBar
+			)
 		) {
-			this.searchResults.style.display = "none";
+			this.searchResults.classList.add("d-none");
 		}
-	};
+	}
 
 	style() {
 		return `
@@ -87,13 +81,15 @@ export class SearchNav extends Component {
 				#search-results {
 					max-height: 200px;
 					overflow-y: auto;
-					display: none;
 				}
 
-				.result-item {
-					cursor: pointer;
-					background-color: var(--bs-body-bg);
-					border: 1px solid var(--bs-border-color);
+				.result-item:hover {
+					background-color: var(--sky-100) !important;
+				}
+
+				.result-item img {
+					height: 40px;
+					width: auto;
 				}
 			</style>
 		`;
