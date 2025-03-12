@@ -114,7 +114,7 @@ export class Engine {
 			this.scene.updateFrame(currentTime, delta);
 
 			this.renderFrame();
-			this.threeJS.refreshControls();
+			this.threeJS.controls.update();
 		});
 	}
 

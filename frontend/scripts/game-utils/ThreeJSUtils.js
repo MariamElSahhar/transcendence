@@ -106,11 +106,7 @@ export class ThreeJSUtils {
 	stopAnimationLoop() {
 		this.renderer.setAnimationLoop(null);
 	}
-
-	refreshControls() {
-		this.controls.update();
-	}
-
+	
 	renderScene(scene) {
 		this.renderer.render(scene, this.camera);
 	}

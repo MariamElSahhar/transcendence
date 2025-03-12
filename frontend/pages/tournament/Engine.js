@@ -157,7 +157,7 @@ export class Engine {
 			const delta = clock.getDelta();
 			this.scene.updateFrame(currentTime, delta);
 
-			this.threeJS.refreshControls();
+			this.threeJS.controls.update();
 			this.renderFrame();
 		});
 	}
