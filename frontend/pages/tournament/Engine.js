@@ -150,7 +150,7 @@ export class Engine {
 	}
 
 	setAnimationLoop(loopFunction) {
-		this.#threeJS.startAnimationLoop(loopFunction);
+		this.#threeJS.beginAnimationLoop(loopFunction);
 	}
 
 	stopAnimationLoop() {
@@ -185,7 +185,7 @@ export class Engine {
 			cameraLookAt.z
 		);
 		this.#threeJS.updateCameraPosition(cameraPosition);
-		this.#threeJS.updateCameraLookAt(cameraLookAt);
+		this.#threeJS.updateCameraView(cameraLookAt);
 	}
 
 	resizeHandler() {
