@@ -23,7 +23,7 @@ export class LocalGamePage extends Component {
 
 	disconnectedCallback() {
 		if (this.engine) {
-			this.engine.stopAnimationLoop();
+			this.engine.threeJS.stopAnimationLoop();
 			this.engine.cleanUp();
 		}
 		if (this.countDownIntervalId) {

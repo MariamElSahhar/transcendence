@@ -215,7 +215,7 @@ export class RemoteGamePage extends Component {
 	player_left() {
 		this.playerLeft = true;
 		if (this.engine) {
-			this.engine.stopAnimationLoop();
+			this.engine.threeJS.stopAnimationLoop();
 			this.engine.cleanUp();
 			this.engine.scene.match.matchIsOver = true;
 			if (this.engine.scene.match.ball)
@@ -260,7 +260,7 @@ export class RemoteGamePage extends Component {
 		});
 		this.activeTimeouts.clear();
 		if (this.engine) {
-			this.engine.stopAnimationLoop();
+			this.engine.threeJS.stopAnimationLoop();
 			this.engine.cleanUp();
 		}
 		if (this.countDownIntervalId) {

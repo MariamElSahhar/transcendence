@@ -5,7 +5,7 @@ import { Scene } from "./TournamentScene.js";
 import { showError } from "../error/ErrorPage.js";
 
 export class Engine {
-	#threeJS;
+	threeJS;
 	#keyHookHandler;
 	#scene;
 	#component;
@@ -31,10 +31,10 @@ export class Engine {
 			console.error("Invalid component or container.");
 			return;
 		}
-		if (this.#threeJS) {
-			this.stopAnimationLoop();
-			this.#threeJS.disposeResourcesr();
-			this.#threeJS = null;
+		if (this.threeJS) {
+			this.threeJS.stopAnimationLoop();
+			this.threeJS.disposeResourcesr();
+			this.threeJS = null;
 		}
 
 		if (this.#scene) {
@@ -47,7 +47,7 @@ export class Engine {
 			container.removeChild(canvas);
 		}
 
-		this.#threeJS = new ThreeJSUtils(this);
+		this.threeJS = new ThreeJSUtils(this);
 		this.#keyHookHandler = new KeyHandler(this);
 
 		this.#scene = new Scene();
@@ -72,7 +72,7 @@ export class Engine {
 
 	cleanUp() {
 		try {
-			this.stopAnimationLoop();
+			this.threeJS.stopAnimationLoop();
 		} catch (err) {
 			showError();
 			console.error("Error stopping animation loop:", err);
@@ -95,8 +95,8 @@ export class Engine {
 			console.error("Error clearing the scene:", err);
 		}
 		try {
-			if (this.#threeJS) {
-				this.#threeJS.disposeResources();
+			if (this.threeJS) {
+				this.threeJS.disposeResources();
 			}
 		} catch (err) {
 			showError();
@@ -105,7 +105,7 @@ export class Engine {
 	}
 
 	renderFrame() {
-		this.#threeJS.renderScene(this.#scene.threeJSScene);
+		this.threeJS.renderScene(this.#scene.threeJSScene);
 	}
 
 	get scene() {
@@ -150,11 +150,7 @@ export class Engine {
 	}
 
 	setAnimationLoop(loopFunction) {
-		this.#threeJS.beginAnimationLoop(loopFunction);
-	}
-
-	stopAnimationLoop() {
-		this.#threeJS.stopAnimationLoop();
+		this.threeJS.beginAnimationLoop(loopFunction);
 	}
 
 	displayGameScene() {
@@ -175,17 +171,17 @@ export class Engine {
 	}
 
 	get threeJS() {
-		return this.#threeJS;
+		return this.threeJS;
 	}
 
 	updateCamera(cameraPosition, cameraLookAt) {
-		this.#threeJS.controls.target.set(
+		this.threeJS.controls.target.set(
 			cameraLookAt.x,
 			cameraLookAt.y,
 			cameraLookAt.z
 		);
-		this.#threeJS.updateCameraPosition(cameraPosition);
-		this.#threeJS.updateCameraView(cameraLookAt);
+		this.threeJS.updateCameraPosition(cameraPosition);
+		this.threeJS.updateCameraView(cameraLookAt);
 	}
 
 	resizeHandler() {
