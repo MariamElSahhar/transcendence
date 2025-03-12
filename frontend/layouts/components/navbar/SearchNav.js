@@ -13,6 +13,30 @@ export class SearchNav extends Component {
 		`;
 	}
 
+	style() {
+		return `
+			<style>
+				#search-bar:active, #search-bar:focus {
+					background-color: var(--bs-body-bg) !important;
+				}
+
+				#search-results {
+					max-height: 200px;
+					overflow-y: auto;
+				}
+
+				.result-item:hover {
+					background-color: var(--sky-100) !important;
+				}
+
+				.result-item img {
+					height: 40px;
+					width: auto;
+				}
+			</style>
+		`;
+	}
+
 	postRender() {
 		this.searchBar = this.querySelector("#search-bar");
 		this.searchResults = this.querySelector("#search-results");
@@ -23,6 +47,17 @@ export class SearchNav extends Component {
 			this.handleInput
 		);
 		super.addComponentEventListener(document, "click", this.closeSearchBar);
+	}
+
+	closeSearchBar(event) {
+		if (
+			!(
+				this.searchResults?.contains(event.target) ||
+				event.target == this.searchBar
+			)
+		) {
+			this.searchResults.classList.add("d-none");
+		}
 	}
 
 	async handleInput(event) {
@@ -58,41 +93,6 @@ export class SearchNav extends Component {
 				});
 			}
 		}
-	}
-
-	closeSearchBar(event) {
-		if (
-			!(
-				this.searchResults?.contains(event.target) ||
-				event.target == this.searchBar
-			)
-		) {
-			this.searchResults.classList.add("d-none");
-		}
-	}
-
-	style() {
-		return `
-			<style>
-				#search-bar:active, #search-bar:focus {
-					background-color: var(--bs-body-bg) !important;
-				}
-
-				#search-results {
-					max-height: 200px;
-					overflow-y: auto;
-				}
-
-				.result-item:hover {
-					background-color: var(--sky-100) !important;
-				}
-
-				.result-item img {
-					height: 40px;
-					width: auto;
-				}
-			</style>
-		`;
 	}
 }
 

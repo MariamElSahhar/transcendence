@@ -11,7 +11,7 @@ export class TwoFactorAuth extends Component {
 
 	render() {
 		return `
-			<main class="d-flex justify-content-center align-items-center flex-grow-1">
+		<main class="d-flex justify-content-center align-items-center flex-grow-1">
 			<div class="card shadow p-5 mx-auto rounded bg-light">
 				<h2 class="m-0 w-100 text-center mb-3">Verify Your OTP</h2>
 				<p class="text-center mb-2">Enter the 6-digit code from your email and let’s-a go!</p>
@@ -23,7 +23,7 @@ export class TwoFactorAuth extends Component {
 
 					<!-- OTP Input Fields -->
 					<div class="input-fields form-group mb-2 w-100 d-flex justify-content-between">
-						${this.#renderOtpInputs()}
+						${this.renderOtpInputs()}
 					</div>
 
 					<!-- Submit Button -->
@@ -51,22 +51,18 @@ export class TwoFactorAuth extends Component {
 		this.errorNotification = this.querySelector("#error-alert");
 
 		this.otpInputs.forEach((input) => {
-			super.addComponentEventListener(
-				input,
-				"keydown",
-				this.#onOtpChange
-			);
-			super.addComponentEventListener(input, "paste", this.#onOtpPaste);
+			super.addComponentEventListener(input, "keydown", this.onOtpChange);
+			super.addComponentEventListener(input, "paste", this.onOtpPaste);
 		});
 
 		super.addComponentEventListener(
 			this.submitButton,
 			"click",
-			this.#onSubmitOtp
+			this.onSubmitOtp
 		);
 	}
 
-	#renderOtpInputs() {
+	renderOtpInputs() {
 		return Array.from(
 			{ length: 6 },
 			(_, i) => `
@@ -78,28 +74,28 @@ export class TwoFactorAuth extends Component {
 		).join("");
 	}
 
-	#onOtpChange = (event) => {
-		if (!this.#isPasteShortcut(event)) {
+	onOtpChange(event) {
+		if (!this.isPasteShortcut(event)) {
 			event.preventDefault();
 		}
 
 		const isValidInput =
-			this.#isNumericKey(event) || this.#isBackspaceKey(event);
+			this.isNumericKey(event) || this.isBackspaceKey(event);
 		if (isValidInput) {
-			if (this.#isBackspaceKey(event)) {
+			if (this.isBackspaceKey(event)) {
 				event.target.value = "";
-				this.#focusPreviousField(event.target);
+				this.focusPreviousField(event.target);
 			} else {
-				event.target.value = this.#extractDigit(event);
-				this.#validateForm();
-				this.#focusNextField(event.target);
+				event.target.value = this.extractDigit(event);
+				this.validateForm();
+				this.focusNextField(event.target);
 			}
 		} else {
 			event.target.value = "";
 		}
-	};
+	}
 
-	#onOtpPaste = (event) => {
+	onOtpPaste(event) {
 		event.preventDefault();
 		const clipboardData = event.clipboardData || window.clipboardData;
 		const pastedCode = clipboardData.getData("text").replace(/\D/g, "");
@@ -108,34 +104,34 @@ export class TwoFactorAuth extends Component {
 		[...pastedCode].forEach((digit) => {
 			if (currentInput) {
 				currentInput.value = digit;
-				this.#validateForm();
-				currentInput = this.#focusNextField(currentInput);
+				this.validateForm();
+				currentInput = this.focusNextField(currentInput);
 			}
 		});
-	};
+	}
 
-	#validateForm() {
+	validateForm() {
 		const allInputsFilled = Array.from(this.otpInputs).every(
 			(input) => input.value
 		);
 		this.submitButton.disabled = !allInputsFilled;
-		if (allInputsFilled) this.#onSubmitOtp();
+		if (allInputsFilled) this.onSubmitOtp();
 	}
 
-	async #onSubmitOtp(event) {
+	async onSubmitOtp(event) {
 		if (event) event.preventDefault();
-		this.#startLoading();
+		this.startLoading();
 
 		const otp = Array.from(this.otpInputs)
 			.map((input) => input.value)
 			.join("");
 
-			if (!otp || otp.length !== 6) {
-				this.#stopLoading();
-				this.errorNotification.innerHTML = "Invalid OTP.";
-				this.errorNotification.classList.remove("d-none");
-				return;
-			}
+		if (!otp || otp.length !== 6) {
+			this.stopLoading();
+			this.errorNotification.innerHTML = "Invalid OTP.";
+			this.errorNotification.classList.remove("d-none");
+			return;
+		}
 
 		const { success, error } = await verifyOTP({
 			username: this.login,
@@ -143,15 +139,15 @@ export class TwoFactorAuth extends Component {
 		});
 
 		if (success) {
-			window.location.href = "/home";
+			window.redirect("/home");
 		} else {
-			this.#stopLoading();
+			this.stopLoading();
 			this.errorNotification.innerHTML = error || "Invalid OTP.";
 			this.errorNotification.classList.remove("d-none");
 		}
 	}
 
-	#focusPreviousField(currentInput) {
+	focusPreviousField(currentInput) {
 		const previousField = currentInput.previousElementSibling;
 		if (previousField) {
 			previousField.focus();
@@ -160,7 +156,7 @@ export class TwoFactorAuth extends Component {
 		return null;
 	}
 
-	#focusNextField(currentInput) {
+	focusNextField(currentInput) {
 		const nextField = currentInput.nextElementSibling;
 		if (nextField) {
 			nextField.focus();
@@ -169,7 +165,7 @@ export class TwoFactorAuth extends Component {
 		return null;
 	}
 
-	#startLoading() {
+	startLoading() {
 		this.submitButton.innerHTML = `
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
       <span class="sr-only">Loading...</span>
@@ -177,7 +173,7 @@ export class TwoFactorAuth extends Component {
 		this.submitButton.disabled = true;
 	}
 
-	#stopLoading() {
+	stopLoading() {
 		this.submitButton.innerHTML = "Verify Code";
 		this.submitButton.disabled = false;
 	}
@@ -185,35 +181,35 @@ export class TwoFactorAuth extends Component {
 	backspaceKeyCode = 8;
 	pasteKeyCode = 86;
 
-	#isNumericKey(event) {
-		return /^\d$/.test(this.#getEventKeyValue(event));
+	isNumericKey(event) {
+		return /^\d$/.test(this.getEventKeyValue(event));
 	}
 
-	#isBackspaceKey(event) {
-		return this.#getEventKeyCode(event) === this.backspaceKeyCode;
+	isBackspaceKey(event) {
+		return this.getEventKeyCode(event) === this.backspaceKeyCode;
 	}
 
-	#getEventKeyCode(event) {
+	getEventKeyCode(event) {
 		return event.keyCode || event.which;
 	}
 
-	#getEventKeyValue(event) {
+	getEventKeyValue(event) {
 		return event.data || event.key;
 	}
 
-	#isPasteShortcut(event) {
+	isPasteShortcut(event) {
 		const isVPressed =
-			this.#getEventKeyValue(event) === "v" ||
+			this.getEventKeyValue(event) === "v" ||
 			event.keyCode === this.pasteKeyCode;
-		return isVPressed && this.#isControlPressed(event);
+		return isVPressed && this.isControlPressed(event);
 	}
 
-	#isControlPressed(event) {
+	isControlPressed(event) {
 		return event.ctrlKey || event.metaKey;
 	}
 
-	#extractDigit(event) {
-		return parseInt(this.#getEventKeyValue(event));
+	extractDigit(event) {
+		return parseInt(this.getEventKeyValue(event));
 	}
 }
 
