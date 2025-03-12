@@ -75,9 +75,7 @@ export class GameStatsCard extends Component {
 			}</span>
                     </p>
                     <div class="progress local">
-                        <div class="progress-bar" style="width: ${
-							(this.stats.localWon / this.stats.localPlayed) * 100
-						}%;"></div>
+                        <div class="progress-bar"></div>
                     </div>
 
                     <p class="d-flex align-items-baseline my-1">
@@ -87,10 +85,7 @@ export class GameStatsCard extends Component {
 			}</span>
                     </p>
                     <div class="progress remote">
-                        <div class="progress-bar" style="width: ${
-							(this.stats.remoteWon / this.stats.remotePlayed) *
-							100
-						}%;"></div>
+                        <div class="progress-bar"></div>
                     </div>
 
                     <p class="d-flex align-items-baseline my-1">
@@ -100,9 +95,7 @@ export class GameStatsCard extends Component {
 			}</span>
                     </p>
                     <div class="progress ttt">
-                        <div class="progress-bar" style="width: ${
-							(this.stats.tttWon / this.stats.tttPlayed) * 100
-						}%;"></div>
+                        <div class="progress-bar"></div>
                     </div>
                 </div>
             </div>
@@ -133,14 +126,19 @@ export class GameStatsCard extends Component {
 
             .local .progress-bar {
                 background-color: ${this.colors.localWonColor};
+                width: ${(this.stats.localWon / this.stats.localPlayed) * 100}%;
             }
 
             .remote .progress-bar {
                 background-color: ${this.colors.remoteWonColor};
+                width: ${
+					(this.stats.remoteWon / this.stats.remotePlayed) * 100
+				}%;
             }
 
             .ttt .progress-bar {
                 background-color: ${this.colors.tttWonColor};
+                width: ${(this.stats.tttWon / this.stats.tttPlayed) * 100}%;
             }
 
             .game-stats {

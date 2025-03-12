@@ -333,7 +333,7 @@ class TicTacToePage extends Component {
 					<div class="scores">
 						${this.getScoresHtml()}
 					</div>
-					<div id="timer" class="fs-1 hidden" style="z-index: 4;">03:00</div>
+					<div id="timer" class="fs-1 hidden">03:00</div>
 				</div>
 			</div>
         `;
@@ -541,6 +541,10 @@ class TicTacToePage extends Component {
                         opacity: 1;
                     }
                 }
+
+				#timer {
+					z-index: 4;
+				}
 
             </style>
         `;
