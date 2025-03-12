@@ -96,45 +96,40 @@ export class Paddle {
 
 	#moveAIPaddle(ballPosition, velocity) {
 		const reactionDelay = 1000;
-		const movementDelay = 50;
+		const movementDelay = 40;
 		const currentTime = Date.now();
 		const movementThreshold = 0.2;
-		const maxSpeed = 2.5;
-		const smoothMove = 0.1;
+		const maxSpeed = 3.5;
+		const smoothMove = 0.2;
+		if (this.#isResetting) {
+			return;
+		}
 
 		if (this.startTime == 0) {
 			this.flag = 0;
-            this.startTime = currentTime;
+            this.startTime =currentTime;
 		}
 		if (this.flag == 1 && currentTime - this.lastBallMovement > movementDelay) {
-			this.ballPredX = this.ballPredX + this.ballVelocityX * (movementDelay / 1000);
-			this.ballPredY = this.ballPredY + this.ballVelocityY * (movementDelay / 1000);
+			this.ballPredX = this.ballPredX + this.ballVelocityX * ((movementDelay)/1000);
+			this.ballPredY = this.ballPredY + this.ballVelocityY * ((movementDelay)/1000);
 
 			let futurePredY = this.ballPredY + this.ballVelocityY * ((movementDelay + 50)/1000);
 			if (futurePredY > this.#boardEdgeLimitY || futurePredY < -this.#boardEdgeLimitY)
 			{
 				this.ballVelocityY = -this.ballVelocityY;
-				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY : -2 * this.#boardEdgeLimitY - futurePredY );
+				futurePredY = (futurePredY > 0 ? 2 * this.#boardEdgeLimitY - futurePredY: -2 * this.#boardEdgeLimitY - futurePredY);
 			}
 			let futurePredX = this.ballPredX + this.ballVelocityX * ((movementDelay + 50)/1000);
 			if (futurePredX > this.#boardEdgeLimitX || futurePredX < -this.#boardEdgeLimitX)
 			{
 				this.ballVelocityX = -this.ballVelocityX;
-				futurePredX = (futurePredX > 0 ? 2 * this.#boardEdgeLimitX - futurePredX: -2 * this.#boardEdgeLimitX + futurePredX);
+				futurePredX = (futurePredX > 0 ? 2 * this.#boardEdgeLimitX - futurePredX: -2 * this.#boardEdgeLimitX - futurePredX);
 			}
 			this.distanceToBall = futurePredY - this.#threeJSGroup.position.y;
-			// const missEdgeThreshold = 0.8; // 80% of board edge
-        // 	if (Math.abs(futurePredY) > this.#boardEdgeLimitY * missEdgeThreshold) {
-        //     	if (Math.random() < 0.3) { // 30% chance to miss the ball near the edge
-        //         	this.lastBallMovement = currentTime;
-        //         	return;
-        //     	}
-        // }
+	
 			if (Math.abs(this.distanceToBall) > movementThreshold) {
 				let moveAmount = this.distanceToBall * smoothMove ;
 				moveAmount = Math.sign(moveAmount) * Math.min(Math.abs(moveAmount), maxSpeed);
-				// if(moveAmount < -2)
-				// 	console.log(moveAmount)
 				
 				const newYPosition = this.#threeJSGroup.position.y + moveAmount;
 				this.#threeJSGroup.position.setY(newYPosition);
