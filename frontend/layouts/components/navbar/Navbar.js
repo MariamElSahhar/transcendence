@@ -24,7 +24,7 @@ export class Navbar extends Component {
 	}
 
 	async connectedCallback() {
-		await import("./SearchNav.js");
+		await import("./SearchBar.js");
 		super.connectedCallback();
 	}
 

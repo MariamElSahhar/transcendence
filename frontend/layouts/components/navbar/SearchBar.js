@@ -2,7 +2,7 @@ import { Component } from "../../../pages/Component.js";
 import { searchUsers } from "../../../scripts/clients/users-client.js";
 import { isAuth } from "../../../scripts/utils/session-manager.js";
 import { showError } from "../../../pages/error/ErrorPage.js";
-export class SearchNav extends Component {
+export class SearchBar extends Component {
 	render() {
 		return `
 			<div class="position-relative z-1">
@@ -46,23 +46,22 @@ export class SearchNav extends Component {
 			"input",
 			this.handleInput
 		);
-		super.addComponentEventListener(document, "click", this.closeSearchBar);
-	}
 
-	closeSearchBar(event) {
-		if (
-			!(
-				this.searchResults?.contains(event.target) ||
-				event.target == this.searchBar
-			)
-		) {
-			this.searchResults.classList.add("d-none");
-		}
+		super.addComponentEventListener(document, "click", (event) => {
+			if (
+				!this.searchResults?.contains(event.target) &&
+				event.target != this.searchBar
+			) {
+				this.searchResults.classList.add("d-none");
+				this.searchResults.classList.remove("d-block");
+			}
+		});
 	}
 
 	async handleInput(event) {
 		if (event.target.value.length < 2) {
-			this.searchResults.style.display = "none";
+			this.searchResults.classList.add("d-none");
+			this.searchResults.classList.remove("d-block");
 			return;
 		}
 		if (!(await isAuth())) window.redirect("/");
@@ -96,4 +95,4 @@ export class SearchNav extends Component {
 	}
 }
 
-customElements.define("navbar-searchbar", SearchNav);
+customElements.define("navbar-searchbar", SearchBar);
