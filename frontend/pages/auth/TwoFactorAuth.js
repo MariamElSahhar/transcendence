@@ -16,17 +16,13 @@ export class TwoFactorAuth extends Component {
 				<h2 class="m-0 w-100 text-center mb-3">Verify Your OTP</h2>
 				<p class="text-center mb-2">Enter the 6-digit code from your email and let’s-a go!</p>
 
-				<!-- Form -->
 				<form>
-					<!-- Error Alert -->
 					<div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
 
-					<!-- OTP Input Fields -->
 					<div class="input-fields form-group mb-2 w-100 d-flex justify-content-between">
 						${this.renderOtpInputs()}
 					</div>
 
-					<!-- Submit Button -->
 					<button id="submit-button" type="submit" class="btn btn-warning w-100 fw-bold" disabled>
 					Confirm
 					</button>

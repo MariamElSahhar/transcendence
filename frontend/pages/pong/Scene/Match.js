@@ -203,7 +203,7 @@ export class Match {
 		this.players.forEach((player, index) => {
 			if (player) {
 				player.stopGame();
-				player.resetPaddle(); // Reset paddles at the end of the game
+				player.resetPaddle(); 
 			} else {
 				showError();
 				console.error(

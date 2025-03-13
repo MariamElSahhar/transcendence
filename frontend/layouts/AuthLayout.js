@@ -19,13 +19,11 @@ export class AuthLayout extends Component {
 			<div
 				id="container"
 				class="d-flex flex-column align-items-center justify-content-center w-100 vh-100 overflow-hidden position-relative">
-				<!-- Sky -->
+
 				<div class="sky"></div>
 
-				<!-- Slot -->
 				<slot-component class="position-relative z-1 d-flex flex-column align-items-center justify-content-center flex-grow-1 flex-1 d-flex w-100 h-100"></slot-component>
 
-				<!-- Pipes -->
 				<div class="pipes-container d-flex w-100 justify-content-center position-absolute z-0">
 					<div class="left-pipe-container d-flex flex-column position-relative align-items-center">
 						<img class="pipe left-pipe z-3" src="/assets/pipe.webp" alt="X"/>

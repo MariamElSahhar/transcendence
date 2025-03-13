@@ -33,16 +33,12 @@ export class SignUpPage extends Component {
 			</h3>
 			<main class="d-flex justify-content-center align-items-center flex-grow-1 h-100 w-100">
 				<div class="login-card card shadow p-5 mx-auto bg-light">
-					<!-- Header -->
 					<h2 class="m-0 w-100 text-center mb-3">Create an Account</h2>
 
-					<!-- Form -->
 					<form id="registration-form" class="needs-validation" novalidate>
 
-						<!-- Error -->
 						<div id="error-banner" class="alert alert-danger d-none" role="alert"></div>
 
-						<!-- Username -->
 						<div class="form-group mb-1">
 							<div class="input-group">
 								<input type="text" class="form-control" id="username" placeholder="Username" required>
@@ -50,7 +46,6 @@ export class SignUpPage extends Component {
 							</div>
 						</div>
 
-						<!-- Email -->
 						<div class="form-group mb-1">
 							<div class="input-group">
 								<input type="email" class="form-control" id="email" placeholder="Email" required>
@@ -58,7 +53,6 @@ export class SignUpPage extends Component {
 							</div>
 						</div>
 
-						<!-- Password -->
 						<div class="form-group mb-1">
 							<div class="input-group">
 								<input type="password" class="form-control" id="password" placeholder="Password" required>
@@ -69,7 +63,6 @@ export class SignUpPage extends Component {
 							</div>
 						</div>
 
-						<!-- Confirm Password -->
 						<div class="form-group mb-1">
 							<div class="input-group">
 								<input type="password" class="form-control" id="confirm-password" placeholder="Confirm password" required>
@@ -80,13 +73,11 @@ export class SignUpPage extends Component {
 							</div>
 						</div>
 
-						<!-- Submit -->
 						<div>
 							<button id="register-btn" type="submit" class="btn w-100 mt-1" disabled>Sign Up</button>
 						</div>
 					</form>
 
-					<!-- Log In -->
 					<div class="text-center mt-2">
 						<small role="button" id="login-link">
 							Already have an account? <span class="text-decoration-underline">Log In</span></small>

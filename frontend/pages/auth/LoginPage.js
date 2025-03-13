@@ -25,13 +25,10 @@ export class LoginPage extends Component {
 				<div class="login-card card shadow p-5 mx-auto bg-light">
 					<h2 class="m-0 w-100 text-center mb-3">Welcome Back</h2>
 
-					<!-- Form -->
 					<form id="login-form" class="needs-validation">
 
-						<!-- Error -->
 						<div id="error-alert" class="alert alert-danger d-none" role="alert">${this.state.errorMessage}</div>
 
-						<!-- Username -->
 						<div class="form-group mb-1">
 							<div class="input-group">
 								<input type="text" class="form-control" id="login" placeholder="Username">
@@ -39,7 +36,6 @@ export class LoginPage extends Component {
 							</div>
 						</div>
 
-						<!-- Password -->
 						<div class="form-group mb-1">
 							<div class="input-group">
 								<input type="password" class="form-control" id="password" placeholder="Password">
@@ -49,12 +45,10 @@ export class LoginPage extends Component {
 							</div>
 						</div>
 
-						<!-- Submit -->
 						<div>
 							<button id="login-btn" class="btn w-100 mt-1" type="submit" disabled>Log In</button>
 						</div>
 
-						<!-- Sign Up -->
 						<div class="text-center mt-2">
 							<small role="button" id="register-link">Don't have an account? <span class="text-decoration-underline">Sign up</span></small>
 						</div>

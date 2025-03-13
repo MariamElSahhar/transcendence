@@ -28,7 +28,6 @@ class TicTacToePage extends Component {
 		this.gameInfoGetIntervalFd = null;
 		this.waitingForOpponentOverlay = null;
 
-		// Bo3 information
 		this.gameId = -1;
 		this.status = "";
 		this.player1 = "";
@@ -45,7 +44,7 @@ class TicTacToePage extends Component {
 
 		this.scoreA = 0;
 		this.scoreB = 0;
-		this.winner = null; // Winner status
+		this.winner = null;
 
 		this.checkAuthInterval = setInterval(async () => {
 			if (!(await isAuth())) window.redirect("/");
@@ -81,12 +80,6 @@ class TicTacToePage extends Component {
 			this.winnerRound3 = gameInfo.winnerRound3;
 
 			if (previousLastPlay != this.lastPlayTime) {
-				/* console.log(
-					">>> lastPlayTime",
-					Date.now(),
-					this.lastPlayTime,
-					Date.now() - this.lastPlayTime
-				); */
 				this.startTimer(60 - (Date.now() - this.lastPlayTime) / 1000); // the time management
 			}
 
@@ -137,7 +130,6 @@ class TicTacToePage extends Component {
 					this.refreshScoresHtml();
 					this.refreshBoardWrapperHtml();
 
-					// In case the user finished the game and not after page reload
 					if (lastStatus !== "NONE" && lastStatus !== "MATCHMAKING")
 						renderEndGameCard(
 							this,
@@ -584,7 +576,7 @@ class TicTacToePage extends Component {
 			timerElement.classList.add("hidden");
 		}
 
-		clearInterval(this.timerInterval); // Clear previous timers
+		clearInterval(this.timerInterval);
 
 		if (this.status != "PLAYING") {
 			timerElement.innerHTML = "";
@@ -612,12 +604,11 @@ class TicTacToePage extends Component {
 			}
 		};
 
-		updateTimer(); // Initial update
-		this.timerInterval = setInterval(updateTimer, 1000); // Start the countdown
+		updateTimer();
+		this.timerInterval = setInterval(updateTimer, 1000);
 	}
 
 	async subscribeToGameInfo() {
-		// Already subscribed
 		if (this.gameInfoGetIntervalFd !== null) {
 			return;
 		}
@@ -654,7 +645,6 @@ class TicTacToePage extends Component {
 		try {
 			const response = await post(`${BASE_URL}/join_matchmaking/`);
 			if (response.message) {
-				// console.log("Subscribe to matchmaking:", response.message);
 				this.inMatchmaking = true;
 			}
 		} catch (error) {
@@ -675,7 +665,6 @@ class TicTacToePage extends Component {
 		try {
 			const response = await post(`${BASE_URL}/cancel_matchmaking/`);
 			if (response.message) {
-				// console.log("Unsubscribed from matchmaking:", response.message);
 				this.inMatchmaking = false;
 			}
 		} catch (error) {
@@ -691,7 +680,6 @@ class TicTacToePage extends Component {
 			if (response.body?.game) {
 				const g = response.body.game;
 
-				// Create a new object containing game information
 				const gameInfo = {
 					id: g.id,
 					status: g.status,
@@ -708,38 +696,30 @@ class TicTacToePage extends Component {
 					winnerRound3: g.winner_round_3,
 				};
 
-				// console.log("Constructed game info object:", gameInfo);
-				return gameInfo; // Return the constructed game info object
+				return gameInfo;
 			}
 
-			// console.log("No active game found:", response.message);
-			// Return null or an empty object if no game is found
 			return null;
 		} catch (error) {
 			showError();
 			console.error("Error fetching game info:", error);
-			// Return false or handle the error as appropriate
 			return false;
 		}
 	}
 
 	handleCellClick(event) {
 		if (!this.inGame || this.nextToPlay !== this.myself) {
-			// console.log("CLICK REJECTED, NOT MY TURN");
 			return;
 		}
 
-		const cell = event.target.closest(".cell"); // Ensure we get the correct cell
+		const cell = event.target.closest(".cell");
 		if (!cell) {
-			// console.log("CLICK REJECTED, NOT A CELL");
 			return;
 		}
 
 		const index = cell.dataset.index;
 
-		// Ignore click if the cell is already filled
 		if (this.getBoard()[index] !== "-") {
-			// console.log("IGNORE CLICK, ALREADY OCCUPIED");
 			return;
 		}
 
@@ -753,7 +733,6 @@ class TicTacToePage extends Component {
 				move: index,
 			});
 			if (response.message) {
-				// console.log("Make move:", response.message);
 			}
 		} catch (error) {
 			showError();
@@ -793,12 +772,10 @@ class TicTacToePage extends Component {
 			}
 		}
 
-		// Check for draw
 		if (!this.board.includes(null)) {
 			this.winner = "Draw";
 		}
 	}
 }
 
-// Define the custom element
 customElements.define("tictactoe-page", TicTacToePage);

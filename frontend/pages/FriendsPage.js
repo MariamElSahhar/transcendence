@@ -111,7 +111,6 @@ export class FriendsPage extends Component {
 
 	async fetchFriends() {
 		const { success, data, error } = await fetchFriends(this.user_id);
-		// Fetch friends
 		if (success) {
 			this.friends = data;
 		} else {

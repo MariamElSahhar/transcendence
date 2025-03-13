@@ -22,7 +22,6 @@ export class Scene {
 			await this.match.init(engine);
 			this.#threeJSScene.add(this.match.threeJSGroup);
 
-			// Set the camera position
 			const camera = engine.threeJS.getCurrentCamera();
 			camera.position.set(0, 50, 100);
 			camera.lookAt(0, 0, 0);

@@ -11,8 +11,8 @@ export class LocalGamePage extends Component {
 		this.container = null;
 		this.engine = null;
 		this.overlay = null;
-		this.playerNames = []; // Stores player names
-		this.scores = [0, 0]; // Tracks scores for both players
+		this.playerNames = [];
+		this.scores = [0, 0]; 
 		this.isAIEnabled = window.location.pathname.endsWith("/single-player");
 	}
 

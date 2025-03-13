@@ -325,7 +325,7 @@ export class SettingsPage extends Component {
 			this.#deleteAvatarHandler
 		);
 
-		this.avatarOptions = this.querySelectorAll(".avatar-option"); // Select all elements
+		this.avatarOptions = this.querySelectorAll(".avatar-option");
 		this.avatarOptions.forEach((option) => {
 			super.addComponentEventListener(
 				option,
@@ -728,16 +728,15 @@ export class SettingsPage extends Component {
 				this.vars
 			);
 			if (!success) {
-				if (error.username) {
+				 if (error.includes("username")) {
 					this.username.classList.remove("is-valid");
 					this.username.classList.add("is-invalid");
-
-					this.usernameFeedback.innerHTML = error.username[0]; // Set the error message for username
+					this.usernameFeedback.innerHTML = error;
 				}
-				if (error.email) {
+				if (error.includes("email")) {
 					this.email.classList.remove("is-valid");
 					this.email.classList.add("is-invalid");
-					this.emailFeedback.innerHTML = error.email[0]; // Set the error message for email
+					this.emailFeedback.innerHTML = error;
 				}
 				this.saveButton.innerHTML = `
       <i class="bi bi-floppy2-fill"></i>

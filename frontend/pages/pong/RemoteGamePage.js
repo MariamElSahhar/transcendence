@@ -28,8 +28,8 @@ export class RemoteGamePage extends Component {
 		this.data;
 		this.engine = null;
 		this.overlay = null;
-		this.playerNames = []; // Stores player names
-		this.scores = [0, 0]; // Tracks scores for both players
+		this.playerNames = [];
+		this.scores = [0, 0];
 		this.isAIEnabled = false;
 		this.playerSet = false;
 		this.playerLeft = false;
@@ -90,7 +90,7 @@ export class RemoteGamePage extends Component {
 	}
 
 	onWebSocketClose() {
-		// console.log("WebSocket closed");
+		console.log("WebSocket closed");
 	}
 
 	onWebSocketError(error) {
@@ -155,9 +155,9 @@ export class RemoteGamePage extends Component {
 	setTrackedTimeout(callback, delay) {
 		const timeoutID = setTimeout(() => {
 			callback();
-			this.activeTimeouts.delete(timeoutID); // Remove timeout ID after execution
+			this.activeTimeouts.delete(timeoutID);
 		}, delay);
-		this.activeTimeouts.add(timeoutID); // Add timeout ID to the set
+		this.activeTimeouts.add(timeoutID);
 		return timeoutID;
 	}
 
@@ -246,7 +246,7 @@ export class RemoteGamePage extends Component {
 			}
 			if (this.timeoutID) {
 				clearTimeout(this.timeoutID);
-				this.timeoutID = null; // Reset the global variable
+				this.timeoutID = null;
 			}
 		} catch (error) {
 			showError();

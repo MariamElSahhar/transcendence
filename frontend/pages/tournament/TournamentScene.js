@@ -44,7 +44,6 @@ export class Scene {
 				throw new Error("PongGameBox is not defined.");
 			}
 
-			// Add lights
 			const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
 			this.#threeJSScene.add(ambientLight);
 
@@ -52,7 +51,6 @@ export class Scene {
 			directionalLight.position.set(50, 100, 50);
 			this.#threeJSScene.add(directionalLight);
 
-			// Adjust camera
 			const camera = this.#engine.threeJS.getCurrentCamera();
 			camera.position.set(0, 50, 100);
 			camera.lookAt(0, 0, 0);

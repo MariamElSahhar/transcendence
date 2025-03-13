@@ -33,24 +33,20 @@ export class Match {
 	async init(engine) {
 		this.#engine = engine;
 
-		// Initialize the ball
 		this.#ball = new Ball();
-		this.prepareBallForMatch(); // Sets the ball in a waiting state
+		this.prepareBallForMatch();
 		this.#threeJSGroup.add(this.#ball.threeJSGroup);
 
-		// Position the group in the scene
 		this.#threeJSGroup.position.set(30, 23.75, 0);
 
-		// Initialize both players
 		for (let i = 0; i < 2; i++) {
 			const playerName = this.#playerNames[i] || `Player ${i + 1}`;
 			this.#players[i] = new Player();
 			await this.#players[i].init(i, this.#pointsToWinMatch, playerName);
 			this.#threeJSGroup.add(this.#players[i].threeJSGroup);
 
-			// Ensure paddle starts in the correct position and size
 			this.#players[i].resetPaddle();
-			this.#players[i].stopGame(); // Disable paddle movement until the game starts
+			this.#players[i].stopGame();
 		}
 	}
 
@@ -61,7 +57,7 @@ export class Match {
 					timeDelta,
 					pongGameBox,
 					index === 1 ? this.#ball.getPosition() : null,
-					!this.#ballIsWaiting && !this.#matchIsOver // gameStarted logic
+					!this.#ballIsWaiting && !this.#matchIsOver
 				);
 			}
 		});
@@ -73,7 +69,7 @@ export class Match {
 				currentTime >= this.#ballStartTime
 			) {
 				this.#ballIsWaiting = false;
-				this.startGame(); // Start the game when the ball is ready
+				this.startGame();
 			}
 
 			if (!this.#ballIsWaiting) {
@@ -85,7 +81,7 @@ export class Match {
 	startGame() {
 		this.#players.forEach((player) => {
 			if (player) {
-				player.startGame(); // Enable paddle movement
+				player.startGame();
 			}
 		});
 	}
@@ -93,19 +89,19 @@ export class Match {
 	stopGame() {
 		this.#players.forEach((player) => {
 			if (player) {
-				player.stopGame(); // Disable paddle movement
+				player.stopGame();
 			}
 		});
 	}
 
 	prepareBallForMatch() {
 		this.#ballIsWaiting = true;
-		this.#ballStartTime = Date.now() + 3000; // 3-second delay before the ball starts moving
+		this.#ballStartTime = Date.now() + 3000;
 		this.#ball.prepareForMatch();
 		this.#players.forEach((player) => {
 			if (player) {
-				player.resetPaddle(); // Reset paddle position and size
-				player.stopGame(); // Ensure paddles cannot move until the ball is ready
+				player.resetPaddle();
+				player.stopGame();
 			}
 		});
 	}
@@ -134,9 +130,8 @@ export class Match {
 					this.#points[1]
 				);
 			}
-			this.stopGame(); // Stop paddles when the match ends
+			this.stopGame();
 
-			// Reset paddles to their starting positions
 			this.#players.forEach((player) => {
 				if (player) {
 					player.resetPaddle();
@@ -146,7 +141,6 @@ export class Match {
 			return;
 		}
 
-		// Reset for the next round
 		this.prepareBallForMatch();
 	}
 
@@ -154,16 +148,14 @@ export class Match {
 		this.#points = [0, 0];
 		this.#matchIsOver = false;
 
-		// Reset players' paddles and points
 		this.#players.forEach((player) => {
 			if (player) {
 				player.resetPaddle();
 				player.resetPoints();
-				player.stopGame(); // Ensure paddles remain stationary until the game starts
+				player.stopGame();
 			}
 		});
 
-		// Reset the ball
 		this.prepareBallForMatch();
 	}
 

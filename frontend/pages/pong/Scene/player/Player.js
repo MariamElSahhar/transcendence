@@ -7,7 +7,7 @@ export class Player {
     #board;
     paddle;
     #isAIControlled;
-    #gameStarted = false; // New flag to track game state
+    #gameStarted = false;
 
     constructor(isAIControlled = false) {
         this.#isAIControlled = isAIControlled;
@@ -15,9 +15,9 @@ export class Player {
 
     async init(index, pointsToWinMatch, playerName) {
         if (index === 0) {
-            this.#threeJSGroup.position.set(-10, 0, 0); // Left player
+            this.#threeJSGroup.position.set(-10, 0, 0);
         } else {
-            this.#threeJSGroup.position.set(10, 0, 0); // Right player
+            this.#threeJSGroup.position.set(10, 0, 0);
         }
 
         this.#board = new PongBoard();
@@ -29,18 +29,17 @@ export class Player {
     }
 
     updateFrame(timeDelta, pongGameBox, ballPosition = null, gameStarted = false, movement) {
-		// console.log(movement);
-        if (!this.#gameStarted) return; // Prevent movement if the game hasn't started
+        if (!this.#gameStarted) return;
 
         this.paddle.updateFrame(timeDelta, pongGameBox, ballPosition, gameStarted, movement);
     }
 
     startGame() {
-        this.#gameStarted = true; // Allow paddle movement when the game starts
+        this.#gameStarted = true;
     }
 
     stopGame() {
-        this.#gameStarted = false; // Stop paddle movement when the game ends
+        this.#gameStarted = false;
     }
 
     resetPaddle() {
@@ -48,8 +47,8 @@ export class Player {
             const boardSize = this.#board.size;
 
             const startingX = this.#threeJSGroup.position.x > 0
-                ? boardSize.x / 2 - 2 // Right player
-                : -boardSize.x / 2 + 2; // Left player
+                ? boardSize.x / 2 - 2
+                : -boardSize.x / 2 + 2; 
             const startingY = 0;
             const startingZ = 0;
 

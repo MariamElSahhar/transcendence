@@ -79,7 +79,6 @@ export class HomePage extends Component {
 	}
 
 	postRender() {
-		// Play Local Game Button
 		super.addComponentEventListener(
 			this.querySelector("#play-single-player-game"),
 			"click",
@@ -95,7 +94,6 @@ export class HomePage extends Component {
 			}
 		);
 
-		// Play Remote Game Button
 		super.addComponentEventListener(
 			this.querySelector("#play-remote-game"),
 			"click",
@@ -104,7 +102,6 @@ export class HomePage extends Component {
 			}
 		);
 
-		// Join Tournament Button
 		super.addComponentEventListener(
 			this.querySelector("#play-tournament"),
 			"click",
@@ -113,7 +110,6 @@ export class HomePage extends Component {
 			}
 		);
 
-		// Play Tic Tac Toe Remotely Button
 		super.addComponentEventListener(
 			this.querySelector("#play-ttt"),
 			"click",

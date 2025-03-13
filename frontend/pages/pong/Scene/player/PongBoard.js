@@ -33,7 +33,7 @@ export class PongBoard {
 	initBoard(boardSize) {
 		this.#board = new THREE.Mesh(
 			new THREE.BoxGeometry(boardSize.x, boardSize.y, boardSize.z),
-			new THREE.MeshStandardMaterial({ color: BOARD_COLOR }) // Grey board
+			new THREE.MeshStandardMaterial({ color: BOARD_COLOR }) 
 		);
 
 		if (this.#side === 1) {

@@ -13,13 +13,6 @@ class PhysicalObject {
   }
 
   handleCollision(_travel, _ball, _collisionHandler, _match) {
-    //_match.playerMarkedPoint(1 - this.isRight); // Update the score.
-
-    // // Reset both players to their starting positions.
-    // _match.resetPlayers();
-
-    // return null;
-    // //throw new Error('Not implemented');
     throw new Error('Not implemented');
   }
 }
@@ -162,7 +155,6 @@ class Paddle extends PhysicalObject {
         return { intersection: null, t: null };
     }
 
-    // Adjust the ball's position slightly outside the paddle to prevent visual overlap
     const adjustedIntersection = intersection.clone().sub(radiusHelper);
 
     return { intersection: adjustedIntersection, t };
@@ -183,7 +175,6 @@ class Paddle extends PhysicalObject {
         .normalize();
         if(_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost || _match.gameType == "remote" && ball.movement.x < 0)
         {
-          // console.log("right",_match.gameType == "remote" && ball.movement.x > 0 && !_match.isHost,"left",  _match.gameType == "remote" && ball.movement.x < 0, )
           sendWebSocketMessage({ type: "ballPosition", position:normalizedMovement.clone().multiplyScalar(ball.movement.length() * ball.acceleration), gameSession: _match.engine.gameSession });
           ball.movement.x=0;
           ball.movement.y=0;

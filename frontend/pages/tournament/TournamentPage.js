@@ -26,7 +26,7 @@ export class TournamentPage extends Component {
 		];
 		this.matches = [];
 		this.winners = [];
-		this.playerWins = {}; // Tracks the number of wins for each player
+		this.playerWins = {};
 		this.countDownIntervalId = null;
 	}
 
@@ -89,7 +89,6 @@ export class TournamentPage extends Component {
 		const submitButton = this.querySelector("#submit-players");
 		const errorMessage = this.querySelector("#error-message");
 
-		// Enable/disable the submit button dynamically
 		super.addComponentEventListener(form, "input", () => {
 			const allFilled = [
 				...form.querySelectorAll("input:not([disabled])"),
@@ -102,16 +101,13 @@ export class TournamentPage extends Component {
 			}
 		});
 
-		// Handle form submission
 		super.addComponentEventListener(form, "submit", (event) => {
 			event.preventDefault();
-			errorMessage.textContent = ""; // Clear previous errors
+			errorMessage.textContent = "";
 			errorMessage.classList.add("d-none");
 
-			// Clear previous players to avoid duplicates
 			this.players = [];
 
-			// Collect player names
 			const playerIds = [
 				"player1-name",
 				"player2-name",
@@ -122,18 +118,14 @@ export class TournamentPage extends Component {
 				form.querySelector(`#${id}`).value.trim()
 			);
 
-			// Validate player names
 			if (!this.areValidNames(this.players)) {
 				errorMessage.classList.remove("d-none");
-				return; // Stop if validation fails
+				return;
 			}
-
-			// Initialize player win counts
 			this.players.forEach((player) => {
 				this.playerWins[player] = 0;
 			});
 
-			// Proceed to initialize the tournament
 			this.initTournament();
 		});
 	}
@@ -141,7 +133,6 @@ export class TournamentPage extends Component {
 	areValidNames(players) {
 		const errorMessage = this.querySelector("#error-message");
 
-		// Check for duplicate names
 		const uniquePlayers = new Set(players);
 		if (uniquePlayers.size !== players.length) {
 			errorMessage.textContent = "Player names must be unique.";
@@ -156,12 +147,11 @@ export class TournamentPage extends Component {
 		this.winners = [];
 		this.currentMatchIndex = 0;
 
-		// Shuffle players to create random matchups
 		this.shufflePlayers();
 		this.matches = [
-			[this.players[0], this.players[1]], // Match 1
-			[this.players[2], this.players[3]], // Match 2
-			[null, null], // Placeholder for the Final Match
+			[this.players[0], this.players[1]],
+			[this.players[2], this.players[3]],
+			[null, null],
 		];
 
 		this.container.innerHTML = "";
@@ -216,7 +206,6 @@ export class TournamentPage extends Component {
 
 		const loser = winner === player1 ? player2 : player1;
 		this.scores[this.currentMatchIndex] = [score1, score2];
-		// if one of the players is the main player
 		if (player1 == this.me.username || player2 == this.me.username) {
 			if (!(await isAuth())) window.redirect("/");
 			await addLocalGame({

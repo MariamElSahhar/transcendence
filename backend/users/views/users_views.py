@@ -48,14 +48,17 @@ def user_retrieve_update_destroy_view(request, user_id):
         if request_user.id != user_id:
             return Response({"error": "Not authorized."}, status=status.HTTP_401_UNAUTHORIZED)
         user = request_user
+        print(user)
         if request.method == "PATCH":
             serializer = UserSerializer(user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            print("here", serializer)
             if "password" in serializer.validated_data:
                 user = serializer.save(password=make_password(serializer.validated_data["password"]))
             else:
                 serializer.save()
-            return Response({"message": "User modified", "data": serializer.data}, status=status.HTTP_201_CREATED)
+                print("here")
+            return Response({"message": "User modified", "data": serializer.validated_data}, status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":
             try:

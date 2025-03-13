@@ -223,7 +223,6 @@ export function renderWaitingForOpponent(component, onCancel) {
 			</div>
 		</div> `;
 
-	// Timer logic using Date.now()
 	const timerElement = overlay.querySelector("#timer");
 	const startTime = Date.now();
 
@@ -232,17 +231,15 @@ export function renderWaitingForOpponent(component, onCancel) {
 		const minutes = Math.floor(elapsedSeconds / 60);
 		const seconds = elapsedSeconds % 60;
 
-		// Format as MM:SS
 		timerElement.textContent = `${minutes}:${seconds
 			.toString()
 			.padStart(2, "0")}`;
 
-		requestAnimationFrame(updateTimer); // Smooth update
+		requestAnimationFrame(updateTimer);
 	};
 
-	updateTimer(); // Start the timer
+	updateTimer();
 
-	// Attach event listener after rendering
 	const cancelButton = overlay.querySelector("#cancel-matchmaking");
 	if (cancelButton && typeof onCancel === "function") {
 		cancelButton.addEventListener("click", function () {
