@@ -52,7 +52,6 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
         }))
 
     async def endgame(self, event):
-        print("startround")
         await self.send(text_data=json.dumps({
             "message": "endgame",
             "index":event["index"]
@@ -178,8 +177,6 @@ class PongConsumer(AsyncJsonWebsocketConsumer):
 def notify_match(player1, player2, game_session, sameSystem):
     group_name = f"game_session_{game_session}"
     channel_layer = get_channel_layer()
-    print("CHANELS", channel_layer)
-    print("MATCH FOUND: ", group_name, player1.username, player2.username)
 
 
     async_to_sync(channel_layer.group_send)(
