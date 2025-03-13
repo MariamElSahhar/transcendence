@@ -1,0 +1,16 @@
+ENV=production
+SECRET_KEY="django-insecure-)_vs&vq9(@qd494xud2txxr!2o8vlz=m5u=75o_#pb72_^sok4"
+
+#email config
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=transcendence.42ad@gmail.com
+EMAIL_HOST_PASSWORD="uuqp fyzm dtzs cnze"
+DEFAULT_FROM_EMAIL ="42AD Transcendence <transcendence.42ad@gmail.com>"
+
+#DB
+DBPASS="mypassword"
+DB_NAME="postgres"
+DB_USER="postgres"
+
