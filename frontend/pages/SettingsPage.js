@@ -674,7 +674,6 @@ export class SettingsPage extends Component {
 	}
 
 	async #deleteAccountHandler(event) {
-		console.log("hefhsl");
 		event.preventDefault();
 		this.deleteAccountButton.innerHTML = `
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
